@@ -4,19 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Click & Go - Travel Meta-Search</title>
-  <meta name="description" content="Click & Go – เปรียบเทียบราคาโรงแรมจากหลายเจ้าในที่เดียว จองง่ายเพียงคลิกเดียว">
-  <link rel="icon" href="/favicon.ico">
-  <!-- Open Graph / Facebook -->
-  <meta property="og:title" content="Click & Go – Travel Meta-Search">
-  <meta property="og:description" content="เปรียบเทียบราคาโรงแรมจากหลายเจ้าในที่เดียว จองง่ายเพียงคลิกเดียว">
-  <meta property="og:image" content="https://click-and-go-navy.vercel.app/logo.png">
-  <meta property="og:url" content="https://click-and-go-navy.vercel.app/">
-  <meta property="og:type" content="website">
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Click & Go – Travel Meta-Search">
-  <meta name="twitter:description" content="เปรียบเทียบราคาโรงแรมจากหลายเจ้าในที่เดียว จองง่ายเพียงคลิกเดียว">
-  <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/logo.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
   <style>
     body {
       margin: 0;
@@ -85,6 +73,8 @@
     .btn-secondary {
       background: #008080;
       color: #fff;
+      text-decoration: none;
+      display: inline-block;
     }
 
     section {
@@ -133,10 +123,11 @@
   <header>
     <img src="logo.png" alt="Click & Go">
     <nav>
-      <a href="#">ดีล</a>
+      <a href="deals.html">ดีล</a>
       <a href="#search">ค้นหาโรงแรม</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
+      <a href="about.html">About Us</a>
     </nav>
   </header>
 
@@ -145,7 +136,7 @@
     <p>เปรียบเทียบราคาโรงแรมจากหลายเจ้า แล้วคลิกไปจองได้ทันที</p>
     <div>
       <button class="btn btn-primary" onclick="document.getElementById('search').scrollIntoView({behavior: 'smooth'});">เริ่มค้นหาโรงแรม</button>
-      <button class="btn btn-secondary">ดูดีลล่าสุด</button>
+      <a href="deals.html" class="btn btn-secondary">ดูดีลล่าสุด</a>
     </div>
   </div>
 
@@ -199,7 +190,8 @@
   <footer style="padding:20px;text-align:center;font-size:14px;color:#666;border-top:1px solid #eee">
     © <script>document.write(new Date().getFullYear())</script> Click & Go |
     <a href="privacy.html">Privacy</a> |
-    <a href="terms.html">Terms</a>
+    <a href="terms.html">Terms</a> |
+    <a href="about.html">About Us</a>
     <div style="font-size:12px;color:#999;margin-top:6px">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติการเป็นพันธมิตร</div>
   </footer>
 </body>
