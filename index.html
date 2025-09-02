@@ -2,145 +2,136 @@
 <html lang="th">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Click & Go – ค้นหา เปรียบเทียบ และไปจองโรงแรมได้ในคลิกเดียว</title>
-  <meta name="description" content="Click & Go เมต้าเสิร์ชโรงแรมสำหรับนักเดินทางไทย เปรียบเทียบดีลจากพาร์ทเนอร์ แล้วคลิกไปจองได้ทันที">
-  <meta name="theme-color" content="#14B8A6">
-  <!-- Open Graph -->
-  <meta property="og:title" content="Click & Go – Travel Meta-Search">
-  <meta property="og:description" content="จองทริปง่าย แค่คลิกเดียว เปรียบเทียบดีลโรงแรมจากพาร์ทเนอร์ชั้นนำ">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="/logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Click & Go - Travel Meta-Search</title>
   <style>
-    :root{
-      --brand:#14B8A6; --brand-dark:#0D9488;
-      --ink:#0F172A; --muted:#64748B;
-      --bg:#F3F4F6; --card:#FFFFFF; --line:#E2E8F0;
-      --radius:16px; --shadow:0 10px 30px rgba(2,8,23,.06);
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: #333;
     }
-    *{box-sizing:border-box} body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--ink)}
-    a{color:inherit;text-decoration:none}
-    .container{max-width:1100px;margin:0 auto;padding:0 24px}
-    .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
-    .logo{display:flex;align-items:center;gap:10px}
-    .logo img{height:40px;width:40px;border-radius:12px;background:#fff;padding:6px;box-shadow:var(--shadow)}
-    .hero{margin-top:12px;border-radius:var(--radius);background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff;box-shadow:var(--shadow);padding:40px}
-    .hero h1{margin:0;font-size:38px;line-height:1.15}
-    .hero p{opacity:.92;margin-top:10px}
-    .hero .actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
-    .btn{display:inline-block;padding:12px 16px;border-radius:var(--radius);border:1px solid var(--line);background:#fff}
-    .btn-primary{background:#fff;color:var(--brand-dark);font-weight:600}
-    .btn-ghost{background:transparent;border-color:#fff;color:#fff}
-    .grid{display:grid;gap:16px}
-    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    @media (max-width:900px){ .grid-3{grid-template-columns:1fr} }
-    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
-    .section{padding:28px 0}
-    footer{border-top:1px solid var(--line);margin-top:28px}
-    .foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:16px 0;color:var(--muted);font-size:12px}
-    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);font-size:12px;color:var(--muted)}
-    .widget-wrap{background:#fff;border:1px dashed var(--line);border-radius:var(--radius);padding:16px}
-    .note{font-size:12px;color:var(--muted)}
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+    }
+
+    header img {
+      height: 40px;
+    }
+
+    nav a {
+      margin-left: 15px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .hero {
+      position: relative;
+      height: 400px;
+      background: url('hero-bg.jpg') center center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin: 0 0 10px;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin: 0 0 20px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+    }
+
+    .hero .btn {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: #fff;
+      color: #008080;
+    }
+
+    .btn-secondary {
+      background: #008080;
+      color: #fff;
+    }
+
+    section {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    section h2 {
+      margin-bottom: 20px;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .feature {
+      flex: 1 1 200px;
+      max-width: 250px;
+    }
   </style>
 </head>
 <body>
-  <header class="container nav">
-    <div class="logo">
-      <img src="/logo.png" alt="Click & Go">
-      <strong>Click &amp; Go</strong>
-    </div>
-    <nav style="display:flex;gap:18px;color:var(--muted);font-size:14px">
-      <a href="#deals">ดีล</a>
-      <a href="#search">ค้นหาโรงแรม</a>
-      <a href="/privacy.html">Privacy</a>
-      <a href="/terms.html">Terms</a>
+  <header>
+    <img src="logo.png" alt="Click & Go">
+    <nav>
+      <a href="#">ดีล</a>
+      <a href="#">ค้นหาโรงแรม</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
     </nav>
   </header>
 
-  <main class="container">
-    <!-- HERO -->
-    <section class="hero">
-      <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center">
-        <div>
-          <h1>จองทริปง่าย แค่คลิกเดียว</h1>
-          <p>เปรียบเทียบดีลโรงแรมจากพาร์ทเนอร์ชั้นนำ แล้วคลิกไปจองได้ทันที</p>
-          <div class="actions">
-            <a class="btn btn-primary" href="#search">เริ่มค้นหาโรงแรม</a>
-            <a class="btn btn-ghost" href="#deals">ดูดีลล่าสุด</a>
-          </div>
-          <p class="note" style="margin-top:8px">* เว็บไซต์กำลังอยู่ระหว่างการพัฒนา (Beta)</p>
-        </div>
-        <div style="display:grid;place-items:center">
-          <img src="/logo.png" alt="GO" style="height:110px;width:110px;border-radius:16px;background:#fff;padding:8px;box-shadow:var(--shadow)">
-        </div>
-      </div>
-    </section>
-
-    <!-- HIGHLIGHTS -->
-    <section class="section" id="highlights">
-      <h2 style="font-size:22px;margin:0 0 10px 0">ทำไมต้อง Click & Go</h2>
-      <div class="grid grid-3">
-        <div class="card"><strong>เปรียบเทียบหลายเจ้า</strong><div class="note" style="margin-top:6px">ดูราคา/โปรจากพาร์ทเนอร์หลายรายในที่เดียว</div></div>
-        <div class="card"><strong>คลิกเดียวไปจอง</strong><div class="note" style="margin-top:6px">ส่งคุณไปหน้าจองของพาร์ทเนอร์โดยตรง</div></div>
-        <div class="card"><strong>รองรับมือถือ</strong><div class="note" style="margin-top:6px">ออกแบบให้ใช้งานง่าย ทุกหน้าจอ</div></div>
-      </div>
-    </section>
-
-    <!-- PARTNERS -->
-    <section class="section" id="deals">
-      <h2 style="font-size:22px;margin:0 0 10px 0">พาร์ทเนอร์</h2>
-      <div style="display:flex;flex-wrap:wrap;gap:8px">
-        <span class="badge">Agoda</span>
-        <span class="badge">Trip.com</span>
-        <span class="badge">Booking.com</span>
-        <span class="badge">Klook</span>
-      </div>
-    </section>
-
-    <!-- AGODA WIDGET PLACEHOLDER -->
-    <section class="section" id="search">
-      <h2 style="font-size:22px;margin:0 0 10px 0">ค้นหาโรงแรม</h2>
-      <div class="widget-wrap">
-        <div id="agoda-search-widget"></div>
-        <p class="note" style="margin-top:8px">
-          วางโค้ด Agoda Search Box/Widget ที่นี่เมื่อได้รับจาก Agoda Partner Portal
-        </p>
-        <!-- ตัวอย่างโค้ด (กรุณาแทนที่ด้วยโค้ดจริงจาก Agoda):
-        <script src="https://partners.agoda.com/widgets/searchbox/searchbox.min.js"></script>
-        <script>
-          agoda.searchBox.init({
-            partnerId: "YOUR_PARTNER_ID",
-            language: "th-th",
-            currency: "THB",
-            width: "100%",
-            height: "260px"
-          });
-        </script>
-        -->
-      </div>
-    </section>
-
-    <!-- POPULAR COLLECTIONS -->
-    <section class="section">
-      <h2 style="font-size:22px;margin:0 0 10px 0">จุดหมายยอดนิยม</h2>
-      <div class="grid grid-3">
-        <a class="card" href="#search"><strong>เชียงใหม่</strong><div class="note" style="margin-top:6px">คาเฟ่โฮเทล / ใกล้สนามบิน / พูลวิลล่า</div></a>
-        <a class="card" href="#search"><strong>กรุงเทพฯ</strong><div class="note" style="margin-top:6px">ใกล้ BTS / ริมน้ำ / ครอบครัว</div></a>
-        <a class="card" href="#search"><strong>ภูเก็ต</strong><div class="note" style="margin-top:6px">ติดหาด / วิวสวย / โรแมนติก</div></a>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container foot">
-      <div>© <span id="y"></span> Click &amp; Go</div>
-      <div style="display:flex;gap:12px">
-        <a href="/privacy.html">Privacy</a>
-        <a href="/terms.html">Terms</a>
-      </div>
-      <div class="note" style="width:100%">คำชี้แจง: เว็บไซต์นี้จะแสดงข้อมูล/ราคาเฉพาะที่ได้รับอนุญาตจากพาร์ทเนอร์ และจะพาคุณไปจองบนเว็บไซต์พาร์ทเนอร์</div>
+  <div class="hero">
+    <h1>จองทริปง่าย แค่คลิกเดียว</h1>
+    <p>เปรียบเทียบราคาโรงแรมจากหลายเจ้า แล้วคลิกไปจองได้ทันที</p>
+    <div>
+      <button class="btn btn-primary">เริ่มค้นหาโรงแรม</button>
+      <button class="btn btn-secondary">ดูดีลล่าสุด</button>
     </div>
-  </footer>
-  <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
+  </div>
+
+  <section>
+    <h2>ทำไมต้อง Click & Go</h2>
+    <div class="features">
+      <div class="feature">
+        <h3>เปรียบเทียบหลายเจ้า</h3>
+        <p>ดูราคา/โปรจากทริปท่องเที่ยวหลายเว็บไซต์ในที่เดียว</p>
+      </div>
+      <div class="feature">
+        <h3>คลิกเดียวไปจอง</h3>
+        <p>ลิงก์ตรงไปหน้าโรงแรมบนพาร์ทเนอร์โดยตรง</p>
+      </div>
+      <div class="feature">
+        <h3>รองรับมือถือ</h3>
+        <p>ออกแบบให้ใช้งานง่าย ทุกหน้าจอ</p>
+      </div>
+    </div>
+  </section>
 </body>
 </html>
