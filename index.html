@@ -55,7 +55,7 @@
       text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
     }
 
-    .hero .btn {
+    .btn {
       padding: 10px 20px;
       margin: 5px;
       border: none;
@@ -94,6 +94,26 @@
       flex: 1 1 200px;
       max-width: 250px;
     }
+
+    .widget-box {
+      border: 2px dashed #ccc;
+      padding: 30px;
+      border-radius: 10px;
+      background: #f9f9f9;
+      margin-top: 20px;
+    }
+    .widget-box p {color:#666;font-size:14px;}
+    .search-form {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      margin-top: 15px;
+    }
+    .search-form input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
   </style>
 </head>
 <body>
@@ -101,7 +121,7 @@
     <img src="logo.png" alt="Click & Go">
     <nav>
       <a href="#">ดีล</a>
-      <a href="#">ค้นหาโรงแรม</a>
+      <a href="#search">ค้นหาโรงแรม</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
     </nav>
@@ -111,7 +131,7 @@
     <h1>จองทริปง่าย แค่คลิกเดียว</h1>
     <p>เปรียบเทียบราคาโรงแรมจากหลายเจ้า แล้วคลิกไปจองได้ทันที</p>
     <div>
-      <button class="btn btn-primary">เริ่มค้นหาโรงแรม</button>
+      <button class="btn btn-primary" onclick="document.getElementById('search').scrollIntoView({behavior: 'smooth'});">เริ่มค้นหาโรงแรม</button>
       <button class="btn btn-secondary">ดูดีลล่าสุด</button>
     </div>
   </div>
@@ -133,5 +153,41 @@
       </div>
     </div>
   </section>
+
+  <section id="search">
+    <h2>ค้นหาโรงแรม</h2>
+    <div class="widget-box">
+      <div id="agoda-search-widget"></div>
+      <p>วางโค้ด Agoda Search Box/Widget ที่นี่เมื่อได้รับจาก Agoda Partner Portal</p>
+      <!-- ตัวอย่างโค้ด (กรุณาแทนที่ด้วยโค้ดจริงจาก Agoda):
+      <script src="https://partners.agoda.com/widgets/searchbox/searchbox.min.js"></script>
+      <script>
+        agoda.searchBox.init({
+          partnerId: "YOUR_PARTNER_ID",
+          language: "th-th",
+          currency: "THB",
+          width: "100%",
+          height: "260px"
+        });
+      </script>
+      -->
+
+      <!-- เพิ่มฟอร์มจำลอง + ปุ่มค้นหา -->
+      <form class="search-form">
+        <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่">
+        <input type="date">
+        <input type="date">
+        <button type="button" class="btn btn-secondary">ค้นหา</button>
+      </form>
+      <p style="font-size:12px;color:#999;margin-top:8px;">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติ</p>
+    </div>
+  </section>
+
+  <footer style="padding:20px;text-align:center;font-size:14px;color:#666;border-top:1px solid #eee">
+    © <script>document.write(new Date().getFullYear())</script> Click & Go |
+    <a href="privacy.html">Privacy</a> |
+    <a href="terms.html">Terms</a>
+    <div style="font-size:12px;color:#999;margin-top:6px">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติการเป็นพันธมิตร</div>
+  </footer>
 </body>
 </html>
