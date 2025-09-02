@@ -73,8 +73,6 @@
     .btn-secondary {
       background: #008080;
       color: #fff;
-      text-decoration: none;
-      display: inline-block;
     }
 
     section {
@@ -125,9 +123,9 @@
     <nav>
       <a href="deals.html">ดีล</a>
       <a href="#search">ค้นหาโรงแรม</a>
+      <a href="about.html">About</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
-      <a href="about.html">About Us</a>
     </nav>
   </header>
 
@@ -136,7 +134,7 @@
     <p>เปรียบเทียบราคาโรงแรมจากหลายเจ้า แล้วคลิกไปจองได้ทันที</p>
     <div>
       <button class="btn btn-primary" onclick="document.getElementById('search').scrollIntoView({behavior: 'smooth'});">เริ่มค้นหาโรงแรม</button>
-      <a href="deals.html" class="btn btn-secondary">ดูดีลล่าสุด</a>
+      <a href="deals.html"><button class="btn btn-secondary">ดูดีลล่าสุด</button></a>
     </div>
   </div>
 
@@ -163,18 +161,6 @@
     <div class="widget-box">
       <div id="agoda-search-widget"></div>
       <p>วางโค้ด Agoda Search Box/Widget ที่นี่เมื่อได้รับจาก Agoda Partner Portal</p>
-      <!-- ตัวอย่างโค้ด (กรุณาแทนที่ด้วยโค้ดจริงจาก Agoda):
-      <script src="https://partners.agoda.com/widgets/searchbox/searchbox.min.js"></script>
-      <script>
-        agoda.searchBox.init({
-          partnerId: "YOUR_PARTNER_ID",
-          language: "th-th",
-          currency: "THB",
-          width: "100%",
-          height: "260px"
-        });
-      </script>
-      -->
 
       <!-- เพิ่มฟอร์มจำลอง + ปุ่มค้นหา -->
       <form class="search-form">
@@ -190,9 +176,8 @@
   <footer style="padding:20px;text-align:center;font-size:14px;color:#666;border-top:1px solid #eee">
     © <script>document.write(new Date().getFullYear())</script> Click & Go |
     <a href="privacy.html">Privacy</a> |
-    <a href="terms.html">Terms</a> |
-    <a href="about.html">About Us</a>
+    <a href="terms.html">Terms</a>
     <div style="font-size:12px;color:#999;margin-top:6px">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติการเป็นพันธมิตร</div>
   </footer>
 </body>
-</html>
+</html> 
