@@ -5,22 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ดีลโรงแรม - Click & Go</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-
   <!-- Canonical -->
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/deals.html">
-
-  <!-- JSON-LD: Organization -->
+  <!-- JSON-LD -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Click & Go",
-    "url": "https://click-and-go-navy.vercel.app/",
-    "logo": "https://click-and-go-navy.vercel.app/logo.png",
-    "sameAs": ["https://web.facebook.com/clickandgothailand"]
-  }
+  {"@context":"https://schema.org","@type":"Organization","name":"Click & Go","url":"https://click-and-go-navy.vercel.app/","logo":"https://click-and-go-navy.vercel.app/logo.png","sameAs":["https://web.facebook.com/clickandgothailand"]}
   </script>
-
   <style>
     body{margin:0;font-family:Arial,sans-serif;color:#333}
     header{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #eee}
@@ -28,8 +18,8 @@
     nav a{margin-left:15px;text-decoration:none;color:#333;font-weight:bold}
     h1{text-align:center;padding:30px 10px;background:#008080;color:#fff}
     .deals{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;padding:20px}
-    .deal-card{border:1px solid #ddd;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-    .deal-card img{width:100%;height:160px;object-fit:cover}
+    .deal-card{border:1px solid #ddd;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+    .deal-card img{width:100%;height:auto;display:block;aspect-ratio:4/3;object-fit:cover}
     .deal-card .content{padding:15px;text-align:left}
     .deal-card h3{margin:0 0 10px;font-size:18px}
     .deal-card p{font-size:14px;color:#555}
@@ -39,7 +29,7 @@
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Click & Go">
+    <img src="logo.png" alt="Click & Go" decoding="async">
     <nav>
       <a href="index.html">หน้าแรก</a>
       <a href="deals.html">ดีล</a>
@@ -55,7 +45,7 @@
 
   <div class="deals">
     <div class="deal-card">
-      <img src="https://source.unsplash.com/400x300/?hotel,room" alt="Hotel Deal 1" loading="lazy">
+      <img src="https://source.unsplash.com/400x300/?hotel,room" alt="Hotel Deal 1" loading="lazy" width="400" height="300">
       <div class="content">
         <h3>โรงแรมตัวอย่าง 1</h3>
         <p>ทำเลดี ราคาเริ่มต้นเพียง 1,200 บาท/คืน</p>
@@ -64,7 +54,7 @@
     </div>
 
     <div class="deal-card">
-      <img src="https://source.unsplash.com/400x300/?resort,beach" alt="Hotel Deal 2" loading="lazy">
+      <img src="https://source.unsplash.com/400x300/?resort,beach" alt="Hotel Deal 2" loading="lazy" width="400" height="300">
       <div class="content">
         <h3>โรงแรมตัวอย่าง 2</h3>
         <p>วิวทะเลสวยงาม ราคาเริ่มต้นเพียง 1,800 บาท/คืน</p>
@@ -73,7 +63,7 @@
     </div>
 
     <div class="deal-card">
-      <img src="https://source.unsplash.com/400x300/?city,hotel" alt="Hotel Deal 3" loading="lazy">
+      <img src="https://source.unsplash.com/400x300/?city,hotel" alt="Hotel Deal 3" loading="lazy" width="400" height="300">
       <div class="content">
         <h3>โรงแรมตัวอย่าง 3</h3>
         <p>ใจกลางเมือง เดินทางสะดวก ราคาเริ่มต้น 900 บาท/คืน</p>
@@ -92,4 +82,3 @@
   </footer>
 </body>
 </html>
-
