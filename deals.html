@@ -1,72 +1,124 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ดีลโรงแรม - Click & Go</title>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ดีลโรงแรม – Click & Go</title>
+  <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
 
-  <!-- Canonical -->
-  <link rel="canonical" href="https://click-and-go-navy.vercel.app/deals.html">
-  <!-- JSON-LD -->
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Organization","name":"Click & Go","url":"https://click-and-go-navy.vercel.app/","logo":"https://click-and-go-navy.vercel.app/logo.png","sameAs":["https://web.facebook.com/clickandgothailand"]}
-  </script>
+  <style>
+    /* ---- เพิ่มเฉพาะสไตล์ของหน้า deals (ถ้ามี style.css แล้ว สามารถย้ายบล็อกนี้ไปใส่ต่อท้ายไฟล์นั้นได้) ---- */
+    .container{max-width:1100px;margin:0 auto;padding:0 16px;}
+    .page-title{font-size:clamp(22px,3.2vw,32px);margin:24px 0;}
+    .deals-grid{
+      display:grid;gap:20px;
+      grid-template-columns:1fr;
+    }
+    @media(min-width:640px){.deals-grid{grid-template-columns:1fr 1fr}}
+    @media(min-width:1024px){.deals-grid{grid-template-columns:1fr 1fr 1fr}}
+    .deal-card{
+      background:#fff;border:1px solid #eee;border-radius:14px;overflow:hidden;
+      box-shadow:0 6px 18px rgba(0,0,0,.06);
+      display:flex;flex-direction:column;
+    }
+    .deal-img{width:100%;height:180px;object-fit:cover;}
+    .deal-body{padding:14px 16px 16px}
+    .deal-title{font-size:18px;margin:0 0 6px}
+    .deal-sub{color:#666;margin:0 0 12px;font-size:14px}
+    .deal-footer{
+      margin-top:auto;display:flex;justify-content:space-between;align-items:center;
+      padding:12px 16px;border-top:1px solid #f0f0f0;background:#fafafa
+    }
+    .price{font-weight:700}
+    .btn{
+      appearance:none;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;
+      background:#128c7e;color:#fff;font-weight:600;text-decoration:none;display:inline-block
+    }
+    .btn:hover{filter:brightness(.95)}
+    /* กันคอนเทนต์ชิดซ้าย: header ก็ติดคอนเทนเนอร์เดียวกัน */
+    header .inner{max-width:1100px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:16px}
+  </style>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="Click & Go" decoding="async">
-    <nav>
-      <a href="index.html">หน้าแรก</a>
-      <a href="deals.html">ดีล</a>
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="contact.html">Contact</a>
-      <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Facebook</a>
-    </nav>
+  <!-- Header -->
+  <header style="border-bottom:1px solid #eee;background:#fff;">
+    <div class="inner">
+      <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+        <img src="logo.png" alt="Click & Go" style="height:34px">
+        <span style="font-weight:700;color:#333">Click & Go</span>
+      </a>
+      <nav style="margin-left:auto;display:flex;gap:14px">
+        <a href="index.html">หน้าแรก</a>
+        <a href="deals.html" aria-current="page" style="font-weight:700">ดีล</a>
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="contact.html">Contact</a>
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Facebook</a>
+      </nav>
+    </div>
   </header>
 
-  <h1 class="page-title">ดีลโรงแรมแนะนำ</h1>
+  <!-- Content -->
+  <main class="container">
+    <h1 class="page-title">ดีลโรงแรมแนะนำ</h1>
 
-  <div class="deals">
-    <div class="deal-card">
-      <img src="https://source.unsplash.com/400x300/?hotel,room" alt="Hotel Deal 1" loading="lazy" width="400" height="300">
-      <div class="content">
-        <h3>โรงแรมตัวอย่าง 1</h3>
-        <p>ทำเลดี ราคาเริ่มต้นเพียง 1,200 บาท/คืน</p>
-        <a href="#" class="btn">จองเลย</a>
-      </div>
+    <section class="deals-grid">
+      <!-- Card 1 -->
+      <article class="deal-card">
+        <img class="deal-img" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="Hotel Deal 1">
+        <div class="deal-body">
+          <h3 class="deal-title">โรงแรมตัวอย่าง 1</h3>
+          <p class="deal-sub">ทำเลดี ใกล้รถไฟฟ้า ราคาเริ่มต้นเพียง 1,200 บาท/คืน</p>
+        </div>
+        <div class="deal-footer">
+          <div class="price">฿1,200 / คืน</div>
+          <a class="btn" href="#" target="_blank" rel="nofollow noopener">จองเลย</a>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="deal-card">
+        <img class="deal-img" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop" alt="Hotel Deal 2">
+        <div class="deal-body">
+          <h3 class="deal-title">โรงแรมตัวอย่าง 2</h3>
+          <p class="deal-sub">วิวทะเลสวยงาม ราคาเริ่มต้นเพียง 1,800 บาท/คืน</p>
+        </div>
+        <div class="deal-footer">
+          <div class="price">฿1,800 / คืน</div>
+          <a class="btn" href="#" target="_blank" rel="nofollow noopener">จองเลย</a>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="deal-card">
+        <img class="deal-img" src="https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?q=80&w=1200&auto=format&fit=crop" alt="Hotel Deal 3">
+        <div class="deal-body">
+          <h3 class="deal-title">โรงแรมตัวอย่าง 3</h3>
+          <p class="deal-sub">ใจกลางเมือง เดินทางสะดวก ราคาเริ่มต้น 900 บาท/คืน</p>
+        </div>
+        <div class="deal-footer">
+          <div class="price">฿900 / คืน</div>
+          <a class="btn" href="#" target="_blank" rel="nofollow noopener">จองเลย</a>
+        </div>
+      </article>
+    </section>
+
+    <p style="margin:22px 0 8px;color:#888;font-size:13px">
+      * ตัวอย่างดีลเพื่อจัดวางเลย์เอาต์ — เมื่อได้รับโค้ด Affiliate จาก Agoda/Booking แล้ว นำลิงก์จริงมาใส่ที่ปุ่ม “จองเลย”
+    </p>
+  </main>
+
+  <!-- Footer -->
+  <footer style="border-top:1px solid #eee;background:#fff;margin-top:32px">
+    <div class="container" style="padding:16px 16px 24px;text-align:center;color:#666;font-size:14px">
+      © <script>document.write(new Date().getFullYear())</script> Click & Go —
+      <a href="privacy.html">Privacy</a> ·
+      <a href="terms.html">Terms</a> ·
+      <a href="contact.html">Contact</a> ·
+      <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Facebook</a>
     </div>
-
-    <div class="deal-card">
-      <img src="https://source.unsplash.com/400x300/?resort,beach" alt="Hotel Deal 2" loading="lazy" width="400" height="300">
-      <div class="content">
-        <h3>โรงแรมตัวอย่าง 2</h3>
-        <p>วิวทะเลสวยงาม ราคาเริ่มต้นเพียง 1,800 บาท/คืน</p>
-        <a href="#" class="btn">จองเลย</a>
-      </div>
-    </div>
-
-    <div class="deal-card">
-      <img src="https://source.unsplash.com/400x300/?city,hotel" alt="Hotel Deal 3" loading="lazy" width="400" height="300">
-      <div class="content">
-        <h3>โรงแรมตัวอย่าง 3</h3>
-        <p>ใจกลางเมือง เดินทางสะดวก ราคาเริ่มต้น 900 บาท/คืน</p>
-        <a href="#" class="btn">จองเลย</a>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    © <script>document.write(new Date().getFullYear())</script> Click & Go |
-    <a href="privacy.html">Privacy</a> |
-    <a href="terms.html">Terms</a> |
-    <a href="about.html">About</a> |
-    <a href="contact.html">Contact</a> |
-    <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Facebook</a>
   </footer>
 </body>
 </html>
-
