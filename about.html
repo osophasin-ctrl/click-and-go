@@ -2,111 +2,86 @@
 <html lang="th">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>About Us - Click & Go</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>About – Click & Go</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://click-and-go-navy.vercel.app/about.html">
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Organization","name":"Click & Go","url":"https://click-and-go-navy.vercel.app/","logo":"https://click-and-go-navy.vercel.app/logo.png","sameAs":["https://web.facebook.com/clickandgothailand"]}
+  </script>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: #333;
-      line-height: 1.6;
+    /* เพิ่มสไตล์เฉพาะหน้านี้เล็กน้อย (ถ้าจำเป็น) */
+    .about-hero{
+      position:relative; min-height:250px; display:grid; place-items:center;
+      text-align:center; color:#fff; background:url('hero-bg.jpg') center/cover no-repeat;
     }
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 20px;
-      background: #fff;
-      border-bottom: 1px solid #eee;
-    }
-    header img {
-      height: 40px;
-    }
-    nav a {
-      margin-left: 15px;
-      text-decoration: none;
-      color: #333;
-      font-weight: bold;
-    }
-    .hero {
-      position: relative;
-      height: 250px;
-      background: url('hero-bg.jpg') center center/cover no-repeat;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: #fff;
-    }
-    .hero h1 {
-      font-size: 2.2rem;
-      text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
-    }
-    section {
-      padding: 40px 20px;
-      max-width: 900px;
-      margin: auto;
-    }
-    section h2 {
-      margin-top: 30px;
-      color: #008080;
-    }
-    footer {
-      padding: 20px;
-      text-align: center;
-      font-size: 14px;
-      color: #666;
-      border-top: 1px solid #eee;
-    }
+    .about-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.45))}
+    .about-hero>*{position:relative}
+    .about-wrap{max-width:900px;margin:0 auto;padding:24px;text-align:left}
+    .about-wrap h2{color:#008080;margin-top:18px}
+    .about-wrap p{line-height:1.8}
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Click & Go">
+    <img src="logo.png" alt="Click & Go" decoding="async">
     <nav>
       <a href="index.html">หน้าแรก</a>
       <a href="deals.html">ดีล</a>
+      <a href="about.html">About</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Facebook</a>
     </nav>
   </header>
 
-  <div class="hero">
-    <h1>About Us</h1>
-  </div>
+  <section class="about-hero">
+    <div>
+      <h1>About Us</h1>
+      <p>รู้จัก Click & Go ให้มากขึ้น</p>
+    </div>
+  </section>
 
-  <section>
+  <main class="about-wrap">
     <h2>วิสัยทัศน์ของเรา</h2>
     <p>
-      Click & Go เกิดขึ้นจากความตั้งใจที่จะทำให้การวางแผนท่องเที่ยวเป็นเรื่องง่าย 
-      ผู้ใช้งานสามารถค้นหาโรงแรมและที่พักจากหลายผู้ให้บริการได้ในที่เดียว 
-      แล้วคลิกเดียวไปยังหน้าจองของพันธมิตรโดยตรง
+      Click & Go ถูกสร้างขึ้นเพื่อทำให้การค้นหาและจองโรงแรมเป็นเรื่องง่ายที่สุด
+      ผู้ใช้สามารถเปรียบเทียบราคาและกดจองได้ในคลิกเดียว โดยเรารวบรวมดีลจากหลายผู้ให้บริการไว้ในที่เดียว
     </p>
 
     <h2>พันธมิตร</h2>
     <p>
-      เราทำงานร่วมกับ Online Travel Agency ชั้นนำ เช่น Agoda และผู้ให้บริการท่องเที่ยวอื่นๆ 
-      เพื่อให้มั่นใจว่าผู้ใช้จะได้รับข้อมูลที่อัปเดตและข้อเสนอที่ดีที่สุด
+      เราทำงานร่วมกับ Online Travel Agency ชั้นนำ (เช่น Agoda) เพื่อให้คุณได้รับข้อมูลที่อัปเดต
+      และข้อเสนอที่คุ้มค่าสำหรับการเดินทางของคุณ
     </p>
 
-    <h2>สิ่งที่เรามุ่งมั่น</h2>
+    <h2>สิ่งที่เราให้ความสำคัญ</h2>
     <p>
-      - มอบประสบการณ์ค้นหาและเปรียบเทียบโรงแรมที่ง่ายที่สุด  
-      - นำเสนอข้อมูลที่โปร่งใส ชัดเจน และเชื่อถือได้  
-      - รองรับการใช้งานทั้งคอมพิวเตอร์และมือถือ  
+      • ประสบการณ์ค้นหา/เปรียบเทียบที่ง่ายและเร็ว<br>
+      • ข้อมูลโปร่งใส น่าเชื่อถือ<br>
+      • รองรับการใช้งานทั้งคอมพิวเตอร์และมือถือ
     </p>
 
     <h2>ติดต่อเรา</h2>
     <p>
       อีเมล: <a href="mailto:oso.phasin@gmail.com">oso.phasin@gmail.com</a><br>
-      Facebook: <a href="https://web.facebook.com/clickandgothailand" target="_blank">Click & Go Thailand</a>
+      Facebook: <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Click & Go Thailand</a>
     </p>
-  </section>
+  </main>
 
   <footer>
     © <script>document.write(new Date().getFullYear())</script> Click & Go |
     <a href="privacy.html">Privacy</a> |
-    <a href="terms.html">Terms</a>
+    <a href="terms.html">Terms</a> |
+    <a href="about.html">About</a> |
+    <a href="contact.html">Contact</a> |
+    <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Facebook</a>
   </footer>
 </body>
 </html>
+
