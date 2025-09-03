@@ -5,38 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Click & Go - Travel Meta-Search</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="preload" as="image" href="hero-bg.jpg">
+  <link rel="stylesheet" href="style.css">
+
   <!-- Canonical -->
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/">
-  <!-- JSON-LD: Organization -->
+  <!-- JSON-LD -->
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Organization","name":"Click & Go","url":"https://click-and-go-navy.vercel.app/","logo":"https://click-and-go-navy.vercel.app/logo.png","sameAs":["https://web.facebook.com/clickandgothailand"]}
   </script>
-  <!-- Preload LCP image -->
-  <link rel="preload" as="image" href="hero-bg.jpg">
-
-  <style>
-    body { margin: 0; font-family: Arial, sans-serif; color: #333; }
-    header { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background: #fff; border-bottom: 1px solid #eee; }
-    header img { height: 40px; }
-    nav a { margin-left: 15px; text-decoration: none; color: #333; font-weight: bold; }
-    .hero { position: relative; height: 400px; background: url('hero-bg.jpg') center center/cover no-repeat; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #fff; }
-    /* Overlay ให้ตัวหนังสืออ่านง่าย */
-    .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.35))}
-    .hero > *{position:relative}
-    .hero h1 { font-size: 2.5rem; margin: 0 0 10px; text-shadow: 1px 1px 4px rgba(0,0,0,0.5); }
-    .hero p { font-size: 1.2rem; margin: 0 0 20px; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); }
-    .btn { padding: 10px 20px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; }
-    .btn-primary { background: #fff; color: #008080; }
-    .btn-secondary { background: #008080; color: #fff; }
-    section { padding: 40px 20px; text-align: center; }
-    section h2 { margin-bottom: 20px; }
-    .features { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-    .feature { flex: 1 1 200px; max-width: 250px; }
-    .widget-box { border: 2px dashed #ccc; padding: 30px; border-radius: 10px; background: #f9f9f9; margin-top: 20px; }
-    .widget-box p { color:#666; font-size:14px; }
-    .search-form { display: grid; gap: 10px; grid-template-columns: 1fr 1fr 1fr auto; margin-top: 15px; }
-    .search-form input { padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-  </style>
 </head>
 <body>
   <header>
@@ -57,7 +34,7 @@
     <p>เปรียบเทียบราคาโรงแรมจากหลายเจ้า แล้วคลิกไปจองได้ทันที</p>
     <div>
       <button class="btn btn-primary" onclick="document.getElementById('search').scrollIntoView({behavior: 'smooth'});">เริ่มค้นหาโรงแรม</button>
-      <a href="deals.html"><button class="btn btn-secondary">ดูดีลล่าสุด</button></a>
+      <a href="deals.html" class="btn btn-secondary">ดูดีลล่าสุด</a>
     </div>
   </div>
 
@@ -81,18 +58,19 @@
         <input type="date">
         <button type="button" class="btn btn-secondary">ค้นหา</button>
       </form>
-      <p style="font-size:12px;color:#999;margin-top:8px;">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติ</p>
+      <p class="note" style="margin-top:8px">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติ</p>
     </div>
   </section>
 
-  <footer style="padding:20px;text-align:center;font-size:14px;color:#666;border-top:1px solid #eee">
+  <footer>
     © <script>document.write(new Date().getFullYear())</script> Click & Go |
     <a href="privacy.html">Privacy</a> |
     <a href="terms.html">Terms</a> |
     <a href="about.html">About</a> |
     <a href="contact.html">Contact</a> |
     <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Facebook</a>
-    <div style="font-size:12px;color:#999;margin-top:6px">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติการเป็นพันธมิตร</div>
+    <div class="note" style="margin-top:6px">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติการเป็นพันธมิตร</div>
   </footer>
 </body>
 </html>
+
