@@ -9,85 +9,100 @@
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Click & Go">
-    <nav>
-      <a href="deals.html">ดีล</a>
-      <a href="#search">ค้นหาโรงแรม</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="https://web.facebook.com/clickandgothailand" target="_blank">Facebook</a>
-    </nav>
+    <div class="container">
+      <img src="logo.png" alt="Click & Go" decoding="async">
+      <nav>
+        <a href="deals.html">ดีล</a>
+        <a href="#search">ค้นหาโรงแรม</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Facebook</a>
+      </nav>
+    </div>
   </header>
 
-  <div class="hero">
+  <section class="hero">
     <h1>จองทริปง่าย แค่คลิกเดียว</h1>
     <p>เปรียบเทียบราคาโรงแรมจากหลายเจ้า แล้วคลิกไปจองได้ทันที</p>
     <div>
-      <button class="btn btn-primary" onclick="document.getElementById('search').scrollIntoView({behavior: 'smooth'});">เริ่มค้นหาโรงแรม</button>
-      <button class="btn btn-secondary" onclick="window.location.href='deals.html'">ดูดีลล่าสุด</button>
+      <a class="btn btn-primary" href="#search">เริ่มค้นหาโรงแรม</a>
+      <a class="btn btn-secondary" href="deals.html">ดูดีลล่าสุด</a>
     </div>
-  </div>
+  </section>
 
-  <!-- 🔹 ย้าย ค้นหาโรงแรม มาไว้บน -->
+  <!-- ค้นหาโรงแรม -->
   <section id="search">
-    <h2>ค้นหาโรงแรม</h2>
-    <div class="widget-box">
-      <div id="agoda-search-widget"></div>
-      <p>วางโค้ด Agoda Search Box/Widget ที่นี่เมื่อได้รับจาก Agoda Partner Portal</p>
-      <!-- ตัวอย่างโค้ด (แทนที่เมื่อ Agoda อนุมัติ):
-      <script src="https://partners.agoda.com/widgets/searchbox/searchbox.min.js"></script>
-      <script>
-        agoda.searchBox.init({
-          partnerId: "YOUR_PARTNER_ID",
-          language: "th-th",
-          currency: "THB",
-          width: "100%",
-          height: "260px"
-        });
-      </script>
-      -->
-      <!-- ฟอร์มจำลอง -->
-      <form class="search-form">
-        <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่">
-        <input type="date">
-        <input type="date">
-        <button type="button" class="btn btn-secondary">ค้นหา</button>
-      </form>
-      <p style="font-size:12px;color:#999;margin-top:8px;">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติ</p>
+    <div class="container">
+      <h2>ค้นหาโรงแรม</h2>
+      <div class="widget-box">
+        <div id="agoda-search-widget"></div>
+        <p style="color:#666;font-size:14px;margin-top:4px">
+          วางโค้ด Agoda Search Box/Widget ที่นี่เมื่อได้รับจาก Agoda Partner Portal
+        </p>
+
+        <!-- ฟอร์มจำลองไว้ก่อน -->
+        <form class="search-form" onsubmit="return false;">
+          <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่">
+          <input type="date">
+          <input type="date">
+          <button type="button" class="btn btn-secondary" onclick="location.href='deals.html'">ค้นหา</button>
+        </form>
+        <p style="font-size:12px;color:#999;margin-top:8px;">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติ</p>
+      </div>
     </div>
   </section>
 
-  <!-- 🔹 เพิ่ม ปลายทางยอดนิยม -->
-  <section id="popular-destinations" style="padding:40px;text-align:center">
-    <h2>ปลายทางยอดนิยม</h2>
-    <p>สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมของไทย</p>
-    <div style="margin-top:20px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
-      <a href="bangkok.html" class="btn btn-secondary">กรุงเทพฯ</a>
-      <a href="chiangmai.html" class="btn btn-secondary">เชียงใหม่</a>
-      <a href="pattaya.html" class="btn btn-secondary">พัทยา</a>
-      <a href="phuket.html" class="btn btn-secondary">ภูเก็ต</a>
-      <a href="krabi.html" class="btn btn-secondary">กระบี่</a>
-      <a href="hua-hin.html" class="btn btn-secondary">หัวหิน</a>
+  <!-- ปลายทางยอดนิยม (ในประเทศ) -->
+  <section id="popular-destinations">
+    <div class="container">
+      <h2>ปลายทางยอดนิยม</h2>
+      <p class="text-center">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมของไทย</p>
+      <div class="chips" style="margin-top:16px">
+        <a href="bangkok.html" class="chip-btn">กรุงเทพฯ</a>
+        <a href="chiangmai.html" class="chip-btn">เชียงใหม่</a>
+        <a href="pattaya.html" class="chip-btn">พัทยา</a>
+        <a href="phuket.html" class="chip-btn">ภูเก็ต</a>
+        <a href="krabi.html" class="chip-btn">กระบี่</a>
+        <a href="hua-hin.html" class="chip-btn">หัวหิน</a>
+      </div>
     </div>
   </section>
 
-  <!-- 🔹 ย้าย ทำไมต้อง Click & Go ลงมาล่าง -->
+  <!-- เมืองยอดฮิตในต่างประเทศ -->
+  <section id="intl-destinations">
+    <div class="container">
+      <h2>เมืองยอดฮิตในต่างประเทศ</h2>
+      <p class="text-center">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมในต่างประเทศ</p>
+      <div class="chips" style="margin-top:16px">
+        <a href="tokyo.html" class="chip-btn">โตเกียว</a>
+        <a href="seoul.html" class="chip-btn">โซล</a>
+        <a href="singapore.html" class="chip-btn">สิงคโปร์</a>
+        <a href="hongkong.html" class="chip-btn">ฮ่องกง</a>
+        <a href="london.html" class="chip-btn">ลอนดอน</a>
+        <a href="paris.html" class="chip-btn">ปารีส</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ทำไมต้อง Click & Go -->
   <section>
-    <h2>ทำไมต้อง Click & Go</h2>
-    <div class="features">
-      <div class="feature">
-        <h3>เปรียบเทียบหลายเจ้า</h3>
-        <p>ดูราคา/โปรจากทริปท่องเที่ยวหลายเว็บไซต์ในที่เดียว</p>
-      </div>
-      <div class="feature">
-        <h3>คลิกเดียวไปจอง</h3>
-        <p>ลิงก์ตรงไปหน้าโรงแรมบนพาร์ทเนอร์โดยตรง</p>
-      </div>
-      <div class="feature">
-        <h3>รองรับมือถือ</h3>
-        <p>ออกแบบให้ใช้งานง่าย ทุกหน้าจอ</p>
+    <div class="container">
+      <h2>ทำไมต้อง Click & Go</h2>
+      <div class="features">
+        <div class="feature">
+          <h3>เปรียบเทียบหลายเจ้า</h3>
+          <p>ดูราคา/โปรจากท่องเที่ยวหลายเว็บไซต์ในที่เดียว</p>
+        </div>
+        <div class="feature">
+          <h3>คลิกเดียวไปจอง</h3>
+          <p>ลิงก์ตรงไปหน้าโรงแรมบนพาร์ทเนอร์โดยตรง</p>
+        </div>
+        <div class="feature">
+          <h3>รองรับมือถือ</h3>
+          <p>ออกแบบให้ใช้งานง่าย ทุกหน้าจอ</p>
+        </div>
       </div>
     </div>
   </section>
@@ -98,8 +113,10 @@
     <a href="terms.html">Terms</a> |
     <a href="about.html">About</a> |
     <a href="contact.html">Contact</a> |
-    <a href="https://web.facebook.com/clickandgothailand" target="_blank">Facebook</a>
-    <div style="font-size:12px;color:#999;margin-top:6px">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติการเป็นพันธมิตร</div>
+    <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Facebook</a>
+    <div style="font-size:12px;color:#999;margin-top:6px">
+      * ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติการเป็นพันธมิตร
+    </div>
   </footer>
 </body>
 </html>
