@@ -1,129 +1,177 @@
-/* ========== Root Variables ========== */
-:root {
-  --brand-color: #0b7;        /* สีหลัก */
-  --brand-color-dark: #0aa46a;
-  --text-color: #333;
-  --bg-color: #fff;
-  --border-color: #eee;
-  --muted-color: #666;
-  --chip-bg: #f7f7f7;
-  --chip-border: #e6e6e6;
-  --footer-bg: #fff;
+/* =====================
+   Global base
+===================== */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #333;
+  background: #fafafa;
+  line-height: 1.5;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --brand-color: #33d18f;
-    --brand-color-dark: #28b17a;
-    --text-color: #f0f0f0;
-    --bg-color: #121212;
-    --border-color: #333;
-    --muted-color: #aaa;
-    --chip-bg: #1e1e1e;
-    --chip-border: #333;
-    --footer-bg: #181818;
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* =====================
+   Layout helpers
+===================== */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* =====================
+   Header & Nav
+===================== */
+header {
+  border-bottom: 1px solid #eee;
+  background: #fff;
+}
+header .inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+header nav {
+  margin-left: auto;
+  display: flex;
+  gap: 14px;
+}
+header nav a {
+  padding: 6px 0;
+  color: #333;
+}
+header nav a[aria-current="page"] {
+  font-weight: bold;
+  color: #128c7e;
+}
+
+/* =====================
+   Buttons
+===================== */
+.btn {
+  appearance: none;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  background: #128c7e;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: 0.2s;
+}
+.btn:hover {
+  filter: brightness(.95);
+}
+
+/* =====================
+   Deals grid
+===================== */
+.deals-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .deals-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
-
-/* ========== Base ==========\ */
-* { box-sizing: border-box; }
-html, body { margin:0; padding:0; }
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-  color: var(--text-color);
-  background: var(--bg-color);
-  line-height:1.6;
+@media (min-width: 1024px) {
+  .deals-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
-img { max-width:100%; height:auto; }
-a { color:var(--brand-color); text-decoration:none; }
-a:hover { text-decoration:underline; }
-
-/* ========== Header & Nav ==========\ */
-header {
-  position:sticky; top:0; z-index:50;
-  background: var(--bg-color);
-  border-bottom:1px solid var(--border-color);
+.deal-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+  display: flex;
+  flex-direction: column;
 }
-header .container {
-  display:flex; align-items:center; justify-content:space-between; padding:10px 20px;
+.deal-img {
+  width: 100%;
+  height: auto;
 }
-header img { height:40px; }
-nav a {
-  margin-left:14px; font-weight:600; color:var(--text-color);
+.img-16x9 {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  background: #f3f3f3;
 }
-nav a:hover { color:var(--brand-color); }
-
-/* ========== Hero ==========\ */
-.hero {
-  position:relative; height:400px;
-  background:url('hero-bg.jpg') center/cover no-repeat;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  text-align:center; color:#fff;
+.deal-body {
+  padding: 14px 16px 16px;
 }
-.hero h1{ font-size:2.4rem; margin:0 0 8px; text-shadow:1px 1px 4px rgba(0,0,0,.5); }
-.hero p { margin:0 0 16px; text-shadow:1px 1px 3px rgba(0,0,0,.35); }
-
-/* ========== Buttons ==========\ */
-.btn {
-  display:inline-block; padding:10px 18px; border-radius:10px;
-  border:1px solid transparent; cursor:pointer; font-weight:600;
+.deal-title {
+  font-size: 18px;
+  margin: 0 0 6px;
 }
-.btn-primary { background:#fff; color:var(--brand-color); border-color:#fff; }
-.btn-primary:hover { background:#f6fffb; }
-.btn-secondary { background:var(--brand-color); color:#fff; border-color:var(--brand-color); }
-.btn-secondary:hover { background:var(--brand-color-dark); }
-
-/* ========== Chips ==========\ */
-.chips { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
-.chip-btn {
-  display:inline-block; padding:8px 14px; border-radius:999px;
-  border:1px solid var(--chip-border); background:var(--chip-bg); color:var(--text-color);
+.deal-sub {
+  color: #666;
+  margin: 0 0 12px;
+  font-size: 14px;
 }
-.chip-btn:hover { background:#eee; text-decoration:none; }
-
-/* ========== Sections ==========\ */
-section { padding:34px 0; }
-section h2 { text-align:center; margin:0 0 14px; font-size:1.6rem; }
-
-/* ========== Features ==========\ */
-.features {
-  display:flex; flex-wrap:wrap; gap:20px; justify-content:center;
-  max-width:1100px; margin:14px auto 0; padding:0 20px;
+.deal-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-top: 1px solid #f0f0f0;
+  background: #fafafa;
 }
-.feature { flex:1 1 220px; max-width:280px; text-align:center; }
-.feature h3 { margin:6px 0 6px; }
-
-/* ========== Search Widget ==========\ */
-.widget-box {
-  border:2px dashed var(--border-color); background:var(--chip-bg);
-  padding:24px; border-radius:12px; max-width:1000px; margin:12px auto 0;
-}
-.search-form {
-  display:grid; gap:10px; grid-template-columns:1fr 1fr 1fr auto; margin-top:10px;
-}
-.search-form input{
-  padding:10px; border:1px solid var(--border-color); border-radius:8px; width:100%;
-  background: var(--bg-color); color: var(--text-color);
+.price {
+  font-weight: 700;
 }
 
-/* ========== Footer ==========\ */
+/* =====================
+   Sections
+===================== */
+section {
+  margin: 34px 0;
+}
+
+section h2 {
+  text-align: center;
+  font-size: clamp(22px, 3vw, 30px);
+  margin-bottom: 10px;
+}
+section p {
+  text-align: center;
+  color: #666;
+  margin: 6px 0 16px;
+}
+
+/* =====================
+   Footer
+===================== */
 footer {
-  border-top:1px solid var(--border-color); text-align:center; color:var(--muted-color);
-  padding:20px; font-size:14px; background:var(--footer-bg);
+  border-top: 1px solid #eee;
+  background: #fff;
+  margin-top: 32px;
 }
-footer a { color:var(--brand-color); }
-
-/* ========== Utility ==========\ */
-.text-center { text-align:center; }
-.mt-0{margin-top:0}.mt-8{margin-top:8px}.mt-16{margin-top:16px}
-
-/* ========== Responsive ==========\ */
-@media (max-width: 1000px){
-  .search-form { grid-template-columns:1fr 1fr; }
+footer .container {
+  padding: 16px 16px 24px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
 }
-@media (max-width: 720px){
-  nav a { margin-left:10px; font-weight:600; }
-  .hero { height:320px; }
-  .hero h1{ font-size:2rem; }
-  .search-form { grid-template-columns:1fr; }
+footer a {
+  color: #128c7e;
+  margin: 0 4px;
 }
