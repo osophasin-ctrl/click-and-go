@@ -1,124 +1,124 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Click & Go - Travel Meta-Search</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <div class="container">
-      <img src="logo.png" alt="Click & Go" decoding="async">
-      <nav>
+  <!-- Header -->
+  <header style="border-bottom:1px solid #eee;background:#fff;">
+    <div class="inner">
+      <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+        <img src="logo.png" alt="Click & Go" style="height:34px">
+        <span style="font-weight:700;color:#333">Click & Go</span>
+      </a>
+      <nav style="margin-left:auto;display:flex;gap:14px">
+        <a href="index.html" aria-current="page" style="font-weight:700">หน้าแรก</a>
         <a href="deals.html">ดีล</a>
-        <a href="#search">ค้นหาโรงแรม</a>
         <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
         <a href="privacy.html">Privacy</a>
         <a href="terms.html">Terms</a>
+        <a href="contact.html">Contact</a>
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Facebook</a>
       </nav>
     </div>
   </header>
 
-  <section class="hero">
-    <h1>จองทริปง่าย แค่คลิกเดียว</h1>
-    <p>เปรียบเทียบราคาโรงแรมจากหลายเจ้า แล้วคลิกไปจองได้ทันที</p>
-    <div>
-      <a class="btn btn-primary" href="#search">เริ่มค้นหาโรงแรม</a>
-      <a class="btn btn-secondary" href="deals.html">ดูดีลล่าสุด</a>
-    </div>
-  </section>
-
-  <!-- ค้นหาโรงแรม -->
-  <section id="search">
-    <div class="container">
-      <h2>ค้นหาโรงแรม</h2>
-      <div class="widget-box">
+  <main class="container">
+    <!-- ค้นหาโรงแรม (อยู่บนสุด) -->
+    <section style="margin:24px 0">
+      <h2 style="margin:10px 0 14px;font-size:clamp(20px,3vw,28px)">ค้นหาโรงแรม</h2>
+      <div style="border:2px dashed #ccc;border-radius:10px;background:#f9f9f9;padding:18px">
         <div id="agoda-search-widget"></div>
-        <p style="color:#666;font-size:14px;margin-top:4px">
-          วางโค้ด Agoda Search Box/Widget ที่นี่เมื่อได้รับจาก Agoda Partner Portal
-        </p>
-
-        <!-- ฟอร์มจำลองไว้ก่อน -->
-        <form class="search-form" onsubmit="return false;">
-          <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่">
-          <input type="date">
-          <input type="date">
-          <button type="button" class="btn btn-secondary" onclick="location.href='deals.html'">ค้นหา</button>
+        <p style="color:#666;font-size:14px">วางโค้ด Agoda/Booking Search Box ที่นี่เมื่อได้รับจาก Partner Portal</p>
+        <form class="search-form" style="display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr auto;margin-top:10px">
+          <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่" />
+          <input type="date" />
+          <input type="date" />
+          <button type="button" class="btn">ค้นหา</button>
         </form>
-        <p style="font-size:12px;color:#999;margin-top:8px;">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติ</p>
+        <p style="font-size:12px;color:#999;margin-top:8px;">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Partner อนุมัติ</p>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ปลายทางยอดนิยม (ในประเทศ) -->
-  <section id="popular-destinations">
-    <div class="container">
-      <h2>ปลายทางยอดนิยม</h2>
-      <p class="text-center">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมของไทย</p>
-      <div class="chips" style="margin-top:16px">
-        <a href="bangkok.html" class="chip-btn">กรุงเทพฯ</a>
-        <a href="chiangmai.html" class="chip-btn">เชียงใหม่</a>
-        <a href="pattaya.html" class="chip-btn">พัทยา</a>
-        <a href="phuket.html" class="chip-btn">ภูเก็ต</a>
-        <a href="krabi.html" class="chip-btn">กระบี่</a>
-        <a href="hua-hin.html" class="chip-btn">หัวหิน</a>
+    <!-- ปลายทางยอดนิยม (ไทย) -->
+    <section style="margin:34px 0 10px">
+      <h2 style="text-align:center;font-size:clamp(22px,3vw,30px)">ปลายทางยอดนิยม</h2>
+      <p style="text-align:center;color:#666;margin:6px 0 16px">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมของไทย</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center">
+        <a class="btn" href="bangkok.html">กรุงเทพฯ</a>
+        <a class="btn" href="chiangmai.html">เชียงใหม่</a>
+        <a class="btn" href="pattaya.html">พัทยา</a>
+        <a class="btn" href="phuket.html">ภูเก็ต</a>
+        <a class="btn" href="krabi.html">กระบี่</a>
+        <a class="btn" href="huahin.html">หัวหิน</a>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- เมืองยอดฮิตในต่างประเทศ -->
-  <section id="intl-destinations">
-    <div class="container">
-      <h2>เมืองยอดฮิตในต่างประเทศ</h2>
-      <p class="text-center">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมในต่างประเทศ</p>
-      <div class="chips" style="margin-top:16px">
-        <a href="tokyo.html" class="chip-btn">โตเกียว</a>
-        <a href="seoul.html" class="chip-btn">โซล</a>
-        <a href="singapore.html" class="chip-btn">สิงคโปร์</a>
-        <a href="hongkong.html" class="chip-btn">ฮ่องกง</a>
-        <a href="london.html" class="chip-btn">ลอนดอน</a>
-        <a href="paris.html" class="chip-btn">ปารีส</a>
+    <!-- ปลายทางต่างประเทศ -->
+    <section style="margin:28px 0 8px">
+      <h2 style="text-align:center;font-size:clamp(22px,3vw,30px)">เมืองยอดฮิตในต่างประเทศ</h2>
+      <p style="text-align:center;color:#666;margin:6px 0 16px">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมในต่างประเทศ</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center">
+        <a class="btn" href="tokyo.html">โตเกียว</a>
+        <a class="btn" href="seoul.html">โซล</a>
+        <a class="btn" href="singapore.html">สิงคโปร์</a>
+        <a class="btn" href="hongkong.html">ฮ่องกง</a>
+        <a class="btn" href="kualalumpur.html">กัวลาลัมเปอร์</a>
+        <a class="btn" href="bali.html">บาหลี</a>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ทำไมต้อง Click & Go -->
-  <section>
-    <div class="container">
-      <h2>ทำไมต้อง Click & Go</h2>
-      <div class="features">
-        <div class="feature">
+    <!-- ทำไมต้อง Click & Go -->
+    <section style="margin:34px 0">
+      <h2 style="text-align:center;font-size:clamp(22px,3vw,30px)">ทำไมต้อง Click & Go</h2>
+      <div class="features" style="display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-top:10px">
+        <div class="feature" style="flex:1 1 220px;max-width:260px">
           <h3>เปรียบเทียบหลายเจ้า</h3>
-          <p>ดูราคา/โปรจากท่องเที่ยวหลายเว็บไซต์ในที่เดียว</p>
+          <p>ดูราคา/โปรจากหลายเว็บไซต์ในที่เดียว</p>
         </div>
-        <div class="feature">
+        <div class="feature" style="flex:1 1 220px;max-width:260px">
           <h3>คลิกเดียวไปจอง</h3>
-          <p>ลิงก์ตรงไปหน้าโรงแรมบนพาร์ทเนอร์โดยตรง</p>
+          <p>ลิงก์ตรงไปหน้าโรงแรมบนพาร์ทเนอร์ได้ทันที</p>
         </div>
-        <div class="feature">
+        <div class="feature" style="flex:1 1 220px;max-width:260px">
           <h3>รองรับมือถือ</h3>
           <p>ออกแบบให้ใช้งานง่าย ทุกหน้าจอ</p>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
-  <footer>
-    © <script>document.write(new Date().getFullYear())</script> Click & Go |
-    <a href="privacy.html">Privacy</a> |
-    <a href="terms.html">Terms</a> |
-    <a href="about.html">About</a> |
-    <a href="contact.html">Contact</a> |
-    <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Facebook</a>
-    <div style="font-size:12px;color:#999;margin-top:6px">
-      * ระบบค้นหาจะใช้งานได้จริงเมื่อ Agoda อนุมัติการเป็นพันธมิตร
+  <footer style="border-top:1px solid #eee;background:#fff;margin-top:32px">
+    <div class="container" style="padding:16px 16px 24px;text-align:center;color:#666;font-size:14px">
+      © <script>document.write(new Date().getFullYear())</script> Click & Go —
+      <a href="privacy.html">Privacy</a> ·
+      <a href="terms.html">Terms</a> ·
+      <a href="contact.html">Contact</a> ·
+      <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Facebook</a>
     </div>
   </footer>
+
+  <!-- Placeholder images (ใช้ได้ทุกหน้า) -->
+  <script>
+    const PLACEHOLDER_IMG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">
+        <rect width="100%" height="100%" fill="#eaeaea"/>
+        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+              font-family="Arial, sans-serif" font-size="48" fill="#9aa0a6">Photo</text>
+      </svg>
+    `);
+    document.querySelectorAll('img[data-placeholder]').forEach(img => {
+      if (!img.getAttribute('src')) img.src = PLACEHOLDER_IMG;
+    });
+    window.addEventListener('error', e => {
+      const el = e.target;
+      if (el && el.tagName === 'IMG') { el.onerror = null; el.src = PLACEHOLDER_IMG; }
+    }, true);
+  </script>
 </body>
 </html>
-
 
