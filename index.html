@@ -5,21 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Click & Go - Travel Meta-Search</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-
   <!-- Canonical -->
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/">
-
   <!-- JSON-LD: Organization -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Click & Go",
-    "url": "https://click-and-go-navy.vercel.app/",
-    "logo": "https://click-and-go-navy.vercel.app/logo.png",
-    "sameAs": ["https://web.facebook.com/clickandgothailand"]
-  }
+  {"@context":"https://schema.org","@type":"Organization","name":"Click & Go","url":"https://click-and-go-navy.vercel.app/","logo":"https://click-and-go-navy.vercel.app/logo.png","sameAs":["https://web.facebook.com/clickandgothailand"]}
   </script>
+  <!-- Preload LCP image -->
+  <link rel="preload" as="image" href="hero-bg.jpg">
 
   <style>
     body { margin: 0; font-family: Arial, sans-serif; color: #333; }
@@ -27,6 +20,9 @@
     header img { height: 40px; }
     nav a { margin-left: 15px; text-decoration: none; color: #333; font-weight: bold; }
     .hero { position: relative; height: 400px; background: url('hero-bg.jpg') center center/cover no-repeat; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #fff; }
+    /* Overlay ให้ตัวหนังสืออ่านง่าย */
+    .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.35))}
+    .hero > *{position:relative}
     .hero h1 { font-size: 2.5rem; margin: 0 0 10px; text-shadow: 1px 1px 4px rgba(0,0,0,0.5); }
     .hero p { font-size: 1.2rem; margin: 0 0 20px; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); }
     .btn { padding: 10px 20px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; }
@@ -44,7 +40,7 @@
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Click & Go">
+    <img src="logo.png" alt="Click & Go" decoding="async">
     <nav>
       <a href="deals.html">ดีล</a>
       <a href="#search">ค้นหาโรงแรม</a>
@@ -100,4 +96,3 @@
   </footer>
 </body>
 </html>
-
