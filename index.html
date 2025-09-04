@@ -21,7 +21,7 @@
   <meta name="twitter:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
   <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
 
-  <!-- JSON-LD: WebSite + SearchAction -->
+  <!-- JSON-LD -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -37,7 +37,6 @@
   </script>
 
   <link rel="icon" href="favicon.ico">
-  <link rel="preload" as="image" href="hero-bg.jpg">
   <link rel="stylesheet" href="style.css">
 
   <!-- GA4 -->
@@ -51,7 +50,7 @@
 </head>
 <body>
   <!-- Header -->
-  <header>
+  <header class="site-header">
     <div class="inner">
       <a href="index.html" class="brand">
         <img src="logo.png" alt="Click & Go" height="34" loading="lazy">
@@ -69,20 +68,22 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
+  <!-- HERO: ใช้พื้นหลัง ไม่ใช้ <img> -->
   <section class="hero">
     <div class="hero-inner">
       <h1>จองโรงแรมง่าย แค่คลิกเดียว</h1>
       <p>เปรียบเทียบราคาโรงแรมจากหลายเจ้า แล้วคลิกไปจองได้ทันที</p>
-      <a href="#search" class="btn btn-primary">เริ่มค้นหาโรงแรม</a>
-      <a href="deals.html" class="btn btn-outline">ดูดีลพิเศษ</a>
+      <div class="hero-actions">
+        <a href="#search" class="btn btn-primary">เริ่มค้นหาโรงแรม</a>
+        <a href="deals.html" class="btn btn-outline">ดูดีลพิเศษ</a>
+      </div>
     </div>
   </section>
 
   <main class="container">
     <!-- ค้นหาโรงแรม -->
-    <section id="search" style="margin:24px 0">
-      <h2 style="margin:10px 0 14px">ค้นหาโรงแรม</h2>
+    <section id="search" class="section">
+      <h2>ค้นหาโรงแรม</h2>
       <div class="widget-box">
         <div id="agoda-search-widget" aria-label="กล่องค้นหาโรงแรมจากพาร์ทเนอร์"></div>
         <p class="muted">วางโค้ด Agoda/Booking Search Box ที่นี่เมื่อได้รับจาก Partner Portal</p>
@@ -92,17 +93,17 @@
           <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่" aria-label="ปลายทาง">
           <input type="date" aria-label="เช็คอิน">
           <input type="date" aria-label="เช็คเอาท์">
-          <button type="button" class="btn btn-secondary">ค้นหา</button>
+          <button type="button" class="btn btn-primary">ค้นหา</button>
         </form>
-        <p class="fine-print">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Partner อนุมัติ</p>
+        <p class="note">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Partner อนุมัติ</p>
       </div>
     </section>
 
     <!-- ปลายทางยอดนิยม (ไทย) -->
-    <section>
+    <section class="section">
       <h2>ปลายทางยอดนิยม</h2>
-      <p>สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมของไทย</p>
-      <div class="destinations">
+      <p class="sub">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมของไทย</p>
+      <div class="pill-group">
         <a class="btn pill" href="bangkok.html">กรุงเทพฯ</a>
         <a class="btn pill" href="chiangmai.html">เชียงใหม่</a>
         <a class="btn pill" href="pattaya.html">พัทยา</a>
@@ -113,10 +114,10 @@
     </section>
 
     <!-- เมืองยอดฮิตต่างประเทศ -->
-    <section>
+    <section class="section">
       <h2>เมืองยอดฮิตในต่างประเทศ</h2>
-      <p>สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมในต่างประเทศ</p>
-      <div class="destinations">
+      <p class="sub">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมในต่างประเทศ</p>
+      <div class="pill-group">
         <a class="btn pill" href="tokyo.html">โตเกียว</a>
         <a class="btn pill" href="seoul.html">โซล</a>
         <a class="btn pill" href="singapore.html">สิงคโปร์</a>
@@ -126,8 +127,8 @@
       </div>
     </section>
 
-    <!-- ทำไมต้อง Click & Go -->
-    <section>
+    <!-- จุดเด่น -->
+    <section class="section">
       <h2>ทำไมต้อง Click & Go</h2>
       <div class="features">
         <div class="feature">
@@ -146,17 +147,19 @@
     </section>
   </main>
 
-  <footer>
+  <footer class="site-footer">
     <div class="container footer-inner">
-      © <script>document.write(new Date().getFullYear())</script> Click & Go ·
-      <a href="privacy.html">Privacy</a> ·
-      <a href="terms.html">Terms</a> ·
-      <a href="contact.html">Contact</a> ·
-      <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      <div>© <script>document.write(new Date().getFullYear())</script> Click & Go</div>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="contact.html">Contact</a>
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
     </div>
   </footer>
 
-  <!-- Placeholder image (เผื่อใช้ในหน้าอื่น) -->
+  <!-- Placeholder image fallback -->
   <script>
     const PLACEHOLDER_IMG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
       <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">
