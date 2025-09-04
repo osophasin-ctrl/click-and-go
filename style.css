@@ -186,4 +186,76 @@ footer a {
 footer a:hover {
   color: #00796b;
 }
+/* =======================
+   Header (layout base)
+   ======================= */
+.site-header{
+  background:#fff;
+  border-bottom:1px solid #e5e7eb;
+}
+.site-header .inner.container{
+  max-width:1200px;
+  margin:0 auto;
+  padding:10px 16px;
+}
+.main-nav a{
+  color:#333;
+  text-decoration:none;
+  font-weight:600;
+}
+.main-nav a:hover{ color:#0b7a6e; }
+
+/* =======================
+   Language popup
+   ======================= */
+.lang{ position:relative; }
+.lang-btn{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+  line-height:1.2;
+}
+.lang-btn:hover{ background:#f9fafb; }
+
+.lang-popup{
+  position:absolute;
+  top:calc(100% + 8px);
+  right:0;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  box-shadow:0 10px 20px rgba(0,0,0,.08);
+  border-radius:10px;
+  min-width:160px;
+  padding:6px;
+  display:none;
+  z-index:1000;
+}
+.lang-popup.show{ display:block; }
+
+.lang-item{
+  width:100%;
+  text-align:left;
+  background:transparent;
+  border:0;
+  padding:10px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+}
+.lang-item:hover{ background:#f3f4f6; }
+
+/* =======================
+   Footer links (bold first row)
+   ======================= */
+.site-footer .footer-links a{
+  font-weight:700;
+  color:#333;
+}
+.site-footer .footer-links a:hover{
+  color:#0b7a6e;
+}
+
 
