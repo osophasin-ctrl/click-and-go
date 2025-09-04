@@ -4,51 +4,55 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>โปรโมชั่นโรงแรม – Click & Go</title>
-  <meta name="description" content="รวมโปรโมชั่นโรงแรมแนะนำจาก Click & Go คัดสรรดีลพิเศษจากพาร์ทเนอร์" />
+  <meta name="description" content="รวมโปรโมชั่นโรงแรมแนะนำจาก Click & Go คัดสรรดีลพิเศษจากพาร์ทเนอร์ OTA พร้อมปุ่มจองทันที" />
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Header include -->
   <div id="header"></div>
 
   <main class="container">
     <section class="section">
       <h1 class="section-title">โปรโมชั่นโรงแรมแนะนำ</h1>
-      <p class="muted">* ตัวอย่างดีลเพื่อจัดวางเลย์เอาต์ — เมื่อได้รับลิงก์ Affiliate จาก Agoda/Booking แล้ว สามารถใส่ลิงก์ “จองเลย” ได้ทันที</p>
+      <p class="muted">* ตัวอย่างเลย์เอาต์ — เมื่อได้รับลิงก์ Affiliate จาก Agoda/Booking แล้ว นำลิงก์ไปแทนที่ปุ่ม “จองเลย” ได้ทันที</p>
 
       <div class="grid-cards">
+        <!-- Card 1 -->
         <article class="card">
-          <img src="https://picsum.photos/seed/h1/800/500" alt="Hotel Deal 1" loading="lazy">
+          <img src="https://picsum.photos/seed/cg-101/800/500" alt="Hotel Deal 1" loading="lazy">
           <div class="card-body">
             <h3>โรงแรมตัวอย่าง 1</h3>
-            <p class="muted">ทำเลดี ใกล้รถไฟฟ้า ราคาเริ่มต้นเพียง 1,200 บาท/คืน</p>
+            <p class="muted">ทำเลดี ใกล้รถไฟฟ้า เริ่มต้น 1,200 บาท/คืน</p>
             <div class="card-foot">
               <div class="price">฿1,200 / คืน</div>
-              <a href="#" class="btn btn-primary">จองเลย</a>
+              <a href="#" class="btn btn-primary" rel="nofollow">จองเลย</a>
             </div>
           </div>
         </article>
 
+        <!-- Card 2 -->
         <article class="card">
-          <img src="https://picsum.photos/seed/h2/800/500" alt="Hotel Deal 2" loading="lazy">
+          <img src="https://picsum.photos/seed/cg-102/800/500" alt="Hotel Deal 2" loading="lazy">
           <div class="card-body">
             <h3>โรงแรมตัวอย่าง 2</h3>
-            <p class="muted">วิวทะเลสวยงาม ราคาเริ่มต้นเพียง 1,800 บาท/คืน</p>
+            <p class="muted">วิวทะเลสวยงาม เริ่มต้น 1,800 บาท/คืน</p>
             <div class="card-foot">
               <div class="price">฿1,800 / คืน</div>
-              <a href="#" class="btn btn-primary">จองเลย</a>
+              <a href="#" class="btn btn-primary" rel="nofollow">จองเลย</a>
             </div>
           </div>
         </article>
 
+        <!-- Card 3 -->
         <article class="card">
-          <img src="https://picsum.photos/seed/h3/800/500" alt="Hotel Deal 3" loading="lazy">
+          <img src="https://picsum.photos/seed/cg-103/800/500" alt="Hotel Deal 3" loading="lazy">
           <div class="card-body">
             <h3>โรงแรมตัวอย่าง 3</h3>
-            <p class="muted">ใจกลางเมือง เดินทางสะดวก ราคาเริ่มต้น 900 บาท/คืน</p>
+            <p class="muted">ใจกลางเมือง เดินทางสะดวก เริ่มต้น 900 บาท/คืน</p>
             <div class="card-foot">
               <div class="price">฿900 / คืน</div>
-              <a href="#" class="btn btn-primary">จองเลย</a>
+              <a href="#" class="btn btn-primary" rel="nofollow">จองเลย</a>
             </div>
           </div>
         </article>
@@ -56,12 +60,23 @@
     </section>
   </main>
 
+  <!-- Footer include -->
   <div id="footer"></div>
 
-  <!-- โหลดส่วนกลาง -->
+  <!-- Include header/footer -->
   <script>
-    async function loadPart(id, file){const el=document.getElementById(id);if(!el)return;try{const r=await fetch(file,{cache:"no-store"});el.innerHTML=await r.text();if(id==='header'){const btn=el.querySelector('.lang-btn');const menu=el.querySelector('.lang-menu');if(btn&&menu){btn.addEventListener('click',()=>{const o=menu.classList.toggle('open');btn.setAttribute('aria-expanded',o?'true':'false');});document.addEventListener('click',e=>{if(!e.target.closest('.lang')){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}});}const links=el.querySelectorAll('.main-nav a[href]');links.forEach(a=>{if(location.pathname.endsWith(a.getAttribute('href'))||(location.pathname.endsWith('/')&&a.getAttribute('href')==='index.html')){a.setAttribute('aria-current','page');}})}}catch(e){console.error('Load part failed:',file,e)}}
-    loadPart('header','header.html'); loadPart('footer','footer.html');
+    async function includeHTML(targetId, file) {
+      const el = document.getElementById(targetId);
+      if (!el) return;
+      try {
+        const res = await fetch(file, { cache: 'no-cache' });
+        el.innerHTML = await res.text();
+      } catch (e) {
+        console.error('Include failed:', file, e);
+      }
+    }
+    includeHTML('header', 'header.html');
+    includeHTML('footer', 'footer.html');
   </script>
 </body>
 </html>
