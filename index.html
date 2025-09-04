@@ -21,7 +21,7 @@
   <meta name="twitter:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
   <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
 
-  <!-- JSON-LD: WebSite + SearchAction -->
+  <!-- JSON-LD -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -37,7 +37,8 @@
   </script>
 
   <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="style.css">
+  <!-- ใส่ version กันแคช -->
+  <link rel="stylesheet" href="style.css?v=3">
 
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
@@ -49,7 +50,7 @@
   </script>
 </head>
 <body>
-  <!-- ===== Header (รุ่นใหม่) ===== -->
+  <!-- ===== Header ===== -->
   <header class="site-header">
     <div class="inner">
       <a href="index.html" class="brand">
@@ -65,7 +66,6 @@
           <button type="button" aria-haspopup="listbox" aria-expanded="false">
             ภาษา <span aria-hidden="true">▾</span>
           </button>
-          <!-- เมนูภาษา (เตรียมไว้สำหรับอนาคต) -->
           <ul class="lang-menu" role="listbox">
             <li role="option" aria-selected="true">ไทย</li>
             <li role="option" aria-selected="false">English (เร็ว ๆ นี้)</li>
@@ -75,18 +75,15 @@
     </div>
   </header>
 
+  <!-- ให้เนื้อหาทุกส่วนจัดกึ่งกลางผ่าน .container -->
   <main class="container">
-    <!-- ===== Hero (ใช้ภาพเดิม + ย่อความสูง) ===== -->
     <section class="hero" role="img" aria-label="Click & Go background"></section>
 
-    <!-- ===== ค้นหาโรงแรม (เหมือนเวอร์ชันก่อน) ===== -->
     <section class="section">
       <h2>ค้นหาโรงแรม</h2>
       <div class="widget-box">
         <div id="agoda-search-widget" aria-label="กล่องค้นหาโรงแรมจากพาร์ทเนอร์"></div>
         <p class="muted">วางโค้ด Agoda/Booking Search Box ที่นี่เมื่อได้รับจาก Partner Portal</p>
-
-        <!-- ฟอร์มจำลอง -->
         <form class="search-form" role="search" aria-label="ค้นหาโรงแรมจำลอง">
           <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่" aria-label="ปลายทาง">
           <input type="date" aria-label="เช็คอิน">
@@ -97,7 +94,6 @@
       </div>
     </section>
 
-    <!-- ===== ปลายทางยอดนิยม (ไทย) ===== -->
     <section class="section">
       <h2>ปลายทางยอดนิยม</h2>
       <p class="section-sub">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมของไทย</p>
@@ -111,7 +107,6 @@
       </div>
     </section>
 
-    <!-- ===== เมืองยอดฮิตต่างประเทศ ===== -->
     <section class="section">
       <h2>เมืองยอดฮิตในต่างประเทศ</h2>
       <p class="section-sub">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมในต่างประเทศ</p>
@@ -125,7 +120,6 @@
       </div>
     </section>
 
-    <!-- ===== ทำไมต้อง Click & Go ===== -->
     <section class="section">
       <h2>ทำไมต้อง Click & Go</h2>
       <div class="features">
@@ -145,7 +139,6 @@
     </section>
   </main>
 
-  <!-- ===== Footer (คงเดิม) ===== -->
   <footer class="site-footer">
     <div class="container footer-inner">
       © <script>document.write(new Date().getFullYear())</script> Click & Go ·
@@ -156,21 +149,8 @@
     </div>
   </footer>
 
-  <!-- ปิด error รูปภาพ (หากหน้าอื่น ๆ โหลดไม่ได้ให้ใส่ Placeholder) -->
   <script>
-    const PLACEHOLDER_IMG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">
-        <rect width="100%" height="100%" fill="#eaeaea"/>
-        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
-              font-family="Arial, sans-serif" font-size="48" fill="#9aa0a6">Photo</text>
-      </svg>
-    `);
-    window.addEventListener('error', e => {
-      const el = e.target;
-      if (el && el.tagName === 'IMG') { el.onerror = null; el.src = PLACEHOLDER_IMG; }
-    }, true);
-
-    // เมนูภาษา (โหมดปิด/เปิด)
+    // Toggle เมนูภาษา
     const langBtn = document.querySelector('.lang > button');
     const langMenu = document.querySelector('.lang-menu');
     if (langBtn && langMenu) {
@@ -188,5 +168,4 @@
   </script>
 </body>
 </html>
-
 
