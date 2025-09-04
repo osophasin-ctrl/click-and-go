@@ -8,11 +8,16 @@
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/" />
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
-  <!-- GA4 (ตามเดิม) -->
+  <!-- GA4 (คงเดิม) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1QR2EGFWN3');</script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', 'G-1QR2EGFWN3');
+  </script>
 </head>
 <body>
+  <!-- โหลดส่วนหัวจากไฟล์ include -->
   <div id="header"></div>
 
   <!-- Hero -->
@@ -66,12 +71,61 @@
     </section>
   </main>
 
+  <!-- โหลดส่วนท้ายจากไฟล์ include -->
   <div id="footer"></div>
 
-  <!-- โหลดส่วนกลาง -->
+  <!-- สคริปต์โหลด header/footer (+ กันเคสตั้งชื่อไฟล์ไม่มี .html) -->
   <script>
-    async function loadPart(id, file){const el=document.getElementById(id);if(!el)return;try{const r=await fetch(file,{cache:"no-store"});el.innerHTML=await r.text();if(id==='header'){const btn=el.querySelector('.lang-btn');const menu=el.querySelector('.lang-menu');if(btn&&menu){btn.addEventListener('click',()=>{const o=menu.classList.toggle('open');btn.setAttribute('aria-expanded',o?'true':'false');});document.addEventListener('click',e=>{if(!e.target.closest('.lang')){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}});}const links=el.querySelectorAll('.main-nav a[href]');links.forEach(a=>{if(location.pathname.endsWith(a.getAttribute('href'))||(location.pathname.endsWith('/')&&a.getAttribute('href')==='index.html')){a.setAttribute('aria-current','page');}})}}catch(e){console.error('Load part failed:',file,e)}}
-    loadPart('header','header.html'); loadPart('footer','footer.html');
+    async function tryFetch(url) {
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) throw new Error(res.status);
+        return await res.text();
+      } catch (e) {
+        return null;
+      }
+    }
+
+    async function loadPart(id, preferred, fallback) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const html = await tryFetch(preferred) ?? await tryFetch(fallback);
+      if (html) {
+        el.innerHTML = html;
+
+        // เมื่อโหลด header เสร็จ: ตั้ง dropdown ภาษา + ไฮไลต์เมนูปัจจุบัน
+        if (id === 'header') {
+          const btn = el.querySelector('.lang-btn');
+          const menu = el.querySelector('.lang-menu');
+          if (btn && menu) {
+            btn.addEventListener('click', () => {
+              const open = menu.classList.toggle('open');
+              btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+            document.addEventListener('click', (e) => {
+              if (!e.target.closest('.lang')) {
+                menu.classList.remove('open');
+                btn.setAttribute('aria-expanded','false');
+              }
+            });
+          }
+          const links = el.querySelectorAll('.main-nav a[href]');
+          links.forEach(a => {
+            const href = a.getAttribute('href');
+            if (location.pathname.endsWith(href) ||
+                (location.pathname.endsWith('/') && href === 'index.html')) {
+              a.setAttribute('aria-current', 'page');
+            }
+          });
+        }
+      } else {
+        console.warn('ไม่พบไฟล์ส่วนกลาง:', preferred, 'หรือ', fallback);
+      }
+    }
+
+    // ถ้าคุณสร้างไฟล์ชื่อ "header" / "footer" (ไม่มี .html) ก็จะพยายามโหลดชื่อนั้นก่อน
+    loadPart('header', 'header.html', 'header');
+    loadPart('footer', 'footer.html', 'footer');
   </script>
 </body>
 </html>
