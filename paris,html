@@ -1,40 +1,21 @@
-<!doctype html>
-<html lang="th">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>โรงแรมปารีส - Click & Go</title>
-  <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="style.css">
-</head>
+<!doctype html><html lang="th"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>โรงแรมในปารีส – Click & Go</title>
+<meta name="description" content="ดีลโรงแรมปารีส เมืองโรแมนติกริมแม่น้ำแซน แฟชั่น อาหาร และพิพิธภัณฑ์ระดับโลก">
+<link rel="canonical" href="https://click-and-go-navy.vercel.app/paris.html">
+<link rel="icon" href="favicon.ico"><link rel="stylesheet" href="style.css"></head>
 <body>
-  <header>
-    <div class="container">
-      <img src="logo.png" alt="Click & Go">
-      <nav>
-        <a href="index.html">หน้าแรก</a>
-        <a href="deals.html">ดีล</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-        <a href="https://web.facebook.com/clickandgothailand" target="_blank">Facebook</a>
-      </nav>
-    </div>
-  </header>
-
-  <section class="hero">
-    <h1>โรงแรมในปารีส</h1>
-    <p>เมืองแห่งแฟชั่นและศิลปะ โรแมนติกทุกมุม</p>
-  </section>
-
-  <section>
-    <div class="container">
-      <h2>ค้นหาโรงแรมในปารีส</h2>
-      <div class="widget-box">
-        <p>* วางโค้ด Agoda Widget สำหรับ “Paris” ที่นี่</p>
-      </div>
-    </div>
-  </section>
-
-  <footer>© <script>document.write(new Date().getFullYear())</script> Click & Go</footer>
-</body>
-</html>
+<header class="site-header"><div class="inner">
+  <a href="index.html" class="brand"><img src="logo.png" height="34" alt=""><span>Click & Go</span></a>
+  <nav class="main-nav"><a href="index.html">หน้าแรก</a><a href="deals.html">ดีล</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a><a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a></nav>
+</div></header>
+<section class="hero hero--sm"><div class="hero-inner"><h1>ปารีส</h1><p>แฟชั่นและศิลปะชื่อดัง คาเฟ่สวย และแลนด์มาร์กมากมาย</p></div></section>
+<main class="container section"><h2>ดีลโรงแรมในปารีส</h2>
+<div class="cards">
+  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>ใกล้หอไอเฟล</h3><p class="muted">เริ่มต้น €140 / คืน</p><div class="card-foot"><div class="price">€140 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
+  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>เลอมาเรส์</h3><p class="muted">เริ่มต้น €120 / คืน</p><div class="card-foot"><div class="price">€120 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
+  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>ซานต์แชร์แมง</h3><p class="muted">เริ่มต้น €135 / คืน</p><div class="card-foot"><div class="price">€135 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
+</div>
+<p class="note">* ปุ่มจองเป็นตัวอย่าง รอแทนที่ด้วยลิงก์ Affiliate</p></main>
+<footer class="site-footer"><div class="container footer-inner"><div>© <script>document.write(new Date().getFullYear())</script> Click & Go</div><div class="footer-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a></div></div></footer>
+</body></html>
