@@ -1,27 +1,82 @@
-<footer class="site-footer" role="contentinfo">
-  <div class="container">
-    
-    <!-- บรรทัดลิงก์ -->
-    <div class="footer-links">
-      <strong>
-        <a href="privacy.html">Privacy</a> ·
-        <a href="terms.html">Terms</a> ·
-        <a href="disclosure.html">Affiliate Disclosure</a> ·
-        <a href="contact.html">Contact</a> ·
-        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
-      </strong>
-    </div>
+<footer class="site-footer" role="contentinfo" style="border-top:1px solid #e5e7eb;background:#fff">
+  <div class="container" style="max-width:1200px;margin:0 auto;padding:18px 16px;text-align:center;color:#333">
+
+    <!-- แถวลิงก์ชั้นบน (ตัวหนา) -->
+    <p class="footer-links" style="margin:0 0 8px 0;">
+      <a href="privacy.html">Privacy</a>
+      &nbsp;·&nbsp;
+      <a href="terms.html">Terms</a>
+      &nbsp;·&nbsp;
+      <a href="affiliate-disclosure.html">Affiliate Disclosure</a>
+      &nbsp;·&nbsp;
+      <a href="contact.html">Contact</a>
+      &nbsp;·&nbsp;
+      <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+    </p>
 
     <!-- เว้น 1 บรรทัด -->
-    <br>
+    <div style="height:8px;"></div>
 
-    <!-- บรรทัดข้อมูลบริษัท -->
-    <div class="footer-info">
-      <strong>Click &amp; Go</strong><br>
-      © <script>document.write(new Date().getFullYear())</script> Click & Go. All rights reserved.<br>
-      <strong>Click &amp; Go OTA (Thailand) Co., Ltd.</strong><br>
-      เลขทะเบียนนิติบุคคล: 0105562054689
-    </div>
-
+    <!-- เนื้อหาชั้นล่าง -->
+    <p style="margin:0;font-weight:700;">Click & Go</p>
+    <p style="margin:4px 0;">© Click & Go. All rights reserved.</p>
+    <p style="margin:0;">
+      Click & Go OTA (Thailand) Co., Ltd.
+    </p>
+    <p style="margin:0;">เลขทะเบียนนิติบุคคล 0105562054689</p>
   </div>
+
+  <!-- Language popup script -->
+  <script>
+    (function () {
+      const btn = document.getElementById('langBtn');
+      const popup = document.getElementById('langPopup');
+
+      if (!btn || !popup) return;
+
+      function openPopup() {
+        popup.classList.add('show');
+        btn.setAttribute('aria-expanded', 'true');
+        popup.setAttribute('aria-hidden', 'false');
+      }
+      function closePopup() {
+        popup.classList.remove('show');
+        btn.setAttribute('aria-expanded', 'false');
+        popup.setAttribute('aria-hidden', 'true');
+      }
+
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        popup.classList.contains('show') ? closePopup() : openPopup();
+      });
+
+      // คลิกนอก popup เพื่อปิด
+      document.addEventListener('click', function (e) {
+        if (popup.classList.contains('show') && !popup.contains(e.target) && e.target !== btn) {
+          closePopup();
+        }
+      });
+
+      // ปิดด้วย Esc
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closePopup();
+      });
+
+      // เก็บค่าภาษา (ยังไม่เปลี่ยนเนื้อหา แค่จำค่ารอไว้)
+      popup.querySelectorAll('.lang-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const lang = el.getAttribute('data-lang') || 'th';
+          try { localStorage.setItem('clickngo_lang', lang); } catch(e){}
+          closePopup();
+          // ถ้าต้องการอัปเดตปุ่มเป็น "ภาษา: ไทย/English" เปิดบรรทัดถัดไป
+          // btn.textContent = lang === 'en' ? 'Language: EN' : 'ภาษา: ไทย';
+        });
+      });
+
+      // โหลดค่าที่เคยเลือกไว้ (ไม่จำเป็นต้องเปลี่ยน label ตามที่คุณต้องการให้แสดงแค่ "ภาษา")
+      // const saved = localStorage.getItem('clickngo_lang') || 'th';
+      // btn.textContent = saved === 'en' ? 'Language: EN' : 'ภาษา';
+    })();
+  </script>
 </footer>
+
