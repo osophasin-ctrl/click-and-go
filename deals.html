@@ -3,38 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ดีลโรงแรม – Click & Go</title>
-  <meta name="description" content="รวมดีลโรงแรมแนะนำ ปุ่มจองเชื่อมไปยังพาร์ทเนอร์ OTA เช่น Booking.com, Agoda" />
-  <link rel="canonical" href="https://click-and-go-navy.vercel.app/deals.html" />
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Click & Go" />
-  <meta property="og:title" content="ดีลโรงแรม – Click & Go" />
-  <meta property="og:description" content="ดีลโรงแรมแนะนำ อัปเดต และลิงก์ไปจองบนพาร์ทเนอร์โดยตรง" />
-  <meta property="og:url" content="https://click-and-go-navy.vercel.app/deals.html" />
-  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="ดีลโรงแรม – Click & Go" />
-  <meta name="twitter:description" content="ดีลโรงแรมแนะนำ อัปเดต และลิงก์ไปจองบนพาร์ทเนอร์โดยตรง" />
-  <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
-
+  <title>ดีลโรงแรมแนะนำ – Click & Go</title>
+  <meta name="description" content="รวมดีลโรงแรมแนะนำจากพาร์ทเนอร์ พร้อมลิงก์ไปจองในคลิกเดียว" />
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Header -->
-  <header>
+  <header class="site-header">
     <div class="inner">
-      <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+      <a href="index.html" class="brand">
         <img src="logo.png" alt="Click & Go" height="34" loading="lazy">
-        <span style="font-weight:700;color:#333">Click & Go</span>
+        <span>Click & Go</span>
       </a>
-      <nav style="margin-left:auto;display:flex;gap:14px">
+      <nav class="main-nav">
         <a href="index.html">หน้าแรก</a>
-        <a href="deals.html" aria-current="page" style="font-weight:700">ดีล</a>
+        <a href="deals.html" aria-current="page">ดีล</a>
         <a href="about.html">About</a>
         <a href="privacy.html">Privacy</a>
         <a href="terms.html">Terms</a>
@@ -44,89 +27,75 @@
     </div>
   </header>
 
-  <!-- Content -->
-  <main class="container">
-    <h1 class="page-title" style="font-size:clamp(22px,3.2vw,32px);margin:24px 0;">ดีลโรงแรมแนะนำ</h1>
+  <!-- Hero ขนาดเล็ก -->
+  <section class="hero hero--sm">
+    <div class="hero-inner">
+      <h1>ดีลโรงแรมแนะนำ</h1>
+      <p>คัดมาให้แล้ว ทั้งดีลใกล้กรุงและทะเลสำหรับวันหยุดของคุณ</p>
+    </div>
+  </section>
 
-    <section class="deals-grid">
-      <!-- Card 1 — placeholder -->
-      <article class="deal-card">
-        <img class="deal-img img-16x9" data-placeholder alt="ดีลโรงแรม 1">
-        <div class="deal-body">
-          <h3 class="deal-title">โรงแรมตัวอย่าง 1</h3>
-          <p class="deal-sub">ทำเลดี ใกล้รถไฟฟ้า ราคาเริ่มต้นเพียง 1,200 บาท/คืน</p>
-        </div>
-        <div class="deal-footer">
-          <div class="price">฿1,200 / คืน</div>
-          <!-- ใส่ลิงก์ affiliate จริงเมื่อพร้อม -->
-          <a class="btn" href="#" target="_blank" rel="nofollow sponsored noopener">จองเลย</a>
+  <main class="container section">
+    <div class="cards">
+      <!-- Card 1 -->
+      <article class="card">
+        <img src="hero-bg.jpg" alt="Hotel Deal 1" loading="lazy"
+             onerror="this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;1200&quot; height=&quot;800&quot;><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;%23eaeaea&quot;/><text x=&quot;50%&quot; y=&quot;50%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Arial, sans-serif&quot; font-size=&quot;48&quot; fill=&quot;%239aa0a6&quot;>Photo</text></svg>';">
+        <div class="card-body">
+          <h3>โรงแรมตัวอย่าง 1</h3>
+          <p class="muted">ทำเลดี ใกล้รถไฟฟ้า ราคาเริ่มต้นเพียง 1,200 บาท/คืน</p>
+          <div class="card-foot">
+            <div class="price">฿1,200 / คืน</div>
+            <a href="#" class="btn btn-primary">จองเลย</a>
+          </div>
         </div>
       </article>
 
-      <!-- Card 2 — มีรูปจริง -->
-      <article class="deal-card">
-        <img class="deal-img img-16x9"
-             src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop"
-             alt="ดีลโรงแรม 2" loading="lazy">
-        <div class="deal-body">
-          <h3 class="deal-title">โรงแรมตัวอย่าง 2</h3>
-          <p class="deal-sub">วิวทะเลสวยงาม ราคาเริ่มต้นเพียง 1,800 บาท/คืน</p>
-        </div>
-        <div class="deal-footer">
-          <div class="price">฿1,800 / คืน</div>
-          <a class="btn" href="#" target="_blank" rel="nofollow sponsored noopener">จองเลย</a>
+      <!-- Card 2 -->
+      <article class="card">
+        <img src="hero-bg.jpg" alt="Hotel Deal 2" loading="lazy" onerror="this.src=this.src;">
+        <div class="card-body">
+          <h3>โรงแรมตัวอย่าง 2</h3>
+          <p class="muted">วิวทะเลสวยงาม ราคาเริ่มต้นเพียง 1,800 บาท/คืน</p>
+          <div class="card-foot">
+            <div class="price">฿1,800 / คืน</div>
+            <a href="#" class="btn btn-primary">จองเลย</a>
+          </div>
         </div>
       </article>
 
-      <!-- Card 3 — มีรูปจริง -->
-      <article class="deal-card">
-        <img class="deal-img img-16x9"
-             src="https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?q=80&w=1200&auto=format&fit=crop"
-             alt="ดีลโรงแรม 3" loading="lazy">
-        <div class="deal-body">
-          <h3 class="deal-title">โรงแรมตัวอย่าง 3</h3>
-          <p class="deal-sub">ใจกลางเมือง เดินทางสะดวก ราคาเริ่มต้น 900 บาท/คืน</p>
-        </div>
-        <div class="deal-footer">
-          <div class="price">฿900 / คืน</div>
-          <a class="btn" href="#" target="_blank" rel="nofollow sponsored noopener">จองเลย</a>
+      <!-- Card 3 -->
+      <article class="card">
+        <img src="hero-bg.jpg" alt="Hotel Deal 3" loading="lazy" onerror="this.src=this.src;">
+        <div class="card-body">
+          <h3>โรงแรมตัวอย่าง 3</h3>
+          <p class="muted">ใจกลางเมือง เดินทางสะดวก ราคาเริ่มต้น 900 บาท/คืน</p>
+          <div class="card-foot">
+            <div class="price">฿900 / คืน</div>
+            <a href="#" class="btn btn-primary">จองเลย</a>
+          </div>
         </div>
       </article>
-    </section>
+    </div>
 
-    <p style="margin:22px 0 8px;color:#888;font-size:13px">
-      * ตัวอย่างดีลเพื่อจัดวางเลย์เอาต์ — เมื่อได้รับโค้ด Affiliate จาก Agoda/Booking แล้ว นำลิงก์จริงมาใส่ที่ปุ่ม “จองเลย”
+    <p class="note" style="margin-top:14px">
+      * ตัวอย่างดีลเพื่อจัดวางเลย์เอาต์ — เมื่อได้รับลิงก์ Affiliate จาก Agoda / Booking แล้ว
+      นำลิงก์ดังกล่าวมาแทนที่ปุ่ม <em>จองเลย</em>
     </p>
   </main>
 
-  <!-- Footer -->
-  <footer>
-    <div class="container" style="text-align:center">
-      © <script>document.write(new Date().getFullYear())</script> Click & Go —
-      <a href="privacy.html">Privacy</a> ·
-      <a href="terms.html">Terms</a> ·
-      <a href="contact.html">Contact</a> ·
-      <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© <script>document.write(new Date().getFullYear())</script> Click & Go</div>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="contact.html">Contact</a>
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
     </div>
   </footer>
-
-  <!-- Placeholder fallback -->
-  <script>
-    const PLACEHOLDER_IMG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">
-        <rect width="100%" height="100%" fill="#eaeaea"/>
-        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
-              font-family="Arial, sans-serif" font-size="48" fill="#9aa0a6">Photo</text>
-      </svg>
-    `);
-    document.querySelectorAll('img[data-placeholder]').forEach(img => {
-      if (!img.getAttribute('src')) img.src = PLACEHOLDER_IMG;
-    });
-    window.addEventListener('error', e => {
-      const el = e.target;
-      if (el && el.tagName === 'IMG') { el.onerror = null; el.src = PLACEHOLDER_IMG; }
-    }, true);
-  </script>
 </body>
 </html>
+
 
