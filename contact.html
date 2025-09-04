@@ -4,124 +4,107 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ติดต่อเรา – Click & Go</title>
-  <meta name="description" content="ติดต่อทีมงาน Click & Go สำหรับคำถามทั่วไป ความร่วมมือทางธุรกิจ และข้อเสนอแนะ" />
-  <link rel="canonical" href="https://click-and-go-navy.vercel.app/contact.html" />
-  <link rel="icon" href="favicon.ico" />
-  <link rel="stylesheet" href="style.css" />
-  <!-- GA4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-1QR2EGFWN3');
+  <meta name="description" content="ติดต่อทีม Click & Go สำหรับคำถาม ข้อเสนอแนะ หรือความร่วมมือด้าน Affiliate/พาร์ทเนอร์" />
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Contact JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"Click & Go",
+    "url":"https://click-and-go-navy.vercel.app/",
+    "logo":"https://click-and-go-navy.vercel.app/logo.png",
+    "contactPoint":[{
+      "@type":"ContactPoint",
+      "contactType":"customer support",
+      "email":"support@clickandgo.co.th",
+      "availableLanguage":["Thai","English"]
+    }],
+    "sameAs":["https://web.facebook.com/clickandgothailand"]
+  }
   </script>
 </head>
 <body>
+  <!-- Header -->
+  <div id="header-placeholder"></div>
+  <script>
+    fetch("header.html").then(r=>r.text()).then(t=>{document.getElementById("header-placeholder").innerHTML=t;});
+  </script>
 
-<header class="site-header">
-  <div class="inner">
-    <a href="index.html" class="brand">
-      <img src="logo.png" height="34" alt="Click & Go"><span>Click & Go</span>
-    </a>
-    <nav class="main-nav">
-      <a href="index.html">หน้าแรก</a>
-      <a href="deals.html">ดีล</a>
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="contact.html" aria-current="page" class="active">Contact</a>
-      <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
-    </nav>
-  </div>
-</header>
-
-<section class="hero hero--sm">
-  <div class="hero-inner">
+  <main class="container">
     <h1>ติดต่อเรา</h1>
-    <p>ต้องการความช่วยเหลือหรือร่วมเป็นพาร์ทเนอร์? ส่งข้อความถึงเราได้เลย</p>
-  </div>
-</section>
+    <p>มีคำถาม ข้อเสนอแนะ หรืออยากร่วมเป็นพาร์ทเนอร์? ส่งข้อความถึงเราได้ที่นี่ หรืออีเมล <a href="mailto:support@clickandgo.co.th">support@clickandgo.co.th</a></p>
 
-<main class="container section">
-  <div class="grid-2">
-    <div>
-      <h2>ข้อมูลการติดต่อ</h2>
-      <ul class="list-dot">
-        <li>อีเมล: <a href="mailto:support@clickandgo.co.th">support@clickandgo.co.th</a></li>
-        <li>Facebook: <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Click & Go Thailand</a></li>
-      </ul>
-      <p class="muted">
-        * เรายังไม่เก็บข้อมูลการชำระเงินหรือข้อมูลส่วนบุคคลที่ละเอียดอ่อนบนเว็บไซต์นี้  
-        การจองจะดำเนินการบนหน้าพาร์ทเนอร์ที่ได้รับอนุมัติเท่านั้น
-      </p>
-    </div>
+    <div class="grid-cards">
+      <!-- Form -->
+      <div class="card">
+        <div class="card-body">
+          <h3>ส่งข้อความหาเรา</h3>
+          <form id="contactForm">
+            <div style="display:grid;gap:10px;grid-template-columns:1fr 1fr">
+              <input type="text" id="name" placeholder="ชื่อ-นามสกุล" required>
+              <input type="email" id="email" placeholder="อีเมล" required>
+            </div>
+            <input type="text" id="subject" placeholder="หัวข้อ" style="margin-top:10px">
+            <textarea id="message" placeholder="ข้อความ" rows="6" style="width:100%;margin-top:10px"></textarea>
+            <div style="margin-top:10px">
+              <button type="button" class="btn" onclick="sendMail()">ส่งข้อความ</button>
+            </div>
+            <p class="note">* ขณะนี้แบบฟอร์มจะเปิดอีเมลของคุณเพื่อส่งหาเราโดยตรง ระบบยังไม่เก็บข้อมูลบนเซิร์ฟเวอร์</p>
+          </form>
+        </div>
+      </div>
 
-    <div>
-      <div class="card soft">
-        <h3>แบบฟอร์มติดต่อ (สาธิต)</h3>
-        <form class="form" onsubmit="handleContact(event)">
-          <label>ชื่อของคุณ
-            <input type="text" name="name" placeholder="เช่น สมชาย ใจดี" required>
-          </label>
-          <label>อีเมล
-            <input type="email" name="email" placeholder="name@example.com" required>
-          </label>
-          <label>ข้อความ
-            <textarea name="message" rows="5" placeholder="พิมพ์ข้อความของคุณ..." required></textarea>
-          </label>
-          <button class="btn btn-primary" type="submit">ส่งข้อความ</button>
-          <p class="muted small" style="margin-top:6px;">
-            * แบบฟอร์มนี้เป็นตัวอย่าง (Demo) — หากกดส่ง เราจะเปิดอีเมลไคลเอนต์ของคุณเพื่อส่งถึงเรา
-          </p>
-        </form>
+      <!-- Contact Info -->
+      <div class="card">
+        <div class="card-body">
+          <h3>ข้อมูลติดต่อ</h3>
+          <p><strong>อีเมล:</strong> <a href="mailto:support@clickandgo.co.th">support@clickandgo.co.th</a></p>
+          <p><strong>Facebook:</strong> <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Click & Go Thailand</a></p>
+          <p><strong>เวลาทำการ:</strong> จ.-ศ. 09.30–17.30 น. (ยกเว้นวันหยุดนักขัตฤกษ์)</p>
+          <p><strong>ที่อยู่สำหรับติดต่อธุรกิจ:</strong><br>Bang Na Nuea, Bang Na, Bangkok, Thailand</p>
+          <p><a class="btn" href="https://maps.google.com/?q=Bang+Na+Nuea,+Bang+Na,+Bangkok" target="_blank" rel="noopener">เปิดแผนที่</a></p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <hr class="divider">
+    <section style="margin-top:20px">
+      <h2>คำถามที่พบบ่อย</h2>
+      <div class="grid-cards">
+        <div class="card"><div class="card-body">
+          <h3>ฉันจองบน Click & Go ได้เลยไหม?</h3>
+          <p>คุณจะถูกพาไปจองบนเว็บไซต์พาร์ทเนอร์ (เช่น Agoda/Booking.com) ซึ่งเป็นผู้ให้บริการชำระเงินและยืนยันการจองโดยตรง</p>
+        </div></div>
+        <div class="card"><div class="card-body">
+          <h3>มีค่าธรรมเนียมเพิ่มหรือไม่?</h3>
+          <p>ไม่มีค่าธรรมเนียมจาก Click & Go — ราคาและโปรโมชั่นขึ้นกับพาร์ทเนอร์ ณ เวลาที่ค้นหา</p>
+        </div></div>
+        <div class="card"><div class="card-body">
+          <h3>เกิดปัญหาเกี่ยวกับการจอง</h3>
+          <p>กรณีต้องการเปลี่ยนแปลง/ยกเลิก โปรดติดต่อฝ่ายบริการลูกค้าของพาร์ทเนอร์ที่คุณทำการจองไว้โดยตรง</p>
+        </div></div>
+      </div>
+    </section>
+  </main>
 
-  <section>
-    <h2>คำถามที่พบบ่อย</h2>
-    <details class="faq">
-      <summary>เว็บไซต์นี้รับชำระเงินเลยไหม?</summary>
-      <p>ไม่ค่ะ/ครับ การชำระเงินจะเกิดขึ้นบนหน้าพาร์ทเนอร์ (เช่น OTA) ที่คุณคลิกไปจอง</p>
-    </details>
-    <details class="faq">
-      <summary>ฉันจะเห็นราคาแบบเรียลไทม์เมื่อไหร่?</summary>
-      <p>เมื่อได้รับการอนุมัติและติดตั้งวิดเจ็ต/เครื่องมือค้นหาจากพาร์ทเนอร์แล้ว ระบบจะดึงข้อมูลเรียลไทม์ให้โดยอัตโนมัติ</p>
-    </details>
-    <details class="faq">
-      <summary>อยากร่วมเป็นพาร์ทเนอร์ ทำอย่างไร?</summary>
-      <p>ส่งอีเมลมาที่ <a href="mailto:support@clickandgo.co.th">support@clickandgo.co.th</a> พร้อมข้อมูลธุรกิจของคุณ ทีมงานจะติดต่อกลับโดยเร็ว</p>
-    </details>
-  </section>
-</main>
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
+  <script>
+    fetch("footer.html").then(r=>r.text()).then(t=>{document.getElementById("footer-placeholder").innerHTML=t;});
+  </script>
 
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <div>© <script>document.write(new Date().getFullYear())</script> Click & Go</div>
-    <div class="footer-links">
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="contact.html">Contact</a>
-    </div>
-  </div>
-</footer>
-
-<script>
-  // ฟังก์ชันส่งเมลผ่าน mailto: (เดโม่ – ไม่มีการเก็บข้อมูลบนเซิร์ฟเวอร์)
-  function handleContact(e){
-    e.preventDefault();
-    const f = e.target;
-    const name = encodeURIComponent(f.name.value.trim());
-    const email = encodeURIComponent(f.email.value.trim());
-    const msg = encodeURIComponent(f.message.value.trim());
-    const subject = `Contact from ${decodeURIComponent(name)} via Click & Go`;
-    const body = `From: ${decodeURIComponent(name)} (%20${decodeURIComponent(email)}%20)%0D%0A%0D%0A${decodeURIComponent(msg)}`;
-    window.location.href = `mailto:support@clickandgo.co.th?subject=${subject}&body=${body}`;
-  }
-</script>
-
+  <script>
+    function sendMail(){
+      const name = encodeURIComponent(document.getElementById('name').value || '');
+      const email = encodeURIComponent(document.getElementById('email').value || '');
+      const subject = encodeURIComponent(document.getElementById('subject').value || 'Website Contact');
+      const message = encodeURIComponent(document.getElementById('message').value || '');
+      const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0AMessage:%0D%0A${message}`;
+      window.location.href = `mailto:support@clickandgo.co.th?subject=${subject}&body=${body}`;
+    }
+  </script>
 </body>
 </html>
+
