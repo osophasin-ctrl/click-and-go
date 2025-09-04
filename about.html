@@ -3,35 +3,103 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>เกี่ยวกับ – Click & Go</title>
-  <meta name="description" content="เกี่ยวกับ Click & Go – เว็บไซต์เปรียบเทียบราคาโรงแรมและดีลท่องเที่ยว" />
+  <title>เกี่ยวกับเรา – Click & Go</title>
+  <meta name="description" content="เกี่ยวกับ Click & Go แพลตฟอร์มช่วยค้นหาและเปรียบเทียบราคาโรงแรม พร้อมลิงก์จองผ่านพาร์ทเนอร์ OTA อย่างปลอดภัย" />
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
+
+  <!-- Organization JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Click & Go",
+    "url": "https://click-and-go-navy.vercel.app/",
+    "logo": "https://click-and-go-navy.vercel.app/logo.png",
+    "sameAs": ["https://web.facebook.com/clickandgothailand"]
+  }
+  </script>
 </head>
 <body>
-  <div id="header"></div>
+  <!-- Header -->
+  <div id="header-placeholder"></div>
+  <script>
+    fetch("header.html").then(r=>r.text()).then(t=>{document.getElementById("header-placeholder").innerHTML=t;});
+  </script>
 
   <main class="container">
-    <section class="section">
-      <h2 class="section-title">เกี่ยวกับ Click & Go</h2>
+    <h1>เกี่ยวกับ Click & Go</h1>
+    <p>Click & Go คือแพลตฟอร์มที่ช่วยให้คุณ <strong>ค้นหา เปรียบเทียบราคา และคลิกไปจอง</strong> โรงแรมผ่านพาร์ทเนอร์ OTA ชั้นนำได้อย่างรวดเร็วและปลอดภัย เราต้องการให้การวางแผนทริปเป็นเรื่องง่ายสำหรับทุกคน</p>
+
+    <section>
+      <h2>สิ่งที่เราเชื่อและเป้าหมาย</h2>
+      <div class="grid-cards">
+        <div class="card">
+          <div class="card-body">
+            <h3>Simple by Design</h3>
+            <p>ประสบการณ์ผู้ใช้ต้องเรียบง่าย รวดเร็ว และชัดเจน ให้คุณตัดสินใจได้ในไม่กี่คลิก</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h3>Trusted Partners</h3>
+            <p>เราเชื่อมต่อกับ OTA ชั้นนำ เช่น Agoda, Booking.com (ผ่านเครือข่าย Affiliate) เพื่อความมั่นใจเรื่องราคาและบริการ</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h3>Value for Travelers</h3>
+            <p>นำเสนอข้อมูลที่จำเป็น ดีลที่ใช่ และลิงก์ไปจองโดยตรง ช่วยประหยัดเวลาและงบประมาณ</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>ระบบทำงานอย่างไร</h2>
+      <div class="grid-cards">
+        <div class="card"><div class="card-body">
+          <h3>1) ค้นหา</h3>
+          <p>กรอกปลายทางและวันที่เดินทางในช่องค้นหา (หรือเลือกเมืองยอดนิยม)</p>
+        </div></div>
+        <div class="card"><div class="card-body">
+          <h3>2) เปรียบเทียบ</h3>
+          <p>ดูราคาและดีลจากหลายแหล่งข้อมูล/พาร์ทเนอร์ในหน้าเดียว</p>
+        </div></div>
+        <div class="card"><div class="card-body">
+          <h3>3) คลิกเพื่อจอง</h3>
+          <p>กด “จองเลย” ระบบจะพาไปยังหน้าจองของพาร์ทเนอร์ OTA เพื่อทำรายการอย่างปลอดภัย</p>
+        </div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>พาร์ทเนอร์และเครือข่าย</h2>
+      <p>เรากำลังพัฒนาความร่วมมือกับ OTA และเครือข่ายโฆษณาชั้นนำ เพื่อให้คุณได้รับข้อมูลราคาและดีลที่เชื่อถือได้</p>
+      <ul>
+        <li>Agoda Partner Program (อยู่ระหว่างการยืนยัน)</li>
+        <li>Booking.com ผ่านเครือข่าย Awin (สมัครใช้งานแล้ว)</li>
+      </ul>
+      <div style="margin-top:10px">
+        <a class="btn" href="deals.html">ดูโปรโมชั่น</a>
+        <a class="btn" href="contact.html" style="margin-left:8px">ติดต่อเรา</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>นโยบายและข้อกำหนด</h2>
+      <p>เราให้ความสำคัญกับความเป็นส่วนตัวและความโปร่งใสในการใช้งานเว็บไซต์</p>
       <p>
-        Click & Go ก่อตั้งขึ้นเพื่อทำให้การค้นหาและจองโรงแรมเป็นเรื่องง่าย 
-        ผู้ใช้งานสามารถเปรียบเทียบราคาโรงแรมจากหลายแพลตฟอร์ม OTA ได้ในที่เดียว 
-        พร้อมลิงก์ไปจองจริงโดยตรงกับพาร์ทเนอร์ของเรา
-      </p>
-      <p>
-        ภารกิจของเราคือช่วยให้ผู้เดินทางประหยัดเวลาและเงิน 
-        พร้อมทั้งได้ดีลที่ดีที่สุดสำหรับทริปในฝันของคุณ
+        <a href="privacy.html">นโยบายความเป็นส่วนตัว</a> ·
+        <a href="terms.html">ข้อกำหนดการใช้งาน</a>
       </p>
     </section>
   </main>
 
-  <div id="footer"></div>
-
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
   <script>
-    async function loadPart(id, file){const el=document.getElementById(id);if(!el)return;try{const r=await fetch(file,{cache:"no-store"});el.innerHTML=await r.text();if(id==='header'){const btn=el.querySelector('.lang-btn');const menu=el.querySelector('.lang-menu');if(btn&&menu){btn.addEventListener('click',()=>{const o=menu.classList.toggle('open');btn.setAttribute('aria-expanded',o?'true':'false');});document.addEventListener('click',e=>{if(!e.target.closest('.lang')){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}});}const links=el.querySelectorAll('.main-nav a[href]');links.forEach(a=>{if(location.pathname.endsWith(a.getAttribute('href'))||(location.pathname.endsWith('/')&&a.getAttribute('href')==='index.html')){a.setAttribute('aria-current','page');}})}}catch(e){console.error('Load part failed:',file,e)}}
-    loadPart('header','header.html'); loadPart('footer','footer.html');
+    fetch("footer.html").then(r=>r.text()).then(t=>{document.getElementById("footer-placeholder").innerHTML=t;});
   </script>
 </body>
 </html>
-
