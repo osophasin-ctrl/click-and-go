@@ -21,7 +21,7 @@
   <meta name="twitter:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
   <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
 
-  <!-- JSON-LD -->
+  <!-- JSON-LD: WebSite + SearchAction -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -44,8 +44,7 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-1QR2EGFWN3');
+    gtag('js', new Date()); gtag('config', 'G-1QR2EGFWN3');
   </script>
 </head>
 <body>
@@ -56,80 +55,86 @@
         <img src="logo.png" alt="Click & Go" height="34" loading="lazy">
         <span>Click & Go</span>
       </a>
-      <nav class="main-nav">
-        <a href="index.html" aria-current="page">หน้าแรก</a>
+      <nav class="main-nav" aria-label="เมนูหลัก">
+        <a class="active" href="index.html">หน้าแรก</a>
         <a href="deals.html">ดีล</a>
-        <a href="about.html">About</a>
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
-        <a href="contact.html">Contact</a>
-        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+        <a href="about.html">เกี่ยวกับ</a>
+        <a href="contact.html">ติดต่อเรา</a>
+
+        <!-- เมนูภาษา (เผื่ออนาคต) -->
+        <div class="lang-menu">
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
+          <ul class="lang-list" role="menu">
+            <li><a href="?lang=th" role="menuitem">ไทย (TH)</a></li>
+            <li><a href="?lang=en" role="menuitem">English (EN)</a></li>
+          </ul>
+        </div>
       </nav>
     </div>
   </header>
 
-  <!-- HERO: ใช้พื้นหลัง ไม่ใช้ <img> -->
+  <!-- HERO -->
   <section class="hero">
-    <div class="hero-inner">
-      <h1>จองโรงแรมง่าย แค่คลิกเดียว</h1>
+    <div class="hero-inner container">
+      <h1>จองทริปง่าย แค่คลิกเดียว</h1>
       <p>เปรียบเทียบราคาโรงแรมจากหลายเจ้า แล้วคลิกไปจองได้ทันที</p>
-      <div class="hero-actions">
-        <a href="#search" class="btn btn-primary">เริ่มค้นหาโรงแรม</a>
-        <a href="deals.html" class="btn btn-outline">ดูดีลพิเศษ</a>
+      <div class="hero-cta">
+        <a class="btn btn-light" href="#search">เริ่มค้นหาโรงแรม</a>
+        <a class="btn btn-dark" href="deals.html">ดูดีลล่าสุด</a>
       </div>
     </div>
   </section>
 
   <main class="container">
     <!-- ค้นหาโรงแรม -->
-    <section id="search" class="section">
-      <h2>ค้นหาโรงแรม</h2>
+    <section id="search" class="section-spacing">
+      <h2 class="section-title">ค้นหาโรงแรม</h2>
       <div class="widget-box">
         <div id="agoda-search-widget" aria-label="กล่องค้นหาโรงแรมจากพาร์ทเนอร์"></div>
         <p class="muted">วางโค้ด Agoda/Booking Search Box ที่นี่เมื่อได้รับจาก Partner Portal</p>
 
-        <!-- ฟอร์มจำลอง -->
+        <!-- แบบฟอร์มจำลอง -->
         <form class="search-form" role="search" aria-label="ค้นหาโรงแรมจำลอง">
           <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่" aria-label="ปลายทาง">
           <input type="date" aria-label="เช็คอิน">
           <input type="date" aria-label="เช็คเอาท์">
-          <button type="button" class="btn btn-primary">ค้นหา</button>
+          <button type="button" class="btn btn-dark">ค้นหา</button>
         </form>
-        <p class="note">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Partner อนุมัติ</p>
+        <p class="fine">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Partner อนุมัติ</p>
       </div>
     </section>
 
     <!-- ปลายทางยอดนิยม (ไทย) -->
-    <section class="section">
-      <h2>ปลายทางยอดนิยม</h2>
-      <p class="sub">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมของไทย</p>
-      <div class="pill-group">
-        <a class="btn pill" href="bangkok.html">กรุงเทพฯ</a>
-        <a class="btn pill" href="chiangmai.html">เชียงใหม่</a>
-        <a class="btn pill" href="pattaya.html">พัทยา</a>
-        <a class="btn pill" href="phuket.html">ภูเก็ต</a>
-        <a class="btn pill" href="krabi.html">กระบี่</a>
-        <a class="btn pill" href="hua-hin.html">หัวหิน</a>
+    <section class="section-spacing">
+      <h2 class="section-title">ปลายทางยอดนิยม</h2>
+      <p class="section-subtitle">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมของไทย</p>
+      <div class="pill-grid">
+        <a class="pill" href="bangkok.html">กรุงเทพฯ</a>
+        <a class="pill" href="chiangmai.html">เชียงใหม่</a>
+        <a class="pill" href="pattaya.html">พัทยา</a>
+        <a class="pill" href="phuket.html">ภูเก็ต</a>
+        <a class="pill" href="krabi.html">กระบี่</a>
+        <a class="pill" href="hua-hin.html">หัวหิน</a>
       </div>
     </section>
 
     <!-- เมืองยอดฮิตต่างประเทศ -->
-    <section class="section">
-      <h2>เมืองยอดฮิตในต่างประเทศ</h2>
-      <p class="sub">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมในต่างประเทศ</p>
-      <div class="pill-group">
-        <a class="btn pill" href="tokyo.html">โตเกียว</a>
-        <a class="btn pill" href="seoul.html">โซล</a>
-        <a class="btn pill" href="singapore.html">สิงคโปร์</a>
-        <a class="btn pill" href="hongkong.html">ฮ่องกง</a>
-        <a class="btn pill" href="london.html">ลอนดอน</a>
-        <a class="btn pill" href="paris.html">ปารีส</a>
+    <section class="section-spacing">
+      <h2 class="section-title">เมืองยอดฮิตในต่างประเทศ</h2>
+      <p class="section-subtitle">สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมในต่างประเทศ</p>
+      <div class="pill-grid">
+        <a class="pill" href="tokyo.html">โตเกียว</a>
+        <a class="pill" href="seoul.html">โซล</a>
+        <a class="pill" href="singapore.html">สิงคโปร์</a>
+        <a class="pill" href="hongkong.html">ฮ่องกง</a>
+        <a class="pill" href="london.html">ลอนดอน</a>
+        <a class="pill" href="paris.html">ปารีส</a>
       </div>
     </section>
 
-    <!-- จุดเด่น -->
-    <section class="section">
-      <h2>ทำไมต้อง Click & Go</h2>
+    <!-- ทำไมต้อง Click & Go -->
+    <section class="section-spacing">
+      <h2 class="section-title">ทำไมต้อง Click & Go</h2>
       <div class="features">
         <div class="feature">
           <h3>เปรียบเทียบหลายเจ้า</h3>
@@ -150,16 +155,34 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div>© <script>document.write(new Date().getFullYear())</script> Click & Go</div>
-      <div class="footer-links">
+      <nav class="footer-nav" aria-label="เมนูล่าง">
         <a href="privacy.html">Privacy</a>
         <a href="terms.html">Terms</a>
         <a href="contact.html">Contact</a>
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
-      </div>
+      </nav>
     </div>
   </footer>
 
-  <!-- Placeholder image fallback -->
+  <!-- เมนูภาษา: toggle -->
+  <script>
+  document.addEventListener('click', function(e){
+    const menu = document.querySelector('.lang-menu');
+    const btn = e.target.closest('.lang-btn');
+    if (btn) {
+      menu.classList.toggle('open');
+      btn.setAttribute('aria-expanded', menu.classList.contains('open'));
+      return;
+    }
+    if (!e.target.closest('.lang-menu') && menu) {
+      menu.classList.remove('open');
+      const b = menu.querySelector('.lang-btn');
+      if (b) b.setAttribute('aria-expanded','false');
+    }
+  });
+  </script>
+
+  <!-- Placeholder รูป (กันภาพเสีย) -->
   <script>
     const PLACEHOLDER_IMG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
       <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">
@@ -168,6 +191,9 @@
               font-family="Arial, sans-serif" font-size="48" fill="#9aa0a6">Photo</text>
       </svg>
     `);
+    document.querySelectorAll('img[data-placeholder]').forEach(img => {
+      if (!img.getAttribute('src')) img.src = PLACEHOLDER_IMG;
+    });
     window.addEventListener('error', e => {
       const el = e.target;
       if (el && el.tagName === 'IMG') { el.onerror = null; el.src = PLACEHOLDER_IMG; }
@@ -175,5 +201,4 @@
   </script>
 </body>
 </html>
-
 
