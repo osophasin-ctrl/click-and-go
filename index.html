@@ -8,36 +8,48 @@
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/" />
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
+
+  <!-- (ถ้าใช้ GA4 อยู่แล้วคงไว้ได้) -->
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1QR2EGFWN3');
+  </script>
+  -->
 </head>
 <body>
   <!-- Header -->
-  <header>
-    <div class="inner">
-      <a href="index.html" class="brand">
+  <header class="site-header">
+    <div class="wrap">
+      <a href="index.html" class="brand" aria-label="หน้าแรก Click & Go">
         <img src="logo.png" alt="Click & Go" height="34" loading="lazy">
         <span>Click & Go</span>
       </a>
-      <nav class="main-nav">
+
+      <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html" aria-current="page">หน้าแรก</a>
         <a href="deals.html">ดีล</a>
         <a href="about.html">เกี่ยวกับ</a>
         <a href="contact.html">ติดต่อเรา</a>
-        <a href="#">ภาษา ▾</a>
+        <a href="#" aria-disabled="true" title="เร็ว ๆ นี้">ภาษา ▾</a>
       </nav>
     </div>
   </header>
 
-  <!-- Hero -->
+  <!-- Hero (พื้นหลังรูป hero-bg.jpg เท่านั้น ไม่มีรูปอื่นซ้อน) -->
   <section class="hero">
-    <div class="hero-content">
+    <div class="wrap hero-content">
       <h1>THAILAND</h1>
       <p>“แค่คลิก แล้วไป”</p>
     </div>
   </section>
 
-  <main class="container">
+  <main class="wrap">
     <!-- ค้นหาโรงแรม -->
-    <section style="margin:24px 0">
+    <section class="block">
       <h2>ค้นหาโรงแรม</h2>
       <div class="search-box">
         <div id="agoda-search-widget"></div>
@@ -46,7 +58,7 @@
     </section>
 
     <!-- ปลายทางยอดนิยม (ไทย) -->
-    <section>
+    <section class="block">
       <h2>ปลายทางยอดนิยม</h2>
       <div class="destinations">
         <a class="btn" href="bangkok.html">กรุงเทพฯ</a>
@@ -59,7 +71,7 @@
     </section>
 
     <!-- เมืองยอดฮิตต่างประเทศ -->
-    <section>
+    <section class="block">
       <h2>เมืองยอดฮิตในต่างประเทศ</h2>
       <div class="destinations">
         <a class="btn" href="tokyo.html">โตเกียว</a>
@@ -72,13 +84,13 @@
     </section>
   </main>
 
-  <footer>
-    <div class="container">
+  <footer class="site-footer">
+    <div class="wrap">
       © <script>document.write(new Date().getFullYear())</script> Click & Go —
       <a href="privacy.html">Privacy</a> ·
       <a href="terms.html">Terms</a> ·
       <a href="contact.html">Contact</a> ·
-      <a href="https://web.facebook.com/clickandgothailand" target="_blank">Facebook</a>
+      <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="noopener">Facebook</a>
     </div>
   </footer>
 </body>
