@@ -1,23 +1,27 @@
 <header class="site-header" role="banner">
-  <div class="inner">
-    <a href="index.html" class="brand" aria-label="Click & Go">
+  <div class="inner container" style="display:flex;align-items:center;gap:16px">
+    <!-- Brand -->
+    <a href="index.html" class="brand" aria-label="Click & Go" style="display:flex;align-items:center;gap:10px;text-decoration:none">
       <img src="logo.png" alt="" width="28" height="28" loading="lazy" />
-      <span>Click & Go</span>
+      <span style="font-weight:700;color:#111">Click & Go</span>
     </a>
 
-    <nav class="main-nav" aria-label="เมนูหลัก">
+    <!-- Main nav -->
+    <nav class="main-nav" aria-label="เมนูหลัก" style="margin-left:auto;display:flex;gap:16px;align-items:center">
       <a href="index.html">หน้าแรก</a>
       <a href="deals.html">โปรโมชั่น</a>
       <a href="about.html">เกี่ยวกับ</a>
       <a href="contact.html">ติดต่อเรา</a>
 
+      <!-- Language Switcher (Popup) -->
       <div class="lang">
-        <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
-        <div class="lang-menu" role="menu">
-          <a role="menuitem" href="#" aria-current="true">ไทย</a>
-          <a role="menuitem" href="#">English (เร็ว ๆ นี้)</a>
+        <button id="langBtn" class="lang-btn" aria-haspopup="true" aria-expanded="false" aria-controls="langPopup">ภาษา</button>
+        <div id="langPopup" class="lang-popup" role="menu" aria-hidden="true">
+          <button type="button" class="lang-item" data-lang="th" role="menuitem">ไทย</button>
+          <button type="button" class="lang-item" data-lang="en" role="menuitem">English</button>
         </div>
       </div>
     </nav>
   </div>
 </header>
+
