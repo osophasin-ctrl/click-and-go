@@ -1,41 +1,53 @@
+/* ---- Base ---- */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
 body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, sans-serif;
   color: #333;
+  background: #fff;
 }
 
-header {
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ---- Header ---- */
+.site-header {
   background: #fff;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #e5e5e5;
   position: sticky;
   top: 0;
   z-index: 1000;
 }
 
-header .inner {
-  max-width: 1200px;
-  margin: auto;
-  padding: 10px 16px;
+.site-header .wrap {
   display: flex;
   align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
 }
 
-header .brand {
-  display: flex;
+.brand {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  text-decoration: none;
-  font-weight: bold;
   color: #333;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;      /* ป้องกันตัดบรรทัด */
 }
+.brand img { display: block; }
 
 .main-nav {
   margin-left: auto;
   display: flex;
   align-items: center;
   gap: 16px;
-  flex-wrap: nowrap;     /* ป้องกันตัดบรรทัด */
-  white-space: nowrap;   /* บังคับอยู่บรรทัดเดียว */
+  flex-wrap: nowrap;        /* อยู่บรรทัดเดียว */
+  white-space: nowrap;      /* อยู่บรรทัดเดียว */
 }
 
 .main-nav a {
@@ -43,57 +55,77 @@ header .brand {
   color: #333;
   font-weight: 500;
 }
-
 .main-nav a[aria-current="page"] {
-  font-weight: 700;
   color: #00796b;
+  font-weight: 700;
 }
 
+/* ---- Hero ---- */
 .hero {
-  height: 280px; /* ลดขนาดให้เท่าประมาณ deals */
+  height: 260px; /* ปรับให้เล็กลงพอดี (ใกล้เคียงหน้า deals) */
   background: url("hero-bg.jpg") center/cover no-repeat;
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  position: relative;
+  isolation: isolate;       /* กันองค์ประกอบอื่นซ้อน */
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.25), rgba(0,0,0,0.05));
+  z-index: 0;
+}
+.hero-content {
+  position: relative;
+  z-index: 1;
   color: #fff;
+  text-shadow: 0 2px 6px rgba(0,0,0,.35);
+  padding: 12px 0;
 }
-
 .hero-content h1 {
-  font-size: 48px;
-  margin: 0;
+  margin: 0 0 6px;
+  font-size: clamp(28px, 5vw, 48px);
+  letter-spacing: .5px;
 }
-
 .hero-content p {
-  font-size: 20px;
-  margin-top: 10px;
+  margin: 0;
+  font-size: clamp(14px, 2.6vw, 20px);
 }
 
-.container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 20px;
-}
-
+/* ---- Sections ---- */
+.block { padding: 24px 0; }
 h2 {
   font-size: 24px;
-  margin: 20px 0 10px;
+  margin: 0 0 10px;
+  font-weight: 700;
 }
 
+/* ---- Search Box ---- */
+.search-box {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  background: #f9f9f9;
+  padding: 16px;
+}
+.search-box .note {
+  font-size: 12px;
+  color: #777;
+  margin-top: 6px;
+}
+
+/* ---- Buttons / Destinations ---- */
 .btn {
   display: inline-block;
   padding: 10px 18px;
-  border-radius: 8px;
+  border-radius: 999px;
   background: #00796b;
   color: #fff;
   text-decoration: none;
-  font-weight: 500;
-  transition: background .2s;
+  font-weight: 600;
+  transition: background .2s ease;
 }
-
-.btn:hover {
-  background: #004d40;
-}
+.btn:hover { background: #005e53; }
 
 .destinations {
   display: flex;
@@ -103,23 +135,19 @@ h2 {
   margin-top: 10px;
 }
 
-.search-box {
-  border: 2px dashed #ccc;
-  padding: 16px;
-  border-radius: 8px;
-  background: #f9f9f9;
-}
-
-.search-box .note {
-  font-size: 12px;
-  color: #777;
-  margin-top: 6px;
-}
-
-footer {
+/* ---- Footer ---- */
+.site-footer {
   background: #f4f4f4;
-  padding: 14px;
+  border-top: 1px solid #e5e5e5;
+  padding: 14px 0;
   text-align: center;
   font-size: 14px;
-  margin-top: 40px;
+  margin-top: 32px;
 }
+
+/* ---- Small screens ---- */
+@media (max-width: 640px) {
+  .main-nav { gap: 12px; }
+  .hero { height: 220px; }
+}
+
