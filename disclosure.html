@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>นโยบายการเปิดเผยพันธมิตร (Affiliate Disclosure) – Click & Go</title>
+  <meta name="description" content="นโยบายการเปิดเผยพันธมิตรของ Click & Go อธิบายการใช้งานลิงก์พันธมิตรและการรับค่าคอมมิชชั่นอย่างโปร่งใส">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
+
+  <script>
+    async function include(part, targetId) {
+      try {
+        const r = await fetch(part);
+        document.getElementById(targetId).innerHTML = await r.text();
+      } catch(e) { console.error(e); }
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      include('header.html', 'site-header');
+      include('footer.html', 'site-footer');
+    });
+  </script>
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main class="container">
+    <h1>นโยบายการเปิดเผยพันธมิตร (Affiliate Disclosure)</h1>
+    <p>
+      เว็บไซต์ <strong>Click &amp; Go</strong> มีการใช้งานลิงก์พันธมิตร (Affiliate Links) ไปยังพาร์ทเนอร์จองที่พัก 
+      เช่น Agoda, Booking.com และผู้ให้บริการท่องเที่ยวรายอื่น ๆ เมื่อผู้ใช้งานคลิกลิงก์และทำการจองหรือซื้อบริการ
+      ทางเว็บไซต์อาจได้รับค่าคอมมิชชั่นโดยไม่ส่งผลต่อราคาที่ท่านต้องชำระ
+    </p>
+    <h2>ความโปร่งใสและความเป็นกลาง</h2>
+    <ul>
+      <li>เราแสดงข้อมูลอย่างเป็นกลาง และพยายามให้เนื้อหา/คำแนะนำที่เป็นประโยชน์ต่อผู้ใช้มากที่สุด</li>
+      <li>ลิงก์พันธมิตรจะถูกทำเครื่องหมายหรือวางอยู่ในบริบทที่เหมาะสม</li>
+      <li>เราไม่มีการเพิ่มค่าธรรมเนียมหรือชาร์จเพิ่มเติมใด ๆ</li>
+    </ul>
+    <h2>ติดต่อเรา</h2>
+    <p>
+      หากมีคำถามเพิ่มเติมเกี่ยวกับนโยบายฉบับนี้ กรุณาติดต่อที่ 
+      <a href="mailto:support@clickandgo.co.th">support@clickandgo.co.th</a>
+    </p>
+  </main>
+
+  <div id="site-footer"></div>
+</body>
+</html>
