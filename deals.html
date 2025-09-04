@@ -4,80 +4,70 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>โปรโมชั่นโรงแรม – Click & Go</title>
-  <meta name="description" content="รวมโปรโมชั่นโรงแรมแนะนำจาก Click & Go คัดสรรดีลพิเศษจากพาร์ทเนอร์ OTA พร้อมปุ่มจองทันที" />
+  <meta name="description" content="โปรโมชั่นโรงแรมจาก Click & Go รวมดีลโรงแรมราคาพิเศษให้คุณเลือกง่ายๆ ในที่เดียว" />
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Header include -->
-  <div id="header"></div>
+  <!-- Header -->
+  <div id="header-placeholder"></div>
+  <script>
+    fetch("header.html")
+      .then(res => res.text())
+      .then(data => { document.getElementById("header-placeholder").innerHTML = data; });
+  </script>
 
   <main class="container">
-    <section class="section">
-      <h1 class="section-title">โปรโมชั่นโรงแรมแนะนำ</h1>
-      <p class="muted">* ตัวอย่างเลย์เอาต์ — เมื่อได้รับลิงก์ Affiliate จาก Agoda/Booking แล้ว นำลิงก์ไปแทนที่ปุ่ม “จองเลย” ได้ทันที</p>
+    <h1>โปรโมชั่นโรงแรมแนะนำ</h1>
+    <p class="note">*ตัวอย่างดีลเพื่อจัดวางเลย์เอาต์ — เมื่อได้รับลิงก์ Affiliate จาก Agoda/Booking แล้ว สามารถใส่ลิงก์ “จองเลย” ได้ทันที</p>
 
-      <div class="grid-cards">
-        <!-- Card 1 -->
-        <article class="card">
-          <img src="https://picsum.photos/seed/cg-101/800/500" alt="Hotel Deal 1" loading="lazy">
-          <div class="card-body">
-            <h3>โรงแรมตัวอย่าง 1</h3>
-            <p class="muted">ทำเลดี ใกล้รถไฟฟ้า เริ่มต้น 1,200 บาท/คืน</p>
-            <div class="card-foot">
-              <div class="price">฿1,200 / คืน</div>
-              <a href="#" class="btn btn-primary" rel="nofollow">จองเลย</a>
-            </div>
+    <div class="grid-cards">
+      <div class="card">
+        <img src="https://picsum.photos/400/250?random=1" alt="โรงแรมตัวอย่าง 1">
+        <div class="card-body">
+          <h3>โรงแรมตัวอย่าง 1</h3>
+          <p>ทำเลดี ใกล้รถไฟฟ้า ราคาเริ่มต้นเพียง 1,200 บาท/คืน</p>
+          <div class="card-foot">
+            <strong>B1,200 / คืน</strong>
+            <a href="#">จองเลย</a>
           </div>
-        </article>
-
-        <!-- Card 2 -->
-        <article class="card">
-          <img src="https://picsum.photos/seed/cg-102/800/500" alt="Hotel Deal 2" loading="lazy">
-          <div class="card-body">
-            <h3>โรงแรมตัวอย่าง 2</h3>
-            <p class="muted">วิวทะเลสวยงาม เริ่มต้น 1,800 บาท/คืน</p>
-            <div class="card-foot">
-              <div class="price">฿1,800 / คืน</div>
-              <a href="#" class="btn btn-primary" rel="nofollow">จองเลย</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 3 -->
-        <article class="card">
-          <img src="https://picsum.photos/seed/cg-103/800/500" alt="Hotel Deal 3" loading="lazy">
-          <div class="card-body">
-            <h3>โรงแรมตัวอย่าง 3</h3>
-            <p class="muted">ใจกลางเมือง เดินทางสะดวก เริ่มต้น 900 บาท/คืน</p>
-            <div class="card-foot">
-              <div class="price">฿900 / คืน</div>
-              <a href="#" class="btn btn-primary" rel="nofollow">จองเลย</a>
-            </div>
-          </div>
-        </article>
+        </div>
       </div>
-    </section>
+
+      <div class="card">
+        <img src="https://picsum.photos/400/250?random=2" alt="โรงแรมตัวอย่าง 2">
+        <div class="card-body">
+          <h3>โรงแรมตัวอย่าง 2</h3>
+          <p>วิวทะเลสวยงาม ราคาเริ่มต้นเพียง 1,800 บาท/คืน</p>
+          <div class="card-foot">
+            <strong>B1,800 / คืน</strong>
+            <a href="#">จองเลย</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://picsum.photos/400/250?random=3" alt="โรงแรมตัวอย่าง 3">
+        <div class="card-body">
+          <h3>โรงแรมตัวอย่าง 3</h3>
+          <p>ใจกลางเมือง เดินทางสะดวก ราคาเริ่มต้น 900 บาท/คืน</p>
+          <div class="card-foot">
+            <strong>B900 / คืน</strong>
+            <a href="#">จองเลย</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
-  <!-- Footer include -->
-  <div id="footer"></div>
-
-  <!-- Include header/footer -->
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
   <script>
-    async function includeHTML(targetId, file) {
-      const el = document.getElementById(targetId);
-      if (!el) return;
-      try {
-        const res = await fetch(file, { cache: 'no-cache' });
-        el.innerHTML = await res.text();
-      } catch (e) {
-        console.error('Include failed:', file, e);
-      }
-    }
-    includeHTML('header', 'header.html');
-    includeHTML('footer', 'footer.html');
+    fetch("footer.html")
+      .then(res => res.text())
+      .then(data => { document.getElementById("footer-placeholder").innerHTML = data; });
   </script>
 </body>
 </html>
+
 
