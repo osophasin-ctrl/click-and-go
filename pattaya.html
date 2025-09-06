@@ -1,21 +1,169 @@
-<!doctype html><html lang="th"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>โรงแรมในพัทยา – Click & Go</title>
-<meta name="description" content="ค้นหาดีลโรงแรมในพัทยา เมืองทะเลยอดนิยม ใกล้กรุงเทพฯ">
-<link rel="canonical" href="https://click-and-go-navy.vercel.app/pattaya.html">
-<link rel="icon" href="favicon.ico"><link rel="stylesheet" href="style.css"></head>
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>พัทยา | Click & Go – เที่ยวพัทยา หาโรงแรมง่ายในคลิกเดียว</title>
+  <meta name="description" content="เที่ยวพัทยา ทะเลใกล้กรุงเทพฯ สีสันครบทั้งวันทั้งคืน ค้นหาโรงแรมและดีลพิเศษในย่านยอดนิยม พัทยาเหนือ กลาง ใต้ จอมเทียน นาจอมเทียน เขาพระตำหนัก – จองง่ายในคลิกเดียวกับ Click & Go">
+  <link rel="canonical" href="https://click-and-go-navy.vercel.app/pattaya.html" />
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Click & Go">
+  <meta property="og:title" content="พัทยา – หาโรงแรมและดีลพิเศษ | Click & Go">
+  <meta property="og:description" content="สำรวจย่านยอดนิยม พัทยาเหนือ กลาง ใต้ จอมเทียน นาจอมเทียน เขาพระตำหนัก พร้อมเปรียบเทียบราคาและไปจองได้ทันที">
+  <meta property="og:url" content="https://click-and-go-navy.vercel.app/pattaya.html">
+  <meta property="og:image" content="https://click-and-go-navy.vercel.app/pattaya-hero.jpg">
+
+  <!-- ค่าปรับเฉพาะหน้านี้ (ทำรูปสว่างขึ้นเล็กน้อย + คงธีมเดิม) -->
+  <style>
+    .city-hero {
+      height: 280px; /* ให้พอดีกับหน้าอื่น */
+      background: linear-gradient(to bottom, rgba(0,0,0,.10), rgba(0,0,0,.25)),
+                  var(--hero-img, #e9eef1);
+      background-position: center;
+      background-size: cover;
+      border-radius: 12px;
+      overflow: hidden;
+      filter: brightness(1.12);
+    }
+    .city-hero .hero-inner{
+      height:100%;
+      display:flex;
+      align-items:flex-end;
+      padding:16px 20px;
+      color:#fff;
+      text-shadow:0 2px 10px rgba(0,0,0,.35);
+    }
+    .pill-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px}
+    .pill-row .btn{padding:9px 14px;border-radius:22px}
+  </style>
+</head>
 <body>
-<header class="site-header"><div class="inner">
-  <a href="index.html" class="brand"><img src="logo.png" height="34" alt=""><span>Click & Go</span></a>
-  <nav class="main-nav"><a href="index.html">หน้าแรก</a><a href="deals.html">ดีล</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a><a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a></nav>
-</div></header>
-<section class="hero hero--sm"><div class="hero-inner"><h1>พัทยา</h1><p>ทะเลใกล้กรุง บรรยากาศสนุก มีร้านอาหารและคาเฟ่มากมาย</p></div></section>
-<main class="container section"><h2>ดีลโรงแรมในพัทยา</h2>
-<div class="cards">
-  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>ติดหาดพัทยา</h3><p class="muted">เริ่มต้น 1,700 บาท/คืน</p><div class="card-foot"><div class="price">฿1,700 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
-  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>วิวน้ำสวย</h3><p class="muted">เริ่มต้น 1,200 บาท/คืน</p><div class="card-foot"><div class="price">฿1,200 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
-  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>พูลวิลล่าส่วนตัว</h3><p class="muted">เริ่มต้น 3,200 บาท/คืน</p><div class="card-foot"><div class="price">฿3,200 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
-</div>
-<p class="note">* ปุ่มจองเป็นตัวอย่าง รอแทนที่ด้วยลิงก์ Affiliate</p></main>
-<footer class="site-footer"><div class="container footer-inner"><div>© <script>document.write(new Date().getFullYear())</script> Click & Go</div><div class="footer-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a></div></div></footer>
-</body></html>
+
+  <!-- Header (โหลดจาก header.html เพื่อคงเมนู/ปุ่มภาษา popup ให้เหมือนหน้าอื่น) -->
+  <div id="site-header"></div>
+
+  <main class="container">
+
+    <!-- HERO -->
+    <section class="city-hero" style="--hero-img: url('pattaya-hero.jpg');" aria-label="ภาพเมืองพัทยา">
+      <div class="hero-inner">
+        <h1 style="font-size:clamp(20px,3.2vw,28px);margin:0;">
+          พัทยา – ทะเลใกล้กรุงเทพฯ สีสันครบทั้งวันทั้งคืน
+        </h1>
+      </div>
+    </section>
+
+    <!-- ค้นหาโรงแรม (placeholder เหมือนทุกหน้า) -->
+    <section style="margin-top:24px">
+      <h2>ค้นหาโรงแรมในพัทยา</h2>
+      <div class="widget-box">
+        <div id="agoda-search-widget"></div>
+        <p class="muted">วางโค้ด Search Box ของ Partner เมื่อได้รับการอนุมัติ</p>
+
+        <form class="search-form" role="search" aria-label="ค้นหาโรงแรมจำลอง">
+          <input type="text" placeholder="ปลายทาง: พัทยา" aria-label="ปลายทาง" value="พัทยา">
+          <input type="date" aria-label="เช็คอิน">
+          <input type="date" aria-label="เช็คเอาต์">
+          <button type="button" class="btn btn-primary">ค้นหา</button>
+        </form>
+        <p class="help small">* ระบบค้นหาจะใช้งานจริงเมื่อได้รับอนุมัติจากพาร์ทเนอร์</p>
+      </div>
+    </section>
+
+    <!-- ย่าน/จุดหมายยอดนิยม -->
+    <section>
+      <h2>ย่านยอดนิยมในพัทยา</h2>
+      <p class="muted">เลือกสำรวจย่านท่องเที่ยวหลักของพัทยา แล้วเปรียบเทียบราคา/ดีลได้ทันที</p>
+      <div class="pill-row">
+        <a class="btn" href="deals.html?q=พัทยาเหนือ">พัทยาเหนือ</a>
+        <a class="btn" href="deals.html?q=พัทยากลาง">พัทยากลาง</a>
+        <a class="btn" href="deals.html?q=พัทยาใต้">พัทยาใต้</a>
+        <a class="btn" href="deals.html?q=จอมเทียน">จอมเทียน</a>
+        <a class="btn" href="deals.html?q=นาจอมเทียน">นาจอมเทียน</a>
+        <a class="btn" href="deals.html?q=เขาพระตำหนัก">เขาพระตำหนัก</a>
+      </div>
+    </section>
+
+    <!-- ดีลแนะนำ (mock) ใช้สไตล์เดียวกับ deals.html -->
+    <section>
+      <h2>โปรโมชั่นโรงแรมแนะนำ – พัทยา</h2>
+      <div class="deal-grid">
+        <!-- Card 1 -->
+        <article class="deal-card">
+          <img class="deal-img" src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรมติดหาดพัทยา" loading="lazy">
+          <div class="deal-body">
+            <h3 class="deal-title">บีชรีสอร์ต – พัทยาเหนือ</h3>
+            <p class="deal-desc">ใกล้หาด เดินเล่นสบาย วิวทะเลสวย ราคาเริ่มต้นคุ้มค่า</p>
+            <div class="deal-meta">
+              <span class="price">฿1,500 / คืน</span>
+              <a class="btn btn-primary" href="deals.html?q=พัทยา">จองเลย</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="deal-card">
+          <img class="deal-img" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรมกลางเมืองพัทยา" loading="lazy">
+          <div class="deal-body">
+            <h3 class="deal-title">ซิตี้โฮเทล – พัทยากลาง</h3>
+            <p class="deal-desc">ทำเลดี ใกล้แหล่งช้อปปิ้งและร้านอาหาร เดินทางสะดวก</p>
+            <div class="deal-meta">
+              <span class="price">฿1,800 / คืน</span>
+              <a class="btn btn-primary" href="deals.html?q=พัทยา">จองเลย</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="deal-card">
+          <img class="deal-img" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างพูลวิลล่าจอมเทียน/นาจอมเทียน" loading="lazy">
+          <div class="deal-body">
+            <h3 class="deal-title">พูลวิลล่า – จอมเทียน</h3>
+            <p class="deal-desc">พักผ่อนเป็นส่วนตัว เหมาะสำหรับครอบครัวและกลุ่มเพื่อน</p>
+            <div class="deal-meta">
+              <span class="price">฿3,000 / คืน</span>
+              <a class="btn btn-primary" href="deals.html?q=พัทยา">จองเลย</a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <p class="help small" style="margin-top:8px">
+        * ตัวอย่างเพื่อสื่อความเฉพาะ — เมื่อได้รับสิทธิ์ Affiliate จากพาร์ทเนอร์แล้ว ปุ่ม “จองเลย” จะลิงก์ไปหน้าพาร์ทเนอร์โดยตรง
+      </p>
+    </section>
+
+  </main>
+
+  <!-- Footer (โหลดจาก footer.html) -->
+  <div id="site-footer"></div>
+
+  <!-- Inject header/footer -->
+  <script>
+    // header
+    fetch('header.html').then(r=>r.text()).then(html=>{
+      document.getElementById('site-header').innerHTML = html;
+    });
+    // footer
+    fetch('footer.html').then(r=>r.text()).then(html=>{
+      document.getElementById('site-footer').innerHTML = html;
+    });
+
+    // Placeholder รูป (ถ้ารูปโหลดไม่ได้)
+    const PLACEHOLDER_IMG='data:image/svg+xml;utf8,'+encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675">
+         <rect width="100%" height="100%" fill="#eaeaea"/>
+         <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+               font-family="Arial, sans-serif" font-size="48" fill="#9aa0a6">Photo</text>
+       </svg>`);
+    document.querySelectorAll('img').forEach(img=>{
+      img.addEventListener('error',()=>{ img.src=PLACEHOLDER_IMG; }, {once:true});
+    });
+  </script>
+</body>
+</html>
+
