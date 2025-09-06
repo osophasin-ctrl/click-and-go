@@ -8,6 +8,7 @@
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/bangkok.html" />
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="preload" as="image" href="bangkok-hero.jpg" imagesrcset="bangkok-hero.jpg 1200w" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -27,7 +28,7 @@
   </script>
 
   <style>
-    /* ---------- เพิ่มสไตล์ปุ่มภาษา (เหมือนหน้า index) ---------- */
+    /* ---------- ปุ่มภาษา ---------- */
     .lang{ position:relative; }
     .lang-btn{
       background:#fff; border:1px solid #ddd; border-radius:6px;
@@ -43,7 +44,7 @@
     .lang-menu a{ display:block; padding:6px 8px; color:#333; text-decoration:none; }
     .lang-menu a[aria-current="true"]{ font-weight:700; }
 
-    /* ---------- Hero ของหน้าเมือง ---------- */
+    /* ---------- Hero เมือง ---------- */
     .hero-city {
       position: relative;
       height: 280px;
@@ -54,14 +55,13 @@
     }
     .hero-city .overlay {
       position:absolute; inset:0;
-      /* ทำให้สว่างขึ้น: ลดความทึบลง */
       background: linear-gradient(to bottom, rgba(0,0,0,.10), rgba(0,0,0,.10));
     }
     .hero-city .content {
       position: absolute; inset: 0;
       display:flex; flex-direction:column;
       align-items:flex-start; justify-content:flex-end;
-      padding: 16px 20px;
+      padding: 18px 20px 22px;
       color:#fff;
       text-shadow: 0 1px 3px rgba(0,0,0,.35);
     }
@@ -117,7 +117,7 @@
   </header>
 
   <main class="container">
-    <!-- Hero ของกรุงเทพฯ -->
+    <!-- Hero กรุงเทพฯ -->
     <section aria-label="ภาพกรุงเทพฯ" class="hero-city"
              style="background-image: url('bangkok-hero.jpg');">
       <div class="overlay" aria-hidden="true"></div>
@@ -138,7 +138,7 @@
               style="display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr auto;margin-top:10px">
           <input type="text" placeholder="ปลายทาง: กรุงเทพฯ" aria-label="ปลายทาง" value="กรุงเทพฯ">
           <input type="date" aria-label="เช็คอิน">
-          <input type="date" aria-label="เช็คเอาท์">
+          <input type="date" aria-label="เช็คเอาต์">
           <button type="button" class="btn">ค้นหา</button>
         </form>
         <p style="font-size:12px;color:#999;margin-top:8px;">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Partner อนุมัติ</p>
@@ -149,13 +149,13 @@
     <section>
       <h2>ย่านยอดนิยมในกรุงเทพฯ</h2>
       <div class="districts">
-        <a class="btn" href="#deals">สยาม / ชิดลม</a>
-        <a class="btn" href="#deals">สุขุมวิท</a>
-        <a class="btn" href="#deals">สีลม / สาทร</a>
-        <a class="btn" href="#deals">รัชดา</a>
-        <a class="btn" href="#deals">ริมแม่น้ำ</a>
-        <a class="btn" href="#deals">ดอนเมือง</a>
-        <a class="btn" href="#deals">สุวรรณภูมิ</a>
+        <a class="btn" href="deals.html?q=สยาม">สยาม / ชิดลม</a>
+        <a class="btn" href="deals.html?q=สุขุมวิท">สุขุมวิท</a>
+        <a class="btn" href="deals.html?q=สีลม">สีลม / สาทร</a>
+        <a class="btn" href="deals.html?q=รัชดา">รัชดา</a>
+        <a class="btn" href="deals.html?q=ริมแม่น้ำ">ริมแม่น้ำ</a>
+        <a class="btn" href="deals.html?q=ดอนเมือง">ดอนเมือง</a>
+        <a class="btn" href="deals.html?q=สุวรรณภูมิ">สุวรรณภูมิ</a>
       </div>
     </section>
 
@@ -164,38 +164,44 @@
       <h2>โรงแรมแนะนำในกรุงเทพฯ</h2>
       <div class="deal-grid">
         <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม 1">
+          <img class="thumb" loading="lazy"
+               src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop"
+               alt="โรงแรมตัวอย่างใกล้รถไฟฟ้าใจกลางกรุงเทพฯ">
           <div class="body">
             <h3>โรงแรมตัวอย่าง 1</h3>
             <p>ใกล้รถไฟฟ้า เดินทางสะดวก เริ่มต้นเพียง 1,200 บาท/คืน</p>
           </div>
           <div class="meta">
             <strong>฿1,200 / คืน</strong>
-            <a class="btn" href="#">จองเลย</a>
+            <a class="btn" href="deals.html?q=กรุงเทพฯ">จองเลย</a>
           </div>
         </article>
 
         <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม 2">
+          <img class="thumb" loading="lazy"
+               src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop"
+               alt="โรงแรมวิวเมืองห้องกว้างในกรุงเทพฯ">
           <div class="body">
             <h3>โรงแรมตัวอย่าง 2</h3>
             <p>วิวเมืองสวย ห้องพักกว้าง เริ่มต้นเพียง 1,800 บาท/คืน</p>
           </div>
           <div class="meta">
             <strong>฿1,800 / คืน</strong>
-            <a class="btn" href="#">จองเลย</a>
+            <a class="btn" href="deals.html?q=กรุงเทพฯ">จองเลย</a>
           </div>
         </article>
 
         <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม 3">
+          <img class="thumb" loading="lazy"
+               src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop"
+               alt="โรงแรมทำเลดีใกล้แหล่งช้อปปิ้งในกรุงเทพฯ">
           <div class="body">
             <h3>โรงแรมตัวอย่าง 3</h3>
             <p>ย่านช้อปปิ้ง ใจกลางเมือง เริ่มต้นเพียง 900 บาท/คืน</p>
           </div>
           <div class="meta">
             <strong>฿900 / คืน</strong>
-            <a class="btn" href="#">จองเลย</a>
+            <a class="btn" href="deals.html?q=กรุงเทพฯ">จองเลย</a>
           </div>
         </article>
       </div>
@@ -219,9 +225,9 @@
     </div>
   </footer>
 
-  <!-- ภาพ Placeholder + Language Toggle -->
+  <!-- Placeholder + Language Popup -->
   <script>
-    // Placeholder
+    // Placeholder image fallback
     const PLACEHOLDER_IMG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
       <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675">
         <rect width="100%" height="100%" fill="#eaeaea"/>
@@ -233,7 +239,7 @@
       img.addEventListener('error',()=>{ img.src = PLACEHOLDER_IMG; }, {once:true});
     });
 
-    // Language pop-up (เหมือนหน้า index)
+    // Language pop-up
     (function(){
       const btn  = document.querySelector('.lang-btn');
       const menu = document.querySelector('.lang-menu');
