@@ -4,53 +4,71 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>เชียงใหม่ | Click & Go – เที่ยวเชียงใหม่ หาโรงแรมง่ายในคลิกเดียว</title>
-  <meta name="description" content="เที่ยวเชียงใหม่ เมืองแห่งวัดวา คาเฟ่ และภูเขา ค้นหาโรงแรมและดีลพิเศษในย่านยอดนิยม นิมมานฯ คูเมือง ดอยสุเทพ – จองง่ายในคลิกเดียวกับ Click & Go">
+  <meta name="description" content="เที่ยวเชียงใหม่ ดอยสุเทพ นิมมาน ไนท์บาซาร์ ค้นหาโรงแรมและดีลพิเศษในย่านยอดนิยม — จองง่ายในคลิกเดียวกับ Click & Go">
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/chiangmai.html" />
-  <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
 
   <!-- Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Click & Go">
-  <meta property="og:title" content="เชียงใหม่ – หาโรงแรมและดีลพิเศษ | Click & Go">
-  <meta property="og:description" content="สำรวจย่านยอดนิยม นิมมานเหมินทร์ คูเมือง ดอยสุเทพ พร้อมเปรียบเทียบราคาและไปจองได้ทันที">
-  <meta property="og:url" content="https://click-and-go-navy.vercel.app/chiangmai.html">
-  <meta property="og:image" content="https://click-and-go-navy.vercel.app/chiangmai-hero.jpg">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Click & Go" />
+  <meta property="og:title" content="เชียงใหม่ – หาโรงแรมและดีลพิเศษ | Click & Go" />
+  <meta property="og:description" content="สำรวจย่านยอดนิยม นิมมาน เมืองเก่า ริมปิง ดอยสุเทพ สันติธรรม ไนท์บาซาร์ พร้อมเปรียบเทียบราคาและไปจองได้ทันที" />
+  <meta property="og:url" content="https://click-and-go-navy.vercel.app/chiangmai.html" />
+  <meta property="og:image" content="https://click-and-go-navy.vercel.app/chiangmai-hero.jpg" />
 
-  <!-- ค่าปรับเฉพาะหน้านี้ (ทำรูปสว่างขึ้นเล็กน้อย + คงธีมเดิม) -->
+  <!-- ปรับเฉพาะหน้านี้: hero + ขนาดรูปดีลให้เท่าหน้ากรุงเทพฯ -->
   <style>
-    .city-hero {
-      /* ใช้สไตล์ hero เดิมของโปรเจกต์ และทำให้ภาพสว่างขึ้นเล็กน้อย */
-      height: 280px;               /* ให้พอดีแนวเดียวกับหน้า bangkok */
-      background: linear-gradient( to bottom, rgba(0,0,0,.10), rgba(0,0,0,.25) ),
+    /* HERO เมือง */
+    .city-hero{
+      height:280px;
+      background: linear-gradient(to bottom, rgba(0,0,0,.10), rgba(0,0,0,.25)),
                   var(--hero-img, #e9eef1);
-      background-position: center;
-      background-size: cover;
-      border-radius: 12px;
-      overflow: hidden;
-      filter: brightness(1.12);   /* << ความสว่างเพิ่มเล็กน้อย */
+      background-position:center;
+      background-size:cover;
+      border-radius:12px;
+      overflow:hidden;
+      filter: brightness(1.12);
     }
-    .city-hero .hero-inner {
-      height: 100%;
-      display: flex;
-      align-items: flex-end;
-      padding: 16px 20px;
-      color: #fff;
-      text-shadow: 0 2px 10px rgba(0,0,0,.35);
+    .city-hero .hero-inner{
+      height:100%;
+      display:flex; align-items:flex-end;
+      padding:16px 20px; color:#fff;
+      text-shadow:0 2px 10px rgba(0,0,0,.35);
     }
-    .pill-row {
-      display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
-      margin-top:10px;
+
+    /* การ์ดดีล – บังคับอัตราส่วนเหมือนกรุงเทพฯ */
+    .deal-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+      gap:20px;
     }
-    .pill-row .btn {
-      padding:9px 14px; border-radius:22px;
+    .deal-card{
+      background:#fff; border:1px solid #e7e7e7;
+      border-radius:12px; overflow:hidden;
+      box-shadow:0 2px 8px rgba(0,0,0,.03);
     }
-    /* Reuse deal grid styles from style.css (already present) */
+    .deal-img{
+      width:100%;
+      aspect-ratio: 16/9;      /* ป้องกันรูปสูงเกิน */
+      object-fit: cover;        /* ครอบภาพให้พอดีกรอบ */
+      display:block;
+    }
+    .deal-body{ padding:14px 16px; }
+    .deal-title{ margin:0 0 6px; font-size:18px; }
+    .deal-desc{ margin:0 0 10px; color:#666; }
+    .deal-meta{ display:flex; align-items:center; justify-content:space-between; }
+    .price{ font-weight:700; color:#222; }
+    .btn.btn-primary{ background:#1ea97c; color:#fff; }
+    .help.small{ font-size:12px; color:#999; }
+    .muted{ color:#666; }
+    .pill-row{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:10px; }
+    .pill-row .btn{ padding:9px 14px; border-radius:22px; }
   </style>
 </head>
 <body>
 
-  <!-- Header (โหลดจาก header.html เพื่อคงเมนู/ปุ่มภาษา popup ให้เหมือนหน้าอื่น) -->
+  <!-- Header (คง popup ภาษา/เมนู ให้เหมือนหน้าหลัก) -->
   <div id="site-header"></div>
 
   <main class="container">
@@ -59,12 +77,12 @@
     <section class="city-hero" style="--hero-img: url('chiangmai-hero.jpg');" aria-label="ภาพเมืองเชียงใหม่">
       <div class="hero-inner">
         <h1 style="font-size:clamp(20px,3.2vw,28px);margin:0;">
-          เชียงใหม่ – เมืองแห่งวัดวา คาเฟ่ และภูเขา
+          เชียงใหม่ – เสน่ห์ล้านนา คาเฟ่ วิวภูเขา อากาศดีทั้งปี
         </h1>
       </div>
     </section>
 
-    <!-- ค้นหาโรงแรม (placeholder เหมือนทุกหน้า) -->
+    <!-- ค้นหาโรงแรม -->
     <section style="margin-top:24px">
       <h2>ค้นหาโรงแรมในเชียงใหม่</h2>
       <div class="widget-box">
@@ -81,43 +99,32 @@
       </div>
     </section>
 
-    <!-- ย่าน/จุดหมายยอดนิยม -->
+    <!-- ย่านยอดนิยม -->
     <section>
       <h2>ย่านยอดนิยมในเชียงใหม่</h2>
-      <p class="muted">เลือกสำรวจย่านท่องเที่ยวหลักของเชียงใหม่ แล้วเปรียบเทียบราคา/ดีลได้ทันที</p>
+      <p class="muted">เลือกสำรวจย่านท่องเที่ยวหลัก แล้วเปรียบเทียบราคา/ดีลได้ทันที</p>
       <div class="pill-row">
-        <a class="btn" href="deals.html?q=นิมมานเหมินทร์">นิมมานเหมินทร์</a>
-        <a class="btn" href="deals.html?q=คูเมือง">คูเมือง/ประตูท่าแพ</a>
+        <a class="btn" href="deals.html?q=นิมมาน">นิมมาน</a>
+        <a class="btn" href="deals.html?q=เมืองเก่า">เมืองเก่า</a>
+        <a class="btn" href="deals.html?q=ริมปิง">ริมปิง</a>
         <a class="btn" href="deals.html?q=ดอยสุเทพ">ดอยสุเทพ</a>
-        <a class="btn" href="deals.html?q=สันกำแพง">สันกำแพง</a>
-        <a class="btn" href="deals.html?q=แม่ริม">แม่ริม</a>
-        <a class="btn" href="deals.html?q=แม่แตง">แม่แตง</a>
+        <a class="btn" href="deals.html?q=สันติธรรม">สันติธรรม</a>
+        <a class="btn" href="deals.html?q=ไนท์บาซาร์">ไนท์บาซาร์</a>
       </div>
     </section>
 
-    <!-- ดีลแนะนำ (mock) ใช้สไตล์เดียวกับ deals.html -->
+    <!-- โปรโมชั่นแนะนำ (mock) -->
     <section>
       <h2>โปรโมชั่นโรงแรมแนะนำ – เชียงใหม่</h2>
+
       <div class="deal-grid">
         <!-- Card 1 -->
         <article class="deal-card">
-          <img class="deal-img" src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรมในคูเมือง" loading="lazy">
+          <img class="deal-img" src="https://images.unsplash.com/photo-1505691723518-36a5ac3b2d88?q=80&w=1200&auto=format&fit=crop"
+               alt="ตัวอย่างบูทีคโฮเทลโซนนิมมาน" loading="lazy">
           <div class="deal-body">
-            <h3 class="deal-title">โรงแรมตัวอย่าง – คูเมือง</h3>
-            <p class="deal-desc">ทำเลดี เดินเล่นประตูท่าแพสะดวก ราคาเริ่มต้นสบายกระเป๋า</p>
-            <div class="deal-meta">
-              <span class="price">฿1,100 / คืน</span>
-              <a class="btn btn-primary" href="deals.html?q=เชียงใหม่">จองเลย</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 2 -->
-        <article class="deal-card">
-          <img class="deal-img" src="https://images.unsplash.com/photo-1508057198894-247b23fe5ade?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรมย่านนิมมานฯ" loading="lazy">
-          <div class="deal-body">
-            <h3 class="deal-title">โรงแรมตัวอย่าง – นิมมานฯ</h3>
-            <p class="deal-desc">ใกล้คาเฟ่และร้านอาหารฮิต เดินทางสะดวก บรรยากาศดี</p>
+            <h3 class="deal-title">บูทีคโฮเทล – นิมมาน</h3>
+            <p class="deal-desc">ใกล้คาเฟ่/ร้านอาหาร เดินเล่นชิล ๆ กลางย่านสุดคึกคัก</p>
             <div class="deal-meta">
               <span class="price">฿1,600 / คืน</span>
               <a class="btn btn-primary" href="deals.html?q=เชียงใหม่">จองเลย</a>
@@ -125,14 +132,29 @@
           </div>
         </article>
 
-        <!-- Card 3 -->
+        <!-- Card 2 -->
         <article class="deal-card">
-          <img class="deal-img" src="https://images.unsplash.com/photo-1496412705862-e0088f16f791?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างรีสอร์ตใกล้ธรรมชาติ" loading="lazy">
+          <img class="deal-img" src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?q=80&w=1200&auto=format&fit=crop"
+               alt="ตัวอย่างรีสอร์ตวิวสวน/ภูเขา" loading="lazy">
           <div class="deal-body">
-            <h3 class="deal-title">รีสอร์ตใกล้ธรรมชาติ</h3>
-            <p class="deal-desc">เหมาะพักผ่อนชิล ๆ ใกล้เขา บรรยากาศเงียบสงบ</p>
+            <h3 class="deal-title">รีสอร์ตวิวสวน – ดอยสุเทพ</h3>
+            <p class="deal-desc">บรรยากาศสงบ สูดอากาศบริสุทธิ์ เหมาะกับการพักผ่อน</p>
             <div class="deal-meta">
               <span class="price">฿1,900 / คืน</span>
+              <a class="btn btn-primary" href="deals.html?q=เชียงใหม่">จองเลย</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="deal-card">
+          <img class="deal-img" src="https://images.unsplash.com/photo-1540541338287-41700207dee6?q=80&w=1200&auto=format&fit=crop"
+               alt="ตัวอย่างโรงแรมโซนเมืองเก่า/ริมปิง" loading="lazy">
+          <div class="deal-body">
+            <h3 class="deal-title">ซิตี้โฮเทล – เมืองเก่า/ริมปิง</h3>
+            <p class="deal-desc">ทำเลดี ใกล้แลนด์มาร์ก เดินทางสะดวก</p>
+            <div class="deal-meta">
+              <span class="price">฿1,300 / คืน</span>
               <a class="btn btn-primary" href="deals.html?q=เชียงใหม่">จองเลย</a>
             </div>
           </div>
@@ -146,24 +168,26 @@
 
   </main>
 
-  <!-- Footer (โหลดจาก footer.html) -->
+  <!-- Footer -->
   <div id="site-footer"></div>
 
-  <!-- Inject header/footer -->
+  <!-- Inject header/footer + placeholder รูป -->
   <script>
-    // header
-    fetch('header.html')
-      .then(r => r.text())
-      .then(html => {
-        document.getElementById('site-header').innerHTML = html;
-        // ให้สคริปต์ popup ภาษาใน header ทำงาน (มีในไฟล์ header.html อยู่แล้ว)
-      });
-    // footer
-    fetch('footer.html')
-      .then(r => r.text())
-      .then(html => {
-        document.getElementById('site-footer').innerHTML = html;
-      });
+    // header/footer
+    fetch('header.html').then(r=>r.text()).then(t=>{ document.getElementById('site-header').innerHTML=t; });
+    fetch('footer.html').then(r=>r.text()).then(t=>{ document.getElementById('site-footer').innerHTML=t; });
+
+    // รูปสำรองกรณีโหลดไม่ได้
+    const PLACEHOLDER='data:image/svg+xml;utf8,'+encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675">
+         <rect width="100%" height="100%" fill="#eaeaea"/>
+         <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+               font-family="Arial, sans-serif" font-size="48" fill="#9aa0a6">Photo</text>
+       </svg>`);
+    document.querySelectorAll('img').forEach(img=>{
+      img.addEventListener('error',()=>{ img.src=PLACEHOLDER; }, {once:true});
+    });
   </script>
 </body>
 </html>
+
