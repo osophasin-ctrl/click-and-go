@@ -6,74 +6,189 @@
   <title>Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว</title>
   <meta name="description" content="Click & Go ช่วยค้นหาและเปรียบเทียบราคาโรงแรมจากหลาย OTA พร้อมลิงก์ไปจองทันที ครอบคลุมปลายทางยอดนิยมทั้งในไทยและต่างประเทศ" />
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Click & Go" />
+  <meta property="og:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว" />
+  <meta property="og:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
+  <meta property="og:url" content="https://click-and-go-navy.vercel.app/" />
+  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', 'G-1QR2EGFWN3');
+  </script>
 </head>
 <body>
   <!-- Header -->
-  <div id="header-placeholder"></div>
-  <script>
-    fetch("header.html")
-      .then(res => res.text())
-      .then(data => { document.getElementById("header-placeholder").innerHTML = data; });
-  </script>
+  <header class="site-header" role="banner">
+    <div class="inner">
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="logo.png" alt="" width="28" height="28" loading="lazy" />
+        <span>Click & Go</span>
+      </a>
 
-  <!-- Hero -->
-  <section class="hero">
-    <img src="hero-bg.jpg" alt="Click & Go Hero">
-    <div class="hero-text">
-      <h1>CLICK & GO THAILAND</h1>
-      <p>“แค่คลิก แล้วไป”</p>
+      <nav class="main-nav" aria-label="เมนูหลัก">
+        <a href="index.html" aria-current="page">หน้าแรก</a>
+        <a href="deals.html">โปรโมชั่น</a>
+        <a href="about.html">เกี่ยวกับ</a>
+        <a href="contact.html">ติดต่อเรา</a>
+
+        <div class="lang">
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="#" aria-current="true">ไทย</a>
+            <a role="menuitem" href="#">English (เร็ว ๆ นี้)</a>
+          </div>
+        </div>
+      </nav>
     </div>
-  </section>
+  </header>
 
   <main class="container">
-    <!-- Search -->
-    <section>
-      <h2>ค้นหาโรงแรม</h2>
-      <div class="search-box">
+    <!-- Hero -->
+    <section class="hero">
+      <img src="hero-bg.jpg" alt="Click & Go Thailand - แค่คลิก แล้วไป" class="hero-img" loading="lazy">
+    </section>
+
+    <!-- ค้นหาโรงแรม -->
+    <section style="margin:24px 0">
+      <h2 class="section-title">ค้นหาโรงแรม</h2>
+      <div class="widget-like">
         <div id="agoda-search-widget"></div>
-        <form class="search-form">
-          <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่">
-          <input type="date">
-          <input type="date">
+        <p class="muted">วางโค้ด Agoda/Booking Search Box ที่นี่เมื่อได้รับจาก Partner Portal</p>
+
+        <form class="search-form" role="search" aria-label="ค้นหาโรงแรมจำลอง">
+          <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่" aria-label="ปลายทาง">
+          <input type="date" aria-label="เช็คอิน">
+          <input type="date" aria-label="เช็คเอาท์">
           <button type="button" class="btn">ค้นหา</button>
         </form>
-        <p class="note">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Partner อนุมัติ</p>
+        <p class="tiny-note">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Partner อนุมัติ</p>
       </div>
     </section>
 
-    <!-- Thailand -->
+    <!-- ปลายทางยอดนิยม (ไทย) -->
     <section>
-      <h2>ปลายทางยอดนิยม</h2>
-      <p>สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมของไทย</p>
-      <div class="btn-group">
-        <a class="btn" href="bangkok.html">กรุงเทพฯ</a>
-        <a class="btn" href="chiangmai.html">เชียงใหม่</a>
-        <a class="btn" href="pattaya.html">พัทยา</a>
-        <a class="btn" href="phuket.html">ภูเก็ต</a>
-        <a class="btn" href="krabi.html">กระบี่</a>
-        <a class="btn" href="huahin.html">หัวหิน</a>
+      <h2 class="section-title">ปลายทางยอดนิยมในไทย</h2>
+      <div class="city-grid">
+        <!-- 6 เมืองไทย -->
+        <a class="city-card" href="bangkok.html" aria-label="กรุงเทพฯ">
+          <figure>
+            <img src="bangkok-tile.webp" alt="กรุงเทพฯ" loading="lazy"
+                 onerror="this.src=window.__sqph;">
+            <figcaption>กรุงเทพฯ</figcaption>
+          </figure>
+        </a>
+
+        <a class="city-card" href="chiangmai.html" aria-label="เชียงใหม่">
+          <figure>
+            <img src="chiangmai-tile.webp" alt="เชียงใหม่" loading="lazy"
+                 onerror="this.src=window.__sqph;">
+            <figcaption>เชียงใหม่</figcaption>
+          </figure>
+        </a>
+
+        <a class="city-card" href="pattaya.html" aria-label="พัทยา">
+          <figure>
+            <img src="pattaya-tile.webp" alt="พัทยา" loading="lazy"
+                 onerror="this.src=window.__sqph;">
+            <figcaption>พัทยา</figcaption>
+          </figure>
+        </a>
+
+        <a class="city-card" href="phuket.html" aria-label="ภูเก็ต">
+          <figure>
+            <img src="phuket-tile.webp" alt="ภูเก็ต" loading="lazy"
+                 onerror="this.src=window.__sqph;">
+            <figcaption>ภูเก็ต</figcaption>
+          </figure>
+        </a>
+
+        <a class="city-card" href="krabi.html" aria-label="กระบี่">
+          <figure>
+            <img src="krabi-tile.webp" alt="กระบี่" loading="lazy"
+                 onerror="this.src=window.__sqph;">
+            <figcaption>กระบี่</figcaption>
+          </figure>
+        </a>
+
+        <a class="city-card" href="huahin.html" aria-label="หัวหิน">
+          <figure>
+            <img src="huahin-tile.webp" alt="หัวหิน" loading="lazy"
+                 onerror="this.src=window.__sqph;">
+            <figcaption>หัวหิน</figcaption>
+          </figure>
+        </a>
       </div>
     </section>
 
-    <!-- Abroad -->
+    <!-- เมืองยอดฮิตต่างประเทศ -->
     <section>
-      <h2>เมืองยอดฮิตในต่างประเทศ</h2>
-      <p>สำรวจโรงแรมและดีลพิเศษในเมืองท่องเที่ยวยอดนิยมในต่างประเทศ</p>
-      <div class="btn-group">
-        <a class="btn" href="tokyo.html">โตเกียว</a>
-        <a class="btn" href="seoul.html">โซล</a>
-        <a class="btn" href="singapore.html">สิงคโปร์</a>
-        <a class="btn" href="hongkong.html">ฮ่องกง</a>
-        <a class="btn" href="london.html">ลอนดอน</a>
-        <a class="btn" href="paris.html">ปารีส</a>
+      <h2 class="section-title">เมืองยอดฮิตในต่างประเทศ</h2>
+      <div class="city-grid">
+        <!-- 6 เมืองต่างประเทศ -->
+        <a class="city-card" href="tokyo.html" aria-label="โตเกียว">
+          <figure>
+            <img src="tokyo-tile.webp" alt="โตเกียว" loading="lazy"
+                 onerror="this.src=window.__sqph;">
+            <figcaption>โตเกียว</figcaption>
+          </figure>
+        </a>
+
+        <a class="city-card" href="seoul.html" aria-label="โซล">
+          <figure>
+            <img src="seoul-tile.webp" alt="โซล" loading="lazy"
+                 onerror="this.src=window.__sqph;">
+            <figcaption>โซล</figcaption>
+          </figure>
+        </a>
+
+        <a class="city-card" href="singapore.html" aria-label="สิงคโปร์">
+          <figure>
+            <img src="singapore-tile.webp" alt="สิงคโปร์" loading="lazy"
+                 onerror="this.src=window.__sqph;">
+            <figcaption>สิงคโปร์</figcaption>
+          </figure>
+        </a>
+
+        <a class="city-card" href="hongkong.html" aria-label="ฮ่องกง">
+          <figure>
+            <img src="hongkong-tile.webp" alt="ฮ่องกง" loading="lazy"
+                 onerror="this.src=window.__sqph;">
+            <figcaption>ฮ่องกง</figcaption>
+          </figure>
+        </a>
+
+        <a class="city-card" href="london.html" aria-label="ลอนดอน">
+          <figure>
+            <img src="london-tile.webp" alt="ลอนดอน" loading="lazy"
+                 onerror="this.src=window.__sqph;">
+            <figcaption>ลอนดอน</figcaption>
+          </figure>
+        </a>
+
+        <a class="city-card" href="paris.html" aria-label="ปารีส">
+          <figure>
+            <img src="paris-tile.webp" alt="ปารีส" loading="lazy"
+                 onerror="this.src=window.__sqph;">
+            <figcaption>ปารีส</figcaption>
+          </figure>
+        </a>
       </div>
     </section>
 
-    <!-- Why -->
+    <!-- ทำไมต้อง Click & Go -->
     <section>
-      <h2>ทำไมต้อง Click & Go</h2>
+      <h2 class="section-title">ทำไมต้อง Click & Go</h2>
       <div class="features">
         <div class="feature">
           <h3>เปรียบเทียบหลายเจ้า</h3>
@@ -92,11 +207,43 @@
   </main>
 
   <!-- Footer -->
-  <div id="footer-placeholder"></div>
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div style="font-weight:700; margin-bottom:4px;">
+        Privacy · Terms · Affiliate Disclosure · Contact ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+      <div>
+        Click & Go OTA (Thailand) Co., Ltd. · Juristic ID 0105562054689
+      </div>
+    </div>
+  </footer>
+
+  <!-- Utilities: Placeholder square & Language pop-up -->
   <script>
-    fetch("footer.html")
-      .then(res => res.text())
-      .then(data => { document.getElementById("footer-placeholder").innerHTML = data; });
+    // SVG placeholder สี่เหลี่ยมจัตุรัส (1:1)
+    window.__sqph = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200">
+        <rect width="100%" height="100%" fill="#eaeaea"/>
+        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+              font-family="Arial, sans-serif" font-size="48" fill="#9aa0a6">Photo</text>
+      </svg>
+    `);
+
+    // Language pop-up
+    (function(){
+      const btn  = document.querySelector('.lang-btn');
+      const menu = document.querySelector('.lang-menu');
+      if (!btn || !menu) return;
+      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      btn.addEventListener('click',(e)=>{
+        e.stopPropagation();
+        const opened = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(opened));
+      });
+      document.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', e => { if(e.key==='Escape') closeMenu(); });
+    })();
   </script>
 </body>
 </html>
