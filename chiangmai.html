@@ -1,22 +1,169 @@
-<!doctype html><html lang="th"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>โรงแรมในเชียงใหม่ – Click & Go</title>
-<meta name="description" content="ค้นหาและเปรียบเทียบดีลโรงแรมในเชียงใหม่ เมืองแห่งวัฒนธรรม คาเฟ่ และธรรมชาติ">
-<link rel="canonical" href="https://click-and-go-navy.vercel.app/chiangmai.html">
-<link rel="icon" href="favicon.ico"><link rel="stylesheet" href="style.css"></head>
-<body>
-<header class="site-header"><div class="inner">
-  <a href="index.html" class="brand"><img src="logo.png" height="34" alt=""><span>Click & Go</span></a>
-  <nav class="main-nav"><a href="index.html">หน้าแรก</a><a href="deals.html">ดีล</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a><a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a></nav>
-</div></header>
-<section class="hero hero--sm"><div class="hero-inner"><h1>เชียงใหม่</h1><p>อากาศดี คาเฟ่เยอะ ใกล้ภูเขาและวัดเก่าแก่</p></div></section>
-<main class="container section"><h2>ดีลโรงแรมในเชียงใหม่</h2>
-<div class="cards">
-  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>ย่านนิมมาน</h3><p class="muted">เริ่มต้น 1,100 บาท/คืน</p><div class="card-foot"><div class="price">฿1,100 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
-  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>ใกล้คูเมือง</h3><p class="muted">เริ่มต้น 900 บาท/คืน</p><div class="card-foot"><div class="price">฿900 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
-  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>วิวดอยสุเทพ</h3><p class="muted">เริ่มต้น 1,800 บาท/คืน</p><div class="card-foot"><div class="price">฿1,800 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
-</div>
-<p class="note">* ปุ่มจองเป็นตัวอย่าง รอแทนที่ด้วยลิงก์ Affiliate</p></main>
-<footer class="site-footer"><div class="container footer-inner"><div>© <script>document.write(new Date().getFullYear())</script> Click & Go</div><div class="footer-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a></div></div></footer>
-</body></html>
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>เชียงใหม่ | Click & Go – เที่ยวเชียงใหม่ หาโรงแรมง่ายในคลิกเดียว</title>
+  <meta name="description" content="เที่ยวเชียงใหม่ เมืองแห่งวัดวา คาเฟ่ และภูเขา ค้นหาโรงแรมและดีลพิเศษในย่านยอดนิยม นิมมานฯ คูเมือง ดอยสุเทพ – จองง่ายในคลิกเดียวกับ Click & Go">
+  <link rel="canonical" href="https://click-and-go-navy.vercel.app/chiangmai.html" />
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
 
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Click & Go">
+  <meta property="og:title" content="เชียงใหม่ – หาโรงแรมและดีลพิเศษ | Click & Go">
+  <meta property="og:description" content="สำรวจย่านยอดนิยม นิมมานเหมินทร์ คูเมือง ดอยสุเทพ พร้อมเปรียบเทียบราคาและไปจองได้ทันที">
+  <meta property="og:url" content="https://click-and-go-navy.vercel.app/chiangmai.html">
+  <meta property="og:image" content="https://click-and-go-navy.vercel.app/chiangmai-hero.jpg">
+
+  <!-- ค่าปรับเฉพาะหน้านี้ (ทำรูปสว่างขึ้นเล็กน้อย + คงธีมเดิม) -->
+  <style>
+    .city-hero {
+      /* ใช้สไตล์ hero เดิมของโปรเจกต์ และทำให้ภาพสว่างขึ้นเล็กน้อย */
+      height: 280px;               /* ให้พอดีแนวเดียวกับหน้า bangkok */
+      background: linear-gradient( to bottom, rgba(0,0,0,.10), rgba(0,0,0,.25) ),
+                  var(--hero-img, #e9eef1);
+      background-position: center;
+      background-size: cover;
+      border-radius: 12px;
+      overflow: hidden;
+      filter: brightness(1.12);   /* << ความสว่างเพิ่มเล็กน้อย */
+    }
+    .city-hero .hero-inner {
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      padding: 16px 20px;
+      color: #fff;
+      text-shadow: 0 2px 10px rgba(0,0,0,.35);
+    }
+    .pill-row {
+      display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
+      margin-top:10px;
+    }
+    .pill-row .btn {
+      padding:9px 14px; border-radius:22px;
+    }
+    /* Reuse deal grid styles from style.css (already present) */
+  </style>
+</head>
+<body>
+
+  <!-- Header (โหลดจาก header.html เพื่อคงเมนู/ปุ่มภาษา popup ให้เหมือนหน้าอื่น) -->
+  <div id="site-header"></div>
+
+  <main class="container">
+
+    <!-- HERO -->
+    <section class="city-hero" style="--hero-img: url('chiangmai-hero.jpg');" aria-label="ภาพเมืองเชียงใหม่">
+      <div class="hero-inner">
+        <h1 style="font-size:clamp(20px,3.2vw,28px);margin:0;">
+          เชียงใหม่ – เมืองแห่งวัดวา คาเฟ่ และภูเขา
+        </h1>
+      </div>
+    </section>
+
+    <!-- ค้นหาโรงแรม (placeholder เหมือนทุกหน้า) -->
+    <section style="margin-top:24px">
+      <h2>ค้นหาโรงแรมในเชียงใหม่</h2>
+      <div class="widget-box">
+        <div id="agoda-search-widget"></div>
+        <p class="muted">วางโค้ด Search Box ของ Partner เมื่อได้รับการอนุมัติ</p>
+
+        <form class="search-form" role="search" aria-label="ค้นหาโรงแรมจำลอง">
+          <input type="text" placeholder="ปลายทาง: เชียงใหม่" aria-label="ปลายทาง" value="เชียงใหม่">
+          <input type="date" aria-label="เช็คอิน">
+          <input type="date" aria-label="เช็คเอาต์">
+          <button type="button" class="btn btn-primary">ค้นหา</button>
+        </form>
+        <p class="help small">* ระบบค้นหาจะใช้งานจริงเมื่อได้รับอนุมัติจากพาร์ทเนอร์</p>
+      </div>
+    </section>
+
+    <!-- ย่าน/จุดหมายยอดนิยม -->
+    <section>
+      <h2>ย่านยอดนิยมในเชียงใหม่</h2>
+      <p class="muted">เลือกสำรวจย่านท่องเที่ยวหลักของเชียงใหม่ แล้วเปรียบเทียบราคา/ดีลได้ทันที</p>
+      <div class="pill-row">
+        <a class="btn" href="deals.html?q=นิมมานเหมินทร์">นิมมานเหมินทร์</a>
+        <a class="btn" href="deals.html?q=คูเมือง">คูเมือง/ประตูท่าแพ</a>
+        <a class="btn" href="deals.html?q=ดอยสุเทพ">ดอยสุเทพ</a>
+        <a class="btn" href="deals.html?q=สันกำแพง">สันกำแพง</a>
+        <a class="btn" href="deals.html?q=แม่ริม">แม่ริม</a>
+        <a class="btn" href="deals.html?q=แม่แตง">แม่แตง</a>
+      </div>
+    </section>
+
+    <!-- ดีลแนะนำ (mock) ใช้สไตล์เดียวกับ deals.html -->
+    <section>
+      <h2>โปรโมชั่นโรงแรมแนะนำ – เชียงใหม่</h2>
+      <div class="deal-grid">
+        <!-- Card 1 -->
+        <article class="deal-card">
+          <img class="deal-img" src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรมในคูเมือง" loading="lazy">
+          <div class="deal-body">
+            <h3 class="deal-title">โรงแรมตัวอย่าง – คูเมือง</h3>
+            <p class="deal-desc">ทำเลดี เดินเล่นประตูท่าแพสะดวก ราคาเริ่มต้นสบายกระเป๋า</p>
+            <div class="deal-meta">
+              <span class="price">฿1,100 / คืน</span>
+              <a class="btn btn-primary" href="deals.html?q=เชียงใหม่">จองเลย</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="deal-card">
+          <img class="deal-img" src="https://images.unsplash.com/photo-1508057198894-247b23fe5ade?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรมย่านนิมมานฯ" loading="lazy">
+          <div class="deal-body">
+            <h3 class="deal-title">โรงแรมตัวอย่าง – นิมมานฯ</h3>
+            <p class="deal-desc">ใกล้คาเฟ่และร้านอาหารฮิต เดินทางสะดวก บรรยากาศดี</p>
+            <div class="deal-meta">
+              <span class="price">฿1,600 / คืน</span>
+              <a class="btn btn-primary" href="deals.html?q=เชียงใหม่">จองเลย</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="deal-card">
+          <img class="deal-img" src="https://images.unsplash.com/photo-1496412705862-e0088f16f791?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างรีสอร์ตใกล้ธรรมชาติ" loading="lazy">
+          <div class="deal-body">
+            <h3 class="deal-title">รีสอร์ตใกล้ธรรมชาติ</h3>
+            <p class="deal-desc">เหมาะพักผ่อนชิล ๆ ใกล้เขา บรรยากาศเงียบสงบ</p>
+            <div class="deal-meta">
+              <span class="price">฿1,900 / คืน</span>
+              <a class="btn btn-primary" href="deals.html?q=เชียงใหม่">จองเลย</a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <p class="help small" style="margin-top:8px">
+        * ตัวอย่างเพื่อสื่อความเฉพาะ — เมื่อได้รับสิทธิ์ Affiliate จากพาร์ทเนอร์แล้ว ปุ่ม “จองเลย” จะลิงก์ไปหน้าพาร์ทเนอร์โดยตรง
+      </p>
+    </section>
+
+  </main>
+
+  <!-- Footer (โหลดจาก footer.html) -->
+  <div id="site-footer"></div>
+
+  <!-- Inject header/footer -->
+  <script>
+    // header
+    fetch('header.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('site-header').innerHTML = html;
+        // ให้สคริปต์ popup ภาษาใน header ทำงาน (มีในไฟล์ header.html อยู่แล้ว)
+      });
+    // footer
+    fetch('footer.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('site-footer').innerHTML = html;
+      });
+  </script>
+</body>
+</html>
