@@ -17,15 +17,21 @@
   <meta property="og:url" content="https://click-and-go-navy.vercel.app/chiangmai.html" />
   <meta property="og:image" content="https://click-and-go-navy.vercel.app/chiangmai-hero.jpg" />
 
-  <!-- ปรับเฉพาะหน้านี้: hero + ขนาดรูปดีลให้เท่าหน้ากรุงเทพฯ -->
+  <!-- ปรับเฉพาะหน้านี้: hero + ขนาดรูปดีลให้เท่าหน้ากรุงเทพฯ และเลื่อนตัวหนังสือขึ้น -->
   <style>
     /* HERO เมือง */
     .city-hero{
       height:280px;
-      background: linear-gradient(to bottom, rgba(0,0,0,.10), rgba(0,0,0,.25)),
-                  var(--hero-img, #e9eef1);
-      background-position:center;
-      background-size:cover;
+      /* gradient ด้านล่างเข้มขึ้น + เลื่อนตำแหน่งภาพด้วยตัวแปร --hero-pos-y */
+      background:
+        linear-gradient(to bottom,
+          rgba(0,0,0,.08) 0%,
+          rgba(0,0,0,.15) 40%,
+          rgba(0,0,0,.35) 72%,
+          rgba(0,0,0,.55) 100%),
+        var(--hero-img, #e9eef1);
+      background-position: center var(--hero-pos-y, 45%);
+      background-size: cover;
       border-radius:12px;
       overflow:hidden;
       filter: brightness(1.12);
@@ -33,8 +39,10 @@
     .city-hero .hero-inner{
       height:100%;
       display:flex; align-items:flex-end;
-      padding:16px 20px; color:#fff;
-      text-shadow:0 2px 10px rgba(0,0,0,.35);
+      /* เพิ่ม padding-bottom เพื่อดันข้อความให้ลอยขึ้นชัดเจน */
+      padding: 24px 20px 48px;
+      color:#fff;
+      text-shadow:0 2px 12px rgba(0,0,0,.45);
     }
 
     /* การ์ดดีล – บังคับอัตราส่วนเหมือนกรุงเทพฯ */
@@ -50,8 +58,8 @@
     }
     .deal-img{
       width:100%;
-      aspect-ratio: 16/9;      /* ป้องกันรูปสูงเกิน */
-      object-fit: cover;        /* ครอบภาพให้พอดีกรอบ */
+      aspect-ratio: 16/9;
+      object-fit: cover;
       display:block;
     }
     .deal-body{ padding:14px 16px; }
@@ -68,13 +76,14 @@
 </head>
 <body>
 
-  <!-- Header (คง popup ภาษา/เมนู ให้เหมือนหน้าหลัก) -->
+  <!-- Header -->
   <div id="site-header"></div>
 
   <main class="container">
 
     <!-- HERO -->
-    <section class="city-hero" style="--hero-img: url('chiangmai-hero.jpg');" aria-label="ภาพเมืองเชียงใหม่">
+    <!-- ปรับภาพเลื่อนขึ้น/ลง ได้ที่ --hero-pos-y (เช่น 35% หรือ 55%) -->
+    <section class="city-hero" style="--hero-img: url('chiangmai-hero.jpg'); --hero-pos-y: 38%;" aria-label="ภาพเมืองเชียงใหม่">
       <div class="hero-inner">
         <h1 style="font-size:clamp(20px,3.2vw,28px);margin:0;">
           เชียงใหม่ – เสน่ห์ล้านนา คาเฟ่ วิวภูเขา อากาศดีทั้งปี
@@ -173,11 +182,9 @@
 
   <!-- Inject header/footer + placeholder รูป -->
   <script>
-    // header/footer
     fetch('header.html').then(r=>r.text()).then(t=>{ document.getElementById('site-header').innerHTML=t; });
     fetch('footer.html').then(r=>r.text()).then(t=>{ document.getElementById('site-footer').innerHTML=t; });
 
-    // รูปสำรองกรณีโหลดไม่ได้
     const PLACEHOLDER='data:image/svg+xml;utf8,'+encodeURIComponent(
       `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675">
          <rect width="100%" height="100%" fill="#eaeaea"/>
@@ -190,4 +197,3 @@
   </script>
 </body>
 </html>
-
