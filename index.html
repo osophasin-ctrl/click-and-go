@@ -41,9 +41,12 @@
 
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
-  <script>window.dataLayer=window.dataLayer||[];
-  function gtag(){dataLayer.push(arguments);} gtag('js',new Date());
-  gtag('config','G-1QR2EGFWN3');</script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js',new Date());
+    gtag('config','G-1QR2EGFWN3');
+  </script>
 </head>
 <body>
   <!-- Header -->
@@ -144,13 +147,13 @@
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
-      <div style="font-weight:700; margin-bottom:4px;">
+      <div class="footer-links">
         Privacy · Terms · Affiliate Disclosure · 
         <a href="about.html">About us</a> · 
         <a href="contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
-      <div style="font-weight:700;">
+      <div class="footer-rights">
         All Right Reserved : Click And Go OTA (Thailand) Co., Ltd.
       </div>
     </div>
@@ -173,7 +176,7 @@
       document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
     })();
 
-    // toggle date placeholder
+    // toggle date placeholder (เช็คอิน/เช็คเอาท์)
     (function(){
       function bindDatePlaceholder(wrapId, inputId){
         const wrap  = document.getElementById(wrapId);
