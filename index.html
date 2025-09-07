@@ -7,40 +7,57 @@
   <meta name="description" content="Click & Go ช่วยค้นหาและเปรียบเทียบราคาโรงแรมจากหลาย OTA พร้อมลิงก์ไปจองทันที ครอบคลุมปลายทางยอดนิยมทั้งในไทยและต่างประเทศ" />
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/" />
 
-  <!-- Open Graph / Twitter -->
+  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
   <meta property="og:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว" />
   <meta property="og:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
   <meta property="og:url" content="https://click-and-go-navy.vercel.app/" />
   <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว" />
+  <meta name="twitter:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
+  <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+
+  <!-- JSON-LD: WebSite + SearchAction -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"Click & Go",
+    "url":"https://click-and-go-navy.vercel.app/",
+    "potentialAction":{
+      "@type":"SearchAction",
+      "target":"https://click-and-go-navy.vercel.app/deals.html?q={search_term_string}",
+      "query-input":"required name=search_term_string"
+    }
+  }
+  </script>
 
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
 
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date()); gtag('config', 'G-1QR2EGFWN3');
-  </script>
+  <script>window.dataLayer=window.dataLayer||[];
+  function gtag(){dataLayer.push(arguments);} gtag('js',new Date());
+  gtag('config','G-1QR2EGFWN3');</script>
 </head>
 <body>
   <!-- Header -->
   <header class="site-header" role="banner">
     <div class="inner">
       <a href="index.html" class="brand" aria-label="Click & Go">
-        <img src="logo.png" alt="" width="28" height="28" loading="lazy" />
-        <span>Click & Go</span>
+        <!-- โลโก้ใหญ่ขึ้น และไม่แสดงตัวหนังสือ -->
+        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
 
       <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html" aria-current="page">หน้าแรก</a>
         <a href="deals.html">โปรโมชั่น</a>
-        <a href="about.html">เกี่ยวกับ</a>
-        <a href="contact.html">ติดต่อเรา</a>
 
         <div class="lang">
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
@@ -55,23 +72,30 @@
 
   <main class="container">
     <!-- Hero -->
-    <section class="hero">
-      <img src="hero-bg.jpg" alt="Click & Go Thailand - แค่คลิก แล้วไป" class="hero-img" loading="lazy">
+    <section class="hero" aria-label="ภาพแบนเนอร์">
+      <img class="hero-img" src="hero-bg.jpg" alt="Click & Go Thailand" />
     </section>
 
     <!-- ค้นหาโรงแรม -->
     <section style="margin:24px 0">
       <h2 class="section-title">ค้นหาโรงแรม</h2>
       <div class="widget-like">
-        <div id="agoda-search-widget"></div>
         <p class="muted">วางโค้ด Agoda/Booking Search Box ที่นี่เมื่อได้รับจาก Partner Portal</p>
 
+        <!-- ฟอร์มค้นหาจำลอง -->
         <form class="search-form" role="search" aria-label="ค้นหาโรงแรมจำลอง">
           <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่" aria-label="ปลายทาง">
+          <select aria-label="จำนวนผู้เข้าพัก">
+            <option value="2">ผู้เข้าพัก 2 คน</option>
+            <option value="1">ผู้เข้าพัก 1 คน</option>
+            <option value="3">ผู้เข้าพัก 3 คน</option>
+            <option value="4">ผู้เข้าพัก 4 คน</option>
+          </select>
           <input type="date" aria-label="เช็คอิน">
           <input type="date" aria-label="เช็คเอาท์">
           <button type="button" class="btn">ค้นหา</button>
         </form>
+
         <p class="tiny-note">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Partner อนุมัติ</p>
       </div>
     </section>
@@ -80,51 +104,39 @@
     <section>
       <h2 class="section-title">ปลายทางยอดนิยมในไทย</h2>
       <div class="city-grid">
-        <!-- 6 เมืองไทย -->
-        <a class="city-card" href="bangkok.html" aria-label="กรุงเทพฯ">
+        <a class="city-card" href="bangkok.html">
           <figure>
-            <img src="bangkok-tile.webp" alt="กรุงเทพฯ" loading="lazy"
-                 onerror="this.src=window.__sqph;">
+            <img src="bangkok-tile.webp" alt="กรุงเทพฯ">
             <figcaption>กรุงเทพฯ</figcaption>
           </figure>
         </a>
-
-        <a class="city-card" href="chiangmai.html" aria-label="เชียงใหม่">
+        <a class="city-card" href="chiangmai.html">
           <figure>
-            <img src="chiangmai-tile.webp" alt="เชียงใหม่" loading="lazy"
-                 onerror="this.src=window.__sqph;">
+            <img src="chiangmai-tile.webp" alt="เชียงใหม่">
             <figcaption>เชียงใหม่</figcaption>
           </figure>
         </a>
-
-        <a class="city-card" href="pattaya.html" aria-label="พัทยา">
+        <a class="city-card" href="pattaya.html">
           <figure>
-            <img src="pattaya-tile.webp" alt="พัทยา" loading="lazy"
-                 onerror="this.src=window.__sqph;">
+            <img src="pattaya-tile.webp" alt="พัทยา">
             <figcaption>พัทยา</figcaption>
           </figure>
         </a>
-
-        <a class="city-card" href="phuket.html" aria-label="ภูเก็ต">
+        <a class="city-card" href="phuket.html">
           <figure>
-            <img src="phuket-tile.webp" alt="ภูเก็ต" loading="lazy"
-                 onerror="this.src=window.__sqph;">
+            <img src="phuket-tile.webp" alt="ภูเก็ต">
             <figcaption>ภูเก็ต</figcaption>
           </figure>
         </a>
-
-        <a class="city-card" href="krabi.html" aria-label="กระบี่">
+        <a class="city-card" href="krabi.html">
           <figure>
-            <img src="krabi-tile.webp" alt="กระบี่" loading="lazy"
-                 onerror="this.src=window.__sqph;">
+            <img src="krabi-tile.webp" alt="กระบี่">
             <figcaption>กระบี่</figcaption>
           </figure>
         </a>
-
-        <a class="city-card" href="huahin.html" aria-label="หัวหิน">
+        <a class="city-card" href="hua-hin.html">
           <figure>
-            <img src="huahin-tile.webp" alt="หัวหิน" loading="lazy"
-                 onerror="this.src=window.__sqph;">
+            <img src="huahin-tile.webp" alt="หัวหิน">
             <figcaption>หัวหิน</figcaption>
           </figure>
         </a>
@@ -135,54 +147,12 @@
     <section>
       <h2 class="section-title">เมืองยอดฮิตในต่างประเทศ</h2>
       <div class="city-grid">
-        <!-- 6 เมืองต่างประเทศ -->
-        <a class="city-card" href="tokyo.html" aria-label="โตเกียว">
-          <figure>
-            <img src="tokyo-tile.webp" alt="โตเกียว" loading="lazy"
-                 onerror="this.src=window.__sqph;">
-            <figcaption>โตเกียว</figcaption>
-          </figure>
-        </a>
-
-        <a class="city-card" href="seoul.html" aria-label="โซล">
-          <figure>
-            <img src="seoul-tile.webp" alt="โซล" loading="lazy"
-                 onerror="this.src=window.__sqph;">
-            <figcaption>โซล</figcaption>
-          </figure>
-        </a>
-
-        <a class="city-card" href="singapore.html" aria-label="สิงคโปร์">
-          <figure>
-            <img src="singapore-tile.webp" alt="สิงคโปร์" loading="lazy"
-                 onerror="this.src=window.__sqph;">
-            <figcaption>สิงคโปร์</figcaption>
-          </figure>
-        </a>
-
-        <a class="city-card" href="hongkong.html" aria-label="ฮ่องกง">
-          <figure>
-            <img src="hongkong-tile.webp" alt="ฮ่องกง" loading="lazy"
-                 onerror="this.src=window.__sqph;">
-            <figcaption>ฮ่องกง</figcaption>
-          </figure>
-        </a>
-
-        <a class="city-card" href="london.html" aria-label="ลอนดอน">
-          <figure>
-            <img src="london-tile.webp" alt="ลอนดอน" loading="lazy"
-                 onerror="this.src=window.__sqph;">
-            <figcaption>ลอนดอน</figcaption>
-          </figure>
-        </a>
-
-        <a class="city-card" href="paris.html" aria-label="ปารีส">
-          <figure>
-            <img src="paris-tile.webp" alt="ปารีส" loading="lazy"
-                 onerror="this.src=window.__sqph;">
-            <figcaption>ปารีส</figcaption>
-          </figure>
-        </a>
+        <a class="city-card" href="tokyo.html"><figure><img src="tokyo-tile.webp" alt="โตเกียว"><figcaption>โตเกียว</figcaption></figure></a>
+        <a class="city-card" href="seoul.html"><figure><img src="seoul-tile.webp" alt="โซล"><figcaption>โซล</figcaption></figure></a>
+        <a class="city-card" href="singapore.html"><figure><img src="singapore-tile.webp" alt="สิงคโปร์"><figcaption>สิงคโปร์</figcaption></figure></a>
+        <a class="city-card" href="hongkong.html"><figure><img src="hongkong-tile.webp" alt="ฮ่องกง"><figcaption>ฮ่องกง</figcaption></figure></a>
+        <a class="city-card" href="london.html"><figure><img src="london-tile.webp" alt="ลอนดอน"><figcaption>ลอนดอน</figcaption></figure></a>
+        <a class="city-card" href="paris.html"><figure><img src="paris-tile.webp" alt="ปารีส"><figcaption>ปารีส</figcaption></figure></a>
       </div>
     </section>
 
@@ -190,18 +160,9 @@
     <section>
       <h2 class="section-title">ทำไมต้อง Click & Go</h2>
       <div class="features">
-        <div class="feature">
-          <h3>เปรียบเทียบหลายเจ้า</h3>
-          <p>ดูราคา/โปรจากหลายเว็บไซต์ในที่เดียว</p>
-        </div>
-        <div class="feature">
-          <h3>คลิกเดียวไปจอง</h3>
-          <p>ลิงก์ตรงไปหน้าโรงแรมบนพาร์ทเนอร์ได้ทันที</p>
-        </div>
-        <div class="feature">
-          <h3>รองรับมือถือ</h3>
-          <p>ออกแบบให้ใช้งานง่าย ทุกหน้าจอ</p>
-        </div>
+        <div class="feature"><h3>เปรียบเทียบหลายเจ้า</h3><p>ดูราคา/โปรจากหลายเว็บไซต์ในที่เดียว</p></div>
+        <div class="feature"><h3>คลิกเดียวไปจอง</h3><p>ลิงก์ตรงไปหน้าโรงแรมบนพาร์ทเนอร์ได้ทันที</p></div>
+        <div class="feature"><h3>รองรับมือถือ</h3><p>ออกแบบให้ใช้งานง่าย ทุกหน้าจอ</p></div>
       </div>
     </section>
   </main>
@@ -210,41 +171,32 @@
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div style="font-weight:700; margin-bottom:4px;">
-        Privacy · Terms · Affiliate Disclosure · Contact ·
+        Privacy · Terms · Affiliate Disclosure · 
+        <a href="about.html">About us</a> · 
+        <a href="contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
-      <div>
-        Click & Go OTA (Thailand) Co., Ltd. · Juristic ID 0105562054689
+      <div style="font-weight:700;">
+        All Right Reserved : Click And Go OTA (Thailand) Co., Ltd.
       </div>
     </div>
   </footer>
 
-  <!-- Utilities: Placeholder square & Language pop-up -->
+  <!-- Language pop-up -->
   <script>
-    // SVG placeholder สี่เหลี่ยมจัตุรัส (1:1)
-    window.__sqph = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200">
-        <rect width="100%" height="100%" fill="#eaeaea"/>
-        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
-              font-family="Arial, sans-serif" font-size="48" fill="#9aa0a6">Photo</text>
-      </svg>
-    `);
-
-    // Language pop-up
     (function(){
       const btn  = document.querySelector('.lang-btn');
       const menu = document.querySelector('.lang-menu');
-      if (!btn || !menu) return;
+      if(!btn||!menu) return;
       function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-      btn.addEventListener('click',(e)=>{
+      btn.addEventListener('click', e=>{
         e.stopPropagation();
         const opened = menu.classList.toggle('open');
         btn.setAttribute('aria-expanded', String(opened));
       });
       document.addEventListener('click', closeMenu);
-      document.addEventListener('keydown', e => { if(e.key==='Escape') closeMenu(); });
+      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
     })();
   </script>
 </body>
 </html>
-
