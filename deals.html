@@ -10,6 +10,15 @@
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1QR2EGFWN3');</script>
+  <style>
+    /* ฟิลเตอร์บาร์ */
+    .filter-bar{border:1px solid #e5e5e5;background:#f9f9f9;border-radius:10px;padding:12px;margin:12px 0}
+    .filter-grid{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr auto}
+    .filter-grid input,.filter-grid select{padding:10px;border:1px solid #ccc;border-radius:6px;min-width:0}
+    .filter-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end}
+    @media (max-width:780px){.filter-grid{grid-template-columns:1fr 1fr}.filter-actions{justify-content:stretch}}
+    @media (max-width:520px){.filter-grid{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
   <!-- Header -->
@@ -37,12 +46,36 @@
   <main class="container">
     <section style="margin-top:20px">
       <h1 class="section-title">โปรโมชั่นโรงแรม</h1>
-      <p class="muted" style="margin-bottom:14px">ดีลแนะนำอัปเดตสม่ำเสมอ — เมื่อได้รับสิทธิ์ Affiliate ปุ่ม “จองเลย” จะลิงก์ไปยังหน้าโรงแรมจริง</p>
+      <p class="muted" style="margin-bottom:10px">ดีลแนะนำอัปเดตสม่ำเสมอ — เมื่อได้รับสิทธิ์ Affiliate ปุ่ม “จองเลย” จะลิงก์ไปยังหน้าโรงแรมจริง</p>
+
+      <!-- ฟิลเตอร์ -->
+      <div class="filter-bar" role="region" aria-label="ฟิลเตอร์ดีล">
+        <div class="filter-grid">
+          <select id="f-city" aria-label="ปลายทาง">
+            <option value="">ทุกปลายทาง</option>
+            <option value="bangkok">กรุงเทพฯ</option>
+            <option value="chiangmai">เชียงใหม่</option>
+            <option value="phuket">ภูเก็ต</option>
+            <option value="pattaya">พัทยา</option>
+            <option value="krabi">กระบี่</option>
+            <option value="huahin">หัวหิน</option>
+          </select>
+
+          <input type="date" id="f-checkin" aria-label="เช็คอิน">
+          <input type="date" id="f-checkout" aria-label="เช็คเอาท์">
+
+          <div class="filter-actions">
+            <input type="number" id="f-budget" placeholder="งบสูงสุด (฿)" min="0" step="50" aria-label="งบสูงสุด" style="max-width:160px">
+            <button class="btn" id="f-apply" type="button">กรอง</button>
+            <button class="btn" id="f-clear" type="button" style="background:#eee;color:#333">ล้าง</button>
+          </div>
+        </div>
+      </div>
 
       <!-- กริดดีล -->
-      <div class="deal-grid">
+      <div class="deal-grid" id="dealGrid">
         <!-- Card 1 -->
-        <article class="deal-card">
+        <article class="deal-card" data-city="bangkok" data-price="1200">
           <img class="thumb" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop" alt="ดีลโรงแรม กรุงเทพฯ">
           <div class="body">
             <h3>กรุงเทพฯ: วิวเมือง ใกล้รถไฟฟ้า</h3>
@@ -55,7 +88,7 @@
         </article>
 
         <!-- Card 2 -->
-        <article class="deal-card">
+        <article class="deal-card" data-city="chiangmai" data-price="990">
           <img class="thumb" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="ดีลโรงแรม เชียงใหม่">
           <div class="body">
             <h3>เชียงใหม่: ใกล้ย่านนิมมาน</h3>
@@ -68,7 +101,7 @@
         </article>
 
         <!-- Card 3 -->
-        <article class="deal-card">
+        <article class="deal-card" data-city="phuket" data-price="1800">
           <img class="thumb" src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop" alt="ดีลโรงแรม ภูเก็ต">
           <div class="body">
             <h3>ภูเก็ต: รีสอร์ทติดทะเล</h3>
@@ -81,7 +114,7 @@
         </article>
 
         <!-- Card 4 -->
-        <article class="deal-card">
+        <article class="deal-card" data-city="pattaya" data-price="1150">
           <img class="thumb" src="https://images.unsplash.com/photo-1502920514313-52581002a659?q=80&w=1200&auto=format&fit=crop" alt="ดีลโรงแรม พัทยา">
           <div class="body">
             <h3>พัทยา: ซีวิว ใจกลางเมือง</h3>
@@ -94,7 +127,7 @@
         </article>
 
         <!-- Card 5 -->
-        <article class="deal-card">
+        <article class="deal-card" data-city="krabi" data-price="1050">
           <img class="thumb" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop" alt="ดีลโรงแรม กระบี่">
           <div class="body">
             <h3>กระบี่: บูทีคโฮเทล</h3>
@@ -107,7 +140,7 @@
         </article>
 
         <!-- Card 6 -->
-        <article class="deal-card">
+        <article class="deal-card" data-city="huahin" data-price="1390">
           <img class="thumb" src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=1200&auto=format&fit=crop" alt="ดีลโรงแรม หัวหิน">
           <div class="body">
             <h3>หัวหิน: รีสอร์ทสำหรับครอบครัว</h3>
@@ -149,13 +182,42 @@
       document.addEventListener('click',closeMenu); document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
     })();
 
-    // คงภาษา/สลับภาษา
+    // คงภาษา/สลับภาษา + Map ลิงก์
     (function(){
       var isEN=location.pathname.startsWith('/en/'); var prefix=isEN?'/en':'';
       var map={home:prefix+'/index.html',deals:prefix+'/deals.html',privacy:prefix+'/privacy.html',terms:prefix+'/terms.html',aff:prefix+'/affiliate.html',about:prefix+'/about.html',contact:prefix+'/contact.html'};
       var nav=document.querySelector('.main-nav'); if(nav){nav.querySelectorAll('a').forEach(a=>{var t=a.textContent.trim().toLowerCase(); if(t.includes('หน้าแรก')||t==='home')a.href=map.home; else if(t.includes('โปรโมชั่น')||t==='deals')a.href=map.deals;});}
       var foot=document.querySelector('.footer-links'); if(foot){foot.querySelectorAll('a').forEach(a=>{var t=a.textContent.trim().toLowerCase(); if(t.startsWith('privacy'))a.href=map.privacy; else if(t.startsWith('terms'))a.href=map.terms; else if(t.startsWith('affiliate'))a.href=map.aff; else if(t.startsWith('about'))a.href=map.about; else if(t.startsWith('contact'))a.href=map.contact;});}
       var menu=document.querySelector('.lang-menu'); if(menu){var l=menu.querySelectorAll('a'); if(l.length>=2){var th=l[0],en=l[1]; var thPath=location.pathname.replace(/^\/en/,'')||'/deals.html'; var enPath=location.pathname.startsWith('/en')?location.pathname:'/en'+location.pathname; th.href=thPath; en.href=enPath;}}
+    })();
+
+    // ฟิลเตอร์ดีล (ปลายทาง + งบประมาณ)
+    (function(){
+      const $grid = document.getElementById('dealGrid');
+      const $city = document.getElementById('f-city');
+      const $budget = document.getElementById('f-budget');
+      const $apply = document.getElementById('f-apply');
+      const $clear = document.getElementById('f-clear');
+
+      function applyFilter(){
+        const city = ($city.value||'').toLowerCase();
+        const budget = parseFloat($budget.value||'');
+        [...$grid.children].forEach(card=>{
+          const c = (card.getAttribute('data-city')||'').toLowerCase();
+          const p = parseFloat(card.getAttribute('data-price')||'0');
+          let show = true;
+          if(city && c!==city) show = false;
+          if(!isNaN(budget) && p>budget) show = false;
+          card.style.display = show ? '' : 'none';
+        });
+      }
+      function clearFilter(){
+        $city.value=''; $budget.value=''; applyFilter();
+        document.getElementById('f-checkin').value='';
+        document.getElementById('f-checkout').value='';
+      }
+      $apply.addEventListener('click', applyFilter);
+      $clear.addEventListener('click', clearFilter);
     })();
   </script>
 </body>
