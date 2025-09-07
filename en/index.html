@@ -3,58 +3,51 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <title>Click & Go – Compare hotel prices in one click</title>
-  <meta name="description"
-        content="Click & Go helps you compare hotel prices across OTAs with direct booking links. Popular destinations in Thailand and worldwide." />
+  <title>Click & Go – Compare Hotel Prices, Book in One Click</title>
+  <meta name="description" content="Click & Go helps you find and compare hotel prices from multiple OTAs with instant booking links. Covering top destinations in Thailand and worldwide." />
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/en/" />
-
-  <!-- Hreflang (EN/TH) -->
-  <link rel="alternate" hreflang="en" href="https://click-and-go-navy.vercel.app/en/" />
-  <link rel="alternate" hreflang="th" href="https://click-and-go-navy.vercel.app/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
-  <meta property="og:title" content="Click & Go – Compare hotel prices in one click" />
-  <meta property="og:description" content="Find and compare hotel deals with instant booking links." />
+  <meta property="og:title" content="Click & Go – Compare Hotel Prices, Book in One Click" />
+  <meta property="og:description" content="Find and compare hotel prices from multiple providers with instant booking links." />
   <meta property="og:url" content="https://click-and-go-navy.vercel.app/en/" />
   <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Click & Go – Compare hotel prices in one click" />
-  <meta name="twitter:description" content="Find and compare hotel deals with instant booking links." />
+  <meta name="twitter:title" content="Click & Go – Compare Hotel Prices, Book in One Click" />
+  <meta name="twitter:description" content="Find and compare hotel prices from multiple providers with instant booking links." />
   <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
 
   <!-- JSON-LD: WebSite + SearchAction -->
   <script type="application/ld+json">
   {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Click & Go",
-    "url": "https://click-and-go-navy.vercel.app/en/",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://click-and-go-navy.vercel.app/deals.html?q={search_term_string}",
-      "query-input": "required name=search_term_string"
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"Click & Go",
+    "url":"https://click-and-go-navy.vercel.app/en/",
+    "potentialAction":{
+      "@type":"SearchAction",
+      "target":"https://click-and-go-navy.vercel.app/en/deals.html?q={search_term_string}",
+      "query-input":"required name=search_term_string"
     }
   }
   </script>
 
-  <link rel="icon" href="../favicon.ico" />
-  <link rel="stylesheet" href="../style.css" />
+  <link rel="icon" href="../favicon.ico">
+  <link rel="stylesheet" href="../style.css">
 
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-1QR2EGFWN3');
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js',new Date());
+    gtag('config','G-1QR2EGFWN3');
   </script>
 </head>
-
 <body>
   <!-- Header -->
   <header class="site-header" role="banner">
@@ -64,15 +57,15 @@
         <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
 
-      <nav class="main-nav" aria-label="Main menu">
+      <nav class="main-nav" aria-label="Main navigation">
         <a href="index.html" aria-current="page">Home</a>
-        <a href="../deals.html">Deals</a>
+        <a href="deals.html">Deals</a>
 
         <div class="lang">
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
           <div class="lang-menu" role="menu">
             <a role="menuitem" href="../index.html">ไทย</a>
-            <a role="menuitem" href="index.html" aria-current="true">English</a>
+            <a role="menuitem" href="#" aria-current="true">English</a>
           </div>
         </div>
       </nav>
@@ -81,77 +74,71 @@
 
   <main class="container">
     <!-- Hero -->
-    <section class="hero" aria-label="Banner">
-      <img class="hero-img" src="../hero-bg.jpg" alt="Click & Go" />
+    <section class="hero" aria-label="Hero banner">
+      <img class="hero-img" src="../hero-bg.jpg" alt="Click & Go Global" />
     </section>
 
     <!-- Search -->
     <section style="margin:24px 0">
-      <h2 class="section-title">Search Hotels</h2>
-
+      <h2 class="section-title">Find Hotels</h2>
       <div class="widget-like solid">
-        <p class="muted">We are ready to find the best deal for you</p>
+        <p class="muted">We’re ready to find you the best deals</p>
 
-        <form class="search-form search-4cols" role="search" aria-label="Search hotels">
-          <input type="text" placeholder="Destination e.g. Chiang Mai or hotel name" aria-label="Destination">
+        <form class="search-form search-4cols" role="search" aria-label="Mock search form">
+          <!-- Destination -->
+          <input type="text" placeholder="Destination e.g. Chiang Mai or Hotel name" aria-label="Destination">
 
-          <div class="date-wrap empty" id="checkin-wrap-en">
-            <input type="date" id="checkin-en" aria-label="Check-in">
+          <!-- Check-in -->
+          <div class="date-wrap empty" id="checkin-wrap">
+            <input type="date" id="checkin" aria-label="Check-in">
             <span class="date-placeholder">Check-in</span>
           </div>
 
-          <div class="date-wrap empty" id="checkout-wrap-en">
-            <input type="date" id="checkout-en" aria-label="Check-out">
+          <!-- Check-out -->
+          <div class="date-wrap empty" id="checkout-wrap">
+            <input type="date" id="checkout" aria-label="Check-out">
             <span class="date-placeholder">Check-out</span>
           </div>
 
+          <!-- Button -->
           <button type="button" class="btn">Search</button>
         </form>
       </div>
     </section>
 
-    <!-- Thailand -->
+    <!-- Top Destinations in Thailand -->
     <section>
-      <h2 class="section-title">Popular Destinations in Thailand</h2>
+      <h2 class="section-title">Top Destinations in Thailand</h2>
       <div class="city-grid">
-        <a class="city-card" href="../bangkok.html"><figure><img src="../bangkok-tile.webp" alt="Bangkok"><figcaption>Bangkok</figcaption></figure></a>
-        <a class="city-card" href="../chiangmai.html"><figure><img src="../chiangmai-tile.webp" alt="Chiang Mai"><figcaption>Chiang Mai</figcaption></figure></a>
-        <a class="city-card" href="../pattaya.html"><figure><img src="../pattaya-tile.webp" alt="Pattaya"><figcaption>Pattaya</figcaption></figure></a>
-        <a class="city-card" href="../phuket.html"><figure><img src="../phuket-tile.webp" alt="Phuket"><figcaption>Phuket</figcaption></figure></a>
-        <a class="city-card" href="../krabi.html"><figure><img src="../krabi-tile.webp" alt="Krabi"><figcaption>Krabi</figcaption></figure></a>
-        <a class="city-card" href="../hua-hin.html"><figure><img src="../huahin-tile.webp" alt="Hua Hin"><figcaption>Hua Hin</figcaption></figure></a>
+        <a class="city-card" href="bangkok.html"><figure><img src="../bangkok-tile.webp" alt="Bangkok"><figcaption>Bangkok</figcaption></figure></a>
+        <a class="city-card" href="chiangmai.html"><figure><img src="../chiangmai-tile.webp" alt="Chiang Mai"><figcaption>Chiang Mai</figcaption></figure></a>
+        <a class="city-card" href="pattaya.html"><figure><img src="../pattaya-tile.webp" alt="Pattaya"><figcaption>Pattaya</figcaption></figure></a>
+        <a class="city-card" href="phuket.html"><figure><img src="../phuket-tile.webp" alt="Phuket"><figcaption>Phuket</figcaption></figure></a>
+        <a class="city-card" href="krabi.html"><figure><img src="../krabi-tile.webp" alt="Krabi"><figcaption>Krabi</figcaption></figure></a>
+        <a class="city-card" href="hua-hin.html"><figure><img src="../huahin-tile.webp" alt="Hua Hin"><figcaption>Hua Hin</figcaption></figure></a>
       </div>
     </section>
 
-    <!-- International -->
+    <!-- Popular Cities Worldwide -->
     <section>
-      <h2 class="section-title">Top International Cities</h2>
+      <h2 class="section-title">Popular Cities Worldwide</h2>
       <div class="city-grid">
-        <a class="city-card" href="../tokyo.html"><figure><img src="../tokyo-tile.webp" alt="Tokyo"><figcaption>Tokyo</figcaption></figure></a>
-        <a class="city-card" href="../seoul.html"><figure><img src="../seoul-tile.webp" alt="Seoul"><figcaption>Seoul</figcaption></figure></a>
-        <a class="city-card" href="../singapore.html"><figure><img src="../singapore-tile.webp" alt="Singapore"><figcaption>Singapore</figcaption></figure></a>
-        <a class="city-card" href="../hongkong.html"><figure><img src="../hongkong-tile.webp" alt="Hong Kong"><figcaption>Hong Kong</figcaption></figure></a>
-        <a class="city-card" href="../london.html"><figure><img src="../london-tile.webp" alt="London"><figcaption>London</figcaption></figure></a>
-        <a class="city-card" href="../paris.html"><figure><img src="../paris-tile.webp" alt="Paris"><figcaption>Paris</figcaption></figure></a>
+        <a class="city-card" href="tokyo.html"><figure><img src="../tokyo-tile.webp" alt="Tokyo"><figcaption>Tokyo</figcaption></figure></a>
+        <a class="city-card" href="seoul.html"><figure><img src="../seoul-tile.webp" alt="Seoul"><figcaption>Seoul</figcaption></figure></a>
+        <a class="city-card" href="singapore.html"><figure><img src="../singapore-tile.webp" alt="Singapore"><figcaption>Singapore</figcaption></figure></a>
+        <a class="city-card" href="hongkong.html"><figure><img src="../hongkong-tile.webp" alt="Hong Kong"><figcaption>Hong Kong</figcaption></figure></a>
+        <a class="city-card" href="london.html"><figure><img src="../london-tile.webp" alt="London"><figcaption>London</figcaption></figure></a>
+        <a class="city-card" href="paris.html"><figure><img src="../paris-tile.webp" alt="Paris"><figcaption>Paris</figcaption></figure></a>
       </div>
     </section>
 
-    <!-- Why -->
+    <!-- Why Click & Go -->
     <section>
       <h2 class="section-title">Why Click & Go</h2>
       <div class="features">
-        <div class="feature">
-          <h3>Best deals for you</h3>
-          <p>Connected to global partners to fetch real-time prices.</p>
-        </div>
-        <div class="feature">
-          <h3>Booking made simple</h3>
-          <p>Jump straight to the hotel page on our partners.</p>
-        </div>
-        <div class="feature">
-          <h3>Works on every device</h3>
-          <p>Designed for mobile, tablet, and desktop.</p>
-        </div>
+        <div class="feature"><h3>Find the Best Deals</h3><p>Connected with global providers to search prices in real-time.</p></div>
+        <div class="feature"><h3>Simple Booking Flow</h3><p>Click straight to a partner’s hotel page instantly.</p></div>
+        <div class="feature"><h3>Mobile-Friendly</h3><p>Easy to use on mobile, tablet, and desktop.</p></div>
       </div>
     </section>
   </main>
@@ -160,11 +147,11 @@
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="../privacy.html">Privacy</a> ·
-        <a href="../terms.html">Terms</a> ·
-        <a href="../affiliate.html">Affiliate Disclosure</a> ·
-        <a href="../about.html">About us</a> ·
-        <a href="../contact.html">Contact</a> ·
+        <a href="privacy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html">About us</a> ·
+        <a href="contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
@@ -172,28 +159,22 @@
 
   <!-- Scripts -->
   <script>
-    // Language pop-up
+    // language pop-up
     (function(){
       const btn  = document.querySelector('.lang-btn');
       const menu = document.querySelector('.lang-menu');
-      if(!btn || !menu) return;
-
-      const closeMenu = () => {
-        menu.classList.remove('open');
-        btn.setAttribute('aria-expanded','false');
-      };
-
+      if(!btn||!menu) return;
+      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
       btn.addEventListener('click', e=>{
         e.stopPropagation();
         const opened = menu.classList.toggle('open');
         btn.setAttribute('aria-expanded', String(opened));
       });
-
       document.addEventListener('click', closeMenu);
       document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
     })();
 
-    // Toggle date placeholder (EN)
+    // toggle date placeholder
     (function(){
       function bindDatePlaceholder(wrapId, inputId){
         const wrap  = document.getElementById(wrapId);
@@ -204,8 +185,20 @@
         input.addEventListener('input',  toggle);
         input.addEventListener('change', toggle);
       }
-      bindDatePlaceholder('checkin-wrap-en','checkin-en');
-      bindDatePlaceholder('checkout-wrap-en','checkout-en');
+      bindDatePlaceholder('checkin-wrap','checkin');
+      bindDatePlaceholder('checkout-wrap','checkout');
+    })();
+
+    // footer link auto language (TH/EN)
+    (function(){
+      const isEN   = location.pathname.toLowerCase().includes('/en/');
+      const prefix = isEN ? '/en/' : '/';
+      document.querySelectorAll('.site-footer .footer-links a[href]').forEach(a=>{
+        const href = a.getAttribute('href') || '';
+        if (/^(https?:)?\/\//i.test(href) || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+        const clean = href.replace(/^\/en\//i,'').replace(/^\//,'');
+        a.setAttribute('href', prefix + clean);
+      });
     })();
   </script>
 </body>
