@@ -3,65 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ดีลโรงแรม & โปรพิเศษ | Click & Go</title>
-  <meta name="description" content="รวมดีลโรงแรมและโปรพิเศษจากพาร์ทเนอร์ชั้นนำ เลือกปลายทางและวันที่เข้าพักได้ พร้อมลิงก์ไปจองทันที">
+  <title>โปรโมชั่นโรงแรม – Click & Go</title>
+  <meta name="description" content="รวมดีลโรงแรมสุดคุ้ม ดีลพิเศษ และโปรโมชั่นจากพาร์ทเนอร์ของ Click & Go" />
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/deals.html" />
-  <link rel="icon" href="favicon.ico" />
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Click & Go" />
-  <meta property="og:title" content="ดีลโรงแรม & โปรพิเศษ | Click & Go" />
-  <meta property="og:description" content="รวมดีลโรงแรมและโปรพิเศษจากพาร์ทเนอร์ชั้นนำ เลือกปลายทางและวันที่เข้าพักได้ พร้อมลิงก์ไปจองทันที" />
-  <meta property="og:url" content="https://click-and-go-navy.vercel.app/deals.html" />
-  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
-
-  <!-- GA4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
-  <script>window.dataLayer=window.dataLayer||[];
-  function gtag(){dataLayer.push(arguments);} gtag('js',new Date());
-  gtag('config','G-1QR2EGFWN3');</script>
-
-  <!-- สไตล์ปุ่มสีเขียวเฉพาะหน้านี้ (ไม่กระทบไฟล์อื่น) -->
-  <style>
-    .btn.brand {
-      background:#0b8e78;
-      color:#fff;
-      border:1px solid #0b8e78;
-      border-radius:6px;
-      padding:10px 16px;
-      text-decoration:none;
-      display:inline-block;
-    }
-    .btn.brand:hover{ filter:brightness(0.95); text-decoration:none; }
-    .date-wrap{ position:relative; }
-    .date-wrap input[type="date"]{ position:relative; background:#fff; }
-    .date-placeholder{
-      position:absolute; left:12px; top:50%; transform:translateY(-50%);
-      color:#666; pointer-events:none; opacity:.85; font-size:14px;
-    }
-    .date-wrap:not(.empty) .date-placeholder{ display:none; }
-  </style>
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <!-- Header -->
   <header class="site-header" role="banner">
     <div class="inner">
       <a href="index.html" class="brand" aria-label="Click & Go">
-        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
-        <span class="brand-text" aria-hidden="true">Click & Go</span>
+        <img src="logo.png" alt="Click & Go" width="40" height="40" />
+        <span class="brand-text">Click & Go</span>
       </a>
 
-      <nav class="main-nav" aria-label="เมนูหลัก">
+      <nav class="main-nav">
         <a href="index.html">หน้าแรก</a>
         <a href="deals.html" aria-current="page">โปรโมชั่น</a>
 
         <div class="lang">
-          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
-          <div class="lang-menu" role="menu">
-            <a role="menuitem" href="#" aria-current="true">ไทย</a>
-            <a role="menuitem" href="en/deals.html">English</a>
+          <button class="lang-btn">ภาษา ▾</button>
+          <div class="lang-menu">
+            <a href="deals.html" aria-current="true">ไทย</a>
+            <a href="en/deals.html">English</a>
           </div>
         </div>
       </nav>
@@ -70,108 +35,103 @@
 
   <main class="container">
     <!-- Hero -->
-    <section class="hero" aria-label="ภาพแบนเนอร์">
-      <img class="hero-img" src="hero-bg.jpg" alt="ดีลโรงแรม & โปรพิเศษ" />
+    <section class="hero">
+      <img class="hero-img" src="hero-bg.jpg" alt="ดีลโรงแรมพิเศษกับ Click & Go" />
     </section>
 
-    <!-- กล่องค้นหา (เหมือนหน้า index) -->
+    <!-- Search box -->
     <section style="margin:24px 0">
       <h2 class="section-title">ค้นหาโรงแรม</h2>
       <div class="widget-like solid">
         <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
-
-        <form id="dealSearchForm" class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
-          <!-- ปลายทาง -->
-          <input id="dest" type="text" placeholder="ปลายทาง เช่น เชียงใหม่ หรือชื่อโรงแรม" aria-label="ปลายทาง">
-
-          <!-- เช็คอิน -->
+        <form class="search-form search-4cols" role="search">
+          <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่ หรือชื่อโรงแรม" aria-label="ปลายทาง">
           <div class="date-wrap empty" id="checkin-wrap">
-            <input type="date" id="checkin" aria-label="เช็คอิน">
+            <input type="date" id="checkin">
             <span class="date-placeholder">เช็คอิน</span>
           </div>
-
-          <!-- เช็คเอาท์ -->
           <div class="date-wrap empty" id="checkout-wrap">
-            <input type="date" id="checkout" aria-label="เช็คเอาท์">
+            <input type="date" id="checkout">
             <span class="date-placeholder">เช็คเอาท์</span>
           </div>
-
-          <!-- ปุ่มค้นหา -->
-          <button type="submit" class="btn brand">ค้นหา</button>
+          <button type="button" class="btn">ค้นหา</button>
         </form>
       </div>
     </section>
 
-    <!-- ปุ่มไปพาร์ทเนอร์ (ไม่มีข้อความยืดเยื้อ) -->
-    <section style="margin:12px 0 6px">
-      <div class="widget-like" style="margin-top:0;">
-        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-          <strong>ค้นหาต่อบนพาร์ทเนอร์:</strong>
-          <a id="goAgoda"   class="btn brand" href="#" target="_blank" rel="nofollow noopener">ไปที่ Agoda</a>
-          <a id="goBooking" class="btn brand" href="#" target="_blank" rel="nofollow noopener">ไปที่ Booking.com</a>
-        </div>
+    <!-- Partner box -->
+    <section class="partner-box" aria-label="ค้นหาต่อบนพาร์ทเนอร์">
+      <p class="muted" style="margin:0 0 10px">หรือค้นหาต่อบนพาร์ทเนอร์</p>
+      <div class="partner-actions">
+        <a class="btn-partner" href="https://www.agoda.com/" target="_blank" rel="nofollow noopener">ไปที่ Agoda</a>
+        <a class="btn-partner" href="https://www.booking.com/" target="_blank" rel="nofollow noopener">ไปที่ Booking.com</a>
       </div>
     </section>
 
-    <!-- Featured Deals -->
+    <!-- Deals section -->
     <section>
       <h2 class="section-title">ดีลแนะนำ</h2>
       <div class="deal-grid">
-        <article class="deal-card" data-city="bangkok">
-          <img class="thumb" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop" alt="Bangkok Deal">
-          <div class="body">
-            <h3>กรุงเทพฯ – ใกล้รถไฟฟ้า</h3>
-            <p>ที่พักทำเลดี เดินทางสะดวก ราคาเริ่มต้นพิเศษ</p>
-          </div>
-          <div class="meta">
-            <strong>เริ่มต้น ฿1,200</strong>
-            <a class="btn brand" href="#" target="_blank" rel="nofollow noopener">จองเลย</a>
+        <article class="deal-card">
+          <img src="bangkok-tile.webp" alt="กรุงเทพฯ">
+          <div class="deal-info">
+            <h3>โรงแรมสุดหรู กรุงเทพฯ</h3>
+            <p>ลดสูงสุด 40% สำหรับการจองภายในเดือนนี้</p>
+            <a class="btn" href="https://www.agoda.com/" target="_blank" rel="nofollow noopener">จองเลย</a>
           </div>
         </article>
 
-        <article class="deal-card" data-city="phuket">
-          <img class="thumb" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="Phuket Deal">
-          <div class="body">
-            <h3>ภูเก็ต – วิวทะเล</h3>
-            <p>พักผ่อนริมทะเล พร้อมสระว่ายน้ำสวย ๆ</p>
-          </div>
-          <div class="meta">
-            <strong>เริ่มต้น ฿1,800</strong>
-            <a class="btn brand" href="#" target="_blank" rel="nofollow noopener">จองเลย</a>
-          </div>
-        </article>
-
-        <article class="deal-card" data-city="chiangmai">
-          <img class="thumb" src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop" alt="Chiang Mai Deal">
-          <div class="body">
-            <h3>เชียงใหม่ – ใจกลางนิมมาน</h3>
-            <p>คาเฟ่เยอะ เดินเล่นสะดวก อากาศดีทั้งปี</p>
-          </div>
-          <div class="meta">
-            <strong>เริ่มต้น ฿990</strong>
-            <a class="btn brand" href="#" target="_blank" rel="nofollow noopener">จองเลย</a>
+        <article class="deal-card">
+          <img src="chiangmai-tile.webp" alt="เชียงใหม่">
+          <div class="deal-info">
+            <h3>บูติกโฮเทล เชียงใหม่</h3>
+            <p>ดีลพิเศษ เริ่มต้นเพียง 1,200 บาท/คืน</p>
+            <a class="btn" href="https://www.booking.com/" target="_blank" rel="nofollow noopener">จองเลย</a>
           </div>
         </article>
       </div>
-      <p class="tiny-note">* ราคา/ห้องว่างอาจเปลี่ยนแปลงตามวันที่เข้าพักและเงื่อนไขของผู้ให้บริการ</p>
     </section>
 
-    <!-- Top Destinations with Deals -->
+    <!-- Popular deals -->
     <section>
       <h2 class="section-title">ดีลสุดฮอตในเมืองยอดนิยม</h2>
       <div class="city-grid">
         <a class="city-card" href="bangkok.html"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
         <a class="city-card" href="chiangmai.html"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
         <a class="city-card" href="phuket.html"><figure><img src="phuket-tile.webp" alt="ภูเก็ต"><figcaption>ภูเก็ต</figcaption></figure></a>
-        <a class="city-card" href="pattaya.html"><figure><img src="pattaya-tile.webp" alt="พัทยา"><figcaption>พัทยา</figcaption></figure></a>
-        <a class="city-card" href="krabi.html"><figure><img src="krabi-tile.webp" alt="กระบี่"><figcaption>กระบี่</figcaption></figure></a>
-        <a class="city-card" href="hua-hin.html"><figure><img src="huahin-tile.webp" alt="หัวหิน"><figcaption>หัวหิน</figcaption></figure></a>
       </div>
     </section>
+  </main>
 
-    <!-- Partner Promotions (optional widget placeholder) -->
-    <section>
-      <h2 class="section-title">โปรโมชันจากพาร์ทเนอร์</h2>
-      <div class="widget-like">
-        <p class="muted" style="margin-bottom:8px;">วางโค้ดแบนเนอร์/วิดเจ็ตจากพาร์ทเนอร์เมื่อพร้อม</p>
-        <div style="height:
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html">About us</a> ·
+        <a href="contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    (function(){
+      function bindDatePlaceholder(wrapId, inputId){
+        const wrap  = document.getElementById(wrapId);
+        const input = document.getElementById(inputId);
+        if(!wrap || !input) return;
+        const toggle = () => wrap.classList.toggle('empty', !input.value);
+        toggle();
+        input.addEventListener('input',  toggle);
+        input.addEventListener('change', toggle);
+      }
+      bindDatePlaceholder('checkin-wrap','checkin');
+      bindDatePlaceholder('checkout-wrap','checkout');
+    })();
+  </script>
+</body>
+</html>
