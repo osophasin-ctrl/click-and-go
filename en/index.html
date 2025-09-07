@@ -3,15 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <title>Click & Go – Compare hotel prices in one click</title>
-  <meta name="description" content="Click & Go helps you compare hotel prices across OTAs with direct booking links. Popular destinations in Thailand and worldwide." />
+  <meta name="description"
+        content="Click & Go helps you compare hotel prices across OTAs with direct booking links. Popular destinations in Thailand and worldwide." />
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/en/" />
 
-  <!-- Hreflang -->
+  <!-- Hreflang (EN/TH) -->
   <link rel="alternate" hreflang="en" href="https://click-and-go-navy.vercel.app/en/" />
   <link rel="alternate" hreflang="th" href="https://click-and-go-navy.vercel.app/" />
 
-  <!-- OG -->
+  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
   <meta property="og:title" content="Click & Go – Compare hotel prices in one click" />
@@ -19,22 +21,58 @@
   <meta property="og:url" content="https://click-and-go-navy.vercel.app/en/" />
   <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
 
-  <link rel="icon" href="../favicon.ico">
-  <link rel="stylesheet" href="../style.css">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Click & Go – Compare hotel prices in one click" />
+  <meta name="twitter:description" content="Find and compare hotel deals with instant booking links." />
+  <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+
+  <!-- JSON-LD: WebSite + SearchAction -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Click & Go",
+    "url": "https://click-and-go-navy.vercel.app/en/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://click-and-go-navy.vercel.app/deals.html?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="stylesheet" href="../style.css" />
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-1QR2EGFWN3');
+  </script>
 </head>
+
 <body>
   <!-- Header -->
-  <header class="site-header">
+  <header class="site-header" role="banner">
     <div class="inner">
-      <a href="index.html" class="brand"><img src="../logo.png" alt="Click & Go" width="40" height="40" /><span class="brand-text">Click & Go</span></a>
-      <nav class="main-nav">
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="../logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Main menu">
         <a href="index.html" aria-current="page">Home</a>
         <a href="../deals.html">Deals</a>
+
         <div class="lang">
-          <button class="lang-btn">Language ▾</button>
-          <div class="lang-menu">
-            <a href="../index.html">ไทย</a>
-            <a href="index.html" aria-current="true">English</a>
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="../index.html">ไทย</a>
+            <a role="menuitem" href="index.html" aria-current="true">English</a>
           </div>
         </div>
       </nav>
@@ -43,23 +81,36 @@
 
   <main class="container">
     <!-- Hero -->
-    <section class="hero"><img class="hero-img" src="../hero-bg.jpg" alt="Click & Go" /></section>
+    <section class="hero" aria-label="Banner">
+      <img class="hero-img" src="../hero-bg.jpg" alt="Click & Go" />
+    </section>
 
     <!-- Search -->
     <section style="margin:24px 0">
       <h2 class="section-title">Search Hotels</h2>
+
       <div class="widget-like solid">
         <p class="muted">We are ready to find the best deal for you</p>
-        <form class="search-form search-4cols" role="search">
-          <input type="text" placeholder="Destination e.g. Chiang Mai or hotel name">
-          <div class="date-wrap empty" id="checkin-wrap-en"><input type="date" id="checkin-en"><span class="date-placeholder">Check-in</span></div>
-          <div class="date-wrap empty" id="checkout-wrap-en"><input type="date" id="checkout-en"><span class="date-placeholder">Check-out</span></div>
+
+        <form class="search-form search-4cols" role="search" aria-label="Search hotels">
+          <input type="text" placeholder="Destination e.g. Chiang Mai or hotel name" aria-label="Destination">
+
+          <div class="date-wrap empty" id="checkin-wrap-en">
+            <input type="date" id="checkin-en" aria-label="Check-in">
+            <span class="date-placeholder">Check-in</span>
+          </div>
+
+          <div class="date-wrap empty" id="checkout-wrap-en">
+            <input type="date" id="checkout-en" aria-label="Check-out">
+            <span class="date-placeholder">Check-out</span>
+          </div>
+
           <button type="button" class="btn">Search</button>
         </form>
       </div>
     </section>
 
-    <!-- Cities -->
+    <!-- Thailand -->
     <section>
       <h2 class="section-title">Popular Destinations in Thailand</h2>
       <div class="city-grid">
@@ -72,6 +123,7 @@
       </div>
     </section>
 
+    <!-- International -->
     <section>
       <h2 class="section-title">Top International Cities</h2>
       <div class="city-grid">
@@ -88,9 +140,18 @@
     <section>
       <h2 class="section-title">Why Click & Go</h2>
       <div class="features">
-        <div class="feature"><h3>Best deals for you</h3><p>Connected to global partners to fetch real-time prices.</p></div>
-        <div class="feature"><h3>Booking made simple</h3><p>One click to the hotel page on our partners.</p></div>
-        <div class="feature"><h3>Works on every device</h3><p>Designed for mobile, tablet, and desktop.</p></div>
+        <div class="feature">
+          <h3>Best deals for you</h3>
+          <p>Connected to global partners to fetch real-time prices.</p>
+        </div>
+        <div class="feature">
+          <h3>Booking made simple</h3>
+          <p>Jump straight to the hotel page on our partners.</p>
+        </div>
+        <div class="feature">
+          <h3>Works on every device</h3>
+          <p>Designed for mobile, tablet, and desktop.</p>
+        </div>
       </div>
     </section>
   </main>
@@ -99,11 +160,53 @@
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="../privacy.html">Privacy</a> · <a href="../terms.html">Terms</a> · <a href="../affiliate.html">Affiliate Disclosure</a> · 
-        <a href="../about.html">About us</a> · <a href="../contact.html">Contact</a> ·
+        <a href="../privacy.html">Privacy</a> ·
+        <a href="../terms.html">Terms</a> ·
+        <a href="../affiliate.html">Affiliate Disclosure</a> ·
+        <a href="../about.html">About us</a> ·
+        <a href="../contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
   </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Language pop-up
+    (function(){
+      const btn  = document.querySelector('.lang-btn');
+      const menu = document.querySelector('.lang-menu');
+      if(!btn || !menu) return;
+
+      const closeMenu = () => {
+        menu.classList.remove('open');
+        btn.setAttribute('aria-expanded','false');
+      };
+
+      btn.addEventListener('click', e=>{
+        e.stopPropagation();
+        const opened = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(opened));
+      });
+
+      document.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
+    })();
+
+    // Toggle date placeholder (EN)
+    (function(){
+      function bindDatePlaceholder(wrapId, inputId){
+        const wrap  = document.getElementById(wrapId);
+        const input = document.getElementById(inputId);
+        if(!wrap || !input) return;
+        const toggle = () => wrap.classList.toggle('empty', !input.value);
+        toggle();
+        input.addEventListener('input',  toggle);
+        input.addEventListener('change', toggle);
+      }
+      bindDatePlaceholder('checkin-wrap-en','checkin-en');
+      bindDatePlaceholder('checkout-wrap-en','checkout-en');
+    })();
+  </script>
 </body>
 </html>
