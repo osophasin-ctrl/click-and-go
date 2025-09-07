@@ -21,7 +21,7 @@
   <meta name="twitter:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
   <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
 
-  <!-- JSON-LD: WebSite + SearchAction -->
+  <!-- JSON-LD -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -84,7 +84,6 @@
       <div class="widget-like solid">
         <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
 
-        <!-- ฟอร์มค้นหาจำลอง -->
         <form class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
           <!-- ปลายทาง -->
           <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่ หรือชื่อโรงแรม" aria-label="ปลายทาง">
@@ -144,7 +143,7 @@
     </section>
   </main>
 
-  <!-- Footer -->
+  <!-- Footer (ปรับตามที่ขอ) -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
@@ -152,9 +151,6 @@
         <a href="about.html">About us</a> · 
         <a href="contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
-      </div>
-      <div class="footer-rights">
-        All Right Reserved : Click And Go OTA (Thailand) Co., Ltd.
       </div>
     </div>
   </footer>
@@ -176,7 +172,7 @@
       document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
     })();
 
-    // toggle date placeholder (เช็คอิน/เช็คเอาท์)
+    // toggle date placeholder
     (function(){
       function bindDatePlaceholder(wrapId, inputId){
         const wrap  = document.getElementById(wrapId);
