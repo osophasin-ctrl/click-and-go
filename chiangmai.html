@@ -127,4 +127,74 @@
 
         <!-- 5 -->
         <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-
+          <img class="thumb" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม 5">
+          <div class="body">
+            <h3>โรงแรมตัวอย่าง 5</h3>
+            <p>พูลวิลล่าเป็นส่วนตัว เหมาะสำหรับครอบครัว เริ่มเพียง 2,400 บาท/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿2,400 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+
+        <!-- 6 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม 6">
+          <div class="body">
+            <h3>โรงแรมตัวอย่าง 6</h3>
+            <p>ใกล้ไนท์บาซาร์ ช้อปปิ้งสะดวก เริ่มเพียง 1,050 บาท/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿1,050 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+      </div>
+
+      <p class="tiny-note">
+        * ตัวอย่างดีลเพื่อจัดวางเลย์เอาท์ — เมื่อได้รับสิทธิ์ Affiliate แล้ว ปุ่ม “จองเลย” จะลิงก์ไปหน้าโรงแรมจริง
+      </p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> · 
+        <a href="terms.html">Terms</a> · 
+        <a href="affiliate.html">Affiliate Disclosure</a> · 
+        <a href="about.html">About us</a> · 
+        <a href="contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // language pop-up
+    (function(){
+      const btn=document.querySelector('.lang-btn'); 
+      const menu=document.querySelector('.lang-menu');
+      if(!btn||!menu) return;
+      const close=()=>{menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};
+      btn.addEventListener('click',e=>{e.stopPropagation();const opened=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(opened));});
+      document.addEventListener('click',close); 
+      document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
+    })();
+
+    // date placeholder (เช็คอิน/เช็คเอาท์)
+    (function(){
+      function bind(wrapId,inputId){
+        const w=document.getElementById(wrapId), i=document.getElementById(inputId); 
+        if(!w||!i) return;
+        const t=()=>w.classList.toggle('empty',!i.value);
+        t(); i.addEventListener('input',t); i.addEventListener('change',t);
+      }
+      bind('checkin-wrap','checkin'); 
+      bind('checkout-wrap','checkout');
+    })();
+  </script>
+</body>
+</html>
