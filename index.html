@@ -83,9 +83,25 @@
 
         <!-- ฟอร์มค้นหาจำลอง -->
         <form class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
-          <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่" aria-label="ปลายทาง">
-          <input type="date" aria-label="เช็คอิน">
-          <input type="date" aria-label="เช็คเอาท์">
+          <!-- 1) ปลายทาง -->
+          <input
+            type="text"
+            placeholder="ปลายทาง เช่น เชียงใหม่ หรือชื่อโรงแรม"
+            aria-label="ปลายทาง" />
+
+          <!-- 2) เช็คอิน -->
+          <input
+            type="date"
+            placeholder="เช็คอิน"
+            aria-label="เช็คอิน" />
+
+          <!-- 3) เช็คเอาท์ -->
+          <input
+            type="date"
+            placeholder="เช็คเอาท์"
+            aria-label="เช็คเอาท์" />
+
+          <!-- ปุ่มค้นหา -->
           <button type="button" class="btn">ค้นหา</button>
         </form>
       </div>
