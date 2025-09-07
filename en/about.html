@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>About Us | Click & Go</title>
+  <meta name="description" content="About Click & Go: a hotel meta-search that compares prices across OTAs and lets you book in one click."/>
+  <link rel="icon" href="../favicon.ico"/><link rel="stylesheet" href="../style.css"/>
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <a href="index.html" class="brand"><img src="../logo.png" alt="Click & Go" width="40" height="40"/><span class="brand-text" aria-hidden="true">Click & Go</span></a>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="deals.html">Deals</a>
+        <div class="lang">
+          <button class="lang-btn">Language ▾</button>
+          <div class="lang-menu"><a href="#">ไทย</a><a href="#" aria-current="true">English</a></div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section style="margin-top:20px">
+      <h1 class="section-title">About Click & Go</h1>
+      <p>We are a hotel meta-search that <strong>compares prices</strong> across multiple providers and links you to book instantly. We focus on simplicity, transparency, and the best value.</p>
+      <h2 class="section-title">Our Principles</h2>
+      <ul>
+        <li>Transparent information and fair comparison</li>
+        <li>Seamless user experience across all devices</li>
+        <li>Continuous improvements and broader partners</li>
+      </ul>
+      <h2 class="section-title">Partners</h2>
+      <p>We work with leading OTAs via official affiliate programs to provide up-to-date prices and offers.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html" aria-current="page">About us</a> · <a href="contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  (function(){
+    var isEN=location.pathname.startsWith('/en/'); var prefix=isEN?'/en':'';
+    var map={home:prefix+'/index.html',deals:prefix+'/deals.html',privacy:prefix+'/privacy.html',terms:prefix+'/terms.html',aff:prefix+'/affiliate.html',about:prefix+'/about.html',contact:prefix+'/contact.html'};
+    var nav=document.querySelector('.main-nav'); if(nav){nav.querySelectorAll('a').forEach(a=>{var t=a.textContent.toLowerCase(); if(t.includes('home'))a.href=map.home; else if(t.includes('deals'))a.href=map.deals;});}
+    var foot=document.querySelector('.footer-links'); if(foot){foot.querySelectorAll('a').forEach(a=>{var t=a.textContent.toLowerCase(); if(t.startsWith('privacy'))a.href=map.privacy; else if(t.startsWith('terms'))a.href=map.terms; else if(t.startsWith('affiliate'))a.href=map.aff; else if(t.startsWith('about'))a.href=map.about; else if(t.startsWith('contact'))a.href=map.contact;});}
+    var menu=document.querySelector('.lang-menu'); if(menu){var l=menu.querySelectorAll('a'); if(l.length>=2){var th=l[0],en=l[1]; var thPath=location.pathname.replace(/^\/en/,'')||'/about.html'; var enPath=location.pathname.startsWith('/en')?location.pathname:'/en'+location.pathname; th.href=thPath; en.href=enPath;}}
+  })();
+  </script>
+</body>
+</html>
