@@ -1,105 +1,61 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>เกี่ยวกับเรา – Click & Go</title>
-  <meta name="description" content="เกี่ยวกับ Click & Go แพลตฟอร์มช่วยค้นหาและเปรียบเทียบราคาโรงแรม พร้อมลิงก์จองผ่านพาร์ทเนอร์ OTA อย่างปลอดภัย" />
-  <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Organization JSON-LD -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Click & Go",
-    "url": "https://click-and-go-navy.vercel.app/",
-    "logo": "https://click-and-go-navy.vercel.app/logo.png",
-    "sameAs": ["https://web.facebook.com/clickandgothailand"]
-  }
-  </script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>เกี่ยวกับเรา | Click & Go</title>
+  <meta name="description" content="เกี่ยวกับ Click & Go แพลตฟอร์มเปรียบเทียบราคาโรงแรมและดีลที่เชื่อมต่อพันธมิตร OTA หลายเจ้า เพื่อให้คุณจองได้ง่ายในคลิกเดียว"/>
+  <link rel="icon" href="favicon.ico"/>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- Header -->
-  <div id="header-placeholder"></div>
-  <script>
-    fetch("header.html").then(r=>r.text()).then(t=>{document.getElementById("header-placeholder").innerHTML=t;});
-  </script>
+  <header class="site-header">
+    <div class="inner">
+      <a href="index.html" class="brand"><img src="logo.png" alt="Click & Go" width="40" height="40"/><span class="brand-text" aria-hidden="true">Click & Go</span></a>
+      <nav class="main-nav">
+        <a href="index.html">หน้าแรก</a>
+        <a href="deals.html">โปรโมชั่น</a>
+        <div class="lang">
+          <button class="lang-btn">ภาษา ▾</button>
+          <div class="lang-menu"><a href="#" aria-current="true">ไทย</a><a href="#">English</a></div>
+        </div>
+      </nav>
+    </div>
+  </header>
 
   <main class="container">
-    <h1>เกี่ยวกับ Click & Go</h1>
-    <p>Click & Go คือแพลตฟอร์มที่ช่วยให้คุณ <strong>ค้นหา เปรียบเทียบราคา และคลิกไปจอง</strong> โรงแรมผ่านพาร์ทเนอร์ OTA ชั้นนำได้อย่างรวดเร็วและปลอดภัย เราต้องการให้การวางแผนทริปเป็นเรื่องง่ายสำหรับทุกคน</p>
-
-    <section>
-      <h2>สิ่งที่เราเชื่อและเป้าหมาย</h2>
-      <div class="grid-cards">
-        <div class="card">
-          <div class="card-body">
-            <h3>Simple by Design</h3>
-            <p>ประสบการณ์ผู้ใช้ต้องเรียบง่าย รวดเร็ว และชัดเจน ให้คุณตัดสินใจได้ในไม่กี่คลิก</p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <h3>Trusted Partners</h3>
-            <p>เราเชื่อมต่อกับ OTA ชั้นนำ เช่น Agoda, Booking.com (ผ่านเครือข่าย Affiliate) เพื่อความมั่นใจเรื่องราคาและบริการ</p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <h3>Value for Travelers</h3>
-            <p>นำเสนอข้อมูลที่จำเป็น ดีลที่ใช่ และลิงก์ไปจองโดยตรง ช่วยประหยัดเวลาและงบประมาณ</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <h2>ระบบทำงานอย่างไร</h2>
-      <div class="grid-cards">
-        <div class="card"><div class="card-body">
-          <h3>1) ค้นหา</h3>
-          <p>กรอกปลายทางและวันที่เดินทางในช่องค้นหา (หรือเลือกเมืองยอดนิยม)</p>
-        </div></div>
-        <div class="card"><div class="card-body">
-          <h3>2) เปรียบเทียบ</h3>
-          <p>ดูราคาและดีลจากหลายแหล่งข้อมูล/พาร์ทเนอร์ในหน้าเดียว</p>
-        </div></div>
-        <div class="card"><div class="card-body">
-          <h3>3) คลิกเพื่อจอง</h3>
-          <p>กด “จองเลย” ระบบจะพาไปยังหน้าจองของพาร์ทเนอร์ OTA เพื่อทำรายการอย่างปลอดภัย</p>
-        </div></div>
-      </div>
-    </section>
-
-    <section>
-      <h2>พาร์ทเนอร์และเครือข่าย</h2>
-      <p>เรากำลังพัฒนาความร่วมมือกับ OTA และเครือข่ายโฆษณาชั้นนำ เพื่อให้คุณได้รับข้อมูลราคาและดีลที่เชื่อถือได้</p>
+    <section style="margin-top:20px">
+      <h1 class="section-title">เกี่ยวกับ Click & Go</h1>
+      <p>เราเป็นเมต้าเสิร์ชที่ช่วยคุณ <strong>เปรียบเทียบราคาโรงแรม</strong> จากผู้ให้บริการหลายเจ้า แล้วลิงก์ไปจองได้ทันทีในคลิกเดียว โฟกัสคือความเรียบง่าย ความโปร่งใส และดีลที่คุ้มค่าที่สุดสำหรับคุณ</p>
+      <h2 class="section-title">สิ่งที่เราเชื่อ</h2>
       <ul>
-        <li>Agoda Partner Program (อยู่ระหว่างการยืนยัน)</li>
-        <li>Booking.com ผ่านเครือข่าย Awin (สมัครใช้งานแล้ว)</li>
+        <li>ข้อมูลที่โปร่งใส เปรียบเทียบราคาแบบยุติธรรม</li>
+        <li>ประสบการณ์ใช้งานที่ลื่นไหล บนทุกอุปกรณ์</li>
+        <li>พัฒนาต่อเนื่อง เพิ่มปลายทางและพาร์ทเนอร์ใหม่ๆ</li>
       </ul>
-      <div style="margin-top:10px">
-        <a class="btn" href="deals.html">ดูโปรโมชั่น</a>
-        <a class="btn" href="contact.html" style="margin-left:8px">ติดต่อเรา</a>
-      </div>
-    </section>
-
-    <section>
-      <h2>นโยบายและข้อกำหนด</h2>
-      <p>เราให้ความสำคัญกับความเป็นส่วนตัวและความโปร่งใสในการใช้งานเว็บไซต์</p>
-      <p>
-        <a href="privacy.html">นโยบายความเป็นส่วนตัว</a> ·
-        <a href="terms.html">ข้อกำหนดการใช้งาน</a>
-      </p>
+      <h2 class="section-title">พันธมิตรของเรา</h2>
+      <p>เราทำงานร่วมกับ OTA และผู้ให้บริการท่องเที่ยวหลายราย ผ่านโปรแกรม Affiliate อย่างเป็นทางการ เพื่อให้ได้ข้อมูลราคาและข้อเสนอที่อัปเดต</p>
     </section>
   </main>
 
-  <!-- Footer -->
-  <div id="footer-placeholder"></div>
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html" aria-current="page">About us</a> · <a href="contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
   <script>
-    fetch("footer.html").then(r=>r.text()).then(t=>{document.getElementById("footer-placeholder").innerHTML=t;});
+  (function(){
+    var isEN=location.pathname.startsWith('/en/'); var prefix=isEN?'/en':'';
+    var map={home:prefix+'/index.html',deals:prefix+'/deals.html',privacy:prefix+'/privacy.html',terms:prefix+'/terms.html',aff:prefix+'/affiliate.html',about:prefix+'/about.html',contact:prefix+'/contact.html'};
+    var nav=document.querySelector('.main-nav'); if(nav){nav.querySelectorAll('a').forEach(a=>{var t=a.textContent.toLowerCase(); if(t.includes('หน้าแรก')||t==='home')a.href=map.home; else if(t.includes('โปรโมชั่น')||t==='deals')a.href=map.deals;});}
+    var foot=document.querySelector('.footer-links'); if(foot){foot.querySelectorAll('a').forEach(a=>{var t=a.textContent.toLowerCase(); if(t.startsWith('privacy'))a.href=map.privacy; else if(t.startsWith('terms'))a.href=map.terms; else if(t.startsWith('affiliate'))a.href=map.aff; else if(t.startsWith('about'))a.href=map.about; else if(t.startsWith('contact'))a.href=map.contact;});}
+    var menu=document.querySelector('.lang-menu'); if(menu){var l=menu.querySelectorAll('a'); if(l.length>=2){var th=l[0],en=l[1]; var thPath=location.pathname.replace(/^\/en/,'')||'/about.html'; var enPath=location.pathname.startsWith('/en')?location.pathname:'/en'+location.pathname; th.href=thPath; en.href=enPath;}}
+  })();
   </script>
 </body>
 </html>
