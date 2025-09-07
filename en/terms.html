@@ -12,4 +12,121 @@
   <link rel="alternate" hreflang="th" href="https://click-and-go-navy.vercel.app/terms.html" />
 
   <!-- Open Graph -->
-  <
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Click & Go" />
+  <meta property="og:title" content="Terms & Conditions | Click & Go" />
+  <meta property="og:description" content="Click & Go Terms & Conditions covering service scope, affiliate links, liability, IP rights, governing law, and changes." />
+  <meta property="og:url" content="https://click-and-go-navy.vercel.app/en/terms.html" />
+  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="inner">
+      <a href="/en/" class="brand" aria-label="Click & Go">
+        <img src="/logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="/en/" >Home</a>
+        <a href="/en/deals.html">Deals</a>
+
+        <div class="lang">
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="/terms.html">ไทย</a>
+            <a role="menuitem" href="#" aria-current="true">English</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section style="margin:18px 0 8px">
+      <h1 class="section-title">Terms & Conditions</h1>
+      <p class="muted">Last updated: 9 September 2025</p>
+    </section>
+
+    <section>
+      <h2>1) Acceptance of Terms</h2>
+      <p>By accessing or using Click & Go, you agree to these Terms & Conditions. If you do not agree, please discontinue using the website.</p>
+    </section>
+
+    <section>
+      <h2>2) Nature of Service</h2>
+      <p>We provide a meta-search experience to compare hotel prices from third-party providers (OTAs/partners) and link you to complete bookings on partner sites. Booking, payment, cancellation, and after-sales services are handled by the respective providers.</p>
+    </section>
+
+    <section>
+      <h2>3) Affiliate Links & Commissions</h2>
+      <p>Some links are affiliate links. If you complete a booking via these links, we may earn a commission at no extra cost to you. Specific terms depend on each provider.</p>
+    </section>
+
+    <section>
+      <h2>4) Information Accuracy</h2>
+      <p>Prices and availability are subject to change and depend on partner systems. We strive for accuracy but cannot guarantee completeness or real-time correctness at all times.</p>
+    </section>
+
+    <section>
+      <h2>5) Limitation of Liability</h2>
+      <p>Click & Go shall not be liable for any direct or indirect damages arising from the use of the site, reliance on information, or transactions with third-party providers, except where prohibited by law.</p>
+    </section>
+
+    <section>
+      <h2>6) Intellectual Property</h2>
+      <p>All content, logos, designs, and elements on this site are the property of Click & Go or its licensors. They are provided for personal use only. You may not reproduce, modify, publish, or use them commercially without permission.</p>
+    </section>
+
+    <section>
+      <h2>7) Governing Law</h2>
+      <p>These Terms are governed by the laws of Thailand. Any disputes shall be subject to the jurisdiction of competent courts in Thailand.</p>
+    </section>
+
+    <section>
+      <h2>8) Changes to Terms</h2>
+      <p>We may update these Terms from time to time. We will indicate updates by revising the “Last updated” date. Continued use of the site constitutes acceptance of the revised Terms.</p>
+    </section>
+
+    <section>
+      <h2>9) Contact</h2>
+      <p>If you have questions about these Terms, please visit <a href="/en/contact.html">Contact</a>.</p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="/en/privacy.html">Privacy</a> ·
+        <a href="/en/terms.html">Terms</a> ·
+        <a href="/en/affiliate.html">Affiliate Disclosure</a> ·
+        <a href="/en/about.html">About us</a> ·
+        <a href="/en/contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Language pop-up -->
+  <script>
+    (function(){
+      const btn  = document.querySelector('.lang-btn');
+      const menu = document.querySelector('.lang-menu');
+      if(!btn||!menu) return;
+      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      btn.addEventListener('click', e=>{
+        e.stopPropagation();
+        const opened = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(opened));
+      });
+      document.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
+    })();
+  </script>
+</body>
+</html>
