@@ -22,6 +22,27 @@
   <script>window.dataLayer=window.dataLayer||[];
   function gtag(){dataLayer.push(arguments);} gtag('js',new Date());
   gtag('config','G-1QR2EGFWN3');</script>
+
+  <!-- สไตล์ปุ่มสีเขียวเฉพาะหน้านี้ (ไม่กระทบไฟล์อื่น) -->
+  <style>
+    .btn.brand {
+      background:#0b8e78;
+      color:#fff;
+      border:1px solid #0b8e78;
+      border-radius:6px;
+      padding:10px 16px;
+      text-decoration:none;
+      display:inline-block;
+    }
+    .btn.brand:hover{ filter:brightness(0.95); text-decoration:none; }
+    .date-wrap{ position:relative; }
+    .date-wrap input[type="date"]{ position:relative; background:#fff; }
+    .date-placeholder{
+      position:absolute; left:12px; top:50%; transform:translateY(-50%);
+      color:#666; pointer-events:none; opacity:.85; font-size:14px;
+    }
+    .date-wrap:not(.empty) .date-placeholder{ display:none; }
+  </style>
 </head>
 <body>
   <!-- Header -->
@@ -53,17 +74,41 @@
       <img class="hero-img" src="hero-bg.jpg" alt="ดีลโรงแรม & โปรพิเศษ" />
     </section>
 
-    <!-- Heading + Partner Deep Links -->
-    <section style="margin:20px 0 10px">
-      <h1 class="section-title" style="margin-bottom:6px;">ดีลโรงแรม & โปรโมชั่นพิเศษ</h1>
-      <p class="muted" id="dealContext">เลือกปลายทาง/วันที่จากหน้าแรกได้ แล้วมาค้นหาต่อบนพาร์ทเนอร์</p>
+    <!-- กล่องค้นหา (เหมือนหน้า index) -->
+    <section style="margin:24px 0">
+      <h2 class="section-title">ค้นหาโรงแรม</h2>
+      <div class="widget-like solid">
+        <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
 
-      <div class="widget-like" style="margin-top:10px;">
+        <form id="dealSearchForm" class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
+          <!-- ปลายทาง -->
+          <input id="dest" type="text" placeholder="ปลายทาง เช่น เชียงใหม่ หรือชื่อโรงแรม" aria-label="ปลายทาง">
+
+          <!-- เช็คอิน -->
+          <div class="date-wrap empty" id="checkin-wrap">
+            <input type="date" id="checkin" aria-label="เช็คอิน">
+            <span class="date-placeholder">เช็คอิน</span>
+          </div>
+
+          <!-- เช็คเอาท์ -->
+          <div class="date-wrap empty" id="checkout-wrap">
+            <input type="date" id="checkout" aria-label="เช็คเอาท์">
+            <span class="date-placeholder">เช็คเอาท์</span>
+          </div>
+
+          <!-- ปุ่มค้นหา -->
+          <button type="submit" class="btn brand">ค้นหา</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ปุ่มไปพาร์ทเนอร์ (ไม่มีข้อความยืดเยื้อ) -->
+    <section style="margin:12px 0 6px">
+      <div class="widget-like" style="margin-top:0;">
         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
           <strong>ค้นหาต่อบนพาร์ทเนอร์:</strong>
-          <a id="goAgoda"   class="btn" href="#" target="_blank" rel="nofollow noopener">ไปที่ Agoda</a>
-          <a id="goBooking" class="btn" href="#" target="_blank" rel="nofollow noopener">ไปที่ Booking.com</a>
-          <span id="deepLinkHint" class="muted"></span>
+          <a id="goAgoda"   class="btn brand" href="#" target="_blank" rel="nofollow noopener">ไปที่ Agoda</a>
+          <a id="goBooking" class="btn brand" href="#" target="_blank" rel="nofollow noopener">ไปที่ Booking.com</a>
         </div>
       </div>
     </section>
@@ -80,7 +125,7 @@
           </div>
           <div class="meta">
             <strong>เริ่มต้น ฿1,200</strong>
-            <a class="btn" href="#" target="_blank" rel="nofollow noopener">จองเลย</a>
+            <a class="btn brand" href="#" target="_blank" rel="nofollow noopener">จองเลย</a>
           </div>
         </article>
 
@@ -92,7 +137,7 @@
           </div>
           <div class="meta">
             <strong>เริ่มต้น ฿1,800</strong>
-            <a class="btn" href="#" target="_blank" rel="nofollow noopener">จองเลย</a>
+            <a class="btn brand" href="#" target="_blank" rel="nofollow noopener">จองเลย</a>
           </div>
         </article>
 
@@ -104,7 +149,7 @@
           </div>
           <div class="meta">
             <strong>เริ่มต้น ฿990</strong>
-            <a class="btn" href="#" target="_blank" rel="nofollow noopener">จองเลย</a>
+            <a class="btn brand" href="#" target="_blank" rel="nofollow noopener">จองเลย</a>
           </div>
         </article>
       </div>
@@ -113,7 +158,7 @@
 
     <!-- Top Destinations with Deals -->
     <section>
-      <h2 class="section-title">ปลายทางยอดนิยมมีดีล</h2>
+      <h2 class="section-title">ดีลสุดฮอตในเมืองยอดนิยม</h2>
       <div class="city-grid">
         <a class="city-card" href="bangkok.html"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
         <a class="city-card" href="chiangmai.html"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
@@ -129,139 +174,4 @@
       <h2 class="section-title">โปรโมชันจากพาร์ทเนอร์</h2>
       <div class="widget-like">
         <p class="muted" style="margin-bottom:8px;">วางโค้ดแบนเนอร์/วิดเจ็ตจากพาร์ทเนอร์เมื่อพร้อม</p>
-        <!-- ตัวอย่าง (คอมเมนต์ไว้): 
-        <script src="https://partners.agoda.com/widgets/banner/banner.min.js"></script>
-        <div id="agoda-banner"></div>
-        -->
-        <div style="height:120px; border:1px dashed #ccc; border-radius:10px; background:#fff; display:flex; align-items:center; justify-content:center;">
-          <span class="muted">Partner Widget Placeholder</span>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container" style="text-align:center">
-      <div class="footer-links">
-        <a href="privacy.html">Privacy</a> · 
-        <a href="terms.html">Terms</a> · 
-        <a href="affiliate-disclosure.html">Affiliate Disclosure</a> · 
-        <a href="about.html">About us</a> · 
-        <a href="contact.html">Contact</a> ·
-        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Scripts -->
-  <script>
-    // Language pop-up
-    (function(){
-      const btn  = document.querySelector('.lang-btn');
-      const menu = document.querySelector('.lang-menu');
-      if(!btn||!menu) return;
-      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-      btn.addEventListener('click', e=>{
-        e.stopPropagation();
-        const opened = menu.classList.toggle('open');
-        btn.setAttribute('aria-expanded', String(opened));
-      });
-      document.addEventListener('click', closeMenu);
-      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
-    })();
-
-    // ===== Deep Link Builder =====
-    const CFG = {
-      agoda: {
-        base: 'https://www.agoda.com/search',
-        cid : 'YOUR_CID',                      // <<< ใส่รหัส Agoda CID ของคุณ
-        lang: 'th-th',
-        curr: 'THB'
-      },
-      booking: {
-        base: 'https://www.booking.com/searchresults.html',
-        aid : 'YOUR_AID',                      // <<< ใส่รหัส Booking AID ของคุณ
-        lang: 'th',
-        curr: 'THB'
-      }
-    };
-
-    function getParams(){
-      const u = new URL(location.href);
-      return {
-        dest    : u.searchParams.get('dest') || '',
-        checkin : u.searchParams.get('checkin') || '',
-        checkout: u.searchParams.get('checkout') || '',
-        adults  : u.searchParams.get('adults') || '2',
-        rooms   : u.searchParams.get('rooms')  || '1'
-      };
-    }
-
-    function buildAgoda(p){
-      const url = new URL(CFG.agoda.base);
-      if (CFG.agoda.cid) url.searchParams.set('cid', CFG.agoda.cid);
-      if (p.dest) url.searchParams.set('q', p.dest);
-      if (p.checkin)  url.searchParams.set('checkIn',  p.checkin);
-      if (p.checkout) url.searchParams.set('checkOut', p.checkout);
-      url.searchParams.set('adults', p.adults);
-      url.searchParams.set('rooms',  p.rooms);
-      url.searchParams.set('language', CFG.agoda.lang);
-      url.searchParams.set('currency', CFG.agoda.curr);
-      return url.toString();
-    }
-
-    function buildBooking(p){
-      const url = new URL(CFG.booking.base);
-      if (CFG.booking.aid) url.searchParams.set('aid', CFG.booking.aid);
-      if (p.dest) url.searchParams.set('ss', p.dest);
-      if (p.checkin)  url.searchParams.set('checkin',  p.checkin);
-      if (p.checkout) url.searchParams.set('checkout', p.checkout);
-      url.searchParams.set('group_adults', p.adults);
-      url.searchParams.set('no_rooms',     p.rooms);
-      url.searchParams.set('group_children','0');
-      url.searchParams.set('lang', CFG.booking.lang);
-      url.searchParams.set('selected_currency', CFG.booking.curr);
-      return url.toString();
-    }
-
-    (function(){
-      const p = getParams();
-      const ag = document.getElementById('goAgoda');
-      const bk = document.getElementById('goBooking');
-      const hint = document.getElementById('deepLinkHint');
-      const ctx = document.getElementById('dealContext');
-
-      if(ag) ag.href = buildAgoda(p);
-      if(bk) bk.href = buildBooking(p);
-
-      if(hint){
-        hint.textContent = (p.dest||p.checkin||p.checkout)
-          ? `ปลายทาง: ${p.dest||'-'} · ${p.checkin||'--'} → ${p.checkout||'--'}`
-          : 'ยังไม่ได้เลือกปลายทาง/วันที่ — ลองเลือกจากหน้าแรกแล้วกลับมาค้นหาต่อ';
-      }
-      if(ctx && p.dest){
-        ctx.textContent = `ดีลสำหรับ: ${p.dest}  (${p.checkin||'--'} → ${p.checkout||'--'})`;
-      }
-
-      // อัปเดตปุ่ม "จองเลย" ในการ์ด ให้ชี้ไป OTA เดียวกัน (ตั้งไว้เป็น Agoda)
-      document.querySelectorAll('.deal-card .btn').forEach(btn=>{
-        const card = btn.closest('.deal-card');
-        const params = {...p};
-        if(card && !params.dest){
-          const slug = card.getAttribute('data-city');
-          const map = {bangkok:'Bangkok',chiangmai:'Chiang Mai',phuket:'Phuket',pattaya:'Pattaya',krabi:'Krabi',huahin:'Hua Hin'};
-          if (slug) params.dest = map[slug] || slug;
-        }
-        btn.href = buildAgoda(params);
-      });
-
-      // กันภาพเสียให้ขึ้น Placeholder
-      const PH = 'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675"><rect width="100%" height="100%" fill="#eaeaea"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" fill="#9aa0a6">Photo</text></svg>`);
-      document.querySelectorAll('img.thumb').forEach(img=>{
-        img.addEventListener('error',()=>{ img.src = PH; }, {once:true});
-      });
-    })();
-  </script>
-</body>
-</html>
+        <div style="height:
