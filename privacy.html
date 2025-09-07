@@ -3,85 +3,135 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>นโยบายความเป็นส่วนตัว – Click & Go</title>
-  <meta name="description" content="นโยบายความเป็นส่วนตัวของ Click & Go อธิบายการเก็บ ใช้ และคุ้มครองข้อมูลส่วนบุคคลของผู้ใช้งาน" />
-  <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="style.css">
+  <title>นโยบายความเป็นส่วนตัว | Click & Go</title>
+  <meta name="description" content="นโยบายความเป็นส่วนตัวของ Click & Go อธิบายถึงข้อมูลที่เราเก็บ ใช้งาน และคุ้มครอง รวมถึงการใช้งานคุกกี้และลิงก์พันธมิตร" />
+  <link rel="canonical" href="https://click-and-go-navy.vercel.app/privacy.html" />
+
+  <!-- Hreflang (EN/TH pair) -->
+  <link rel="alternate" hreflang="en" href="https://click-and-go-navy.vercel.app/en/privacy.html" />
+  <link rel="alternate" hreflang="th" href="https://click-and-go-navy.vercel.app/privacy.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Click & Go" />
+  <meta property="og:title" content="นโยบายความเป็นส่วนตัว | Click & Go" />
+  <meta property="og:description" content="นโยบายความเป็นส่วนตัวของ Click & Go อธิบายถึงข้อมูลที่เราเก็บ ใช้งาน และคุ้มครอง" />
+  <meta property="og:url" content="https://click-and-go-navy.vercel.app/privacy.html" />
+  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <!-- Header -->
-  <div id="header-placeholder"></div>
-  <script>
-    fetch("header.html").then(r=>r.text()).then(t=>{document.getElementById("header-placeholder").innerHTML=t;});
-  </script>
+  <header class="site-header" role="banner">
+    <div class="inner">
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
+      </a>
+
+      <nav class="main-nav" aria-label="เมนูหลัก">
+        <a href="index.html">หน้าแรก</a>
+        <a href="deals.html">โปรโมชั่น</a>
+
+        <div class="lang">
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="#" aria-current="true">ไทย</a>
+            <a role="menuitem" href="/en/privacy.html">English</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
 
   <main class="container">
-    <h1>นโยบายความเป็นส่วนตัว</h1>
-    <p class="note">อัปเดตล่าสุด: กันยายน 2025</p>
-
-    <section>
-      <h2>ภาพรวม</h2>
-      <p>Click & Go ให้ความสำคัญกับความเป็นส่วนตัวของผู้ใช้งาน นโยบายฉบับนี้อธิบายถึงวิธีที่เราเก็บ ใช้ เปิดเผย และคุ้มครองข้อมูลส่วนบุคคลที่ได้จากการใช้งานเว็บไซต์ของเรา</p>
+    <section style="margin:18px 0 8px">
+      <h1 class="section-title">นโยบายความเป็นส่วนตัว (Privacy Policy)</h1>
+      <p class="muted">อัปเดตล่าสุด: 9 กันยายน 2025</p>
     </section>
 
-    <section>
-      <h2>ข้อมูลที่เราเก็บ</h2>
+    <section style="margin-top:8px">
+      <h2>เราเก็บข้อมูลอะไรบ้าง</h2>
+      <p>เมื่อคุณใช้งานเว็บไซต์ของเรา เราอาจเก็บข้อมูลต่อไปนี้เพื่อปรับปรุงการให้บริการ:</p>
       <ul>
-        <li>ข้อมูลการติดต่อ (เช่น อีเมล ชื่อ) เมื่อคุณกรอกแบบฟอร์มติดต่อ</li>
-        <li>ข้อมูลการใช้งานเว็บไซต์ (เช่น หน้าที่เข้าชม อุปกรณ์/เบราว์เซอร์) เพื่อวิเคราะห์และปรับปรุงประสบการณ์การใช้งาน</li>
-        <li>คุกกี้/เทคโนโลยีติดตามเพื่อจดจำค่าตั้งค่าและวัดผลสถิติ</li>
+        <li>ข้อมูลการใช้งานเว็บไซต์ (เช่น เพจที่เยี่ยมชม ประเภทอุปกรณ์ เบราว์เซอร์ และ IP ที่ถูกทำให้ไม่สามารถระบุตัวตนได้)</li>
+        <li>ข้อมูลที่คุณกรอกเอง เช่น คำค้นหา ปลายทาง หรือวันที่เดินทาง (ใช้เพื่อประสบการณ์ใช้งาน ไม่ได้เก็บข้อมูลบัตร)</li>
+        <li>คุกกี้และเทคโนโลยีที่คล้ายกัน เพื่อจดจำการตั้งค่าและวัดผลการใช้งาน</li>
       </ul>
     </section>
 
     <section>
-      <h2>การใช้ข้อมูล</h2>
+      <h2>คุกกี้ (Cookies) และเครื่องมือวิเคราะห์</h2>
+      <p>เราใช้คุกกี้เพื่อจดจำการตั้งค่าและปรับปรุงประสบการณ์ของคุณ รวมถึงใช้เครื่องมือวิเคราะห์การใช้งาน (เช่น Google Analytics) เพื่อทำความเข้าใจพฤติกรรมโดยรวมของผู้ใช้</p>
+      <p>คุณสามารถตั้งค่าบราวเซอร์ให้ปฏิเสธคุกกี้ได้ แต่การปิดคุกกี้บางประเภทอาจทำให้บางฟังก์ชันทำงานได้ไม่สมบูรณ์</p>
+    </section>
+
+    <section>
+      <h2>ลิงก์พันธมิตร (Affiliate Links)</h2>
+      <p>บางลิงก์ในเว็บไซต์อาจเป็นลิงก์พันธมิตรไปยังพาร์ทเนอร์ OTA เมื่อคุณคลิกและทำรายการสำเร็จ เราอาจได้รับค่าคอมมิชชั่น ซึ่งไม่เพิ่มค่าใช้จ่ายใด ๆ ให้กับคุณ</p>
+    </section>
+
+    <section>
+      <h2>การใช้และการเปิดเผยข้อมูล</h2>
       <ul>
-        <li>ให้บริการฟีเจอร์ค้นหาและเปรียบเทียบโรงแรม</li>
-        <li>ตอบกลับคำถาม/ข้อเสนอแนะจากแบบฟอร์มติดต่อ</li>
-        <li>วิเคราะห์การใช้งานเพื่อปรับปรุงเว็บไซต์ (เช่น Google Analytics)</li>
+        <li>ใช้เพื่อให้บริการ ปรับปรุงคุณภาพ และพัฒนาเว็บไซต์</li>
+        <li>อาจเปิดเผยต่อผู้ให้บริการภายนอกที่เกี่ยวข้องกับการดำเนินการทางเทคนิค (เช่น ผู้ให้บริการโฮสติ้ง/วิเคราะห์) โดยมีมาตรการคุ้มครองที่เหมาะสม</li>
+        <li>จะเปิดเผยเมื่อจำเป็นตามกฎหมายหรือข้อเรียกร้องทางกฎหมายเท่านั้น</li>
       </ul>
     </section>
 
     <section>
-      <h2>การเปิดเผยข้อมูล</h2>
-      <p>เราไม่ขายข้อมูลส่วนบุคคลของคุณให้บุคคลที่สาม ข้อมูลอาจถูกเปิดเผยต่อพาร์ทเนอร์ OTA หรือผู้ให้บริการด้านเทคนิคเท่าที่จำเป็นต่อการให้บริการ เช่น ลิงก์จองของพาร์ทเนอร์</p>
+      <h2>การเก็บรักษาข้อมูล</h2>
+      <p>เราจะเก็บรักษาข้อมูลเท่าที่จำเป็นเพื่อวัตถุประสงค์ที่ระบุไว้ในนโยบายนี้ และจะลบหรือทำให้ไม่สามารถระบุตัวตนได้เมื่อไม่จำเป็นต้องใช้งาน</p>
     </section>
 
     <section>
-      <h2>คุกกี้และเครื่องมือวิเคราะห์</h2>
-      <p>เว็บไซต์อาจใช้คุกกี้และ Google Analytics เพื่อเก็บข้อมูลการใช้งานเชิงสถิติ คุณสามารถตั้งค่าบราว์เซอร์เพื่อปฏิเสธคุกกี้ได้ แต่อาจมีผลต่อประสบการณ์ใช้งานบางส่วน</p>
-    </section>
-
-    <section>
-      <h2>การเก็บรักษาความปลอดภัย</h2>
-      <p>เราดำเนินมาตรการที่เหมาะสมทางเทคนิคและองค์กรเพื่อปกป้องข้อมูล แต่ไม่สามารถรับประกันความปลอดภัยได้ 100% โปรดใช้งานด้วยความระมัดระวัง</p>
-    </section>
-
-    <section>
-      <h2>สิทธิของผู้ใช้งาน</h2>
+      <h2>สิทธิของคุณ</h2>
       <ul>
-        <li>สิทธิในการขอเข้าถึง แก้ไข หรือลบข้อมูลส่วนบุคคลของคุณ</li>
-        <li>สิทธิในการคัดค้านการประมวลผลหรือเพิกถอนความยินยอม (ถ้ามี)</li>
+        <li>สิทธิในการเข้าถึงและขอสำเนาข้อมูลส่วนบุคคลของคุณ</li>
+        <li>สิทธิในการขอแก้ไข/ลบ หรือคัดค้านการประมวลผล (ภายใต้เงื่อนไขตามกฎหมาย)</li>
+        <li>สิทธิในการเพิกถอนความยินยอม (ถ้ามีการใช้ฐานความยินยอม)</li>
       </ul>
-      <p>ติดต่อเราได้ที่ <a href="mailto:support@clickandgo.co.th">support@clickandgo.co.th</a></p>
+      <p>หากต้องการใช้สิทธิ โปรดติดต่อเราตามข้อมูลด้านล่าง</p>
     </section>
 
     <section>
-      <h2>การเปลี่ยนแปลงนโยบาย</h2>
-      <p>เราอาจปรับปรุงนโยบายนี้เป็นครั้งคราว โดยจะประกาศบนหน้านี้พร้อมระบุวันที่ปรับปรุงล่าสุด</p>
-    </section>
-
-    <section>
-      <h2>ติดต่อเรา</h2>
-      <p>หากมีคำถามเกี่ยวกับนโยบายความเป็นส่วนตัว กรุณาติดต่อ <a href="contact.html">ทีมงาน Click & Go</a></p>
+      <h2>การติดต่อเรา</h2>
+      <p>หากมีคำถามเกี่ยวกับนโยบายนี้ กรุณาติดต่อที่หน้า <a href="contact.html">Contact</a> หรืออีเมล: <a href="mailto:support@clickandgo.example">support@clickandgo.example</a></p>
     </section>
   </main>
 
   <!-- Footer -->
-  <div id="footer-placeholder"></div>
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html">About us</a> ·
+        <a href="contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Language pop-up -->
   <script>
-    fetch("footer.html").then(r=>r.text()).then(t=>{document.getElementById("footer-placeholder").innerHTML=t;});
+    (function(){
+      const btn  = document.querySelector('.lang-btn');
+      const menu = document.querySelector('.lang-menu');
+      if(!btn||!menu) return;
+      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      btn.addEventListener('click', e=>{
+        e.stopPropagation();
+        const opened = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(opened));
+      });
+      document.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
+    })();
   </script>
 </body>
 </html>
-
