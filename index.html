@@ -57,7 +57,6 @@
       <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html" aria-current="page">หน้าแรก</a>
         <a href="deals.html">โปรโมชั่น</a>
-
         <div class="lang">
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
           <div class="lang-menu" role="menu">
@@ -78,27 +77,13 @@
     <!-- ค้นหาโรงแรม -->
     <section style="margin:24px 0">
       <h2 class="section-title">ค้นหาโรงแรม</h2>
-      <div class="widget-like solid">
+      <div class="widget-like">
         <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
 
-        <!-- ฟอร์มค้นหาจำลอง -->
-        <form class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
-          <!-- ปลายทาง -->
+        <form class="search-form" role="search" aria-label="ค้นหาโรงแรมจำลอง">
           <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่ หรือชื่อโรงแรม" aria-label="ปลายทาง">
-
-          <!-- เช็คอิน -->
-          <div class="date-wrap empty" id="checkin-wrap">
-            <input type="date" id="checkin" aria-label="เช็คอิน">
-            <span class="date-placeholder">เช็คอิน</span>
-          </div>
-
-          <!-- เช็คเอาท์ -->
-          <div class="date-wrap empty" id="checkout-wrap">
-            <input type="date" id="checkout" aria-label="เช็คเอาท์">
-            <span class="date-placeholder">เช็คเอาท์</span>
-          </div>
-
-          <!-- ปุ่มค้นหา -->
+          <input type="date" aria-label="เช็คอิน" placeholder="เช็คอิน">
+          <input type="date" aria-label="เช็คเอาท์" placeholder="เช็คเอาท์">
           <button type="button" class="btn">ค้นหา</button>
         </form>
       </div>
@@ -144,21 +129,17 @@
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
-      <div style="font-weight:700; margin-bottom:4px;">
+      <div class="footer-links">
         Privacy · Terms · Affiliate Disclosure · 
         <a href="about.html">About us</a> · 
         <a href="contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
-      <div style="font-weight:700;">
-        All Right Reserved : Click And Go OTA (Thailand) Co., Ltd.
-      </div>
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Language pop-up -->
   <script>
-    // language pop-up
     (function(){
       const btn  = document.querySelector('.lang-btn');
       const menu = document.querySelector('.lang-menu');
@@ -171,21 +152,6 @@
       });
       document.addEventListener('click', closeMenu);
       document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
-    })();
-
-    // toggle date placeholder
-    (function(){
-      function bindDatePlaceholder(wrapId, inputId){
-        const wrap  = document.getElementById(wrapId);
-        const input = document.getElementById(inputId);
-        if(!wrap || !input) return;
-        const toggle = () => wrap.classList.toggle('empty', !input.value);
-        toggle();
-        input.addEventListener('input',  toggle);
-        input.addEventListener('change', toggle);
-      }
-      bindDatePlaceholder('checkin-wrap','checkin');
-      bindDatePlaceholder('checkout-wrap','checkout');
     })();
   </script>
 </body>
