@@ -1,73 +1,162 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>โปรโมชั่นโรงแรม – Click & Go</title>
-  <meta name="description" content="โปรโมชั่นโรงแรมจาก Click & Go รวมดีลโรงแรมราคาพิเศษให้คุณเลือกง่ายๆ ในที่เดียว" />
-  <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>โปรโมชั่นโรงแรม | Click & Go</title>
+  <meta name="description" content="รวมดีลและโปรโมชั่นโรงแรม คุ้มค่า คัดสรรมาให้ จองง่ายในคลิกเดียว"/>
+  <link rel="icon" href="favicon.ico"/>
+  <link rel="stylesheet" href="style.css"/>
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1QR2EGFWN3');</script>
 </head>
 <body>
   <!-- Header -->
-  <div id="header-placeholder"></div>
-  <script>
-    fetch("header.html")
-      .then(res => res.text())
-      .then(data => { document.getElementById("header-placeholder").innerHTML = data; });
-  </script>
-
-  <main class="container">
-    <h1>โปรโมชั่นโรงแรมแนะนำ</h1>
-    <p class="note">*ตัวอย่างดีลเพื่อจัดวางเลย์เอาต์ — เมื่อได้รับลิงก์ Affiliate จาก Agoda/Booking แล้ว สามารถใส่ลิงก์ “จองเลย” ได้ทันที</p>
-
-    <div class="grid-cards">
-      <div class="card">
-        <img src="https://picsum.photos/400/250?random=1" alt="โรงแรมตัวอย่าง 1">
-        <div class="card-body">
-          <h3>โรงแรมตัวอย่าง 1</h3>
-          <p>ทำเลดี ใกล้รถไฟฟ้า ราคาเริ่มต้นเพียง 1,200 บาท/คืน</p>
-          <div class="card-foot">
-            <strong>B1,200 / คืน</strong>
-            <a href="#">จองเลย</a>
+  <header class="site-header" role="banner">
+    <div class="inner">
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
+      </a>
+      <nav class="main-nav" aria-label="เมนูหลัก">
+        <a href="index.html">หน้าแรก</a>
+        <a href="deals.html" aria-current="page">โปรโมชั่น</a>
+        <div class="lang">
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="#" aria-current="true">ไทย</a>
+            <a role="menuitem" href="#">English</a>
           </div>
         </div>
-      </div>
-
-      <div class="card">
-        <img src="https://picsum.photos/400/250?random=2" alt="โรงแรมตัวอย่าง 2">
-        <div class="card-body">
-          <h3>โรงแรมตัวอย่าง 2</h3>
-          <p>วิวทะเลสวยงาม ราคาเริ่มต้นเพียง 1,800 บาท/คืน</p>
-          <div class="card-foot">
-            <strong>B1,800 / คืน</strong>
-            <a href="#">จองเลย</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <img src="https://picsum.photos/400/250?random=3" alt="โรงแรมตัวอย่าง 3">
-        <div class="card-body">
-          <h3>โรงแรมตัวอย่าง 3</h3>
-          <p>ใจกลางเมือง เดินทางสะดวก ราคาเริ่มต้น 900 บาท/คืน</p>
-          <div class="card-foot">
-            <strong>B900 / คืน</strong>
-            <a href="#">จองเลย</a>
-          </div>
-        </div>
-      </div>
+      </nav>
     </div>
+  </header>
+
+  <!-- Main -->
+  <main class="container">
+    <section style="margin-top:20px">
+      <h1 class="section-title">โปรโมชั่นโรงแรม</h1>
+      <p class="muted" style="margin-bottom:14px">ดีลแนะนำอัปเดตสม่ำเสมอ — เมื่อได้รับสิทธิ์ Affiliate ปุ่ม “จองเลย” จะลิงก์ไปยังหน้าโรงแรมจริง</p>
+
+      <!-- กริดดีล -->
+      <div class="deal-grid">
+        <!-- Card 1 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop" alt="ดีลโรงแรม กรุงเทพฯ">
+          <div class="body">
+            <h3>กรุงเทพฯ: วิวเมือง ใกล้รถไฟฟ้า</h3>
+            <p>ทำเลดี เดินทางสะดวก รวมอาหารเช้า</p>
+          </div>
+          <div class="meta">
+            <strong>เริ่มต้น ฿1,200/คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="ดีลโรงแรม เชียงใหม่">
+          <div class="body">
+            <h3>เชียงใหม่: ใกล้ย่านนิมมาน</h3>
+            <p>ห้องใหม่ สะดวกสบาย ใกล้คาเฟ่ดัง</p>
+          </div>
+          <div class="meta">
+            <strong>เริ่มต้น ฿990/คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop" alt="ดีลโรงแรม ภูเก็ต">
+          <div class="body">
+            <h3>ภูเก็ต: รีสอร์ทติดทะเล</h3>
+            <p>สระว่ายน้ำวิวสวย ใกล้หาด</p>
+          </div>
+          <div class="meta">
+            <strong>เริ่มต้น ฿1,800/คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1502920514313-52581002a659?q=80&w=1200&auto=format&fit=crop" alt="ดีลโรงแรม พัทยา">
+          <div class="body">
+            <h3>พัทยา: ซีวิว ใจกลางเมือง</h3>
+            <p>เดินถึงหาด ร้านอาหารเพียบ</p>
+          </div>
+          <div class="meta">
+            <strong>เริ่มต้น ฿1,150/คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+
+        <!-- Card 5 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop" alt="ดีลโรงแรม กระบี่">
+          <div class="body">
+            <h3>กระบี่: บูทีคโฮเทล</h3>
+            <p>บรรยากาศดี ใกล้แหล่งท่องเที่ยวธรรมชาติ</p>
+          </div>
+          <div class="meta">
+            <strong>เริ่มต้น ฿1,050/คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+
+        <!-- Card 6 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=1200&auto=format&fit=crop" alt="ดีลโรงแรม หัวหิน">
+          <div class="body">
+            <h3>หัวหิน: รีสอร์ทสำหรับครอบครัว</h3>
+            <p>สวนน้ำเด็ก กิจกรรมครบ</p>
+          </div>
+          <div class="meta">
+            <strong>เริ่มต้น ฿1,390/คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+      </div>
+
+      <p class="tiny-note" style="margin-top:10px">* ตัวอย่างดีลเพื่อจัดวางเลย์เอาท์</p>
+    </section>
   </main>
 
   <!-- Footer -->
-  <div id="footer-placeholder"></div>
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html">About us</a> ·
+        <a href="contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
   <script>
-    fetch("footer.html")
-      .then(res => res.text())
-      .then(data => { document.getElementById("footer-placeholder").innerHTML = data; });
+    // language pop-up
+    (function(){
+      const btn=document.querySelector('.lang-btn'); const menu=document.querySelector('.lang-menu');
+      if(!btn||!menu) return;
+      function closeMenu(){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}
+      btn.addEventListener('click',e=>{e.stopPropagation();const opened=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(opened));});
+      document.addEventListener('click',closeMenu); document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
+    })();
+
+    // คงภาษา/สลับภาษา
+    (function(){
+      var isEN=location.pathname.startsWith('/en/'); var prefix=isEN?'/en':'';
+      var map={home:prefix+'/index.html',deals:prefix+'/deals.html',privacy:prefix+'/privacy.html',terms:prefix+'/terms.html',aff:prefix+'/affiliate.html',about:prefix+'/about.html',contact:prefix+'/contact.html'};
+      var nav=document.querySelector('.main-nav'); if(nav){nav.querySelectorAll('a').forEach(a=>{var t=a.textContent.trim().toLowerCase(); if(t.includes('หน้าแรก')||t==='home')a.href=map.home; else if(t.includes('โปรโมชั่น')||t==='deals')a.href=map.deals;});}
+      var foot=document.querySelector('.footer-links'); if(foot){foot.querySelectorAll('a').forEach(a=>{var t=a.textContent.trim().toLowerCase(); if(t.startsWith('privacy'))a.href=map.privacy; else if(t.startsWith('terms'))a.href=map.terms; else if(t.startsWith('affiliate'))a.href=map.aff; else if(t.startsWith('about'))a.href=map.about; else if(t.startsWith('contact'))a.href=map.contact;});}
+      var menu=document.querySelector('.lang-menu'); if(menu){var l=menu.querySelectorAll('a'); if(l.length>=2){var th=l[0],en=l[1]; var thPath=location.pathname.replace(/^\/en/,'')||'/deals.html'; var enPath=location.pathname.startsWith('/en')?location.pathname:'/en'+location.pathname; th.href=thPath; en.href=enPath;}}
+    })();
   </script>
 </body>
 </html>
-
-
