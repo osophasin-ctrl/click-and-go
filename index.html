@@ -7,7 +7,11 @@
   <meta name="description" content="Click & Go ช่วยค้นหาและเปรียบเทียบราคาโรงแรมจากหลาย OTA พร้อมลิงก์ไปจองทันที ครอบคลุมปลายทางยอดนิยมทั้งในไทยและต่างประเทศ" />
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/" />
 
-  <!-- Open Graph -->
+  <!-- Hreflang -->
+  <link rel="alternate" hreflang="th" href="https://click-and-go-navy.vercel.app/" />
+  <link rel="alternate" hreflang="en" href="https://click-and-go-navy.vercel.app/en/" />
+
+  <!-- OG -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
   <meta property="og:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว" />
@@ -15,54 +19,22 @@
   <meta property="og:url" content="https://click-and-go-navy.vercel.app/" />
   <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว" />
-  <meta name="twitter:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
-  <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
-
-  <!-- JSON-LD -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebSite",
-    "name":"Click & Go",
-    "url":"https://click-and-go-navy.vercel.app/",
-    "potentialAction":{
-      "@type":"SearchAction",
-      "target":"https://click-and-go-navy.vercel.app/deals.html?q={search_term_string}",
-      "query-input":"required name=search_term_string"
-    }
-  }
-  </script>
-
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
-
-  <!-- GA4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
-  <script>window.dataLayer=window.dataLayer||[];
-  function gtag(){dataLayer.push(arguments);} gtag('js',new Date());
-  gtag('config','G-1QR2EGFWN3');</script>
 </head>
 <body>
   <!-- Header -->
-  <header class="site-header" role="banner">
+  <header class="site-header">
     <div class="inner">
-      <a href="index.html" class="brand" aria-label="Click & Go">
-        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
-        <span class="brand-text" aria-hidden="true">Click & Go</span>
-      </a>
-
-      <nav class="main-nav" aria-label="เมนูหลัก">
+      <a href="index.html" class="brand"><img src="logo.png" alt="Click & Go" width="40" height="40" /><span class="brand-text">Click & Go</span></a>
+      <nav class="main-nav">
         <a href="index.html" aria-current="page">หน้าแรก</a>
         <a href="deals.html">โปรโมชั่น</a>
-
         <div class="lang">
-          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
-          <div class="lang-menu" role="menu">
-            <a role="menuitem" href="#" aria-current="true">ไทย</a>
-            <a role="menuitem" href="#">English</a>
+          <button class="lang-btn">ภาษา ▾</button>
+          <div class="lang-menu">
+            <a href="index.html" aria-current="true">ไทย</a>
+            <a href="en/index.html">English</a>
           </div>
         </div>
       </nav>
@@ -71,40 +43,23 @@
 
   <main class="container">
     <!-- Hero -->
-    <section class="hero" aria-label="ภาพแบนเนอร์">
-      <img class="hero-img" src="hero-bg.jpg" alt="Click & Go Thailand" />
-    </section>
+    <section class="hero"><img class="hero-img" src="hero-bg.jpg" alt="Click & Go Thailand" /></section>
 
-    <!-- ค้นหาโรงแรม -->
+    <!-- Search -->
     <section style="margin:24px 0">
       <h2 class="section-title">ค้นหาโรงแรม</h2>
       <div class="widget-like solid">
         <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
-
-        <!-- ฟอร์มค้นหาจำลอง -->
-        <form class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
-          <!-- ปลายทาง -->
-          <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่ หรือชื่อโรงแรม" aria-label="ปลายทาง">
-
-          <!-- เช็คอิน -->
-          <div class="date-wrap empty" id="checkin-wrap">
-            <input type="date" id="checkin" aria-label="เช็คอิน">
-            <span class="date-placeholder">เช็คอิน</span>
-          </div>
-
-          <!-- เช็คเอาท์ -->
-          <div class="date-wrap empty" id="checkout-wrap">
-            <input type="date" id="checkout" aria-label="เช็คเอาท์">
-            <span class="date-placeholder">เช็คเอาท์</span>
-          </div>
-
-          <!-- ปุ่มค้นหา -->
+        <form class="search-form search-4cols" role="search">
+          <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่ หรือชื่อโรงแรม">
+          <div class="date-wrap empty" id="checkin-wrap"><input type="date" id="checkin"><span class="date-placeholder">เช็คอิน</span></div>
+          <div class="date-wrap empty" id="checkout-wrap"><input type="date" id="checkout"><span class="date-placeholder">เช็คเอาท์</span></div>
           <button type="button" class="btn">ค้นหา</button>
         </form>
       </div>
     </section>
 
-    <!-- ปลายทางยอดนิยม (ไทย) -->
+    <!-- Cities -->
     <section>
       <h2 class="section-title">ปลายทางยอดนิยมในไทย</h2>
       <div class="city-grid">
@@ -117,7 +72,6 @@
       </div>
     </section>
 
-    <!-- เมืองยอดฮิตต่างประเทศ -->
     <section>
       <h2 class="section-title">เมืองยอดฮิตในต่างประเทศ</h2>
       <div class="city-grid">
@@ -129,101 +83,27 @@
         <a class="city-card" href="paris.html"><figure><img src="paris-tile.webp" alt="ปารีส"><figcaption>ปารีส</figcaption></figure></a>
       </div>
     </section>
+
+    <!-- Why -->
+    <section>
+      <h2 class="section-title">ทำไมต้อง Click & Go</h2>
+      <div class="features">
+        <div class="feature"><h3>ค้นหาข้อเสนอที่ดีที่สุดให้คุณ</h3><p>เชื่อมต่อผู้ให้บริการทั่วโลก ค้นหาราคาได้แบบเรียลไทม์</p></div>
+        <div class="feature"><h3>ขั้นตอนการจองไม่ยุ่งยาก</h3><p>กดลิงก์ตรงไปยังหน้าโรงแรมของผู้ให้บริการได้ทันที</p></div>
+        <div class="feature"><h3>รองรับทุกอุปกรณ์การเชื่อมต่อ</h3><p>ออกแบบให้ใช้งานง่าย ไม่ว่าจะเป็นการจองผ่านมือถือ แท็บเล็ต หรือคอมพิวเตอร์</p></div>
+      </div>
+    </section>
   </main>
 
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="privacy.html">Privacy</a> ·
-        <a href="terms.html">Terms</a> ·
-        <a href="affiliate.html">Affiliate Disclosure</a> ·
-        <a href="about.html">About us</a> ·
-        <a href="contact.html">Contact</a> ·
+        <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="affiliate.html">Affiliate Disclosure</a> · 
+        <a href="about.html">About us</a> · <a href="contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
   </footer>
-
-  <!-- Scripts -->
-  <script>
-    // language pop-up
-    (function(){
-      const btn  = document.querySelector('.lang-btn');
-      const menu = document.querySelector('.lang-menu');
-      if(!btn||!menu) return;
-      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-      btn.addEventListener('click', e=>{
-        e.stopPropagation();
-        const opened = menu.classList.toggle('open');
-        btn.setAttribute('aria-expanded', String(opened));
-      });
-      document.addEventListener('click', closeMenu);
-      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
-    })();
-
-    // toggle date placeholder
-    (function(){
-      function bindDatePlaceholder(wrapId, inputId){
-        const wrap  = document.getElementById(wrapId);
-        const input = document.getElementById(inputId);
-        if(!wrap || !input) return;
-        const toggle = () => wrap.classList.toggle('empty', !input.value);
-        toggle();
-        input.addEventListener('input',  toggle);
-        input.addEventListener('change', toggle);
-      }
-      bindDatePlaceholder('checkin-wrap','checkin');
-      bindDatePlaceholder('checkout-wrap','checkout');
-    })();
-
-    // ===== NEW: คงภาษา/สลับภาษาแบบรักษาหน้าที่อยู่ =====
-    (function(){
-      var isEN = location.pathname.startsWith('/en/');
-      var prefix = isEN ? '/en' : '';
-      var map = {
-        home:    prefix + '/index.html',
-        deals:   prefix + '/deals.html',
-        privacy: prefix + '/privacy.html',
-        terms:   prefix + '/terms.html',
-        aff:     prefix + '/affiliate.html',
-        about:   prefix + '/about.html',
-        contact: prefix + '/contact.html'
-      };
-      var nav = document.querySelector('.main-nav');
-      if (nav){
-        nav.querySelectorAll('a').forEach(function(a){
-          var t = a.textContent.trim().toLowerCase();
-          if (t.includes('หน้าแรก') || t === 'home') a.href = map.home;
-          else if (t.includes('โปรโมชั่น') || t === 'deals') a.href = map.deals;
-        });
-      }
-      var foot = document.querySelector('.footer-links');
-      if (foot){
-        foot.querySelectorAll('a').forEach(function(a){
-          var txt = a.textContent.trim().toLowerCase();
-          if (txt.startsWith('privacy')) a.href = map.privacy;
-          else if (txt.startsWith('terms')) a.href = map.terms;
-          else if (txt.startsWith('affiliate')) a.href = map.aff;
-          else if (txt.startsWith('about')) a.href = map.about;
-          else if (txt.startsWith('contact')) a.href = map.contact;
-        });
-      }
-      var menu = document.querySelector('.lang-menu');
-      if (menu){
-        var links = menu.querySelectorAll('a');
-        if (links.length >= 2){
-          var thLink = links[0];
-          var enLink = links[1];
-          var thaiPath = location.pathname.replace(/^\/en/, '') || '/index.html';
-          var enPath   = location.pathname.startsWith('/en')
-                         ? location.pathname
-                         : '/en' + location.pathname;
-          thLink.href = thaiPath;
-          enLink.href = enPath;
-        }
-      }
-    })();
-  </script>
 </body>
 </html>
