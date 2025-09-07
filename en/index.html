@@ -3,26 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Click & Go – Compare hotel prices, book in one click</title>
-  <meta name="description" content="Click & Go helps you find and compare hotel prices across multiple OTAs, then jump to book in one click." />
-  <link rel="canonical" href="https://click-and-go-navy.vercel.app/en/" />
-
-  <!-- Hreflang (EN/TH pair) -->
-  <link rel="alternate" hreflang="en" href="https://click-and-go-navy.vercel.app/en/" />
-  <link rel="alternate" hreflang="th" href="https://click-and-go-navy.vercel.app/" />
+  <title>Click & Go – Compare Hotels, Book in One Click</title>
+  <meta name="description" content="Click & Go helps you compare hotel prices across OTAs and book instantly. Covering top destinations in Thailand and worldwide." />
+  <link rel="canonical" href="https://click-and-go-navy.vercel.app/en/index.html" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
-  <meta property="og:title" content="Click & Go – Compare hotel prices, book in one click" />
-  <meta property="og:description" content="Find the best deals from multiple providers and jump to book instantly." />
-  <meta property="og:url" content="https://click-and-go-navy.vercel.app/en/" />
+  <meta property="og:title" content="Click & Go – Compare Hotels, Book in One Click" />
+  <meta property="og:description" content="Compare hotel prices across providers and book instantly." />
+  <meta property="og:url" content="https://click-and-go-navy.vercel.app/en/index.html" />
   <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Click & Go – Compare hotel prices, book in one click" />
-  <meta name="twitter:description" content="Find the best deals from multiple providers and jump to book instantly." />
+  <meta name="twitter:title" content="Click & Go – Compare Hotels, Book in One Click" />
+  <meta name="twitter:description" content="Compare hotel prices across providers and book instantly." />
   <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
 
   <!-- JSON-LD -->
@@ -31,36 +27,42 @@
     "@context":"https://schema.org",
     "@type":"WebSite",
     "name":"Click & Go",
-    "url":"https://click-and-go-navy.vercel.app/en/",
+    "url":"https://click-and-go-navy.vercel.app/en/index.html",
     "potentialAction":{
       "@type":"SearchAction",
-      "target":"https://click-and-go-navy.vercel.app/deals.html?q={search_term_string}",
+      "target":"https://click-and-go-navy.vercel.app/en/deals.html?q={search_term_string}",
       "query-input":"required name=search_term_string"
     }
   }
   </script>
 
-  <link rel="icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="../favicon.ico">
+  <link rel="stylesheet" href="../style.css">
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
+  <script>window.dataLayer=window.dataLayer||[];
+  function gtag(){dataLayer.push(arguments);} gtag('js',new Date());
+  gtag('config','G-1QR2EGFWN3');</script>
 </head>
 <body>
   <!-- Header -->
   <header class="site-header" role="banner">
     <div class="inner">
-      <a href="/en/" class="brand" aria-label="Click & Go">
-        <img src="/logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="../logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
         <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
 
-      <nav class="main-nav" aria-label="Main menu">
-        <a href="/en/" aria-current="page">Home</a>
-        <a href="/deals.html">Deals</a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="deals.html">Deals</a>
 
         <div class="lang">
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
           <div class="lang-menu" role="menu">
-            <a role="menuitem" href="/" hreflang="th">ไทย</a>
-            <a role="menuitem" href="/en/" aria-current="true" hreflang="en">English</a>
+            <a role="menuitem" href="#">ไทย</a>
+            <a role="menuitem" href="#" aria-current="true">English</a>
           </div>
         </div>
       </nav>
@@ -69,17 +71,17 @@
 
   <main class="container">
     <!-- Hero -->
-    <section class="hero" aria-label="Hero banner">
-      <img class="hero-img" src="/hero-bg.jpg" alt="Click & Go Thailand" />
+    <section class="hero" aria-label="Banner image">
+      <img class="hero-img" src="../hero-bg.jpg" alt="Click & Go" />
     </section>
 
     <!-- Search -->
     <section style="margin:24px 0">
-      <h2 class="section-title">Search hotels</h2>
+      <h2 class="section-title">Search Hotels</h2>
       <div class="widget-like solid">
         <p class="muted">We’re ready to find the best deals for you</p>
 
-        <form class="search-form search-4cols" role="search" aria-label="Mock hotel search">
+        <form class="search-form search-4cols" role="search" aria-label="Mock search form">
           <input type="text" placeholder="Destination e.g. Chiang Mai or hotel name" aria-label="Destination">
           <div class="date-wrap empty" id="checkin-wrap">
             <input type="date" id="checkin" aria-label="Check-in">
@@ -94,61 +96,42 @@
       </div>
     </section>
 
-    <!-- Top destinations in Thailand -->
+    <!-- Cities (TH) -->
     <section>
-      <h2 class="section-title">Top destinations in Thailand</h2>
+      <h2 class="section-title">Top Destinations in Thailand</h2>
       <div class="city-grid">
-        <a class="city-card" href="/bangkok.html"><figure><img src="/bangkok-tile.webp" alt="Bangkok"><figcaption>Bangkok</figcaption></figure></a>
-        <a class="city-card" href="/chiangmai.html"><figure><img src="/chiangmai-tile.webp" alt="Chiang Mai"><figcaption>Chiang Mai</figcaption></figure></a>
-        <a class="city-card" href="/pattaya.html"><figure><img src="/pattaya-tile.webp" alt="Pattaya"><figcaption>Pattaya</figcaption></figure></a>
-        <a class="city-card" href="/phuket.html"><figure><img src="/phuket-tile.webp" alt="Phuket"><figcaption>Phuket</figcaption></figure></a>
-        <a class="city-card" href="/krabi.html"><figure><img src="/krabi-tile.webp" alt="Krabi"><figcaption>Krabi</figcaption></figure></a>
-        <a class="city-card" href="/hua-hin.html"><figure><img src="/huahin-tile.webp" alt="Hua Hin"><figcaption>Hua Hin</figcaption></figure></a>
+        <a class="city-card" href="bangkok.html"><figure><img src="../bangkok-tile.webp" alt="Bangkok"><figcaption>Bangkok</figcaption></figure></a>
+        <a class="city-card" href="chiangmai.html"><figure><img src="../chiangmai-tile.webp" alt="Chiang Mai"><figcaption>Chiang Mai</figcaption></figure></a>
+        <a class="city-card" href="pattaya.html"><figure><img src="../pattaya-tile.webp" alt="Pattaya"><figcaption>Pattaya</figcaption></figure></a>
+        <a class="city-card" href="phuket.html"><figure><img src="../phuket-tile.webp" alt="Phuket"><figcaption>Phuket</figcaption></figure></a>
+        <a class="city-card" href="krabi.html"><figure><img src="../krabi-tile.webp" alt="Krabi"><figcaption>Krabi</figcaption></figure></a>
+        <a class="city-card" href="hua-hin.html"><figure><img src="../huahin-tile.webp" alt="Hua Hin"><figcaption>Hua Hin</figcaption></figure></a>
       </div>
     </section>
 
-    <!-- Popular cities worldwide -->
+    <!-- Cities (INTL) -->
     <section>
-      <h2 class="section-title">Popular cities worldwide</h2>
+      <h2 class="section-title">Top Destinations Worldwide</h2>
       <div class="city-grid">
-        <a class="city-card" href="/tokyo.html"><figure><img src="/tokyo-tile.webp" alt="Tokyo"><figcaption>Tokyo</figcaption></figure></a>
-        <a class="city-card" href="/seoul.html"><figure><img src="/seoul-tile.webp" alt="Seoul"><figcaption>Seoul</figcaption></figure></a>
-        <a class="city-card" href="/singapore.html"><figure><img src="/singapore-tile.webp" alt="Singapore"><figcaption>Singapore</figcaption></figure></a>
-        <a class="city-card" href="/hongkong.html"><figure><img src="/hongkong-tile.webp" alt="Hong Kong"><figcaption>Hong Kong</figcaption></figure></a>
-        <a class="city-card" href="/london.html"><figure><img src="/london-tile.webp" alt="London"><figcaption>London</figcaption></figure></a>
-        <a class="city-card" href="/paris.html"><figure><img src="/paris-tile.webp" alt="Paris"><figcaption>Paris</figcaption></figure></a>
-      </div>
-    </section>
-
-    <!-- Why Click & Go -->
-    <section>
-      <h2 class="section-title">Why Click & Go</h2>
-      <div class="features">
-        <div class="feature">
-          <h3>Find the best deals</h3>
-          <p>We connect providers worldwide to fetch real-time prices.</p>
-        </div>
-        <div class="feature">
-          <h3>Book in one click</h3>
-          <p>Jump straight to the hotel page on our partners and book instantly.</p>
-        </div>
-        <div class="feature">
-          <h3>Works on every device</h3>
-          <p>Designed to be easy on mobile, tablet, and desktop.</p>
-        </div>
+        <a class="city-card" href="tokyo.html"><figure><img src="../tokyo-tile.webp" alt="Tokyo"><figcaption>Tokyo</figcaption></figure></a>
+        <a class="city-card" href="seoul.html"><figure><img src="../seoul-tile.webp" alt="Seoul"><figcaption>Seoul</figcaption></figure></a>
+        <a class="city-card" href="singapore.html"><figure><img src="../singapore-tile.webp" alt="Singapore"><figcaption>Singapore</figcaption></figure></a>
+        <a class="city-card" href="hongkong.html"><figure><img src="../hongkong-tile.webp" alt="Hong Kong"><figcaption>Hong Kong</figcaption></figure></a>
+        <a class="city-card" href="london.html"><figure><img src="../london-tile.webp" alt="London"><figcaption>London</figcaption></figure></a>
+        <a class="city-card" href="paris.html"><figure><img src="../paris-tile.webp" alt="Paris"><figcaption>Paris</figcaption></figure></a>
       </div>
     </section>
   </main>
 
-  <!-- Footer (first row links fixed) -->
+  <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="/privacy.html">Privacy</a> ·
-        <a href="/terms.html">Terms</a> ·
-        <a href="/affiliate.html">Affiliate Disclosure</a> ·
-        <a href="/about.html">About us</a> · 
-        <a href="/contact.html">Contact</a> ·
+        <a href="privacy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html">About us</a> ·
+        <a href="contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
@@ -156,6 +139,7 @@
 
   <!-- Scripts -->
   <script>
+    // language pop-up
     (function(){
       const btn  = document.querySelector('.lang-btn');
       const menu = document.querySelector('.lang-menu');
@@ -170,6 +154,7 @@
       document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
     })();
 
+    // toggle date placeholder
     (function(){
       function bindDatePlaceholder(wrapId, inputId){
         const wrap  = document.getElementById(wrapId);
@@ -182,6 +167,54 @@
       }
       bindDatePlaceholder('checkin-wrap','checkin');
       bindDatePlaceholder('checkout-wrap','checkout');
+    })();
+
+    // ===== NEW: keep language & switch preserving current page =====
+    (function(){
+      var isEN = location.pathname.startsWith('/en/');
+      var prefix = isEN ? '/en' : '';
+      var map = {
+        home:    prefix + '/index.html',
+        deals:   prefix + '/deals.html',
+        privacy: prefix + '/privacy.html',
+        terms:   prefix + '/terms.html',
+        aff:     prefix + '/affiliate.html',
+        about:   prefix + '/about.html',
+        contact: prefix + '/contact.html'
+      };
+      var nav = document.querySelector('.main-nav');
+      if (nav){
+        nav.querySelectorAll('a').forEach(function(a){
+          var t = a.textContent.trim().toLowerCase();
+          if (t.includes('home')) a.href = map.home;
+          else if (t.includes('deals')) a.href = map.deals;
+        });
+      }
+      var foot = document.querySelector('.footer-links');
+      if (foot){
+        foot.querySelectorAll('a').forEach(function(a){
+          var txt = a.textContent.trim().toLowerCase();
+          if (txt.startsWith('privacy')) a.href = map.privacy;
+          else if (txt.startsWith('terms')) a.href = map.terms;
+          else if (txt.startsWith('affiliate')) a.href = map.aff;
+          else if (txt.startsWith('about')) a.href = map.about;
+          else if (txt.startsWith('contact')) a.href = map.contact;
+        });
+      }
+      var menu = document.querySelector('.lang-menu');
+      if (menu){
+        var links = menu.querySelectorAll('a');
+        if (links.length >= 2){
+          var thLink = links[0];
+          var enLink = links[1];
+          var thaiPath = location.pathname.replace(/^\/en/, '') || '/index.html';
+          var enPath   = location.pathname.startsWith('/en')
+                         ? location.pathname
+                         : '/en' + location.pathname;
+          thLink.href = thaiPath;
+          enLink.href = enPath;
+        }
+      }
     })();
   </script>
 </body>
