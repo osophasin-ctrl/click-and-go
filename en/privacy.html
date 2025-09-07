@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy | Click & Go</title>
+  <meta name="description" content="Click & Go privacy policy explains what data we collect, how we use it, cookies, affiliates, and your rights." />
+  <link rel="canonical" href="https://click-and-go-navy.vercel.app/en/privacy.html" />
+
+  <!-- Hreflang (EN/TH pair) -->
+  <link rel="alternate" hreflang="en" href="https://click-and-go-navy.vercel.app/en/privacy.html" />
+  <link rel="alternate" hreflang="th" href="https://click-and-go-navy.vercel.app/privacy.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Click & Go" />
+  <meta property="og:title" content="Privacy Policy | Click & Go" />
+  <meta property="og:description" content="Click & Go privacy policy explains what data we collect, how we use it, cookies, affiliates, and your rights." />
+  <meta property="og:url" content="https://click-and-go-navy.vercel.app/en/privacy.html" />
+  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="inner">
+      <a href="/en/index.html" class="brand" aria-label="Click & Go">
+        <img src="/logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="/en/index.html">Home</a>
+        <a href="/en/deals.html">Deals</a>
+
+        <div class="lang">
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="/privacy.html">ไทย</a>
+            <a role="menuitem" href="#" aria-current="true">English</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section style="margin:18px 0 8px">
+      <h1 class="section-title">Privacy Policy</h1>
+      <p class="muted">Last updated: 9 September 2025</p>
+    </section>
+
+    <section style="margin-top:8px">
+      <h2>What data we collect</h2>
+      <p>When you use our website, we may collect the following information to improve our services:</p>
+      <ul>
+        <li>Usage data (e.g., pages visited, device type, browser, and de-identified IP)</li>
+        <li>Information you enter, such as search queries, destination, or travel dates (no payment card is collected on this site)</li>
+        <li>Cookies and similar technologies to remember preferences and measure performance</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Cookies & Analytics</h2>
+      <p>We use cookies to remember your settings and enhance your experience. We also use analytics tools (e.g., Google Analytics) to understand aggregate behavior. You may disable cookies in your browser; some features may not function properly without certain cookies.</p>
+    </section>
+
+    <section>
+      <h2>Affiliate Links</h2>
+      <p>Some links on this website are affiliate links to OTA partners. If you make a booking through these links, we may earn a commission at no additional cost to you.</p>
+    </section>
+
+    <section>
+      <h2>How we use and share information</h2>
+      <ul>
+        <li>To provide and improve our services and website</li>
+        <li>To share with service providers involved in technical operations (e.g., hosting/analytics) under appropriate safeguards</li>
+        <li>To disclose when required by law or legal process</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Data retention</h2>
+      <p>We retain personal data only as long as necessary for the purposes described in this policy and will delete or de-identify it when no longer needed.</p>
+    </section>
+
+    <section>
+      <h2>Your rights</h2>
+      <ul>
+        <li>Right to access and obtain a copy of your personal data</li>
+        <li>Right to request correction/deletion or object to processing (subject to applicable law)</li>
+        <li>Right to withdraw consent where processing is based on consent</li>
+      </ul>
+      <p>To exercise your rights, please contact us using the details below.</p>
+    </section>
+
+    <section>
+      <h2>Contact us</h2>
+      <p>If you have any questions about this policy, please visit <a href="/en/contact.html">Contact</a> or email us at <a href="mailto:support@clickandgo.example">support@clickandgo.example</a>.</p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="/en/privacy.html">Privacy</a> ·
+        <a href="/en/terms.html">Terms</a> ·
+        <a href="/en/affiliate.html">Affiliate Disclosure</a> ·
+        <a href="/en/about.html">About us</a> ·
+        <a href="/en/contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Language pop-up -->
+  <script>
+    (function(){
+      const btn  = document.querySelector('.lang-btn');
+      const menu = document.querySelector('.lang-menu');
+      if(!btn||!menu) return;
+      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      btn.addEventListener('click', e=>{
+        e.stopPropagation();
+        const opened = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(opened));
+      });
+      document.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
+    })();
+  </script>
+</body>
+</html>
