@@ -3,62 +3,75 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว</title>
-  <meta name="description" content="Click & Go ช่วยค้นหาและเปรียบเทียบราคาโรงแรมจากหลาย OTA พร้อมลิงก์ไปจองทันที ครอบคลุมปลายทางยอดนิยมทั้งในไทยและต่างประเทศ" />
-  <link rel="canonical" href="https://click-and-go-navy.vercel.app/" />
+  <title>Click & Go – จองโรงแรมทั่วไทยและทั่วโลก</title>
+  <meta name="description" content="Click & Go ค้นหาโรงแรมและดีลพิเศษในไทยและต่างประเทศ จองง่ายในไม่กี่คลิก" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Click & Go" />
-  <meta property="og:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว" />
-  <meta property="og:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
-  <meta property="og:url" content="https://click-and-go-navy.vercel.app/" />
-  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+  <style>
+    /* ---------- Header ---------- */
+    .site-header .brand span { display: none; }
+    .site-header .brand img { width: 42px; height: 42px; }
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว" />
-  <meta name="twitter:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
-  <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
-
-  <!-- JSON-LD: WebSite + SearchAction -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebSite",
-    "name":"Click & Go",
-    "url":"https://click-and-go-navy.vercel.app/",
-    "potentialAction":{
-      "@type":"SearchAction",
-      "target":"https://click-and-go-navy.vercel.app/deals.html?q={search_term_string}",
-      "query-input":"required name=search_term_string"
+    /* ---------- Search Box ---------- */
+    .widget-like {
+      border: 2px solid #ccc;
+      border-radius: 12px;
+      background: #f9f9f9;
+      padding: 16px;
     }
-  }
-  </script>
+    .search-form {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr;
+      margin-top: 10px;
+    }
+    @media (min-width: 768px) {
+      .search-form {
+        grid-template-columns: 2fr 1fr 1fr auto;
+      }
+    }
+    .search-form input,
+    .search-form select,
+    .search-form button {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+    .search-form button.btn {
+      background: #009970;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
 
-  <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="style.css">
-
-  <!-- GA4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
-  <script>window.dataLayer=window.dataLayer||[];
-  function gtag(){dataLayer.push(arguments);} gtag('js',new Date());
-  gtag('config','G-1QR2EGFWN3');</script>
+    /* ---------- Footer ---------- */
+    .site-footer {
+      margin-top: 40px;
+      padding: 16px 0;
+      border-top: 1px solid #ddd;
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+    }
+    .site-footer strong { font-weight: 700; }
+    .site-footer a { color: #009970; text-decoration: none; margin: 0 6px; }
+  </style>
 </head>
+
 <body>
   <!-- Header -->
   <header class="site-header" role="banner">
     <div class="inner">
       <a href="index.html" class="brand" aria-label="Click & Go">
-        <!-- โลโก้ใหญ่ขึ้น และไม่แสดงตัวหนังสือ -->
-        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
-        <span class="brand-text" aria-hidden="true">Click & Go</span>
+        <img src="logo.png" alt="Click & Go" loading="lazy" />
+        <span>Click & Go</span>
       </a>
 
       <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html" aria-current="page">หน้าแรก</a>
         <a href="deals.html">โปรโมชั่น</a>
-
         <div class="lang">
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
           <div class="lang-menu" role="menu">
@@ -72,131 +85,69 @@
 
   <main class="container">
     <!-- Hero -->
-    <section class="hero" aria-label="ภาพแบนเนอร์">
-      <img class="hero-img" src="hero-bg.jpg" alt="Click & Go Thailand" />
+    <section class="hero" style="margin-top:14px">
+      <img src="hero-bg.jpg" alt="Click & Go Thailand" style="width:100%;border-radius:10px" />
     </section>
 
-    <!-- ค้นหาโรงแรม -->
-    <section style="margin:24px 0">
-      <h2 class="section-title">ค้นหาโรงแรม</h2>
+    <!-- Search Box -->
+    <section style="margin-top:20px">
+      <h2 style="margin:6px 0 12px">ค้นหาโรงแรม</h2>
       <div class="widget-like">
-        <p class="muted">วางโค้ด Agoda/Booking Search Box ที่นี่เมื่อได้รับจาก Partner Portal</p>
+        <p style="color:#333;font-weight:600;margin:0 0 10px">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
 
-        <!-- ฟอร์มค้นหาจำลอง -->
         <form class="search-form" role="search" aria-label="ค้นหาโรงแรมจำลอง">
+          <!-- 1. ปลายทาง -->
           <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่" aria-label="ปลายทาง">
-          <select aria-label="จำนวนผู้เข้าพัก">
-            <option value="2">ผู้เข้าพัก 2 คน</option>
-            <option value="1">ผู้เข้าพัก 1 คน</option>
-            <option value="3">ผู้เข้าพัก 3 คน</option>
-            <option value="4">ผู้เข้าพัก 4 คน</option>
-          </select>
+
+          <!-- 2. เช็คอิน -->
           <input type="date" aria-label="เช็คอิน">
+
+          <!-- 3. เช็คเอาท์ -->
           <input type="date" aria-label="เช็คเอาท์">
+
+          <!-- 4. ปุ่มค้นหา -->
           <button type="button" class="btn">ค้นหา</button>
         </form>
-
-        <p class="tiny-note">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Partner อนุมัติ</p>
       </div>
     </section>
 
-    <!-- ปลายทางยอดนิยม (ไทย) -->
+    <!-- ปลายทางยอดนิยม -->
     <section>
-      <h2 class="section-title">ปลายทางยอดนิยมในไทย</h2>
-      <div class="city-grid">
-        <a class="city-card" href="bangkok.html">
-          <figure>
-            <img src="bangkok-tile.webp" alt="กรุงเทพฯ">
-            <figcaption>กรุงเทพฯ</figcaption>
-          </figure>
-        </a>
-        <a class="city-card" href="chiangmai.html">
-          <figure>
-            <img src="chiangmai-tile.webp" alt="เชียงใหม่">
-            <figcaption>เชียงใหม่</figcaption>
-          </figure>
-        </a>
-        <a class="city-card" href="pattaya.html">
-          <figure>
-            <img src="pattaya-tile.webp" alt="พัทยา">
-            <figcaption>พัทยา</figcaption>
-          </figure>
-        </a>
-        <a class="city-card" href="phuket.html">
-          <figure>
-            <img src="phuket-tile.webp" alt="ภูเก็ต">
-            <figcaption>ภูเก็ต</figcaption>
-          </figure>
-        </a>
-        <a class="city-card" href="krabi.html">
-          <figure>
-            <img src="krabi-tile.webp" alt="กระบี่">
-            <figcaption>กระบี่</figcaption>
-          </figure>
-        </a>
-        <a class="city-card" href="hua-hin.html">
-          <figure>
-            <img src="huahin-tile.webp" alt="หัวหิน">
-            <figcaption>หัวหิน</figcaption>
-          </figure>
-        </a>
+      <h2>ปลายทางยอดนิยมในไทย</h2>
+      <div class="destinations">
+        <a href="bangkok.html"><img src="bangkok.jpg" alt="กรุงเทพฯ"><span>กรุงเทพฯ</span></a>
+        <a href="chiangmai.html"><img src="chiangmai.jpg" alt="เชียงใหม่"><span>เชียงใหม่</span></a>
+        <a href="phuket.html"><img src="phuket.jpg" alt="ภูเก็ต"><span>ภูเก็ต</span></a>
+        <a href="pattaya.html"><img src="pattaya.jpg" alt="พัทยา"><span>พัทยา</span></a>
+        <a href="krabi.html"><img src="krabi.jpg" alt="กระบี่"><span>กระบี่</span></a>
+        <a href="huahin.html"><img src="huahin.jpg" alt="หัวหิน"><span>หัวหิน</span></a>
       </div>
     </section>
 
-    <!-- เมืองยอดฮิตต่างประเทศ -->
     <section>
-      <h2 class="section-title">เมืองยอดฮิตในต่างประเทศ</h2>
-      <div class="city-grid">
-        <a class="city-card" href="tokyo.html"><figure><img src="tokyo-tile.webp" alt="โตเกียว"><figcaption>โตเกียว</figcaption></figure></a>
-        <a class="city-card" href="seoul.html"><figure><img src="seoul-tile.webp" alt="โซล"><figcaption>โซล</figcaption></figure></a>
-        <a class="city-card" href="singapore.html"><figure><img src="singapore-tile.webp" alt="สิงคโปร์"><figcaption>สิงคโปร์</figcaption></figure></a>
-        <a class="city-card" href="hongkong.html"><figure><img src="hongkong-tile.webp" alt="ฮ่องกง"><figcaption>ฮ่องกง</figcaption></figure></a>
-        <a class="city-card" href="london.html"><figure><img src="london-tile.webp" alt="ลอนดอน"><figcaption>ลอนดอน</figcaption></figure></a>
-        <a class="city-card" href="paris.html"><figure><img src="paris-tile.webp" alt="ปารีส"><figcaption>ปารีส</figcaption></figure></a>
-      </div>
-    </section>
-
-    <!-- ทำไมต้อง Click & Go -->
-    <section>
-      <h2 class="section-title">ทำไมต้อง Click & Go</h2>
-      <div class="features">
-        <div class="feature"><h3>เปรียบเทียบหลายเจ้า</h3><p>ดูราคา/โปรจากหลายเว็บไซต์ในที่เดียว</p></div>
-        <div class="feature"><h3>คลิกเดียวไปจอง</h3><p>ลิงก์ตรงไปหน้าโรงแรมบนพาร์ทเนอร์ได้ทันที</p></div>
-        <div class="feature"><h3>รองรับมือถือ</h3><p>ออกแบบให้ใช้งานง่าย ทุกหน้าจอ</p></div>
+      <h2>ปลายทางยอดนิยมต่างประเทศ</h2>
+      <div class="destinations">
+        <a href="#"><img src="tokyo.jpg" alt="โตเกียว"><span>โตเกียว</span></a>
+        <a href="#"><img src="osaka.jpg" alt="โอซาก้า"><span>โอซาก้า</span></a>
+        <a href="#"><img src="seoul.jpg" alt="โซล"><span>โซล</span></a>
+        <a href="#"><img src="singapore.jpg" alt="สิงคโปร์"><span>สิงคโปร์</span></a>
+        <a href="#"><img src="hongkong.jpg" alt="ฮ่องกง"><span>ฮ่องกง</span></a>
+        <a href="#"><img src="paris.jpg" alt="ปารีส"><span>ปารีส</span></a>
       </div>
     </section>
   </main>
 
   <!-- Footer -->
   <footer class="site-footer">
-    <div class="container" style="text-align:center">
-      <div style="font-weight:700; margin-bottom:4px;">
-        Privacy · Terms · Affiliate Disclosure · 
-        <a href="about.html">About us</a> · 
-        <a href="contact.html">Contact</a> ·
-        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
-      </div>
-      <div style="font-weight:700;">
-        All Right Reserved : Click And Go OTA (Thailand) Co., Ltd.
-      </div>
+    <div>
+      Privacy · Terms · Affiliate Disclosure · 
+      <a href="about.html">About us</a> · 
+      <a href="contact.html">Contact</a> · 
+      <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+    </div>
+    <div style="margin-top:6px; font-size:12px;">
+      <strong>All Right Reserved : Click And Go OTA (Thailand) Co., Ltd.</strong>
     </div>
   </footer>
-
-  <!-- Language pop-up -->
-  <script>
-    (function(){
-      const btn  = document.querySelector('.lang-btn');
-      const menu = document.querySelector('.lang-menu');
-      if(!btn||!menu) return;
-      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-      btn.addEventListener('click', e=>{
-        e.stopPropagation();
-        const opened = menu.classList.toggle('open');
-        btn.setAttribute('aria-expanded', String(opened));
-      });
-      document.addEventListener('click', closeMenu);
-      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
-    })();
-  </script>
 </body>
 </html>
