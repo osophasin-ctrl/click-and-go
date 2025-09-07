@@ -1,131 +1,223 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Hotel Deals | Click & Go</title>
-  <meta name="description" content="Curated hotel deals and promotions. Book easily in one click."/>
-  <link rel="icon" href="../favicon.ico"/>
-  <link rel="stylesheet" href="../style.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Hotel Deals – Best Offers | Click & Go</title>
+  <meta name="description" content="Hand-picked hotel deals from multiple partners. Compare and go book in one click with Click & Go." />
+  <link rel="canonical" href="https://click-and-go-navy.vercel.app/en/deals.html" />
+
+  <!-- Hreflang (EN/TH pair) -->
+  <link rel="alternate" hreflang="en" href="https://click-and-go-navy.vercel.app/en/deals.html" />
+  <link rel="alternate" hreflang="th" href="https://click-and-go-navy.vercel.app/deals.html" />
+  <link rel="icon" href="/favicon.ico" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Click & Go" />
+  <meta property="og:title" content="Hotel Deals – Best Offers | Click & Go" />
+  <meta property="og:description" content="Curated hotel deals from multiple partners. Compare and go book in one click." />
+  <meta property="og:url" content="https://click-and-go-navy.vercel.app/en/deals.html" />
+  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Hotel Deals – Best Offers | Click & Go" />
+  <meta name="twitter:description" content="Curated hotel deals from multiple partners. Compare and go book in one click." />
+  <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Hotel Deals",
+    "url": "https://click-and-go-navy.vercel.app/en/deals.html",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Click & Go",
+      "url": "https://click-and-go-navy.vercel.app/"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="/style.css" />
+
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1QR2EGFWN3');</script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-1QR2EGFWN3');
+  </script>
 </head>
 <body>
   <!-- Header -->
   <header class="site-header" role="banner">
     <div class="inner">
-      <a href="index.html" class="brand" aria-label="Click & Go">
-        <img src="../logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+      <a href="/en/index.html" class="brand" aria-label="Click & Go">
+        <img src="/logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
         <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
+
       <nav class="main-nav" aria-label="Main navigation">
-        <a href="index.html">Home</a>
-        <a href="deals.html" aria-current="page">Deals</a>
+        <a href="/en/index.html">Home</a>
+        <a href="/en/deals.html" aria-current="page">Deals</a>
+
         <div class="lang">
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
           <div class="lang-menu" role="menu">
-            <a role="menuitem" href="#">ไทย</a>
-            <a role="menuitem" href="#" aria-current="true">English</a>
+            <a role="menuitem" href="/deals.html">ไทย</a>
+            <a role="menuitem" href="/en/deals.html" aria-current="true">English</a>
           </div>
         </div>
       </nav>
     </div>
   </header>
 
-  <!-- Main -->
   <main class="container">
-    <section style="margin-top:20px">
-      <h1 class="section-title">Hotel Deals</h1>
-      <p class="muted" style="margin-bottom:14px">Sample layout for curated deals — once affiliate is active, “Book now” will link to real hotels.</p>
+    <!-- Hero -->
+    <section class="hero" aria-label="Hero image">
+      <img class="hero-img" src="/hero-bg.jpg" alt="Click & Go – Hotel deals" />
+    </section>
+
+    <!-- Search -->
+    <section style="margin:24px 0">
+      <h2 class="section-title">Find hotels</h2>
+      <div class="widget-like solid">
+        <p class="muted">We’re ready to fetch the best offers for you</p>
+
+        <form class="search-form search-4cols" role="search" aria-label="Search hotels (mock)">
+          <input type="text" placeholder="Destination e.g. Chiang Mai or hotel name" aria-label="Destination">
+
+          <div class="date-wrap empty" id="checkin-wrap">
+            <input type="date" id="checkin" aria-label="Check-in">
+            <span class="date-placeholder">Check-in</span>
+          </div>
+
+          <div class="date-wrap empty" id="checkout-wrap">
+            <input type="date" id="checkout" aria-label="Check-out">
+            <span class="date-placeholder">Check-out</span>
+          </div>
+
+          <button type="button" class="btn">Search</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Partner Search -->
+    <section>
+      <div class="widget-like" style="margin-top:12px">
+        <h3 style="margin:0 0 10px">Or search on our partners</h3>
+        <div style="display:grid; gap:12px">
+          <a class="btn" href="#" rel="nofollow">Go to Agoda</a>
+          <a class="btn" href="#" rel="nofollow">Go to Booking.com</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- City Hot Deals -->
+    <section style="margin-top:24px">
+      <h2 class="section-title">Hottest deals in popular cities</h2>
+      <div class="city-grid">
+        <a class="city-card" href="/bangkok.html">
+          <figure>
+            <img src="/bangkok-tile.webp" alt="Bangkok">
+            <figcaption>Bangkok</figcaption>
+          </figure>
+        </a>
+        <a class="city-card" href="/chiangmai.html">
+          <figure>
+            <img src="/chiangmai-tile.webp" alt="Chiang Mai">
+            <figcaption>Chiang Mai</figcaption>
+          </figure>
+        </a>
+        <a class="city-card" href="/phuket.html">
+          <figure>
+            <img src="/phuket-tile.webp" alt="Phuket">
+            <figcaption>Phuket</figcaption>
+          </figure>
+        </a>
+        <a class="city-card" href="/pattaya.html">
+          <figure>
+            <img src="/pattaya-tile.webp" alt="Pattaya">
+            <figcaption>Pattaya</figcaption>
+          </figure>
+        </a>
+        <a class="city-card" href="/krabi.html">
+          <figure>
+            <img src="/krabi-tile.webp" alt="Krabi">
+            <figcaption>Krabi</figcaption>
+          </figure>
+        </a>
+        <a class="city-card" href="/hua-hin.html">
+          <figure>
+            <img src="/huahin-tile.webp" alt="Hua Hin">
+            <figcaption>Hua Hin</figcaption>
+          </figure>
+        </a>
+      </div>
+
+      <p class="tiny-note" style="margin-top:8px">
+        * Layout for demonstration — once Affiliate access is granted, “Book now” buttons will link to real hotel pages.
+      </p>
+    </section>
+
+    <!-- Example Deals Listing (Optional) -->
+    <section id="example-list" style="margin-top:26px">
+      <h2 class="section-title">Recommended deals</h2>
 
       <div class="deal-grid">
         <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop" alt="Bangkok hotel deal">
+          <img class="thumb" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop" alt="Sample hotel 1">
           <div class="body">
-            <h3>Bangkok: City View near BTS</h3>
-            <p>Great location, breakfast included</p>
+            <h3>Sample Hotel 1</h3>
+            <p>Central location, near metro. From THB 1,200/night</p>
           </div>
           <div class="meta">
-            <strong>From ฿1,200/night</strong>
-            <a class="btn" href="#">Book now</a>
+            <strong>THB 1,200 / night</strong>
+            <a class="btn" href="#" rel="nofollow">Book now</a>
           </div>
         </article>
 
         <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="Chiang Mai hotel deal">
+          <img class="thumb" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="Sample hotel 2">
           <div class="body">
-            <h3>Chiang Mai: Nimman Area</h3>
-            <p>New rooms, café scene nearby</p>
+            <h3>Sample Hotel 2</h3>
+            <p>Great city view, spacious room. From THB 1,800/night</p>
           </div>
           <div class="meta">
-            <strong>From ฿990/night</strong>
-            <a class="btn" href="#">Book now</a>
+            <strong>THB 1,800 / night</strong>
+            <a class="btn" href="#" rel="nofollow">Book now</a>
           </div>
         </article>
 
         <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop" alt="Phuket hotel deal">
+          <img class="thumb" src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop" alt="Sample hotel 3">
           <div class="body">
-            <h3>Phuket: Beachfront Resort</h3>
-            <p>Pool & stunning views</p>
+            <h3>Sample Hotel 3</h3>
+            <p>Shopping district, right in the heart of the city. From THB 900/night</p>
           </div>
           <div class="meta">
-            <strong>From ฿1,800/night</strong>
-            <a class="btn" href="#">Book now</a>
-          </div>
-        </article>
-
-        <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1502920514313-52581002a659?q=80&w=1200&auto=format&fit=crop" alt="Pattaya hotel deal">
-          <div class="body">
-            <h3>Pattaya: Sea View</h3>
-            <p>Walk to the beach, restaurants nearby</p>
-          </div>
-          <div class="meta">
-            <strong>From ฿1,150/night</strong>
-            <a class="btn" href="#">Book now</a>
-          </div>
-        </article>
-
-        <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop" alt="Krabi hotel deal">
-          <div class="body">
-            <h3>Krabi: Boutique Hotel</h3>
-            <p>Cozy stay near nature spots</p>
-          </div>
-          <div class="meta">
-            <strong>From ฿1,050/night</strong>
-            <a class="btn" href="#">Book now</a>
-          </div>
-        </article>
-
-        <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=1200&auto=format&fit=crop" alt="Hua Hin hotel deal">
-          <div class="body">
-            <h3>Hua Hin: Family Resort</h3>
-            <p>Kids’ pool and activities</p>
-          </div>
-          <div class="meta">
-            <strong>From ฿1,390/night</strong>
-            <a class="btn" href="#">Book now</a>
+            <strong>THB 900 / night</strong>
+            <a class="btn" href="#" rel="nofollow">Book now</a>
           </div>
         </article>
       </div>
-
-      <p class="tiny-note" style="margin-top:10px">* Sample content for layout</p>
     </section>
   </main>
 
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
-      <div class="footer-links">
-        <a href="privacy.html">Privacy</a> ·
-        <a href="terms.html">Terms</a> ·
-        <a href="affiliate.html">Affiliate Disclosure</a> ·
-        <a href="about.html">About us</a> ·
-        <a href="contact.html">Contact</a> ·
+      <div class="footer-links" style="margin-bottom:4px;">
+        <a href="/en/privacy.html" class="ft ft-privacy">Privacy</a> ·
+        <a href="/en/terms.html" class="ft ft-terms">Terms</a> ·
+        <a href="/en/affiliate.html" class="ft ft-affiliate">Affiliate Disclosure</a> ·
+        <a href="/en/about.html" class="ft ft-about">About us</a> ·
+        <a href="/en/contact.html" class="ft ft-contact">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
@@ -133,22 +225,50 @@
 
   <!-- Scripts -->
   <script>
-    // language pop-up
+    // Language pop-up
     (function(){
-      const btn=document.querySelector('.lang-btn'); const menu=document.querySelector('.lang-menu');
-      if(!btn||!menu) return;
-      function closeMenu(){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}
-      btn.addEventListener('click',e=>{e.stopPropagation();const opened=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(opened));});
-      document.addEventListener('click',closeMenu); document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
+      const btn  = document.querySelector('.lang-btn');
+      const menu = document.querySelector('.lang-menu');
+      if(!btn || !menu) return;
+      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      btn.addEventListener('click', e=>{
+        e.stopPropagation();
+        const opened = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(opened));
+      });
+      document.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
     })();
 
-    // keep language / switch
+    // Date placeholder show/hide
     (function(){
-      var isEN=location.pathname.startsWith('/en/'); var prefix=isEN?'/en':'';
-      var map={home:prefix+'/index.html',deals:prefix+'/deals.html',privacy:prefix+'/privacy.html',terms:prefix+'/terms.html',aff:prefix+'/affiliate.html',about:prefix+'/about.html',contact:prefix+'/contact.html'};
-      var nav=document.querySelector('.main-nav'); if(nav){nav.querySelectorAll('a').forEach(a=>{var t=a.textContent.trim().toLowerCase(); if(t.includes('home'))a.href=map.home; else if(t.includes('deals'))a.href=map.deals;});}
-      var foot=document.querySelector('.footer-links'); if(foot){foot.querySelectorAll('a').forEach(a=>{var t=a.textContent.trim().toLowerCase(); if(t.startsWith('privacy'))a.href=map.privacy; else if(t.startsWith('terms'))a.href=map.terms; else if(t.startsWith('affiliate'))a.href=map.aff; else if(t.startsWith('about'))a.href=map.about; else if(t.startsWith('contact'))a.href=map.contact;});}
-      var menu=document.querySelector('.lang-menu'); if(menu){var l=menu.querySelectorAll('a'); if(l.length>=2){var th=l[0],en=l[1]; var thPath=location.pathname.replace(/^\/en/,'')||'/deals.html'; var enPath=location.pathname.startsWith('/en')?location.pathname:'/en'+location.pathname; th.href=thPath; en.href=enPath;}}
+      function bindDatePlaceholder(wrapId, inputId){
+        const wrap = document.getElementById(wrapId);
+        const input = document.getElementById(inputId);
+        if(!wrap || !input) return;
+        const toggle = () => wrap.classList.toggle('empty', !input.value);
+        toggle();
+        input.addEventListener('input', toggle);
+        input.addEventListener('change', toggle);
+      }
+      bindDatePlaceholder('checkin-wrap','checkin');
+      bindDatePlaceholder('checkout-wrap','checkout');
+    })();
+
+    // Footer i18n auto-prefix (for safety if path changes)
+    (function(){
+      const isEN = location.pathname.startsWith('/en/');
+      const map = {
+        '.ft-privacy':  isEN ? '/en/privacy.html'  : '/privacy.html',
+        '.ft-terms':    isEN ? '/en/terms.html'    : '/terms.html',
+        '.ft-affiliate':isEN ? '/en/affiliate.html': '/affiliate.html',
+        '.ft-about':    isEN ? '/en/about.html'    : '/about.html',
+        '.ft-contact':  isEN ? '/en/contact.html'  : '/contact.html',
+      };
+      Object.keys(map).forEach(sel=>{
+        const el = document.querySelector(sel);
+        if(el) el.setAttribute('href', map[sel]);
+      });
     })();
   </script>
 </body>
