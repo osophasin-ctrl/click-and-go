@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Hotel Deals | Click & Go</title>
+  <meta name="description" content="Curated hotel deals and promotions. Book easily in one click."/>
+  <link rel="icon" href="../favicon.ico"/>
+  <link rel="stylesheet" href="../style.css"/>
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1QR2EGFWN3');</script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="inner">
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="../logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="deals.html" aria-current="page">Deals</a>
+        <div class="lang">
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="#">ไทย</a>
+            <a role="menuitem" href="#" aria-current="true">English</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="container">
+    <section style="margin-top:20px">
+      <h1 class="section-title">Hotel Deals</h1>
+      <p class="muted" style="margin-bottom:14px">Sample layout for curated deals — once affiliate is active, “Book now” will link to real hotels.</p>
+
+      <div class="deal-grid">
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop" alt="Bangkok hotel deal">
+          <div class="body">
+            <h3>Bangkok: City View near BTS</h3>
+            <p>Great location, breakfast included</p>
+          </div>
+          <div class="meta">
+            <strong>From ฿1,200/night</strong>
+            <a class="btn" href="#">Book now</a>
+          </div>
+        </article>
+
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="Chiang Mai hotel deal">
+          <div class="body">
+            <h3>Chiang Mai: Nimman Area</h3>
+            <p>New rooms, café scene nearby</p>
+          </div>
+          <div class="meta">
+            <strong>From ฿990/night</strong>
+            <a class="btn" href="#">Book now</a>
+          </div>
+        </article>
+
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop" alt="Phuket hotel deal">
+          <div class="body">
+            <h3>Phuket: Beachfront Resort</h3>
+            <p>Pool & stunning views</p>
+          </div>
+          <div class="meta">
+            <strong>From ฿1,800/night</strong>
+            <a class="btn" href="#">Book now</a>
+          </div>
+        </article>
+
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1502920514313-52581002a659?q=80&w=1200&auto=format&fit=crop" alt="Pattaya hotel deal">
+          <div class="body">
+            <h3>Pattaya: Sea View</h3>
+            <p>Walk to the beach, restaurants nearby</p>
+          </div>
+          <div class="meta">
+            <strong>From ฿1,150/night</strong>
+            <a class="btn" href="#">Book now</a>
+          </div>
+        </article>
+
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop" alt="Krabi hotel deal">
+          <div class="body">
+            <h3>Krabi: Boutique Hotel</h3>
+            <p>Cozy stay near nature spots</p>
+          </div>
+          <div class="meta">
+            <strong>From ฿1,050/night</strong>
+            <a class="btn" href="#">Book now</a>
+          </div>
+        </article>
+
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=1200&auto=format&fit=crop" alt="Hua Hin hotel deal">
+          <div class="body">
+            <h3>Hua Hin: Family Resort</h3>
+            <p>Kids’ pool and activities</p>
+          </div>
+          <div class="meta">
+            <strong>From ฿1,390/night</strong>
+            <a class="btn" href="#">Book now</a>
+          </div>
+        </article>
+      </div>
+
+      <p class="tiny-note" style="margin-top:10px">* Sample content for layout</p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html">About us</a> ·
+        <a href="contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // language pop-up
+    (function(){
+      const btn=document.querySelector('.lang-btn'); const menu=document.querySelector('.lang-menu');
+      if(!btn||!menu) return;
+      function closeMenu(){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}
+      btn.addEventListener('click',e=>{e.stopPropagation();const opened=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(opened));});
+      document.addEventListener('click',closeMenu); document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
+    })();
+
+    // keep language / switch
+    (function(){
+      var isEN=location.pathname.startsWith('/en/'); var prefix=isEN?'/en':'';
+      var map={home:prefix+'/index.html',deals:prefix+'/deals.html',privacy:prefix+'/privacy.html',terms:prefix+'/terms.html',aff:prefix+'/affiliate.html',about:prefix+'/about.html',contact:prefix+'/contact.html'};
+      var nav=document.querySelector('.main-nav'); if(nav){nav.querySelectorAll('a').forEach(a=>{var t=a.textContent.trim().toLowerCase(); if(t.includes('home'))a.href=map.home; else if(t.includes('deals'))a.href=map.deals;});}
+      var foot=document.querySelector('.footer-links'); if(foot){foot.querySelectorAll('a').forEach(a=>{var t=a.textContent.trim().toLowerCase(); if(t.startsWith('privacy'))a.href=map.privacy; else if(t.startsWith('terms'))a.href=map.terms; else if(t.startsWith('affiliate'))a.href=map.aff; else if(t.startsWith('about'))a.href=map.about; else if(t.startsWith('contact'))a.href=map.contact;});}
+      var menu=document.querySelector('.lang-menu'); if(menu){var l=menu.querySelectorAll('a'); if(l.length>=2){var th=l[0],en=l[1]; var thPath=location.pathname.replace(/^\/en/,'')||'/deals.html'; var enPath=location.pathname.startsWith('/en')?location.pathname:'/en'+location.pathname; th.href=thPath; en.href=enPath;}}
+    })();
+  </script>
+</body>
+</html>
