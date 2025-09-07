@@ -80,22 +80,15 @@
         <p class="muted">We’re ready to find the best deals for you</p>
 
         <form class="search-form search-4cols" role="search" aria-label="Mock hotel search">
-          <!-- Destination -->
           <input type="text" placeholder="Destination e.g. Chiang Mai or hotel name" aria-label="Destination">
-
-          <!-- Check-in -->
           <div class="date-wrap empty" id="checkin-wrap">
             <input type="date" id="checkin" aria-label="Check-in">
             <span class="date-placeholder">Check-in</span>
           </div>
-
-          <!-- Check-out -->
           <div class="date-wrap empty" id="checkout-wrap">
             <input type="date" id="checkout" aria-label="Check-out">
             <span class="date-placeholder">Check-out</span>
           </div>
-
-          <!-- Submit -->
           <button type="button" class="btn">Search</button>
         </form>
       </div>
@@ -147,11 +140,13 @@
     </section>
   </main>
 
-  <!-- Footer -->
+  <!-- Footer (first row links fixed) -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        Privacy · Terms · Affiliate Disclosure · 
+        <a href="/privacy.html">Privacy</a> ·
+        <a href="/terms.html">Terms</a> ·
+        <a href="/affiliate.html">Affiliate Disclosure</a> ·
         <a href="/about.html">About us</a> · 
         <a href="/contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
@@ -161,7 +156,6 @@
 
   <!-- Scripts -->
   <script>
-    // language pop-up
     (function(){
       const btn  = document.querySelector('.lang-btn');
       const menu = document.querySelector('.lang-menu');
@@ -176,7 +170,6 @@
       document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
     })();
 
-    // toggle date placeholder
     (function(){
       function bindDatePlaceholder(wrapId, inputId){
         const wrap  = document.getElementById(wrapId);
