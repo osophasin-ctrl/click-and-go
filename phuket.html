@@ -3,112 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ภูเก็ต (Phuket) – โรงแรมและย่านยอดนิยม | Click & Go</title>
-  <meta name="description" content="โรงแรมในภูเก็ต เปรียบเทียบราคาง่าย คลิกเดียวไปจองได้เลย ครอบคลุมย่านยอดนิยม เช่น ป่าตอง กะตะ/กะรน กมลา/สุรินทร์/บางเทา ราไวย์/ในหาน เมืองภูเก็ต และโซนสนามบิน" />
+  <title>ภูเก็ต (Phuket) – โรงแรมและดีลยอดนิยม | Click & Go</title>
+  <meta name="description" content="โรงแรมในภูเก็ต เปรียบเทียบราคาง่าย คลิกเดียวไปจอง ดีลร้อนแรงอัปเดตตลอด" />
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/phuket.html" />
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Click & Go" />
-  <meta property="og:title" content="ภูเก็ต (Phuket) – โรงแรมและย่านยอดนิยม | Click & Go" />
-  <meta property="og:description" content="ค้นหาโรงแรมในภูเก็ต เปรียบเทียบราคา คลิกเดียวไปจองได้เลย" />
-  <meta property="og:url" content="https://click-and-go-navy.vercel.app/phuket.html" />
-  <meta property="og:image" content="https://click-and-go-navy.vercel.app/phuket-hero.jpg" />
-
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-1QR2EGFWN3');
-  </script>
-
-  <style>
-    /* ---------- ปุ่มภาษา ---------- */
-    .lang{ position:relative; }
-    .lang-btn{
-      background:#fff; border:1px solid #ddd; border-radius:6px;
-      padding:6px 10px; cursor:pointer;
-    }
-    .lang-menu{
-      position:absolute; right:0; top:calc(100% + 6px);
-      background:#fff; border:1px solid #e5e5e5; border-radius:8px;
-      min-width:180px; padding:8px 10px; box-shadow:0 8px 24px rgba(0,0,0,.08);
-      display:none; z-index:50;
-    }
-    .lang-menu.open{ display:block; }
-    .lang-menu a{ display:block; padding:6px 8px; color:#333; text-decoration:none; }
-    .lang-menu a[aria-current="true"]{ font-weight:700; }
-
-    /* ---------- Hero ของหน้าเมือง ---------- */
-    .hero-city {
-      position: relative;
-      height: 280px;            /* ให้สอดคล้องธีมเดียวกับกรุงเทพฯ/เชียงใหม่ */
-      border-radius: 10px;
-      overflow: hidden;
-      background: #ddd center/cover no-repeat;
-      margin-top: 14px;
-    }
-    .hero-city .overlay {
-      position:absolute; inset:0;
-      background: linear-gradient(to bottom, rgba(0,0,0,.10), rgba(0,0,0,.10));
-    }
-    .hero-city .content {
-      position: absolute; inset: 0;
-      display:flex; flex-direction:column;
-      align-items:flex-start; justify-content:flex-end;
-      padding: 18px 20px 22px;
-      color:#fff;
-      text-shadow: 0 1px 3px rgba(0,0,0,.35);
-    }
-    .hero-city h1 { margin: 0 0 4px; font-size: clamp(22px, 3vw, 28px); font-weight: 800; }
-    .hero-city p  { margin:0; font-size: clamp(14px, 2vw, 16px); opacity:.98; }
-
-    .districts { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px }
-    .districts .btn { padding:8px 14px; }
-
-    .deal-grid { display:grid; gap:18px; grid-template-columns: repeat(3, 1fr); }
-    @media (max-width: 980px){ .deal-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 620px){ .deal-grid { grid-template-columns: 1fr; } }
-    .deal-card{
-      border:1px solid #eee; border-radius:12px; background:#fff;
-      overflow:hidden; box-shadow:0 1px 10px rgba(0,0,0,.04);
-      display:flex; flex-direction:column;
-    }
-    .deal-card .thumb{ width:100%; aspect-ratio:16/9; object-fit:cover; background:#f1f1f1; display:block; }
-    .deal-card .body{ padding:14px 14px 10px; }
-    .deal-card h3{ margin:0 0 6px; font-size:18px }
-    .deal-card p { margin:0 0 10px; color:#666; font-size:14px }
-    .deal-card .meta{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:0 14px 14px; margin-top:auto;
-    }
-  </style>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);} gtag('js',new Date()); gtag('config','G-1QR2EGFWN3');</script>
 </head>
-
 <body>
-  <!-- Header -->
   <header class="site-header" role="banner">
     <div class="inner">
       <a href="index.html" class="brand" aria-label="Click & Go">
-        <img src="logo.png" alt="" width="28" height="28" loading="lazy" />
-        <span>Click & Go</span>
+        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
-
       <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html">หน้าแรก</a>
         <a href="deals.html">โปรโมชั่น</a>
-        <a href="about.html">เกี่ยวกับ</a>
-        <a href="contact.html">ติดต่อเรา</a>
-
         <div class="lang">
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
           <div class="lang-menu" role="menu">
             <a role="menuitem" href="#" aria-current="true">ไทย</a>
-            <a role="menuitem" href="#">English (เร็ว ๆ นี้)</a>
+            <a role="menuitem" href="#">English</a>
           </div>
         </div>
       </nav>
@@ -116,135 +34,46 @@
   </header>
 
   <main class="container">
-    <!-- Hero ของภูเก็ต -->
-    <section aria-label="ภาพภูเก็ต" class="hero-city"
-             style="background-image: url('phuket-hero.jpg');">
+    <section class="hero-city" style="background-image:url('phuket-hero.jpg')">
       <div class="overlay" aria-hidden="true"></div>
       <div class="content">
         <h1>ภูเก็ต (Phuket)</h1>
-        <p>หาดสวย น้ำทะเลใส จุดดำน้ำ วิวพระอาทิตย์ตก — คลิกเดียวแล้วไป</p>
+        <p>ทะเลสวย หาดดัง อาหารซีฟู้ดสุดฟิน — เลือกดีลคุ้มแล้วคลิกไปจองได้ทันที</p>
       </div>
     </section>
 
-    <!-- กล่องค้นหา -->
     <section style="margin-top:20px">
-      <h2 style="margin:6px 0 12px">ค้นหาโรงแรมในภูเก็ต</h2>
-      <div class="widget-like" style="border:2px dashed #ccc;border-radius:12px;background:#f9f9f9;padding:16px">
-        <div id="agoda-widget"></div>
-        <p style="color:#666;font-size:14px">* วางโค้ด Search Box จาก Partner Portal ที่นี่เมื่อพร้อม</p>
-
-        <form class="search-form" role="search" aria-label="ค้นหาโรงแรมจำลอง"
-              style="display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr auto;margin-top:10px">
-          <input type="text" placeholder="ปลายทาง: ภูเก็ต" aria-label="ปลายทาง" value="ภูเก็ต">
-          <input type="date" aria-label="เช็คอิน">
-          <input type="date" aria-label="เช็คเอาท์">
+      <h2 class="section-title">ค้นหาโรงแรมในภูเก็ต</h2>
+      <div class="widget-like solid">
+        <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
+        <form class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
+          <input type="text" placeholder="ปลายทาง เช่น ภูเก็ต หรือชื่อโรงแรม" aria-label="ปลายทาง" value="ภูเก็ต">
+          <div class="date-wrap empty" id="checkin-wrap"><input type="date" id="checkin" aria-label="เช็คอิน"><span class="date-placeholder">เช็คอิน</span></div>
+          <div class="date-wrap empty" id="checkout-wrap"><input type="date" id="checkout" aria-label="เช็คเอาท์"><span class="date-placeholder">เช็คเอาท์</span></div>
           <button type="button" class="btn">ค้นหา</button>
         </form>
-        <p style="font-size:12px;color:#999;margin-top:8px;">* ระบบค้นหาจะใช้งานได้จริงเมื่อ Partner อนุมัติ</p>
       </div>
     </section>
 
-    <!-- ย่านยอดนิยม -->
-    <section>
-      <h2>ย่านยอดนิยมในภูเก็ต</h2>
-      <div class="districts">
-        <a class="btn" href="#deals">ป่าตอง</a>
-        <a class="btn" href="#deals">กะตะ / กะรน</a>
-        <a class="btn" href="#deals">กมลา / สุรินทร์ / บางเทา</a>
-        <a class="btn" href="#deals">ราไวย์ / ในหาน</a>
-        <a class="btn" href="#deals">เมืองภูเก็ต / ย่านเก่า</a>
-        <a class="btn" href="#deals">สนามบิน / ไม้ขาว / ในยาง</a>
-      </div>
-    </section>
-
-    <!-- โรงแรมแนะนำ -->
     <section id="deals">
-      <h2>โรงแรมแนะนำในภูเก็ต</h2>
+      <h2 class="section-title">Hot Deals ในภูเก็ต</h2>
       <div class="deal-grid">
-        <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1519822471922-928e04d0f0eb?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรมริมหาด ป่าตอง">
-          <div class="body">
-            <h3>บีชรีสอร์ท – ป่าตอง</h3>
-            <p>ติดทะเล เดินลงหาดง่าย ใกล้ร้านอาหารและแหล่งท่องเที่ยว เริ่มต้นเพียง 2,200 บาท/คืน</p>
-          </div>
-          <div class="meta">
-            <strong>฿2,200 / คืน</strong>
-            <a class="btn" href="#">จองเลย</a>
-          </div>
-        </article>
-
-        <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1200&auto=format&fit=crop" alt="พูลวิลล่า กะตะ/กะรน">
-          <div class="body">
-            <h3>พูลวิลล่า – กะตะ/กะรน</h3>
-            <p>ส่วนตัว วิวทะเลเหมาะสำหรับครอบครัว/แก๊งเพื่อน เริ่มต้นเพียง 4,500 บาท/คืน</p>
-          </div>
-          <div class="meta">
-            <strong>฿4,500 / คืน</strong>
-            <a class="btn" href="#">จองเลย</a>
-          </div>
-        </article>
-
-        <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop" alt="บูทีคโฮเทล เมืองภูเก็ต">
-          <div class="body">
-            <h3>บูทีคโฮเทล – เมืองภูเก็ต</h3>
-            <p>ย่านเมืองเก่า เดินเที่ยวคาเฟ่และสตรีทอาร์ต เริ่มต้นเพียง 1,000 บาท/คืน</p>
-          </div>
-          <div class="meta">
-            <strong>฿1,000 / คืน</strong>
-            <a class="btn" href="#">จองเลย</a>
-          </div>
-        </article>
+        <article class="deal-card"><img class="thumb" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop" alt="Phuket Hotel 1"><div class="body"><h3>ซีวิว รีสอร์ต</h3><p>ติดหาดป่าตอง เดินลงทะเลได้ เริ่มเพียง 1,900 บาท/คืน</p></div><div class="meta"><strong>฿1,900 / คืน</strong><a class="btn" href="#">จองเลย</a></div></article>
+        <article class="deal-card"><img class="thumb" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="Phuket Hotel 2"><div class="body"><h3>กะตะ บีช โฮเทล</h3><p>วิวทะเลจากห้องพัก ใกล้ร้านอาหาร เริ่มเพียง 2,200 บาท/คืน</p></div><div class="meta"><strong>฿2,200 / คืน</strong><a class="btn" href="#">จองเลย</a></div></article>
+        <article class="deal-card"><img class="thumb" src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop" alt="Phuket Hotel 3"><div class="body"><h3>ป่าตอง เซ็นเตอร์</h3><p>ใกล้แหล่งช้อปปิ้ง/ไนท์ไลฟ์ เดินสะดวก เริ่ม 1,300 บาท/คืน</p></div><div class="meta"><strong>฿1,300 / คืน</strong><a class="btn" href="#">จองเลย</a></div></article>
+        <article class="deal-card"><img class="thumb" src="https://images.unsplash.com/photo-1552902865-1c6c8f3f2b98?q=80&w=1200&auto=format&fit=crop" alt="Phuket Hotel 4"><div class="body"><h3>ภูเก็ต บูทีค</h3><p>สระว่ายน้ำส่วนกลาง เงียบสงบ เริ่มเพียง 1,650 บาท/คืน</p></div><div class="meta"><strong>฿1,650 / คืน</strong><a class="btn" href="#">จองเลย</a></div></article>
+        <article class="deal-card"><img class="thumb" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop" alt="Phuket Hotel 5"><div class="body"><h3>พูลวิลล่า กะรน</h3><p>เหมาะครอบครัว พื้นที่กว้างขวาง เริ่ม 3,200 บาท/คืน</p></div><div class="meta"><strong>฿3,200 / คืน</strong><a class="btn" href="#">จองเลย</a></div></article>
+        <article class="deal-card"><img class="thumb" src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1200&auto=format&fit=crop" alt="Phuket Hotel 6"><div class="body"><h3>ราไวย์ ซีไซด์</h3><p>ชมพระอาทิตย์ตกสวย เดินเล่นชายหาด เริ่ม 1,700 บาท/คืน</p></div><div class="meta"><strong>฿1,700 / คืน</strong><a class="btn" href="#">จองเลย</a></div></article>
       </div>
-
-      <p class="disclaimer" style="font-size:12px;color:#888;margin-top:10px">
-        * ตัวอย่างดีลเพื่อจัดวางเลย์เอาท์ — เมื่อได้รับสิทธิ์ Affiliate จาก Partner แล้ว ปุ่ม “จองเลย” จะลิงก์ไปยังหน้าโรงแรมจริง
-      </p>
+      <p class="tiny-note">* ตัวอย่างดีลเพื่อจัดวางเลย์เอาท์ — เมื่อได้สิทธิ์ Affiliate ปุ่ม “จองเลย” จะลิงก์ไปหน้าโรงแรมจริง</p>
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container" style="text-align:center">
-      <div style="font-weight:700; margin-bottom:4px;">
-        Privacy · Terms · Affiliate Disclosure · Contact ·
-        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
-      </div>
-      <div>
-        Click & Go OTA (Thailand) Co., Ltd. · Juristic ID 0105562054689
-      </div>
-    </div>
-  </footer>
+  <footer class="site-footer"><div class="container" style="text-align:center"><div class="footer-links"><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="affiliate.html">Affiliate Disclosure</a> · <a href="about.html">About us</a> · <a href="contact.html">Contact</a> · <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a></div></div></footer>
 
-  <!-- Placeholder + Language Popup -->
   <script>
-    // Placeholder image fallback
-    const PLACEHOLDER_IMG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675">
-        <rect width="100%" height="100%" fill="#eaeaea"/>
-        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
-              font-family="Arial, sans-serif" font-size="48" fill="#9aa0a6">Photo</text>
-      </svg>
-    `);
-    document.querySelectorAll('img').forEach(img=>{
-      img.addEventListener('error',()=>{ img.src = PLACEHOLDER_IMG; }, {once:true});
-    });
-
-    // Language pop-up
-    (function(){
-      const btn  = document.querySelector('.lang-btn');
-      const menu = document.querySelector('.lang-menu');
-      if (!btn || !menu) return;
-      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-      btn.addEventListener('click',(e)=>{
-        e.stopPropagation();
-        const opened = menu.classList.toggle('open');
-        btn.setAttribute('aria-expanded', String(opened));
-      });
-      document.addEventListener('click', closeMenu);
-      document.addEventListener('keydown', e => { if(e.key==='Escape') closeMenu(); });
-    })();
+    (function(){const b=document.querySelector('.lang-btn'),m=document.querySelector('.lang-menu');if(!b||!m)return;const c=()=>{m.classList.remove('open');b.setAttribute('aria-expanded','false');};b.addEventListener('click',e=>{e.stopPropagation();const o=m.classList.toggle('open');b.setAttribute('aria-expanded',String(o));});document.addEventListener('click',c);document.addEventListener('keydown',e=>{if(e.key==='Escape')c();});})();
+    (function(){function bind(w,i){const W=document.getElementById(w),I=document.getElementById(i);if(!W||!I)return;const t=()=>W.classList.toggle('empty',!I.value);t();I.addEventListener('input',t);I.addEventListener('change',t);}bind('checkin-wrap','checkin');bind('checkout-wrap','checkout');})();
   </script>
 </body>
 </html>
