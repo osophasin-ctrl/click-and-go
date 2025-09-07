@@ -18,6 +18,7 @@
     <div class="inner">
       <a href="index.html" class="brand" aria-label="Click & Go">
         <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
       <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html">หน้าแรก</a>
@@ -26,7 +27,7 @@
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
           <div class="lang-menu" role="menu">
             <a role="menuitem" href="#" aria-current="true">ไทย</a>
-            <a role="menuitem" href="#">English (เร็ว ๆ นี้)</a>
+            <a role="menuitem" href="#">English</a>
           </div>
         </div>
       </nav>
@@ -36,7 +37,7 @@
   <main class="container">
     <!-- Hero -->
     <section class="hero-city" style="background-image:url('chiangmai-hero.jpg')">
-      <div class="overlay"></div>
+      <div class="overlay" aria-hidden="true"></div>
       <div class="content">
         <h1>เชียงใหม่ (Chiang Mai)</h1>
         <p>เสน่ห์ล้านนา คาเฟ่วิวเขา อากาศดีทั้งปี — เลือกย่านที่ใช่แล้วคลิกไปจองได้ทันที</p>
@@ -49,13 +50,19 @@
       <div class="widget-like solid">
         <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
         <form class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
+          <!-- ปลายทาง -->
           <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่ หรือชื่อโรงแรม" aria-label="ปลายทาง" value="เชียงใหม่">
+          <!-- เช็คอิน -->
           <div class="date-wrap empty" id="checkin-wrap">
-            <input type="date" id="checkin" aria-label="เช็คอิน"><span class="date-placeholder">เช็คอิน</span>
+            <input type="date" id="checkin" aria-label="เช็คอิน">
+            <span class="date-placeholder">เช็คอิน</span>
           </div>
+          <!-- เช็คเอาท์ -->
           <div class="date-wrap empty" id="checkout-wrap">
-            <input type="date" id="checkout" aria-label="เช็คเอาท์"><span class="date-placeholder">เช็คเอาท์</span>
+            <input type="date" id="checkout" aria-label="เช็คเอาท์">
+            <span class="date-placeholder">เช็คเอาท์</span>
           </div>
+          <!-- ปุ่มค้นหา -->
           <button type="button" class="btn">ค้นหา</button>
         </form>
       </div>
@@ -64,7 +71,8 @@
     <!-- Districts -->
     <section>
       <h2 class="section-title">ย่านยอดนิยมในเชียงใหม่</h2>
-      <div class="districts">
+      <!-- ใส่ style ตรงนี้เพื่อคุม spacing โดยไม่กระทบ base css ส่วนอื่น -->
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px">
         <a class="btn" href="#deals">นิมมาน</a>
         <a class="btn" href="#deals">คูเมือง (เชียงใหม่เก่า)</a>
         <a class="btn" href="#deals">ริมปิง</a>
@@ -80,21 +88,44 @@
       <div class="deal-grid">
         <article class="deal-card">
           <img class="thumb" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม 1">
-          <div class="body"><h3>โรงแรมตัวอย่าง 1</h3><p>ย่านนิมมาน ใกล้คาเฟ่และแหล่งเที่ยว เริ่มเพียง 1,200 บาท/คืน</p></div>
-          <div class="meta"><strong>฿1,200 / คืน</strong><a class="btn" href="#">จองเลย</a></div>
+          <div class="body">
+            <h3>โรงแรมตัวอย่าง 1</h3>
+            <p>ย่านนิมมาน ใกล้คาเฟ่และแหล่งเที่ยว เริ่มเพียง 1,200 บาท/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿1,200 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
         </article>
+
         <article class="deal-card">
           <img class="thumb" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม 2">
-          <div class="body"><h3>โรงแรมตัวอย่าง 2</h3><p>วิวภูเขา เงียบสงบ เหมาะพักผ่อน เริ่มเพียง 1,500 บาท/คืน</p></div>
-          <div class="meta"><strong>฿1,500 / คืน</strong><a class="btn" href="#">จองเลย</a></div>
+          <div class="body">
+            <h3>โรงแรมตัวอย่าง 2</h3>
+            <p>วิวภูเขา เงียบสงบ เหมาะพักผ่อน เริ่มเพียง 1,500 บาท/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿1,500 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
         </article>
+
         <article class="deal-card">
           <img class="thumb" src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม 3">
-          <div class="body"><h3>โรงแรมตัวอย่าง 3</h3><p>ใกล้คูเมือง เดินทางสะดวก เริ่มเพียง 900 บาท/คืน</p></div>
-          <div class="meta"><strong>฿900 / คืน</strong><a class="btn" href="#">จองเลย</a></div>
+          <div class="body">
+            <h3>โรงแรมตัวอย่าง 3</h3>
+            <p>ใกล้คูเมือง เดินทางสะดวก เริ่มเพียง 900 บาท/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿900 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
         </article>
       </div>
-      <p class="tiny-note">* ตัวอย่างดีลเพื่อจัดวางเลย์เอาท์ — เมื่อได้รับสิทธิ์ Affiliate แล้ว ปุ่ม “จองเลย” จะลิงก์ไปหน้าโรงแรมจริง</p>
+
+      <p class="tiny-note">
+        * ตัวอย่างดีลเพื่อจัดวางเลย์เอาท์ — เมื่อได้รับสิทธิ์ Affiliate แล้ว ปุ่ม “จองเลย” จะลิงก์ไปหน้าโรงแรมจริง
+      </p>
     </section>
   </main>
 
@@ -115,17 +146,25 @@
   <script>
     // language pop-up
     (function(){
-      const btn=document.querySelector('.lang-btn'); const menu=document.querySelector('.lang-menu');
+      const btn=document.querySelector('.lang-btn'); 
+      const menu=document.querySelector('.lang-menu');
       if(!btn||!menu) return;
       const close=()=>{menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};
       btn.addEventListener('click',e=>{e.stopPropagation();const opened=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(opened));});
-      document.addEventListener('click',close); document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
+      document.addEventListener('click',close); 
+      document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
     })();
-    // date placeholder
+
+    // date placeholder (แสดงคำว่า เช็คอิน/เช็คเอาท์ จนกว่าจะมีค่า)
     (function(){
-      function bind(wrapId,inputId){const w=document.getElementById(wrapId),i=document.getElementById(inputId); if(!w||!i) return;
-        const t=()=>w.classList.toggle('empty',!i.value); t(); i.addEventListener('input',t); i.addEventListener('change',t);}
-      bind('checkin-wrap','checkin'); bind('checkout-wrap','checkout');
+      function bind(wrapId,inputId){
+        const w=document.getElementById(wrapId), i=document.getElementById(inputId); 
+        if(!w||!i) return;
+        const t=()=>w.classList.toggle('empty',!i.value);
+        t(); i.addEventListener('input',t); i.addEventListener('change',t);
+      }
+      bind('checkin-wrap','checkin'); 
+      bind('checkout-wrap','checkout');
     })();
   </script>
 </body>
