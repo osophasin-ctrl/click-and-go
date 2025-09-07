@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Contact | Click & Go</title>
+  <meta name="description" content="Contact Click & Go for questions, partnership, and feedback."/>
+  <link rel="icon" href="../favicon.ico"/><link rel="stylesheet" href="../style.css"/>
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <a href="index.html" class="brand"><img src="../logo.png" alt="Click & Go" width="40" height="40"/><span class="brand-text" aria-hidden="true">Click & Go</span></a>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="deals.html">Deals</a>
+        <div class="lang">
+          <button class="lang-btn">Language ▾</button>
+          <div class="lang-menu"><a href="#">ไทย</a><a href="#" aria-current="true">English</a></div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section style="margin-top:20px">
+      <h1 class="section-title">Contact Click & Go</h1>
+      <p>Questions or feedback? Send us a message below or email <a href="mailto:hello@clickandgo.example">hello@clickandgo.example</a>.</p>
+      <form class="search-form" style="grid-template-columns:1fr 1fr">
+        <input type="text" placeholder="Your name">
+        <input type="email" placeholder="Your email">
+        <input type="text" placeholder="Subject" style="grid-column:1/-1">
+        <textarea placeholder="Message" style="grid-column:1/-1; min-height:120px; padding:10px; border:1px solid #ccc; border-radius:6px;"></textarea>
+        <button type="submit" class="btn" style="grid-column:1/-1">Send</button>
+      </form>
+
+      <h2 class="section-title" style="margin-top:24px">Company</h2>
+      <p>Click & Go OTA (Thailand) Co., Ltd.<br>Bangkok, Thailand</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html">About us</a> · <a href="contact.html" aria-current="page">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  (function(){
+    var isEN=location.pathname.startsWith('/en/'); var prefix=isEN?'/en':'';
+    var map={home:prefix+'/index.html',deals:prefix+'/deals.html',privacy:prefix+'/privacy.html',terms:prefix+'/terms.html',aff:prefix+'/affiliate.html',about:prefix+'/about.html',contact:prefix+'/contact.html'};
+    var nav=document.querySelector('.main-nav'); if(nav){nav.querySelectorAll('a').forEach(a=>{var t=a.textContent.toLowerCase(); if(t.includes('home'))a.href=map.home; else if(t.includes('deals'))a.href=map.deals;});}
+    var foot=document.querySelector('.footer-links'); if(foot){foot.querySelectorAll('a').forEach(a=>{var t=a.textContent.toLowerCase(); if(t.startsWith('privacy'))a.href=map.privacy; else if(t.startsWith('terms'))a.href=map.terms; else if(t.startsWith('affiliate'))a.href=map.aff; else if(t.startsWith('about'))a.href=map.about; else if(t.startsWith('contact'))a.href=map.contact;});}
+    var menu=document.querySelector('.lang-menu'); if(menu){var l=menu.querySelectorAll('a'); if(l.length>=2){var th=l[0],en=l[1]; var thPath=location.pathname.replace(/^\/en/,'')||'/contact.html'; var enPath=location.pathname.startsWith('/en')?location.pathname:'/en'+location.pathname; th.href=thPath; en.href=enPath;}}
+  })();
+  </script>
+</body>
+</html>
