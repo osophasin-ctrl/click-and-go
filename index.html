@@ -7,10 +7,6 @@
   <meta name="description" content="Click & Go ช่วยค้นหาและเปรียบเทียบราคาโรงแรมจากหลาย OTA พร้อมลิงก์ไปจองทันที ครอบคลุมปลายทางยอดนิยมทั้งในไทยและต่างประเทศ" />
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/" />
 
-  <!-- Hreflang (EN/TH pair) -->
-  <link rel="alternate" hreflang="th" href="https://click-and-go-navy.vercel.app/" />
-  <link rel="alternate" hreflang="en" href="https://click-and-go-navy.vercel.app/en/" />
-
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
@@ -45,12 +41,9 @@
 
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
-  <script>
-    window.dataLayer=window.dataLayer||[];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js',new Date());
-    gtag('config','G-1QR2EGFWN3');
-  </script>
+  <script>window.dataLayer=window.dataLayer||[];
+  function gtag(){dataLayer.push(arguments);} gtag('js',new Date());
+  gtag('config','G-1QR2EGFWN3');</script>
 </head>
 <body>
   <!-- Header -->
@@ -68,8 +61,8 @@
         <div class="lang">
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
           <div class="lang-menu" role="menu">
-            <a role="menuitem" href="/" aria-current="true" hreflang="th">ไทย</a>
-            <a role="menuitem" href="/en/" hreflang="en">English</a>
+            <a role="menuitem" href="#" aria-current="true">ไทย</a>
+            <a role="menuitem" href="#">English</a>
           </div>
         </div>
       </nav>
@@ -88,6 +81,7 @@
       <div class="widget-like solid">
         <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
 
+        <!-- ฟอร์มค้นหาจำลอง -->
         <form class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
           <!-- ปลายทาง -->
           <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่ หรือชื่อโรงแรม" aria-label="ปลายทาง">
@@ -135,35 +129,16 @@
         <a class="city-card" href="paris.html"><figure><img src="paris-tile.webp" alt="ปารีส"><figcaption>ปารีส</figcaption></figure></a>
       </div>
     </section>
-
-    <!-- ทำไมต้อง Click & Go -->
-    <section>
-      <h2 class="section-title">ทำไมต้อง Click & Go</h2>
-      <div class="features">
-        <div class="feature">
-          <h3>ค้นหาข้อเสนอที่ดีที่สุดให้คุณ</h3>
-          <p>เชื่อมต่อผู้ให้บริการทั่วโลก ค้นหาราคาได้แบบเรียลไทม์</p>
-        </div>
-        <div class="feature">
-          <h3>ขั้นตอนการจองไม่ยุ่งยาก</h3>
-          <p>กดลิงก์ตรงไปยังหน้าโรงแรมของพาร์ทเนอร์ได้ทันที</p>
-        </div>
-        <div class="feature">
-          <h3>รองรับทุกอุปกรณ์การเชื่อมต่อ</h3>
-          <p>ออกแบบให้ใช้งานง่าย ทั้งมือถือ แท็บเล็ต และคอมพิวเตอร์</p>
-        </div>
-      </div>
-    </section>
   </main>
 
-  <!-- Footer (ลิงก์แถวแรกคลิกได้แล้ว) -->
+  <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
         <a href="privacy.html">Privacy</a> ·
         <a href="terms.html">Terms</a> ·
         <a href="affiliate.html">Affiliate Disclosure</a> ·
-        <a href="about.html">About us</a> · 
+        <a href="about.html">About us</a> ·
         <a href="contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
@@ -200,6 +175,54 @@
       }
       bindDatePlaceholder('checkin-wrap','checkin');
       bindDatePlaceholder('checkout-wrap','checkout');
+    })();
+
+    // ===== NEW: คงภาษา/สลับภาษาแบบรักษาหน้าที่อยู่ =====
+    (function(){
+      var isEN = location.pathname.startsWith('/en/');
+      var prefix = isEN ? '/en' : '';
+      var map = {
+        home:    prefix + '/index.html',
+        deals:   prefix + '/deals.html',
+        privacy: prefix + '/privacy.html',
+        terms:   prefix + '/terms.html',
+        aff:     prefix + '/affiliate.html',
+        about:   prefix + '/about.html',
+        contact: prefix + '/contact.html'
+      };
+      var nav = document.querySelector('.main-nav');
+      if (nav){
+        nav.querySelectorAll('a').forEach(function(a){
+          var t = a.textContent.trim().toLowerCase();
+          if (t.includes('หน้าแรก') || t === 'home') a.href = map.home;
+          else if (t.includes('โปรโมชั่น') || t === 'deals') a.href = map.deals;
+        });
+      }
+      var foot = document.querySelector('.footer-links');
+      if (foot){
+        foot.querySelectorAll('a').forEach(function(a){
+          var txt = a.textContent.trim().toLowerCase();
+          if (txt.startsWith('privacy')) a.href = map.privacy;
+          else if (txt.startsWith('terms')) a.href = map.terms;
+          else if (txt.startsWith('affiliate')) a.href = map.aff;
+          else if (txt.startsWith('about')) a.href = map.about;
+          else if (txt.startsWith('contact')) a.href = map.contact;
+        });
+      }
+      var menu = document.querySelector('.lang-menu');
+      if (menu){
+        var links = menu.querySelectorAll('a');
+        if (links.length >= 2){
+          var thLink = links[0];
+          var enLink = links[1];
+          var thaiPath = location.pathname.replace(/^\/en/, '') || '/index.html';
+          var enPath   = location.pathname.startsWith('/en')
+                         ? location.pathname
+                         : '/en' + location.pathname;
+          thLink.href = thaiPath;
+          enLink.href = enPath;
+        }
+      }
     })();
   </script>
 </body>
