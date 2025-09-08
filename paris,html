@@ -1,21 +1,202 @@
-<!doctype html><html lang="th"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>โรงแรมในปารีส – Click & Go</title>
-<meta name="description" content="ดีลโรงแรมปารีส เมืองโรแมนติกริมแม่น้ำแซน แฟชั่น อาหาร และพิพิธภัณฑ์ระดับโลก">
-<link rel="canonical" href="https://click-and-go-navy.vercel.app/paris.html">
-<link rel="icon" href="favicon.ico"><link rel="stylesheet" href="style.css"></head>
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ปารีส (Paris) – โรงแรมและดีลแนะนำ | Click & Go</title>
+  <meta name="description" content="โรงแรมในปารีส เปรียบเทียบราคาง่าย คลิกเดียวไปจอง ย่านยอดนิยม: เลอมาเร่ ลาตินเควอร์ตอร์ ฌ็องเอลิเซ่ แซ็ง-เจอร์แม็ง บาสติลล์ มงมาร์ต ฯลฯ" />
+  <link rel="canonical" href="https://click-and-go-navy.vercel.app/paris.html" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Click & Go" />
+  <meta property="og:title" content="ปารีส (Paris) – โรงแรมและดีลแนะนำ | Click & Go" />
+  <meta property="og:description" content="สำรวจดีลโรงแรมในปารีส เลือกช่วงวันพัก แล้วคลิกไปจองได้ทันที" />
+  <meta property="og:url" content="https://click-and-go-navy.vercel.app/paris.html" />
+  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', 'G-1QR2EGFWN3');
+  </script>
+</head>
 <body>
-<header class="site-header"><div class="inner">
-  <a href="index.html" class="brand"><img src="logo.png" height="34" alt=""><span>Click & Go</span></a>
-  <nav class="main-nav"><a href="index.html">หน้าแรก</a><a href="deals.html">ดีล</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a><a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a></nav>
-</div></header>
-<section class="hero hero--sm"><div class="hero-inner"><h1>ปารีส</h1><p>แฟชั่นและศิลปะชื่อดัง คาเฟ่สวย และแลนด์มาร์กมากมาย</p></div></section>
-<main class="container section"><h2>ดีลโรงแรมในปารีส</h2>
-<div class="cards">
-  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>ใกล้หอไอเฟล</h3><p class="muted">เริ่มต้น €140 / คืน</p><div class="card-foot"><div class="price">€140 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
-  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>เลอมาเรส์</h3><p class="muted">เริ่มต้น €120 / คืน</p><div class="card-foot"><div class="price">€120 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
-  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>ซานต์แชร์แมง</h3><p class="muted">เริ่มต้น €135 / คืน</p><div class="card-foot"><div class="price">€135 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
-</div>
-<p class="note">* ปุ่มจองเป็นตัวอย่าง รอแทนที่ด้วยลิงก์ Affiliate</p></main>
-<footer class="site-footer"><div class="container footer-inner"><div>© <script>document.write(new Date().getFullYear())</script> Click & Go</div><div class="footer-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a></div></div></footer>
-</body></html>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="inner">
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+      </a>
+      <nav class="main-nav" aria-label="เมนูหลัก">
+        <a href="index.html">หน้าแรก</a>
+        <a href="deals.html">โปรโมชั่น</a>
+        <div class="lang">
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="#" aria-current="true">ไทย</a>
+            <a role="menuitem" href="en/index.html">English</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero -->
+    <section class="hero-city" style="background-image:url('paris-hero.jpg')">
+      <div class="overlay" aria-hidden="true"></div>
+      <div class="content">
+        <h1>ปารีส (Paris)</h1>
+        <p>เมืองแห่งแสงศิลป์ คาเฟ่หรู โรแมนติกทุกมุม — เลือกช่วงวันพักแล้วคลิกไปจองได้ทันที</p>
+      </div>
+    </section>
+
+    <!-- Search -->
+    <section style="margin-top:20px">
+      <h2 class="section-title">ค้นหาโรงแรมในปารีส</h2>
+      <div class="widget-like solid">
+        <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
+        <form class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
+          <!-- ปลายทาง -->
+          <input type="text" placeholder="ปลายทาง เช่น ปารีส หรือชื่อโรงแรม" aria-label="ปลายทาง" value="ปารีส">
+          <!-- เช็คอิน -->
+          <div class="date-wrap empty" id="checkin-wrap">
+            <input type="date" id="checkin" aria-label="เช็คอิน">
+            <span class="date-placeholder">เช็คอิน</span>
+          </div>
+          <!-- เช็คเอาท์ -->
+          <div class="date-wrap empty" id="checkout-wrap">
+            <input type="date" id="checkout" aria-label="เช็คเอาท์">
+            <span class="date-placeholder">เช็คเอาท์</span>
+          </div>
+          <!-- ปุ่มค้นหา -->
+          <button type="button" class="btn">ค้นหา</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Hot Deals -->
+    <section id="deals">
+      <h2 class="section-title">Hot Deals ในปารีส</h2>
+      <div class="deal-grid">
+        <!-- 1 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม ปารีส 1">
+          <div class="body">
+            <h3>Seine Riverside</h3>
+            <p>วิวแม่น้ำแซน ใกล้ Notre-Dame เดินเล่นโรแมนติก เริ่มเพียง ฿4,900/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿4,900 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+        <!-- 2 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม ปารีส 2">
+          <div class="body">
+            <h3>Le Marais Chic</h3>
+            <p>ย่านเก๋ ร้านดีไซน์ คาเฟ่เพียบ เดินถึงพิพิธภัณฑ์ เริ่มเพียง ฿4,300/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿4,300 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+        <!-- 3 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม ปารีส 3">
+          <div class="body">
+            <h3>Champs-Élysées Stay</h3>
+            <p>ทำเลหรูหรา ใกล้ช้อปแบรนด์ดัง เดินถึง Arc เริ่มเพียง ฿5,600/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿5,600 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+        <!-- 4 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม ปารีส 4">
+          <div class="body">
+            <h3>Saint-Germain Boutique</h3>
+            <p>บรรยากาศคลาสสิก คาเฟ่เก๋ พิพิธภัณฑ์ใกล้มือ เริ่มเพียง ฿3,900/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿3,900 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+        <!-- 5 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม ปารีส 5">
+          <div class="body">
+            <h3>Latin Quarter Cozy</h3>
+            <p>ย่านนักศึกษา อารมณ์ท้องถิ่น ร้านอาหารเพียบ เริ่มเพียง ฿3,300/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿3,300 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+        <!-- 6 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม ปารีส 6">
+          <div class="body">
+            <h3>Montmartre Views</h3>
+            <p>ใกล้ซาเครเกอร์ คาเฟ่วิวเนินเขา ศิลป์และโรแมนซ์ เริ่มเพียง ฿3,600/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿3,600 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+      </div>
+
+      <p class="tiny-note" style="margin-top:10px">
+        * ตัวอย่างดีลเพื่อจัดวางเลย์เอาท์ — เมื่อได้รับสิทธิ์ Affiliate แล้ว ปุ่ม “จองเลย” จะลิงก์ไปหน้าโรงแรมจริง
+      </p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> · 
+        <a href="terms.html">Terms</a> · 
+        <a href="affiliate.html">Affiliate Disclosure</a> · 
+        <a href="about.html">About us</a> · 
+        <a href="contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // language pop-up
+    (function(){
+      const btn=document.querySelector('.lang-btn'); const menu=document.querySelector('.lang-menu');
+      if(!btn||!menu) return;
+      const close=()=>{menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};
+      btn.addEventListener('click',e=>{e.stopPropagation();const opened=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(opened));});
+      document.addEventListener('click',close); document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
+    })();
+    // date placeholder
+    (function(){
+      function bind(wrapId,inputId){
+        const w=document.getElementById(wrapId), i=document.getElementById(inputId);
+        if(!w||!i) return;
+        const t=()=>w.classList.toggle('empty', !i.value);
+        t(); i.addEventListener('input',t); i.addEventListener('change',t);
+      }
+      bind('checkin-wrap','checkin'); bind('checkout-wrap','checkout');
+    })();
+  </script>
+</body>
+</html>
