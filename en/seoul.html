@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Seoul – Hotels & Hot Deals | Click & Go</title>
+  <meta name="description" content="Find and compare hotel prices in Seoul. Simple and fast — pick your dates and click to book with our partners." />
+  <link rel="canonical" href="https://click-and-go-navy.vercel.app/en/seoul.html" />
+
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="stylesheet" href="../style.css" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Click & Go" />
+  <meta property="og:title" content="Seoul – Hotels & Hot Deals | Click & Go" />
+  <meta property="og:description" content="Explore top hotel deals in Seoul. Pick dates and click to book instantly on our partners." />
+  <meta property="og:url" content="https://click-and-go-navy.vercel.app/en/seoul.html" />
+  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', 'G-1QR2EGFWN3');
+  </script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="inner">
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="../logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="deals.html">Deals</a>
+        <div class="lang">
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="../seoul.html">ไทย</a>
+            <a role="menuitem" href="#" aria-current="true">English</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero -->
+    <section class="hero-city" style="background-image:url('../seoul-hero.jpg')">
+      <div class="overlay" aria-hidden="true"></div>
+      <div class="content">
+        <h1>Seoul</h1>
+        <p>K-pop streets, palaces, and night markets — pick dates and click to book instantly.</p>
+      </div>
+    </section>
+
+    <!-- Search -->
+    <section style="margin-top:20px">
+      <h2 class="section-title">Search hotels in Seoul</h2>
+      <div class="widget-like solid">
+        <p class="muted">We’re ready to find the best deals for you</p>
+        <form class="search-form search-4cols" role="search" aria-label="Mock hotel search">
+          <!-- Destination -->
+          <input type="text" placeholder="Destination e.g., Seoul or hotel name" aria-label="Destination" value="Seoul">
+          <!-- Check-in -->
+          <div class="date-wrap empty" id="checkin-wrap">
+            <input type="date" id="checkin" aria-label="Check-in">
+            <span class="date-placeholder">Check-in</span>
+          </div>
+          <!-- Check-out -->
+          <div class="date-wrap empty" id="checkout-wrap">
+            <input type="date" id="checkout" aria-label="Check-out">
+            <span class="date-placeholder">Check-out</span>
+          </div>
+          <!-- Button -->
+          <button type="button" class="btn">Search</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Hot Deals -->
+    <section id="deals">
+      <h2 class="section-title">Hot Deals in Seoul</h2>
+      <div class="deal-grid">
+        <!-- 1 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1601918774946-2589a93b1bd0?q=80&w=1200&auto=format&fit=crop" alt="Sample Hotel 1 in Seoul">
+          <div class="body">
+            <h3>Myeongdong Stay</h3>
+            <p>Shopping & street food — from THB 2,400/night</p>
+          </div>
+          <div class="meta">
+            <strong>฿2,400 / night</strong>
+            <a class="btn" href="#">Book now</a>
+          </div>
+        </article>
+        <!-- 2 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=1200&auto=format&fit=crop" alt="Sample Hotel 2 in Seoul">
+          <div class="body">
+            <h3>Gangnam Style Hotel</h3>
+            <p>Trendy vibes & nightlife — from THB 3,000/night</p>
+          </div>
+          <div class="meta">
+            <strong>฿3,000 / night</strong>
+            <a class="btn" href="#">Book now</a>
+          </div>
+        </article>
+        <!-- 3 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1200&auto=format&fit=crop" alt="Sample Hotel 3 in Seoul">
+          <div class="body">
+            <h3>Insadong Charm</h3>
+            <p>Traditional lanes & teahouses — from THB 2,100/night</p>
+          </div>
+          <div class="meta">
+            <strong>฿2,100 / night</strong>
+            <a class="btn" href="#">Book now</a>
+          </div>
+        </article>
+        <!-- 4 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1562790351-d273a961e0e9?q=80&w=1200&auto=format&fit=crop" alt="Sample Hotel 4 in Seoul">
+          <div class="body">
+            <h3>Hongdae Energy</h3>
+            <p>Clubs & indie cafés — from THB 2,800/night</p>
+          </div>
+          <div class="meta">
+            <strong>฿2,800 / night</strong>
+            <a class="btn" href="#">Book now</a>
+          </div>
+        </article>
+        <!-- 5 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1542317854-f9596f776b36?q=80&w=1200&auto=format&fit=crop" alt="Sample Hotel 5 in Seoul">
+          <div class="body">
+            <h3>Itaewon Hub</h3>
+            <p>International flavors — from THB 2,600/night</p>
+          </div>
+          <div class="meta">
+            <strong>฿2,600 / night</strong>
+            <a class="btn" href="#">Book now</a>
+          </div>
+        </article>
+        <!-- 6 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1500048993953-d23a436266cf?q=80&w=1200&auto=format&fit=crop" alt="Sample Hotel 6 in Seoul">
+          <div class="body">
+            <h3>Han River Views</h3>
+            <p>Peaceful stays — from THB 3,300/night</p>
+          </div>
+          <div class="meta">
+            <strong>฿3,300 / night</strong>
+            <a class="btn" href="#">Book now</a>
+          </div>
+        </article>
+      </div>
+
+      <p class="tiny-note" style="margin-top:10px">
+        * Demo deals for layout only — once affiliate access is granted, “Book now” will link to the real partner pages.
+      </p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> · 
+        <a href="terms.html">Terms</a> · 
+        <a href="affiliate.html">Affiliate Disclosure</a> · 
+        <a href="about.html">About us</a> · 
+        <a href="contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Language pop-up
+    (function(){
+      const btn=document.querySelector('.lang-btn'); const menu=document.querySelector('.lang-menu');
+      if(!btn||!menu) return;
+      const close=()=>{menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};
+      btn.addEventListener('click',e=>{e.stopPropagation();const opened=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(opened));});
+      document.addEventListener('click',close); document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
+    })();
+
+    // Date placeholder toggle
+    (function(){
+      function bind(wrapId,inputId){
+        const w=document.getElementById(wrapId), i=document.getElementById(inputId);
+        if(!w||!i) return;
+        const t=()=>w.classList.toggle('empty', !i.value);
+        t(); i.addEventListener('input',t); i.addEventListener('change',t);
+      }
+      bind('checkin-wrap','checkin'); bind('checkout-wrap','checkout');
+    })();
+  </script>
+</body>
+</html>
