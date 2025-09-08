@@ -1,22 +1,202 @@
-<!doctype html><html lang="th"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>โรงแรมในโตเกียว – Click & Go</title>
-<meta name="description" content="ค้นหาโรงแรมในโตเกียว เมืองทันสมัย เดินทางด้วยรถไฟสะดวก ใกล้แหล่งช้อปปิ้ง">
-<link rel="canonical" href="https://click-and-go-navy.vercel.app/tokyo.html">
-<link rel="icon" href="favicon.ico"><link rel="stylesheet" href="style.css"></head>
-<body>
-<header class="site-header"><div class="inner">
-  <a href="index.html" class="brand"><img src="logo.png" height="34" alt=""><span>Click & Go</span></a>
-  <nav class="main-nav"><a href="index.html">หน้าแรก</a><a href="deals.html">ดีล</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a><a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a></nav>
-</div></header>
-<section class="hero hero--sm"><div class="hero-inner"><h1>โตเกียว</h1><p>มหานครไม่เคยหลับไหล อาหารอร่อย แหล่งช้อปปิ้งเพียบ</p></div></section>
-<main class="container section"><h2>ดีลโรงแรมในโตเกียว</h2>
-<div class="cards">
-  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>ย่านชินจูกุ</h3><p class="muted">เริ่มต้น ¥8,000 / คืน</p><div class="card-foot"><div class="price">¥8,000 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
-  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>อาซากุสะ / สกายทรี</h3><p class="muted">เริ่มต้น ¥7,200 / คืน</p><div class="card-foot"><div class="price">¥7,200 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
-  <article class="card"><img src="hero-bg.jpg" alt=""><div class="card-body"><h3>อากิฮาบาระ</h3><p class="muted">เริ่มต้น ¥6,800 / คืน</p><div class="card-foot"><div class="price">¥6,800 / คืน</div><a class="btn btn-primary" href="#">จองเลย</a></div></div></article>
-</div>
-<p class="note">* ปุ่มจองเป็นตัวอย่าง รอแทนที่ด้วยลิงก์ Affiliate</p></main>
-<footer class="site-footer"><div class="container footer-inner"><div>© <script>document.write(new Date().getFullYear())</script> Click & Go</div><div class="footer-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a></div></div></footer>
-</body></html>
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>โตเกียว (Tokyo) – โรงแรมและดีลแนะนำ | Click & Go</title>
+  <meta name="description" content="โรงแรมในโตเกียว เปรียบเทียบราคาง่าย คลิกเดียวไปจอง ย่านยอดนิยม: ชินจูกุ ชิบูย่า อาซากุสะ กินซ่า อุเอโนะ อากิฮาบาระ ฯลฯ" />
+  <link rel="canonical" href="https://click-and-go-navy.vercel.app/tokyo.html" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
 
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Click & Go" />
+  <meta property="og:title" content="โตเกียว (Tokyo) – โรงแรมและดีลแนะนำ | Click & Go" />
+  <meta property="og:description" content="สำรวจดีลโรงแรมในโตเกียว เลือกช่วงวันพัก แล้วคลิกไปจองได้ทันที" />
+  <meta property="og:url" content="https://click-and-go-navy.vercel.app/tokyo.html" />
+  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', 'G-1QR2EGFWN3');
+  </script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="inner">
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+      </a>
+      <nav class="main-nav" aria-label="เมนูหลัก">
+        <a href="index.html">หน้าแรก</a>
+        <a href="deals.html">โปรโมชั่น</a>
+        <div class="lang">
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="#" aria-current="true">ไทย</a>
+            <a role="menuitem" href="en/index.html">English</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero -->
+    <section class="hero-city" style="background-image:url('tokyo-hero.jpg')">
+      <div class="overlay" aria-hidden="true"></div>
+      <div class="content">
+        <h1>โตเกียว (Tokyo)</h1>
+        <p>มหานครที่ไม่เคยหลับไหล อาหารอร่อย แหล่งช้อปปิ้งเพียบ — เลือกช่วงวันพักแล้วคลิกไปจองได้ทันที</p>
+      </div>
+    </section>
+
+    <!-- Search -->
+    <section style="margin-top:20px">
+      <h2 class="section-title">ค้นหาโรงแรมในโตเกียว</h2>
+      <div class="widget-like solid">
+        <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
+        <form class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
+          <!-- ปลายทาง -->
+          <input type="text" placeholder="ปลายทาง เช่น โตเกียว หรือชื่อโรงแรม" aria-label="ปลายทาง" value="โตเกียว">
+          <!-- เช็คอิน -->
+          <div class="date-wrap empty" id="checkin-wrap">
+            <input type="date" id="checkin" aria-label="เช็คอิน">
+            <span class="date-placeholder">เช็คอิน</span>
+          </div>
+          <!-- เช็คเอาท์ -->
+          <div class="date-wrap empty" id="checkout-wrap">
+            <input type="date" id="checkout" aria-label="เช็คเอาท์">
+            <span class="date-placeholder">เช็คเอาท์</span>
+          </div>
+          <!-- ปุ่มค้นหา -->
+          <button type="button" class="btn">ค้นหา</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Hot Deals -->
+    <section id="deals">
+      <h2 class="section-title">Hot Deals ในโตเกียว</h2>
+      <div class="deal-grid">
+        <!-- 1 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม โตเกียว 1">
+          <div class="body">
+            <h3>Shinjuku City Stay</h3>
+            <p>ทำเลชินจูกุ ใกล้สถานีรถไฟ ร้านอาหารเพียบ เริ่มเพียง ฿2,300/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿2,300 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+        <!-- 2 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม โตเกียว 2">
+          <div class="body">
+            <h3>Shibuya Modern</h3>
+            <p>ย่านชิบูย่า เดินถึงแยกฮาจิโค วิวเมืองสวย เริ่มเพียง ฿2,800/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿2,800 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+        <!-- 3 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม โตเกียว 3">
+          <div class="body">
+            <h3>Asakusa Riverside</h3>
+            <p>ใกล้วัดเซ็นโซจิ เดินเล่นแม่น้ำสวย บรรยากาศญี่ปุ่นแท้ เริ่มเพียง ฿1,900/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿1,900 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+        <!-- 4 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม โตเกียว 4">
+          <div class="body">
+            <h3>Ginza Boutique</h3>
+            <p>ย่านกินซ่า หรูหราใกล้ห้างดัง เดินทางสะดวก เริ่มเพียง ฿3,200/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿3,200 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+        <!-- 5 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม โตเกียว 5">
+          <div class="body">
+            <h3>Ueno Park Lodge</h3>
+            <p>ใกล้อุเอโนะพาร์คและพิพิธภัณฑ์ เงียบสงบ เริ่มเพียง ฿1,700/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿1,700 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+        <!-- 6 -->
+        <article class="deal-card">
+          <img class="thumb" src="https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม โตเกียว 6">
+          <div class="body">
+            <h3>Akihabara Smart Stay</h3>
+            <p>จุดหมายของสายเกม/อนิเมะ ใกล้รถไฟฟ้า เริ่มเพียง ฿2,100/คืน</p>
+          </div>
+          <div class="meta">
+            <strong>฿2,100 / คืน</strong>
+            <a class="btn" href="#">จองเลย</a>
+          </div>
+        </article>
+      </div>
+
+      <p class="tiny-note" style="margin-top:10px">
+        * ตัวอย่างดีลเพื่อจัดวางเลย์เอาท์ — เมื่อได้รับสิทธิ์ Affiliate แล้ว ปุ่ม “จองเลย” จะลิงก์ไปหน้าโรงแรมจริง
+      </p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> · 
+        <a href="terms.html">Terms</a> · 
+        <a href="affiliate.html">Affiliate Disclosure</a> · 
+        <a href="about.html">About us</a> · 
+        <a href="contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // language pop-up
+    (function(){
+      const btn=document.querySelector('.lang-btn'); const menu=document.querySelector('.lang-menu');
+      if(!btn||!menu) return;
+      const close=()=>{menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};
+      btn.addEventListener('click',e=>{e.stopPropagation();const opened=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(opened));});
+      document.addEventListener('click',close); document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
+    })();
+    // date placeholder
+    (function(){
+      function bind(wrapId,inputId){
+        const w=document.getElementById(wrapId), i=document.getElementById(inputId);
+        if(!w||!i) return;
+        const t=()=>w.classList.toggle('empty', !i.value);
+        t(); i.addEventListener('input',t); i.addEventListener('change',t);
+      }
+      bind('checkin-wrap','checkin'); bind('checkout-wrap','checkout');
+    })();
+  </script>
+</body>
+</html>
