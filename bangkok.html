@@ -8,15 +8,22 @@
   <link rel="icon" href="favicon.ico"/>
   <link rel="stylesheet" href="style.css"/>
   <style>
-    .hotel-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap:16px; margin-top:16px; }
-    .hotel-card { border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff; display:flex; flex-direction:column; }
-    .hotel-card img { width:100%; height:180px; object-fit:cover; display:block; }
-    .hotel-card .body { padding:12px 14px; display:flex; flex-direction:column; gap:6px; }
-    .hotel-card h3 { font-size:1.05rem; margin:0; line-height:1.4; }
-    .hotel-card p { margin:0; color:#6b7280; font-size:.95rem; }
-    .hotel-card .actions { margin-top:10px; }
-    .hotel-card .btn { display:inline-block; padding:10px 14px; background:#0ea5a4; color:#fff; border-radius:8px; text-decoration:none; }
-    .hotel-card .btn:hover { background:#0c8b8a; }
+    /* เฉพาะส่วน hero ให้แสดงเหมือนหน้าภาษาอังกฤษ */
+    .hero { position:relative; color:#fff; }
+    .hero img { width:100%; height:280px; object-fit:cover; display:block; border-radius:12px; }
+    .hero .caption { position:absolute; left:24px; bottom:18px; }
+    .hero .caption h1 { margin:0 0 6px; font-size:2rem; }
+    .hero .caption p { margin:0; opacity:.9; }
+
+    /* การ์ดโรงแรม */
+    .hotel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:16px}
+    .hotel-card{border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+    .hotel-card img{width:100%;height:180px;object-fit:cover;display:block}
+    .hotel-card .body{padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+    .hotel-card h3{font-size:1.05rem;margin:0;line-height:1.4}
+    .hotel-card p{margin:0;color:#6b7280;font-size:.95rem}
+    .hotel-card .btn{display:inline-block;margin-top:10px;padding:10px 14px;background:#0ea5a4;color:#fff;border-radius:8px;text-decoration:none}
+    .hotel-card .btn:hover{background:#0c8b8a}
   </style>
 </head>
 <body>
@@ -37,98 +44,104 @@
     </div>
   </header>
 
+  <!-- Hero เหมือนหน้า EN -->
   <main class="container">
+    <section class="hero" style="margin-top:16px">
+      <!-- รูป hero เมืองกรุงเทพฯ -->
+      <img src="bangkok-hero.jpg" alt="Bangkok">
+      <div class="caption">
+        <h1>กรุงเทพฯ</h1>
+        <p>สตรีทฟู้ด บาร์บนดาดฟ้า วัด และห้างระดับโลก — เลือกวันที่เข้าพักแล้วคลิกจองได้ทันที</p>
+      </div>
+    </section>
+
+    <!-- Search Box เดิม (คงโครงสร้างไว้) -->
     <section style="margin-top:20px">
-      <h1 class="section-title">กรุงเทพฯ</h1>
-      <p>รวมโรงแรมแนะนำในกรุงเทพฯ คลิกลิงก์เพื่อตรวจสอบวันที่เข้าพักและราคา (Affiliate link ผ่าน Agoda)</p>
+      <h2 class="section-title">ค้นหาโรงแรมในกรุงเทพฯ</h2>
+      <form class="search-form">
+        <input type="text" placeholder="Bangkok">
+        <input type="text" placeholder="เช็คอิน">
+        <input type="text" placeholder="เช็คเอาท์">
+        <button type="submit" class="btn">ค้นหา</button>
+      </form>
+    </section>
 
-      <h2 class="section-title" style="margin-top:14px">โรงแรมแนะนำ</h2>
+    <!-- โรงแรมแนะนำ (ปรับ 6 โรงแรมตามที่ให้มา) -->
+    <section style="margin-top:20px">
+      <h2 class="section-title">โรงแรมแนะนำ</h2>
+
       <div class="hotel-grid">
-
-        <!-- 1: ริเวอร์ไซด์ แบงค็อก โฮเทล -->
+        <!-- 1. Riverside Bangkok Hotel -->
         <article class="hotel-card">
-          <img src="images/bkk-riverside.jpg" alt="ริเวอร์ไซด์ แบงค็อก โฮเทล"/>
+          <img src="image/bkk-riverside.jpg" alt="ริเวอร์ไซด์ แบงค็อก โฮเทล">
           <div class="body">
             <h3>ริเวอร์ไซด์ แบงค็อก โฮเทล</h3>
             <p>ริมแม่น้ำเจ้าพระยา — ทำเลเงียบสงบ เดินทางสะดวก</p>
-            <div class="actions">
-              <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=52120188" target="_blank" rel="nofollow sponsored">
-                ตรวจสอบวันที่เข้าพักและราคา
-              </a>
-            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=52120188" target="_blank" rel="nofollow sponsored">
+              ตรวจสอบวันที่เข้าพักและราคา
+            </a>
           </div>
         </article>
 
-        <!-- 2: โรงแรม ลิโวเทล เกษตรนวมินทร์ กรุงเทพ -->
+        <!-- 2. Livotel Hotel Kaset Nawamin Bangkok -->
         <article class="hotel-card">
-          <img src="images/bkk-livotel-kaset.jpg" alt="โรงแรม ลิโวเทล เกษตรนวมินทร์ กรุงเทพ"/>
+          <img src="image/bkk-livotel-kaset.jpg" alt="โรงแรม ลิโวเทล เกษตรนวมินทร์ กรุงเทพ">
           <div class="body">
             <h3>โรงแรม ลิโวเทล เกษตรนวมินทร์ กรุงเทพ</h3>
-            <p>ย่านเกษตร-นวมินทร์ — ห้องกว้าง ราคาคุ้มค่า</p>
-            <div class="actions">
-              <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=1030980" target="_blank" rel="nofollow sponsored">
-                ตรวจสอบวันที่เข้าพักและราคา
-              </a>
-            </div>
+            <p>ย่านเกษตร–นวมินทร์ — ห้องกว้าง ราคาคุ้มค่า</p>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=1030980" target="_blank" rel="nofollow sponsored">
+              ตรวจสอบวันที่เข้าพักและราคา
+            </a>
           </div>
         </article>
 
-        <!-- 3: สกายโดม รีโซเทล -->
+        <!-- 3. Sky Dome Resotel -->
         <article class="hotel-card">
-          <img src="images/bkk-skydome.jpg" alt="สกายโดม รีโซเทล"/>
+          <img src="image/bkk-skydome.jpg" alt="สกายโดม รีโซเทล">
           <div class="body">
             <h3>สกายโดม รีโซเทล</h3>
             <p>รัชดาภิเษก — ใกล้แหล่งกินเที่ยว เดินทางง่าย</p>
-            <div class="actions">
-              <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=444480" target="_blank" rel="nofollow sponsored">
-                ตรวจสอบวันที่เข้าพักและราคา
-              </a>
-            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=444480" target="_blank" rel="nofollow sponsored">
+              ตรวจสอบวันที่เข้าพักและราคา
+            </a>
           </div>
         </article>
 
-        <!-- 4: ซินนามอน โฮเทล แบงค็อก -->
+        <!-- 4. Cinnamon Hotel Bangkok -->
         <article class="hotel-card">
-          <img src="images/bkk-cinnamon.jpg" alt="ซินนามอน โฮเทล แบงค็อก"/>
+          <img src="image/bkk-cinnamon.jpg" alt="ซินนามอน โฮเทล แบงค็อก">
           <div class="body">
             <h3>ซินนามอน โฮเทล แบงค็อก</h3>
             <p>ทำเลสะดวก ราคาเป็นมิตร บริการอบอุ่น</p>
-            <div class="actions">
-              <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=445781" target="_blank" rel="nofollow sponsored">
-                ตรวจสอบวันที่เข้าพักและราคา
-              </a>
-            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=445781" target="_blank" rel="nofollow sponsored">
+              ตรวจสอบวันที่เข้าพักและราคา
+            </a>
           </div>
         </article>
 
-        <!-- 5: วิลลา บารอน -->
+        <!-- 5. Villa Baron -->
         <article class="hotel-card">
-          <img src="images/bkk-villa-baron.jpg" alt="วิลลา บารอน"/>
+          <img src="image/bkk-villa-baron.jpg" alt="วิลลา บารอน">
           <div class="body">
             <h3>วิลลา บารอน</h3>
-            <p>ดอนเมือง — ใกล้สนามบิน เหมาะต่อการต่อเที่ยวบิน</p>
-            <div class="actions">
-              <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=1617912" target="_blank" rel="nofollow sponsored">
-                ตรวจสอบวันที่เข้าพักและราคา
-              </a>
-            </div>
+            <p>ดอนเมือง — ใกล้สนามบิน สะดวกต่อเที่ยวบิน</p>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=1617912" target="_blank" rel="nofollow sponsored">
+              ตรวจสอบวันที่เข้าพักและราคา
+            </a>
           </div>
         </article>
 
-        <!-- 6: คาสเทล กรุงเทพฯ โฮเทล -->
+        <!-- 6. Kastel Bangkok Hotel -->
         <article class="hotel-card">
-          <img src="images/bkk-kastel.jpg" alt="คาสเทล กรุงเทพฯ โฮเทล"/>
+          <img src="image/bkk-kastel.jpg" alt="คาสเทล กรุงเทพฯ โฮเทล">
           <div class="body">
             <h3>คาสเทล กรุงเทพฯ โฮเทล</h3>
             <p>ประตูน้ำ — ใจกลางเมือง ช้อปสะดวก</p>
-            <div class="actions">
-              <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=58282256" target="_blank" rel="nofollow sponsored">
-                ตรวจสอบวันที่เข้าพักและราคา
-              </a>
-            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=58282256" target="_blank" rel="nofollow sponsored">
+              ตรวจสอบวันที่เข้าพักและราคา
+            </a>
           </div>
         </article>
-
       </div>
     </section>
   </main>
@@ -158,23 +171,23 @@
       bkk:     prefix + '/bangkok.html'
     };
 
-    var nav = document.querySelector('.main-nav');
-    if (nav) {
+    var nav=document.querySelector('.main-nav');
+    if(nav){
       nav.querySelectorAll('a').forEach(a=>{
         var t=a.textContent.toLowerCase();
-        if (t.includes('หน้าแรก') || t==='home') a.href = map.home;
-        else if (t.includes('โปรโมชั่น') || t==='deals') a.href = map.deals;
+        if(t.includes('หน้าแรก') || t==='home') a.href=map.home;
+        else if(t.includes('โปรโมชั่น') || t==='deals') a.href=map.deals;
       });
     }
-    var foot = document.querySelector('.footer-links');
-    if (foot) {
+    var foot=document.querySelector('.footer-links');
+    if(foot){
       foot.querySelectorAll('a').forEach(a=>{
         var t=a.textContent.toLowerCase();
-        if (t.startsWith('privacy')) a.href = map.privacy;
-        else if (t.startsWith('terms')) a.href   = map.terms;
-        else if (t.startsWith('affiliate')) a.href = map.aff;
-        else if (t.startsWith('about')) a.href   = map.about;
-        else if (t.startsWith('contact')) a.href = map.contact;
+        if(t.startsWith('privacy')) a.href=map.privacy;
+        else if(t.startsWith('terms')) a.href=map.terms;
+        else if(t.startsWith('affiliate')) a.href=map.aff;
+        else if(t.startsWith('about')) a.href=map.about;
+        else if(t.startsWith('contact')) a.href=map.contact;
       });
     }
     var menu=document.querySelector('.lang-menu');
@@ -182,10 +195,9 @@
       var l=menu.querySelectorAll('a');
       if(l.length>=2){
         var th=l[0], en=l[1];
-        var thPath = location.pathname.replace(/^\/en/,'') || '/bangkok.html';
-        var enPath = location.pathname.startsWith('/en') ? location.pathname : '/en' + thPath;
-        th.href = thPath;
-        en.href = enPath;
+        var thPath=location.pathname.replace(/^\/en/,'')||'/bangkok.html';
+        var enPath=location.pathname.startsWith('/en')?location.pathname:'/en'+thPath;
+        th.href=thPath; en.href=enPath;
       }
     }
   })();
