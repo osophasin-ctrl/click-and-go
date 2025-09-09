@@ -8,8 +8,8 @@
 
   <!-- Canonical & Hreflang -->
   <link rel="canonical" href="https://clickandgo.asia/en/affiliate.html" />
-  <link rel="alternate" hreflang="en" href="https://clickandgo.asia/en/affiliate.html" />
   <link rel="alternate" hreflang="th" href="https://clickandgo.asia/affiliate.html" />
+  <link rel="alternate" hreflang="en" href="https://clickandgo.asia/en/affiliate.html" />
   <link rel="alternate" hreflang="x-default" href="https://clickandgo.asia/affiliate.html" />
 
   <link rel="icon" href="../favicon.ico"/>
@@ -20,7 +20,7 @@
   <script>
     window.dataLayer=window.dataLayer||[];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    gtag('js',new Date());
     gtag('config','G-1QR2EGFWN3');
   </script>
 </head>
@@ -32,8 +32,7 @@
         <img src="../logo.png" alt="Click & Go" width="40" height="40" loading="lazy"/>
         <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
-
-      <nav class="main-nav" aria-label="Main menu">
+      <nav class="main-nav" aria-label="Main navigation">
         <a href="index.html">Home</a>
         <a href="deals.html">Deals</a>
         <div class="lang">
@@ -53,7 +52,7 @@
       <h1 class="section-title">Affiliate Disclosure</h1>
       <p>Some links on this site are affiliate links. If you click and make a booking, we may earn a commission at no extra cost to you.</p>
       <p>We recommend services we believe are useful and strive to keep pricing and offers transparent for users.</p>
-      <p>Questions? Reach us via the <a href="contact.html">Contact</a> page.</p>
+      <p>Questions? Reach us via <a href="contact.html">Contact</a>.</p>
     </section>
   </main>
 
@@ -76,7 +75,6 @@
   (function(){
     var isEN = location.pathname.startsWith('/en/');
     var prefix = isEN ? '/en' : '';
-
     var map = {
       home:    prefix + '/index.html',
       deals:   prefix + '/deals.html',
@@ -87,40 +85,54 @@
       contact: prefix + '/contact.html'
     };
 
-    // Update header nav links to current language
+    // update nav
     var nav = document.querySelector('.main-nav');
-    if (nav){
+    if (nav) {
       nav.querySelectorAll('a').forEach(function(a){
-        var t = a.textContent.trim().toLowerCase();
-        if (t.includes('home') || t.includes('หน้าแรก')) a.href = map.home;
-        else if (t.includes('deals') || t.includes('โปรโมชั่น')) a.href = map.deals;
+        var t = a.textContent.toLowerCase();
+        if (t.includes('home')) a.href = map.home;
+        else if (t.includes('deals')) a.href = map.deals;
       });
     }
 
-    // Update footer links to current language
+    // update footer
     var foot = document.querySelector('.footer-links');
-    if (foot){
+    if (foot) {
       foot.querySelectorAll('a').forEach(function(a){
-        var t = a.textContent.trim().toLowerCase();
-        if (t.startsWith('privacy'))       a.href = map.privacy;
-        else if (t.startsWith('terms'))    a.href = map.terms;
-        else if (t.startsWith('affiliate'))a.href = map.aff;
-        else if (t.startsWith('about'))    a.href = map.about;
-        else if (t.startsWith('contact'))  a.href = map.contact;
+        var t = a.textContent.toLowerCase();
+        if (t.startsWith('privacy')) a.href = map.privacy;
+        else if (t.startsWith('terms')) a.href = map.terms;
+        else if (t.startsWith('affiliate')) a.href = map.aff;
+        else if (t.startsWith('about')) a.href = map.about;
+        else if (t.startsWith('contact')) a.href = map.contact;
       });
     }
 
-    // Language switch: TH <-> EN mirror path
+    // language switch (force exact paths)
     var menu = document.querySelector('.lang-menu');
-    if (menu){
-      var items = menu.querySelectorAll('a');
-      if (items.length >= 2){
-        var th = items[0], en = items[1];
-        var current = location.pathname.replace(/^\/en/, '') || '/affiliate.html';
-        th.href = current;          // TH -> same path without /en
-        en.href = '/en' + current;  // EN -> same path with /en prefix
+    if (menu) {
+      var l = menu.querySelectorAll('a');
+      if (l.length >= 2) {
+        var th = l[0], en = l[1];
+        th.href = '/affiliate.html';
+        en.href = '/en/affiliate.html';
       }
     }
+
+    // toggle popup
+    (function(){
+      var btn  = document.querySelector('.lang-btn');
+      var menu = document.querySelector('.lang-menu');
+      if(!btn || !menu) return;
+      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var opened = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(opened));
+      });
+      document.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMenu(); });
+    })();
   })();
   </script>
 </body>
