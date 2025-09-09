@@ -1,141 +1,177 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>กรุงเทพฯ | Click & Go</title>
-  <meta name="description" content="ค้นหาและเปรียบเทียบราคาโรงแรมในกรุงเทพฯ เลือกวันที่เข้าพักและคลิกจองได้ทันที">
-  <link rel="icon" href="favicon.ico"/>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>กรุงเทพฯ – โรงแรมและดีลฮอต | Click & Go</title>
+  <meta name="description" content="ค้นหาและเปรียบเทียบราคาโรงแรมในกรุงเทพฯ เลือกวันที่แล้วคลิกไปจองกับพาร์ทเนอร์ได้ทันที" />
+  <link rel="canonical" href="https://clickandgo.asia/bangkok.html" />
+
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Click & Go" />
+  <meta property="og:title" content="กรุงเทพฯ – โรงแรมและดีลฮอต | Click & Go" />
+  <meta property="og:description" content="สำรวจดีลโรงแรมในกรุงเทพฯ เลือกวันที่แล้วคลิกไปจองได้ทันที" />
+  <meta property="og:url" content="https://clickandgo.asia/bangkok.html" />
+  <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg" />
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', 'G-1QR2EGFWN3');
+  </script>
 </head>
 <body>
   <!-- Header -->
-  <header class="site-header">
+  <header class="site-header" role="banner">
     <div class="inner">
-      <a href="index.html" class="brand">
-        <img src="logo.png" alt="Click & Go" width="40" height="40"/>
-        <span class="brand-text" aria-hidden="true">Click & Go</span>
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
       </a>
-      <nav class="main-nav">
+      <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html">หน้าแรก</a>
         <a href="deals.html">โปรโมชั่น</a>
         <div class="lang">
-          <button class="lang-btn">ภาษา ▾</button>
-          <div class="lang-menu">
-            <a href="bangkok.html" aria-current="true">ไทย</a>
-            <a href="/en/bangkok.html">English</a>
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="#" aria-current="true">ไทย</a>
+            <a role="menuitem" href="en/bangkok.html">English</a>
           </div>
         </div>
       </nav>
     </div>
   </header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <img src="bangkok-hero.jpg" alt="Bangkok skyline" class="hero-img"/>
-    <div class="hero-overlay">
-      <h1>กรุงเทพฯ</h1>
-      <p>สตรีทฟู้ด บาร์บนดาดฟ้า วัดวาอาราม และห้างระดับโลก — เลือกวันที่เข้าพักแล้วคลิกจองได้ทันที</p>
-    </div>
-  </section>
-
-  <!-- Search Box -->
   <main class="container">
-    <section>
-      <h2 class="section-title">ค้นหาโรงแรมในกรุงเทพฯ</h2>
-      <form class="search-form">
-        <input type="text" placeholder="กรุงเทพฯ" aria-label="ปลายทาง">
-        <input type="text" placeholder="เช็คอิน" aria-label="เช็คอิน">
-        <input type="text" placeholder="เช็คเอาท์" aria-label="เช็คเอาท์">
-        <button class="btn" type="submit">ค้นหา</button>
-      </form>
+    <!-- Hero -->
+    <section class="hero-city" style="background-image:url('bangkok-hero.jpg')">
+      <div class="overlay" aria-hidden="true"></div>
+      <div class="content">
+        <h1>กรุงเทพฯ</h1>
+        <p>สตรีทฟู้ด บาร์วิวเมือง วัดวาอาราม และช้อปปิ้งระดับโลก — เลือกวันที่แล้วคลิกไปจองได้ทันที</p>
+      </div>
     </section>
 
-    <!-- Recommended Hotels -->
-    <section>
-      <h2 class="section-title">โรงแรมแนะนำ</h2>
-      <div class="card-grid">
+    <!-- Search -->
+    <section style="margin-top:20px">
+      <h2 class="section-title">ค้นหาโรงแรมในกรุงเทพฯ</h2>
+      <div class="widget-like solid">
+        <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
+        <form class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
+          <!-- ปลายทาง -->
+          <input type="text" placeholder="ปลายทาง เช่น กรุงเทพฯ หรือชื่อโรงแรม" aria-label="ปลายทาง" value="กรุงเทพฯ">
+          <!-- เช็คอิน -->
+          <div class="date-wrap empty" id="checkin-wrap">
+            <input type="date" id="checkin" aria-label="เช็คอิน">
+            <span class="date-placeholder">เช็คอิน</span>
+          </div>
+          <!-- เช็คเอาท์ -->
+          <div class="date-wrap empty" id="checkout-wrap">
+            <input type="date" id="checkout" aria-label="เช็คเอาท์">
+            <span class="date-placeholder">เช็คเอาท์</span>
+          </div>
+          <!-- ปุ่ม -->
+          <button type="button" class="btn">ค้นหา</button>
+        </form>
+      </div>
+    </section>
 
-        <!-- 1 Riverside Bangkok Hotel -->
-        <article class="card">
-          <img src="image/bangkok-tile.webp" alt="ริเวอร์ไซด์ แบงค็อก โฮเทล" class="card-img"/>
-          <div class="card-body">
-            <h3 class="card-title">ริเวอร์ไซด์ แบงค็อก โฮเทล</h3>
-            <p class="card-desc">ริมแม่น้ำเจ้าพระยา — ทำเลเงียบสงบ เดินทางสะดวก</p>
-            <a class="btn"
-               href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=52120188"
-               target="_blank" rel="nofollow noopener">
-              ตรวจสอบวันที่เข้าพักและราคา
+    <!-- Hot Deals -->
+    <section id="deals">
+      <h2 class="section-title">ดีลฮอตในกรุงเทพฯ</h2>
+      <div class="deal-grid">
+
+        <!-- 1: Riverside Bangkok Hotel -->
+        <article class="deal-card">
+          <img class="thumb" src="image/bkk-riverside.jpg" alt="โรงแรมริเวอร์ไซด์ แบงค็อก">
+          <div class="body">
+            <h3>โรงแรมริเวอร์ไซด์ แบงค็อก</h3>
+            <p>ริมแม่น้ำเจ้าพระยา บรรยากาศสงบ เดินทางสะดวก</p>
+          </div>
+          <div class="meta">
+            <a class="btn" target="_blank" rel="nofollow sponsored noopener"
+               href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=52120188">
+               ตรวจสอบวันที่เข้าพักและราคา
             </a>
           </div>
         </article>
 
-        <!-- 2 Livotel Kaset Nawamin Bangkok -->
-        <article class="card">
-          <img src="image/bangkok-tile.webp" alt="โรงแรม ลิโวเทล เกษตรนวมินทร์ กรุงเทพฯ" class="card-img"/>
-          <div class="card-body">
-            <h3 class="card-title">โรงแรม ลิโวเทล เกษตรนวมินทร์ กรุงเทพฯ</h3>
-            <p class="card-desc">จตุจักร — เดินทางเข้าเมืองง่าย ใกล้แหล่งช้อปปิ้ง</p>
-            <a class="btn"
-               href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=1030980"
-               target="_blank" rel="nofollow noopener">
-              ตรวจสอบวันที่เข้าพักและราคา
+        <!-- 2: Livotel Hotel Kaset Nawamin Bangkok -->
+        <article class="deal-card">
+          <img class="thumb" src="image/bkk-livotel.jpg" alt="ไลโวเทล โฮเทล เกษตร-นวมินทร์ กรุงเทพฯ">
+          <div class="body">
+            <h3>ไลโวเทล โฮเทล เกษตร-นวมินทร์ กรุงเทพฯ</h3>
+            <p>ย่านเกษตร–นวมินทร์ เดินทางสะดวก ใกล้โซนเหนือของกรุงเทพฯ</p>
+          </div>
+          <div class="meta">
+            <a class="btn" target="_blank" rel="nofollow sponsored noopener"
+               href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=1030980">
+               ตรวจสอบวันที่เข้าพักและราคา
             </a>
           </div>
         </article>
 
-        <!-- 3 Sky Dome Resotel -->
-        <article class="card">
-          <img src="image/bangkok-tile.webp" alt="สกายโดม รีโซเทล" class="card-img"/>
-          <div class="card-body">
-            <h3 class="card-title">สกายโดม รีโซเทล</h3>
-            <p class="card-desc">รัชดาภิเษก — ห้องพักคุ้มค่า ใกล้ย่านไลฟ์สไตล์</p>
-            <a class="btn"
-               href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=444480"
-               target="_blank" rel="nofollow noopener">
-              ตรวจสอบวันที่เข้าพักและราคา
+        <!-- 3: Sky Dome Resotel -->
+        <article class="deal-card">
+          <img class="thumb" src="image/bkk-skydome.jpg" alt="สกายโดม รีโซเทล">
+          <div class="body">
+            <h3>สกายโดม รีโซเทล</h3>
+            <p>โซนรัชดา–ลาดพร้าว ใกล้แหล่งกินดื่มและไลฟ์สไตล์</p>
+          </div>
+          <div class="meta">
+            <a class="btn" target="_blank" rel="nofollow sponsored noopener"
+               href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=444480">
+               ตรวจสอบวันที่เข้าพักและราคา
             </a>
           </div>
         </article>
 
-        <!-- 4 Cinnamon Hotel Bangkok -->
-        <article class="card">
-          <img src="image/bangkok-tile.webp" alt="ซินนามอน โฮเทล แบงค็อก" class="card-img"/>
-          <div class="card-body">
-            <h3 class="card-title">ซินนามอน โฮเทล แบงค็อก</h3>
-            <p class="card-desc">ทำเลใกล้ใจกลางเมือง — เดินทางสะดวก</p>
-            <a class="btn"
-               href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=445781"
-               target="_blank" rel="nofollow noopener">
-              ตรวจสอบวันที่เข้าพักและราคา
+        <!-- 4: Cinnamon Hotel Bangkok -->
+        <article class="deal-card">
+          <img class="thumb" src="image/bkk-cinnamon.jpg" alt="ซินนามอน โฮเทล แบงค็อก">
+          <div class="body">
+            <h3>ซินนามอน โฮเทล แบงค็อก</h3>
+            <p>ใจกลางเมือง ใกล้ห้างสรรพสินค้า และระบบขนส่ง BTS/MRT</p>
+          </div>
+          <div class="meta">
+            <a class="btn" target="_blank" rel="nofollow sponsored noopener"
+               href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=445781">
+               ตรวจสอบวันที่เข้าพักและราคา
             </a>
           </div>
         </article>
 
-        <!-- 5 Villa Baron -->
-        <article class="card">
-          <img src="image/bangkok-tile.webp" alt="วิลลา บารอน" class="card-img"/>
-          <div class="card-body">
-            <h3 class="card-title">วิลลา บารอน</h3>
-            <p class="card-desc">สนามบินดอนเมือง — ที่พักสะอาด กว้าง และคุ้มค่า</p>
-            <a class="btn"
-               href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=1617912"
-               target="_blank" rel="nofollow noopener">
-              ตรวจสอบวันที่เข้าพักและราคา
+        <!-- 5: Villa Baron -->
+        <article class="deal-card">
+          <img class="thumb" src="image/bkk-villabaron.jpg" alt="วิลลา บารอน">
+          <div class="body">
+            <h3>วิลลา บารอน</h3>
+            <p>ย่านดอนเมือง เหมาะสำหรับผู้เดินทางฝั่งเหนือของกรุงเทพฯ</p>
+          </div>
+          <div class="meta">
+            <a class="btn" target="_blank" rel="nofollow sponsored noopener"
+               href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=1617912">
+               ตรวจสอบวันที่เข้าพักและราคา
             </a>
           </div>
         </article>
 
-        <!-- 6 Kastel Bangkok Hotel -->
-        <article class="card">
-          <img src="image/bangkok-tile.webp" alt="คาสเทล กรุงเทพฯ โฮเทล" class="card-img"/>
-          <div class="card-body">
-            <h3 class="card-title">คาสเทล กรุงเทพฯ โฮเทล</h3>
-            <p class="card-desc">ประตูน้ำ — ใกล้ช้อปปิ้ง & แหล่งท่องเที่ยวสำคัญ</p>
-            <a class="btn"
-               href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=58282256"
-               target="_blank" rel="nofollow noopener">
-              ตรวจสอบวันที่เข้าพักและราคา
+        <!-- 6: Kastel Bangkok Hotel -->
+        <article class="deal-card">
+          <img class="thumb" src="image/bkk-kastel.jpg" alt="คัสเทล แบงค็อก โฮเทล">
+          <div class="body">
+            <h3>คัสเทล แบงค็อก โฮเทล</h3>
+            <p>ย่านประตูน้ำ ใกล้แหล่งช้อปปิ้งและตลาด</p>
+          </div>
+          <div class="meta">
+            <a class="btn" target="_blank" rel="nofollow sponsored noopener"
+               href="https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=58282256">
+               ตรวจสอบวันที่เข้าพักและราคา
             </a>
           </div>
         </article>
@@ -148,64 +184,47 @@
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="affiliate.html">Affiliate Disclosure</a> ·
-        <a href="about.html">About us</a> · <a href="contact.html">Contact</a> ·
-        <a href="https://web.facebook.com/clickandgothailand" target="_blank">Facebook</a>
+        <a href="privacy.html">Privacy</a> · 
+        <a href="terms.html">Terms</a> · 
+        <a href="affiliate.html">Affiliate Disclosure</a> · 
+        <a href="about.html">About us</a> · 
+        <a href="contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script>
-  (function(){
-    var isEN = location.pathname.startsWith('/en/');
-    var prefix = isEN ? '/en' : '';
-    var map = {
-      home: prefix + '/index.html',
-      deals: prefix + '/deals.html',
-      privacy: prefix + '/privacy.html',
-      terms: prefix + '/terms.html',
-      aff: prefix + '/affiliate.html',
-      about: prefix + '/about.html',
-      contact: prefix + '/contact.html',
-      bkk: prefix + '/bangkok.html'
-    };
-
-    // set nav links
-    var nav = document.querySelector('.main-nav');
-    if (nav) {
-      nav.querySelectorAll('a').forEach(function(a){
-        var t = a.textContent.trim().toLowerCase();
-        if (t.includes('หน้าแรก') || t === 'home') a.href = map.home;
-        else if (t.includes('โปรโมชั่น') || t === 'deals') a.href = map.deals;
+    // language pop-up
+    (function(){
+      const btn  = document.querySelector('.lang-btn');
+      const menu = document.querySelector('.lang-menu');
+      if(!btn||!menu) return;
+      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      btn.addEventListener('click', e=>{
+        e.stopPropagation();
+        const opened = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(opened));
       });
-    }
+      document.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
+    })();
 
-    // footer links
-    var foot = document.querySelector('.footer-links');
-    if (foot) {
-      foot.querySelectorAll('a').forEach(function(a){
-        var t = a.textContent.trim().toLowerCase();
-        if (t.startsWith('privacy')) a.href = map.privacy;
-        else if (t.startsWith('terms')) a.href = map.terms;
-        else if (t.startsWith('affiliate')) a.href = map.aff;
-        else if (t.startsWith('about')) a.href = map.about;
-        else if (t.startsWith('contact')) a.href = map.contact;
-      });
-    }
-
-    // language menu
-    var menu = document.querySelector('.lang-menu');
-    if (menu) {
-      var l = menu.querySelectorAll('a');
-      if (l.length >= 2) {
-        var th = l[0], en = l[1];
-        var thPath = location.pathname.replace(/^\/en/, '') || '/bangkok.html';
-        var enPath = location.pathname.startsWith('/en') ? location.pathname : '/en' + location.pathname;
-        th.href = thPath;
-        en.href = enPath.replace(/\/$/, '/bangkok.html');
+    // toggle date placeholder
+    (function(){
+      function bindDatePlaceholder(wrapId, inputId){
+        const wrap  = document.getElementById(wrapId);
+        const input = document.getElementById(inputId);
+        if(!wrap || !input) return;
+        const toggle = () => wrap.classList.toggle('empty', !input.value);
+        toggle();
+        input.addEventListener('input',  toggle);
+        input.addEventListener('change', toggle);
       }
-    }
-  })();
+      bindDatePlaceholder('checkin-wrap','checkin');
+      bindDatePlaceholder('checkout-wrap','checkout');
+    })();
   </script>
 </body>
 </html>
