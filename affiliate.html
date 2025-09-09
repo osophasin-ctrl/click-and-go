@@ -1,26 +1,52 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Affiliate Disclosure | Click & Go</title>
   <meta name="description" content="คำชี้แจงความเป็นพันธมิตร (Affiliate) ของ Click & Go"/>
-  <link rel="icon" href="favicon.ico"/><link rel="stylesheet" href="style.css"/>
+
+  <!-- Canonical & Hreflang -->
+  <link rel="canonical" href="https://clickandgo.asia/affiliate.html" />
+  <link rel="alternate" hreflang="th" href="https://clickandgo.asia/affiliate.html" />
+  <link rel="alternate" hreflang="en" href="https://clickandgo.asia/en/affiliate.html" />
+  <link rel="alternate" hreflang="x-default" href="https://clickandgo.asia/affiliate.html" />
+
+  <link rel="icon" href="favicon.ico"/>
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- GA4 (เหมือนหน้าหลัก) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js',new Date()); gtag('config','G-1QR2EGFWN3');
+  </script>
 </head>
 <body>
-  <header class="site-header">
+  <!-- Header -->
+  <header class="site-header" role="banner">
     <div class="inner">
-      <a href="index.html" class="brand"><img src="logo.png" alt="Click & Go" width="40" height="40"/><span class="brand-text" aria-hidden="true">Click & Go</span></a>
-      <nav class="main-nav">
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy"/>
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
+      </a>
+
+      <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html">หน้าแรก</a>
         <a href="deals.html">โปรโมชั่น</a>
         <div class="lang">
-          <button class="lang-btn">ภาษา ▾</button>
-          <div class="lang-menu"><a href="#" aria-current="true">ไทย</a><a href="#">English</a></div>
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
+          <div class="lang-menu" role="menu">
+            <a href="#" aria-current="true" role="menuitem">ไทย</a>
+            <a href="#" role="menuitem">English</a>
+          </div>
         </div>
       </nav>
     </div>
   </header>
 
+  <!-- Main -->
   <main class="container">
     <section style="margin-top:20px">
       <h1 class="section-title">Affiliate Disclosure</h1>
@@ -30,24 +56,13 @@
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="affiliate.html" aria-current="page">Affiliate Disclosure</a> ·
-        <a href="about.html">About us</a> · <a href="contact.html">Contact</a> ·
-        <a href="https://web.facebook.com/clickandgothailand" target="_blank">Facebook</a>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-  (function(){
-    var isEN=location.pathname.startsWith('/en/'); var prefix=isEN?'/en':'';
-    var map={home:prefix+'/index.html',deals:prefix+'/deals.html',privacy:prefix+'/privacy.html',terms:prefix+'/terms.html',aff:prefix+'/affiliate.html',about:prefix+'/about.html',contact:prefix+'/contact.html'};
-    var nav=document.querySelector('.main-nav'); if(nav){nav.querySelectorAll('a').forEach(a=>{var t=a.textContent.toLowerCase(); if(t.includes('หน้าแรก')||t==='home')a.href=map.home; else if(t.includes('โปรโมชั่น')||t==='deals')a.href=map.deals;});}
-    var foot=document.querySelector('.footer-links'); if(foot){foot.querySelectorAll('a').forEach(a=>{var t=a.textContent.toLowerCase(); if(t.startsWith('privacy'))a.href=map.privacy; else if(t.startsWith('terms'))a.href=map.terms; else if(t.startsWith('affiliate'))a.href=map.aff; else if(t.startsWith('about'))a.href=map.about; else if(t.startsWith('contact'))a.href=map.contact;});}
-    var menu=document.querySelector('.lang-menu'); if(menu){var l=menu.querySelectorAll('a'); if(l.length>=2){var th=l[0],en=l[1]; var thPath=location.pathname.replace(/^\/en/,'')||'/affiliate.html'; var enPath=location.pathname.startsWith('/en')?location.pathname:'/en'+location.pathname; th.href=thPath; en.href=enPath;}}
-  })();
-  </script>
-</body>
-</html>
+        <a href="privacy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="affiliate.html" aria-current="page">Affiliate Disclosure</a> ·
+        <a href="about.html">About us</a> ·
+        <a href="contact.html">Contact</a> ·
+        <a href="
