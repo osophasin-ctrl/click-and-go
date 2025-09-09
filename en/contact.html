@@ -7,54 +7,132 @@
   <link rel="icon" href="../favicon.ico"/><link rel="stylesheet" href="../style.css"/>
 </head>
 <body>
-  <header class="site-header">
+  <!-- Header -->
+  <header class="site-header" role="banner">
     <div class="inner">
-      <a href="index.html" class="brand"><img src="../logo.png" alt="Click & Go" width="40" height="40"/><span class="brand-text" aria-hidden="true">Click & Go</span></a>
-      <nav class="main-nav">
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="../logo.png" alt="Click & Go" width="40" height="40" loading="lazy"/>
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
+      </a>
+      <nav class="main-nav" aria-label="Main menu">
         <a href="index.html">Home</a>
         <a href="deals.html">Deals</a>
         <div class="lang">
-          <button class="lang-btn">Language ▾</button>
-          <div class="lang-menu"><a href="#">ไทย</a><a href="#" aria-current="true">English</a></div>
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="#">ไทย</a>
+            <a role="menuitem" href="#" aria-current="true">English</a>
+          </div>
         </div>
       </nav>
     </div>
   </header>
 
+  <!-- Main -->
   <main class="container">
     <section style="margin-top:20px">
       <h1 class="section-title">Contact Click & Go</h1>
-      <p>Questions or feedback? Send us a message below or email <a href="mailto:hello@clickandgo.example">hello@clickandgo.example</a>.</p>
-      <form class="search-form" style="grid-template-columns:1fr 1fr">
-        <input type="text" placeholder="Your name">
-        <input type="email" placeholder="Your email">
-        <input type="text" placeholder="Subject" style="grid-column:1/-1">
-        <textarea placeholder="Message" style="grid-column:1/-1; min-height:120px; padding:10px; border:1px solid #ccc; border-radius:6px;"></textarea>
+      <p>
+        Questions or feedback? Send us a message below or email
+        <a href="mailto:hello@clickandgo.asia">hello@clickandgo.asia</a>.
+      </p>
+
+      <!-- Contact form -->
+      <form class="search-form" style="grid-template-columns:1fr 1fr" aria-label="Contact form">
+        <input type="text" placeholder="Your name" aria-label="Your name" autocomplete="name">
+        <input type="email" placeholder="Your email" aria-label="Your email" autocomplete="email">
+        <input type="text" placeholder="Subject" aria-label="Subject" style="grid-column:1/-1">
+        <textarea placeholder="Message" aria-label="Message" style="grid-column:1/-1; min-height:120px; padding:10px; border:1px solid #ccc; border-radius:6px;"></textarea>
         <button type="submit" class="btn" style="grid-column:1/-1">Send</button>
       </form>
 
       <h2 class="section-title" style="margin-top:24px">Company</h2>
-      <p>Click & Go OTA (Thailand) Co., Ltd.<br>Bangkok, Thailand</p>
+      <p>
+        Click & Go OTA (Thailand) Co., Ltd.<br/>
+        Bangkok, Thailand
+      </p>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="affiliate.html">Affiliate Disclosure</a> ·
-        <a href="about.html">About us</a> · <a href="contact.html" aria-current="page">Contact</a> ·
-        <a href="https://web.facebook.com/clickandgothailand" target="_blank">Facebook</a>
+        <a href="privacy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html">About us</a> ·
+        <a href="contact.html" aria-current="page">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
   </footer>
 
+  <!-- Language + nav/footer mapping -->
   <script>
   (function(){
-    var isEN=location.pathname.startsWith('/en/'); var prefix=isEN?'/en':'';
-    var map={home:prefix+'/index.html',deals:prefix+'/deals.html',privacy:prefix+'/privacy.html',terms:prefix+'/terms.html',aff:prefix+'/affiliate.html',about:prefix+'/about.html',contact:prefix+'/contact.html'};
-    var nav=document.querySelector('.main-nav'); if(nav){nav.querySelectorAll('a').forEach(a=>{var t=a.textContent.toLowerCase(); if(t.includes('home'))a.href=map.home; else if(t.includes('deals'))a.href=map.deals;});}
-    var foot=document.querySelector('.footer-links'); if(foot){foot.querySelectorAll('a').forEach(a=>{var t=a.textContent.toLowerCase(); if(t.startsWith('privacy'))a.href=map.privacy; else if(t.startsWith('terms'))a.href=map.terms; else if(t.startsWith('affiliate'))a.href=map.aff; else if(t.startsWith('about'))a.href=map.about; else if(t.startsWith('contact'))a.href=map.contact;});}
-    var menu=document.querySelector('.lang-menu'); if(menu){var l=menu.querySelectorAll('a'); if(l.length>=2){var th=l[0],en=l[1]; var thPath=location.pathname.replace(/^\/en/,'')||'/contact.html'; var enPath=location.pathname.startsWith('/en')?location.pathname:'/en'+location.pathname; th.href=thPath; en.href=enPath;}}
+    var isEN = location.pathname.startsWith('/en/');
+    var prefix = isEN ? '/en' : '';
+
+    // Keep links in the same language
+    var map = {
+      home:    prefix + '/index.html',
+      deals:   prefix + '/deals.html',
+      privacy: prefix + '/privacy.html',
+      terms:   prefix + '/terms.html',
+      aff:     prefix + '/affiliate.html',
+      about:   prefix + '/about.html',
+      contact: prefix + '/contact.html'
+    };
+
+    // Header nav mapping
+    var nav = document.querySelector('.main-nav');
+    if (nav) {
+      nav.querySelectorAll('a').forEach(function(a){
+        var t = a.textContent.trim().toLowerCase();
+        if (t.includes('home'))  a.href = map.home;
+        else if (t.includes('deals')) a.href = map.deals;
+      });
+    }
+
+    // Footer mapping
+    var foot = document.querySelector('.footer-links');
+    if (foot) {
+      foot.querySelectorAll('a').forEach(function(a){
+        var t = a.textContent.trim().toLowerCase();
+        if (t.startsWith('privacy'))        a.href = map.privacy;
+        else if (t.startsWith('terms'))     a.href = map.terms;
+        else if (t.startsWith('affiliate')) a.href = map.aff;
+        else if (t.startsWith('about'))     a.href = map.about;
+        else if (t.startsWith('contact'))   a.href = map.contact;
+      });
+    }
+
+    // Language toggle (this page = contact)
+    (function(){
+      var btn  = document.querySelector('.lang-btn');
+      var menu = document.querySelector('.lang-menu');
+      if (!btn || !menu) return;
+
+      var links = menu.querySelectorAll('a');
+      if (links.length >= 2) {
+        var th = links[0], en = links[1];
+        th.href = '/contact.html';       // switch to Thai
+        en.href = '/en/contact.html';    // stay English
+      }
+
+      function closeMenu(){
+        menu.classList.remove('open');
+        btn.setAttribute('aria-expanded','false');
+      }
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var opened = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(opened));
+      });
+      document.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
+    })();
   })();
   </script>
 </body>
