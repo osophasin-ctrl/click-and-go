@@ -15,12 +15,13 @@
   <link rel="icon" href="favicon.ico"/>
   <link rel="stylesheet" href="style.css"/>
 
-  <!-- GA4 (เหมือนหน้าหลัก) -->
+  <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
   <script>
     window.dataLayer=window.dataLayer||[];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js',new Date()); gtag('config','G-1QR2EGFWN3');
+    gtag('js',new Date());
+    gtag('config','G-1QR2EGFWN3');
   </script>
 </head>
 <body>
@@ -31,15 +32,14 @@
         <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy"/>
         <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
-
       <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html">หน้าแรก</a>
         <a href="deals.html">โปรโมชั่น</a>
         <div class="lang">
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
           <div class="lang-menu" role="menu">
-            <a href="#" aria-current="true" role="menuitem">ไทย</a>
-            <a href="#" role="menuitem">English</a>
+            <a role="menuitem" href="#" aria-current="true">ไทย</a>
+            <a role="menuitem" href="#">English</a>
           </div>
         </div>
       </nav>
@@ -52,7 +52,7 @@
       <h1 class="section-title">Affiliate Disclosure</h1>
       <p>บางลิงก์ในเว็บไซต์นี้เป็นลิงก์พันธมิตร (Affiliate links) เมื่อคุณคลิกและทำการจอง เราอาจได้รับคอมมิชชั่น โดยไม่มีค่าใช้จ่ายเพิ่มเติมสำหรับคุณ</p>
       <p>เราแนะนำเฉพาะบริการที่เชื่อว่าเป็นประโยชน์ต่อผู้ใช้ และพยายามรักษาความโปร่งใสในการนำเสนอราคาและข้อเสนอเสมอ</p>
-      <p>คำถามเพิ่มเติม ติดต่อเราได้ที่หน้า <a href="contact.html">ติดต่อเรา</a></p>
+      <p>หากมีข้อสงสัยเพิ่มเติม ติดต่อเราได้ที่หน้า <a href="contact.html">ติดต่อเรา</a></p>
     </section>
   </main>
 
@@ -65,4 +65,75 @@
         <a href="affiliate.html" aria-current="page">Affiliate Disclosure</a> ·
         <a href="about.html">About us</a> ·
         <a href="contact.html">Contact</a> ·
-        <a href="
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Language / Nav mapping -->
+  <script>
+  (function(){
+    var isEN = location.pathname.startsWith('/en/');
+    var prefix = isEN ? '/en' : '';
+    var map = {
+      home:    prefix + '/index.html',
+      deals:   prefix + '/deals.html',
+      privacy: prefix + '/privacy.html',
+      terms:   prefix + '/terms.html',
+      aff:     prefix + '/affiliate.html',
+      about:   prefix + '/about.html',
+      contact: prefix + '/contact.html'
+    };
+
+    // อัปเดตเมนูหลัก
+    var nav = document.querySelector('.main-nav');
+    if (nav) {
+      nav.querySelectorAll('a').forEach(function(a){
+        var t = a.textContent.toLowerCase();
+        if (t.includes('หน้าแรก') || t === 'home') a.href = map.home;
+        else if (t.includes('โปรโมชั่น') || t === 'deals') a.href = map.deals;
+      });
+    }
+
+    // อัปเดตลิงก์ในฟุตเตอร์
+    var foot = document.querySelector('.footer-links');
+    if (foot) {
+      foot.querySelectorAll('a').forEach(function(a){
+        var t = a.textContent.toLowerCase();
+        if (t.startsWith('privacy'))   a.href = map.privacy;
+        else if (t.startsWith('terms')) a.href = map.terms;
+        else if (t.startsWith('affiliate')) a.href = map.aff;
+        else if (t.startsWith('about')) a.href = map.about;
+        else if (t.startsWith('contact')) a.href = map.contact;
+      });
+    }
+
+    // สลับภาษา: บังคับ path ชัดเจน
+    var menu = document.querySelector('.lang-menu');
+    if (menu) {
+      var l = menu.querySelectorAll('a');
+      if (l.length >= 2) {
+        var th = l[0], en = l[1];
+        th.href = '/affiliate.html';
+        en.href = '/en/affiliate.html';
+      }
+    }
+
+    // toggle popup ภาษา
+    (function(){
+      var btn  = document.querySelector('.lang-btn');
+      var menu = document.querySelector('.lang-menu');
+      if(!btn || !menu) return;
+      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var opened = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(opened));
+      });
+      document.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMenu(); });
+    })();
+  })();
+  </script>
+</body>
+</html>
