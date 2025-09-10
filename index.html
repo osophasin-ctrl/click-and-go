@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว</title>
   <meta name="description" content="Click & Go ช่วยค้นหาและเปรียบเทียบราคาโรงแรมจากหลาย OTA พร้อมลิงก์ไปจองทันที ครอบคลุมปลายทางยอดนิยมทั้งในไทยและต่างประเทศ" />
-  <link rel="canonical" href="https://clickandgo.asia/" />
+  <link rel="canonical" href="https://clickandgo.asia/index.html" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
   <meta property="og:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว" />
   <meta property="og:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
-  <meta property="og:url" content="https://clickandgo.asia/" />
+  <meta property="og:url" content="https://clickandgo.asia/index.html" />
   <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg" />
 
   <link rel="icon" href="favicon.ico">
@@ -26,11 +26,6 @@
     gtag('js',new Date());
     gtag('config','G-1QR2EGFWN3');
   </script>
-
-  <style>
-    /* กันเผื่อไม่ให้ widget ล้น */
-    .agoda-wrap { max-width:100%; overflow:hidden; }
-  </style>
 </head>
 <body>
   <!-- Header -->
@@ -67,49 +62,26 @@
       <div class="widget-like solid">
         <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
 
-        <!-- Agoda Search Box (Responsive Init) -->
-        <div class="agoda-wrap">
-          <div id="adgshp-1065502534"></div>
-        </div>
-
-        <script>
-          (function(){
-            function initSherpa() {
-              var host = document.getElementById('adgshp-1065502534');
-              if (!host) return;
-
-              // วัดความกว้างของกล่องครอบ เพื่อส่งให้ Agoda
-              var parent = host.parentElement;
-              var w = Math.max(300, Math.min(parent.clientWidth || 900, 1100)); // 300–1100px
-              // กำหนดความสูงตามช่วง เพื่อไม่แน่น/ไม่ล้น
-              var h = (w >= 900) ? 257 : (w >= 560 ? 280 : 320);
-
-              var stg = new Object();
-              stg.crt = "6875755303030";
-              stg.version = "1.04";
-              stg.id = stg.name = "adgshp-1065502534";
-              stg.width = w + "px";
-              stg.height = h + "px";
-              stg.ReferenceKey = "HLoB8knkD3mwE38NHf58lg==";
-              stg.Layout = "Oneline";
-              stg.Language = "th-th";
-              stg.Cid = "1949420";
-              stg.DestinationName = "";
-              stg.OverideConf = false;
-              new AgdSherpa(stg).initialize();
-            }
-
-            // โหลดสคริปต์ Agoda ถ้ายังไม่มี
-            if (window.AgdSherpa) {
-              initSherpa();
-            } else {
-              var s = document.createElement('script');
-              s.src = "//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js";
-              s.onload = initSherpa;
-              document.head.appendChild(s);
-            }
-          })();
+        <!-- Agoda Search Box -->
+        <div id="adgshp-1065502534"></div>
+        <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
+        <script type="text/javascript">
+        var stg = new Object(); 
+        stg.crt="6572208258236";
+        stg.version="1.04"; 
+        stg.id=stg.name="adgshp-1065502534"; 
+        stg.width="1059px"; 
+        stg.height="303px";
+        stg.ReferenceKey="HLoB8knkD3mwE38NHf58lg=="; 
+        stg.Layout="Oneline"; 
+        stg.Language="th-th";
+        stg.Cid="1949420"; 
+        stg.DestinationName=""; 
+        stg.OverideConf=false; 
+        new AgdSherpa(stg).initialize();
         </script>
+        <!-- /Agoda Search Box -->
+
       </div>
     </section>
 
@@ -164,8 +136,9 @@
     </div>
   </footer>
 
-  <!-- Language pop-up -->
+  <!-- Scripts -->
   <script>
+    // language pop-up
     (function(){
       const btn  = document.querySelector('.lang-btn');
       const menu = document.querySelector('.lang-menu');
@@ -178,6 +151,18 @@
       });
       document.addEventListener('click', closeMenu);
       document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
+    })();
+
+    // footer link auto language (TH/EN)
+    (function(){
+      const isEN   = location.pathname.toLowerCase().includes('/en/');
+      const prefix = isEN ? '/en/' : '/';
+      document.querySelectorAll('.site-footer .footer-links a[href]').forEach(a=>{
+        const href = a.getAttribute('href') || '';
+        if (/^(https?:)?\/\//i.test(href) || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+        const clean = href.replace(/^\/en\//i,'').replace(/^\//,'');
+        a.setAttribute('href', prefix + clean);
+      });
     })();
   </script>
 </body>
