@@ -63,30 +63,32 @@
       <img class="hero-img" src="../hero-bg.jpg" alt="Click & Go Thailand" />
     </section>
 
-    <!-- Search (Agoda Widget) -->
+    <!-- Search (Internal Form) -->
     <section style="margin:24px 0">
       <h2 class="section-title">Search Hotels</h2>
       <div class="widget-like solid">
         <p class="muted">We’re ready to find the best deals for you</p>
 
-        <!-- Agoda Search Box -->
-        <div id="adgshp-1762923411"></div>
-        <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
-        <script type="text/javascript">
-          var stg = new Object();
-          stg.crt="8131380105591";
-          stg.version="1.04";
-          stg.id=stg.name="adgshp-1762923411";
-          stg.width="1030px";
-          stg.height="293px";
-          stg.ReferenceKey="kTXcoy+P0WUNEGEcPWXr0A==";
-          stg.Layout="Oneline";
-          stg.Language="en-us";
-          stg.Cid="1949420";
-          stg.DestinationName="";
-          stg.OverideConf=false;
-          new AgdSherpa(stg).initialize();
-        </script>
+        <!-- Our Search Form -->
+        <form id="cg-search" class="search-form search-4cols" role="search" aria-label="Hotel search">
+          <!-- Destination -->
+          <input type="text" id="dest" placeholder="Destination e.g., Bangkok or hotel name" aria-label="Destination" autocomplete="off">
+
+          <!-- Check-in -->
+          <div class="date-wrap empty" id="checkin-wrap">
+            <input type="date" id="checkin" aria-label="Check-in">
+            <span class="date-placeholder">Check-in</span>
+          </div>
+
+          <!-- Check-out -->
+          <div class="date-wrap empty" id="checkout-wrap">
+            <input type="date" id="checkout" aria-label="Check-out">
+            <span class="date-placeholder">Check-out</span>
+          </div>
+
+          <!-- Button -->
+          <button type="submit" class="btn">Search</button>
+        </form>
       </div>
     </section>
 
@@ -143,7 +145,7 @@
 
   <!-- Scripts -->
   <script>
-    // language pop-up
+    // Language pop-up
     (function(){
       const btn  = document.querySelector('.lang-btn');
       const menu = document.querySelector('.lang-menu');
@@ -156,6 +158,37 @@
       });
       document.addEventListener('click', closeMenu);
       document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
+    })();
+
+    // Date placeholder toggle
+    (function(){
+      function bindWrap(wrapId, inputId){
+        const wrap=document.getElementById(wrapId);
+        const input=document.getElementById(inputId);
+        if(!wrap||!input) return;
+        const toggle=()=>wrap.classList.toggle('empty', !input.value);
+        toggle(); input.addEventListener('input',toggle); input.addEventListener('change',toggle);
+      }
+      bindWrap('checkin-wrap','checkin');
+      bindWrap('checkout-wrap','checkout');
+    })();
+
+    // Submit -> redirect to /search.html with params
+    (function(){
+      const form = document.getElementById('cg-search');
+      if(!form) return;
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const dest = (document.getElementById('dest').value || '').trim();
+        const ci   = document.getElementById('checkin').value || '';
+        const co   = document.getElementById('checkout').value || '';
+        const params = new URLSearchParams();
+        if(dest) params.set('dest', dest);
+        if(ci) params.set('checkin', ci);
+        if(co) params.set('checkout', co);
+        // ไปหน้า /search.html (ภาษาอังกฤษอยู่รูทเดียวกับ /search.html)
+        location.href = '/search.html?' + params.toString();
+      });
     })();
   </script>
 </body>
