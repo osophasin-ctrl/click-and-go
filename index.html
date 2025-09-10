@@ -84,25 +84,25 @@
       <div class="widget-like solid">
         <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
 
-        <form class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
-          <!-- ปลายทาง -->
-          <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่ หรือชื่อโรงแรม" aria-label="ปลายทาง">
-
-          <!-- เช็คอิน -->
-          <div class="date-wrap empty" id="checkin-wrap">
-            <input type="date" id="checkin" aria-label="เช็คอิน">
-            <span class="date-placeholder">เช็คอิน</span>
-          </div>
-
-          <!-- เช็คเอาท์ -->
-          <div class="date-wrap empty" id="checkout-wrap">
-            <input type="date" id="checkout" aria-label="เช็คเอาท์">
-            <span class="date-placeholder">เช็คเอาท์</span>
-          </div>
-
-          <!-- ปุ่มค้นหา -->
-          <button type="button" class="btn">ค้นหา</button>
-        </form>
+        <!-- ===== Agoda Search Box (แทนฟอร์มจำลองเดิม) ===== -->
+        <div id="adgshp-1065502534"></div>
+        <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
+        <script type="text/javascript">
+          var stg = new Object();
+          stg.crt = "6865556955390";
+          stg.version = "1.04";
+          stg.id = stg.name = "adgshp-1065502534";
+          stg.width = "100%";
+          stg.height = "300px";
+          stg.ReferenceKey = "HLoB8knkD3mwE38NHf58lg==";
+          stg.Layout = "Oneline";
+          stg.Language = "th-th";
+          stg.Cid = "1949420";
+          stg.DestinationName = "";   // ว่าง = ให้ผู้ใช้พิมพ์เอง
+          stg.OverideConf = false;
+          new AgdSherpa(stg).initialize();
+        </script>
+        <!-- ===== /Agoda Search Box ===== -->
       </div>
     </section>
 
@@ -172,21 +172,6 @@
       });
       document.addEventListener('click', closeMenu);
       document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
-    })();
-
-    // toggle date placeholder
-    (function(){
-      function bindDatePlaceholder(wrapId, inputId){
-        const wrap  = document.getElementById(wrapId);
-        const input = document.getElementById(inputId);
-        if(!wrap || !input) return;
-        const toggle = () => wrap.classList.toggle('empty', !input.value);
-        toggle();
-        input.addEventListener('input',  toggle);
-        input.addEventListener('change', toggle);
-      }
-      bindDatePlaceholder('checkin-wrap','checkin');
-      bindDatePlaceholder('checkout-wrap','checkout');
     })();
 
     // footer link auto language (TH/EN)
