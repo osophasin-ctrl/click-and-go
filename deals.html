@@ -3,55 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <title>โปรโมชั่นโรงแรม – ดีลห้ามพลาด | Click & Go</title>
-  <meta name="description" content="รวมดีลโรงแรมเด็ด ๆ จากหลายพาร์ทเนอร์ จองง่ายในคลิกเดียว ค้นหาข้อเสนอที่ดีที่สุดสำหรับคุณได้ที่ Click & Go" />
-  <link rel="canonical" href="https://click-and-go-navy.vercel.app/deals.html" />
-
-  <!-- Hreflang (EN/TH pair) -->
-  <link rel="alternate" hreflang="en" href="https://click-and-go-navy.vercel.app/en/deals.html" />
-  <link rel="alternate" hreflang="th" href="https://click-and-go-navy.vercel.app/deals.html" />
-  <link rel="icon" href="favicon.ico" />
+  <title>โปรโมชั่นโรงแรม – ดีลพิเศษ | Click & Go</title>
+  <meta name="description" content="ค้นหาโปรโมชั่นและดีลพิเศษสำหรับโรงแรมจากพาร์ทเนอร์ของเรา เลือกวันที่แล้วคลิกไปจองได้ทันที" />
+  <link rel="canonical" href="https://clickandgo.asia/deals.html" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
-  <meta property="og:title" content="โปรโมชั่นโรงแรม – ดีลห้ามพลาด | Click & Go" />
-  <meta property="og:description" content="รวมดีลโรงแรมเด็ด ๆ จากหลายพาร์ทเนอร์ จองง่ายในคลิกเดียว" />
-  <meta property="og:url" content="https://click-and-go-navy.vercel.app/deals.html" />
-  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+  <meta property="og:title" content="โปรโมชั่นโรงแรม – ดีลพิเศษ | Click & Go" />
+  <meta property="og:description" content="ค้นหาโปรโมชั่นและดีลพิเศษสำหรับโรงแรมจากพาร์ทเนอร์ของเรา เลือกวันที่แล้วคลิกไปจองได้ทันที" />
+  <meta property="og:url" content="https://clickandgo.asia/deals.html" />
+  <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg" />
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="โปรโมชั่นโรงแรม – ดีลห้ามพลาด | Click & Go" />
-  <meta name="twitter:description" content="รวมดีลโรงแรมเด็ด ๆ จากหลายพาร์ทเนอร์ จองง่ายในคลิกเดียว" />
-  <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
-
-  <!-- JSON-LD -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Hotel Deals",
-    "url": "https://click-and-go-navy.vercel.app/deals.html",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "Click & Go",
-      "url": "https://click-and-go-navy.vercel.app/"
-    }
-  }
-  </script>
-
+  <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="style.css" />
-
-  <!-- GA4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-1QR2EGFWN3');
-  </script>
 </head>
 <body>
   <!-- Header -->
@@ -61,16 +26,14 @@
         <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
         <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
-
       <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html">หน้าแรก</a>
         <a href="deals.html" aria-current="page">โปรโมชั่น</a>
-
         <div class="lang">
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
           <div class="lang-menu" role="menu">
-            <a role="menuitem" href="/deals.html" aria-current="true">ไทย</a>
-            <a role="menuitem" href="/en/deals.html">English</a>
+            <a role="menuitem" href="#" aria-current="true">ไทย</a>
+            <a role="menuitem" href="en/deals.html">English</a>
           </div>
         </div>
       </nav>
@@ -78,133 +41,44 @@
   </header>
 
   <main class="container">
-    <!-- Hero -->
-    <section class="hero" aria-label="ภาพแบนเนอร์">
-      <img class="hero-img" src="hero-bg.jpg" alt="Click & Go – ดีลโรงแรม" />
-    </section>
-
-    <!-- Search -->
+    <!-- ค้นหาโรงแรม -->
     <section style="margin:24px 0">
-      <h2 class="section-title">ค้นหาโรงแรม</h2>
+      <h1 class="section-title">ค้นหาโรงแรม</h1>
       <div class="widget-like solid">
         <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
 
-        <form class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรมจำลอง">
-          <input type="text" placeholder="ปลายทาง เช่น เชียงใหม่ หรือชื่อโรงแรม" aria-label="ปลายทาง">
-
-          <div class="date-wrap empty" id="checkin-wrap">
-            <input type="date" id="checkin" aria-label="เช็คอิน">
-            <span class="date-placeholder">เช็คอิน</span>
-          </div>
-
-          <div class="date-wrap empty" id="checkout-wrap">
-            <input type="date" id="checkout" aria-label="เช็คเอาท์">
-            <span class="date-placeholder">เช็คเอาท์</span>
-          </div>
-
-        <button type="button" class="btn">ค้นหา</button>
-        </form>
+        <!-- Agoda Search Box (เหมือนหน้า index ภาษาไทย) -->
+        <div id="adgshp-1065502534"></div>
+        <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
+        <script type="text/javascript">
+          var stg = new Object();
+          stg.crt="6577528008956";
+          stg.version="1.04";
+          stg.id=stg.name="adgshp-1065502534";
+          stg.width="1030px";
+          stg.height="293px";
+          stg.ReferenceKey="HLoB8knkD3mwE38NHf58lg==";
+          stg.Layout="Oneline";
+          stg.Language="th-th";
+          stg.Cid="1949420";
+          stg.City="9395";
+          stg.DestinationName="กรุงเทพ, ไทย";
+          stg.OverideConf=false;
+          new AgdSherpa(stg).initialize();
+        </script>
       </div>
     </section>
 
-    <!-- Partner Search -->
+    <!-- ดีลสุดฮอตในเมืองยอดนิยม -->
     <section>
-      <div class="widget-like" style="margin-top:12px">
-        <h3 style="margin:0 0 10px">หรือค้นหาต่อบนพาร์ทเนอร์</h3>
-        <div style="display:grid; gap:12px">
-          <a class="btn" href="#" rel="nofollow">ไปที่ Agoda</a>
-          <a class="btn" href="#" rel="nofollow">ไปที่ Booking.com</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- City Hot Deals -->
-    <section style="margin-top:24px">
       <h2 class="section-title">ดีลสุดฮอตในเมืองยอดนิยม</h2>
       <div class="city-grid">
-        <a class="city-card" href="bangkok.html">
-          <figure>
-            <img src="bangkok-tile.webp" alt="กรุงเทพฯ">
-            <figcaption>กรุงเทพฯ</figcaption>
-          </figure>
-        </a>
-        <a class="city-card" href="chiangmai.html">
-          <figure>
-            <img src="chiangmai-tile.webp" alt="เชียงใหม่">
-            <figcaption>เชียงใหม่</figcaption>
-          </figure>
-        </a>
-        <a class="city-card" href="phuket.html">
-          <figure>
-            <img src="phuket-tile.webp" alt="ภูเก็ต">
-            <figcaption>ภูเก็ต</figcaption>
-          </figure>
-        </a>
-        <a class="city-card" href="pattaya.html">
-          <figure>
-            <img src="pattaya-tile.webp" alt="พัทยา">
-            <figcaption>พัทยา</figcaption>
-          </figure>
-        </a>
-        <a class="city-card" href="krabi.html">
-          <figure>
-            <img src="krabi-tile.webp" alt="กระบี่">
-            <figcaption>กระบี่</figcaption>
-          </figure>
-        </a>
-        <a class="city-card" href="hua-hin.html">
-          <figure>
-            <img src="huahin-tile.webp" alt="หัวหิน">
-            <figcaption>หัวหิน</figcaption>
-          </figure>
-        </a>
-      </div>
-
-      <p class="tiny-note" style="margin-top:8px">
-        * เป็นตัวอย่างเลย์เอาท์ — เมื่อได้รับสิทธิ์ Affiliate ปุ่ม “จองเลย” จะลิงก์ไปหน้าโรงแรมจริง
-      </p>
-    </section>
-
-    <!-- Example Deals Listing (Optional Showcase) -->
-    <section id="example-list" style="margin-top:26px">
-      <h2 class="section-title">ดีลแนะนำ</h2>
-
-      <div class="deal-grid">
-        <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม 1">
-          <div class="body">
-            <h3>โรงแรมตัวอย่าง 1</h3>
-            <p>ย่านเมือง ใกล้รถไฟฟ้า เดินทางสะดวก เริ่มต้นเพียง 1,200 บาท/คืน</p>
-          </div>
-          <div class="meta">
-            <strong>฿1,200 / คืน</strong>
-            <a class="btn" href="#" rel="nofollow">จองเลย</a>
-          </div>
-        </article>
-
-        <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม 2">
-          <div class="body">
-            <h3>โรงแรมตัวอย่าง 2</h3>
-            <p>วิวสวย ห้องกว้าง ทำเลดี เริ่มต้นเพียง 1,800 บาท/คืน</p>
-          </div>
-          <div class="meta">
-            <strong>฿1,800 / คืน</strong>
-            <a class="btn" href="#" rel="nofollow">จองเลย</a>
-          </div>
-        </article>
-
-        <article class="deal-card">
-          <img class="thumb" src="https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop" alt="ตัวอย่างโรงแรม 3">
-          <div class="body">
-            <h3>โรงแรมตัวอย่าง 3</h3>
-            <p>ย่านท่องเที่ยว ใจกลางเมือง เริ่มต้นเพียง 900 บาท/คืน</p>
-          </div>
-          <div class="meta">
-            <strong>฿900 / คืน</strong>
-            <a class="btn" href="#" rel="nofollow">จองเลย</a>
-          </div>
-        </article>
+        <a class="city-card" href="bangkok.html"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
+        <a class="city-card" href="chiangmai.html"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
+        <a class="city-card" href="pattaya.html"><figure><img src="pattaya-tile.webp" alt="พัทยา"><figcaption>พัทยา</figcaption></figure></a>
+        <a class="city-card" href="phuket.html"><figure><img src="phuket-tile.webp" alt="ภูเก็ต"><figcaption>ภูเก็ต</figcaption></figure></a>
+        <a class="city-card" href="krabi.html"><figure><img src="krabi-tile.webp" alt="กระบี่"><figcaption>กระบี่</figcaption></figure></a>
+        <a class="city-card" href="hua-hin.html"><figure><img src="huahin-tile.webp" alt="หัวหิน"><figcaption>หัวหิน</figcaption></figure></a>
       </div>
     </section>
   </main>
@@ -212,12 +86,12 @@
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
-      <div class="footer-links" style="margin-bottom:4px;">
-        <a href="/privacy.html" class="ft ft-privacy">Privacy</a> ·
-        <a href="/terms.html" class="ft ft-terms">Terms</a> ·
-        <a href="/affiliate.html" class="ft ft-affiliate">Affiliate Disclosure</a> ·
-        <a href="/about.html" class="ft ft-about">About us</a> ·
-        <a href="/contact.html" class="ft ft-contact">Contact</a> ·
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html">About us</a> ·
+        <a href="contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
@@ -225,51 +99,19 @@
 
   <!-- Scripts -->
   <script>
-    // Language pop-up
+    // language pop-up
     (function(){
-      const btn  = document.querySelector('.lang-btn');
-      const menu = document.querySelector('.lang-menu');
-      if(!btn || !menu) return;
+      const btn=document.querySelector('.lang-btn');
+      const menu=document.querySelector('.lang-menu');
+      if(!btn||!menu) return;
       function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-      btn.addEventListener('click', e=>{
+      btn.addEventListener('click',e=>{
         e.stopPropagation();
-        const opened = menu.classList.toggle('open');
-        btn.setAttribute('aria-expanded', String(opened));
+        const opened=menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded',String(opened));
       });
-      document.addEventListener('click', closeMenu);
-      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
-    })();
-
-    // Date placeholder show/hide
-    (function(){
-      function bindDatePlaceholder(wrapId, inputId){
-        const wrap = document.getElementById(wrapId);
-        const input = document.getElementById(inputId);
-        if(!wrap || !input) return;
-        const toggle = () => wrap.classList.toggle('empty', !input.value);
-        toggle();
-        input.addEventListener('input', toggle);
-        input.addEventListener('change', toggle);
-      }
-      bindDatePlaceholder('checkin-wrap','checkin');
-      bindDatePlaceholder('checkout-wrap','checkout');
-    })();
-
-    // Footer i18n auto-prefix (TH stays as is, EN handled on /en/ pages)
-    (function(){
-      const isEN = location.pathname.startsWith('/en/');
-      if(!isEN) return; // หน้า TH ไม่ต้องแก้
-      const map = {
-        '.ft-privacy':  '/en/privacy.html',
-        '.ft-terms':    '/en/terms.html',
-        '.ft-affiliate':'/en/affiliate.html',
-        '.ft-about':    '/en/about.html',
-        '.ft-contact':  '/en/contact.html'
-      };
-      Object.keys(map).forEach(sel=>{
-        const el = document.querySelector(sel);
-        if(el) el.setAttribute('href', map[sel]);
-      });
+      document.addEventListener('click',closeMenu);
+      document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu(); });
     })();
   </script>
 </body>
