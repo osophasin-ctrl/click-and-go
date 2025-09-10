@@ -15,27 +15,6 @@
   <meta property="og:url" content="https://clickandgo.asia/" />
   <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg" />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว" />
-  <meta name="twitter:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
-  <meta name="twitter:image" content="https://clickandgo.asia/hero-bg.jpg" />
-
-  <!-- JSON-LD: WebSite + SearchAction -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebSite",
-    "name":"Click & Go",
-    "url":"https://clickandgo.asia/",
-    "potentialAction":{
-      "@type":"SearchAction",
-      "target":"https://clickandgo.asia/deals.html?q={search_term_string}",
-      "query-input":"required name=search_term_string"
-    }
-  }
-  </script>
-
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
 
@@ -47,14 +26,6 @@
     gtag('js',new Date());
     gtag('config','G-1QR2EGFWN3');
   </script>
-
-  <style>
-    /* ทำให้ Agoda Search Box responsive */
-    .agoda-wrap { max-width:1100px; margin:0 auto; }
-    @media (max-width: 768px){
-      .agoda-wrap{ max-width:100%; }
-    }
-  </style>
 </head>
 <body>
   <!-- Header -->
@@ -68,7 +39,6 @@
       <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html" aria-current="page">หน้าแรก</a>
         <a href="deals.html">โปรโมชั่น</a>
-
         <div class="lang">
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
           <div class="lang-menu" role="menu">
@@ -89,41 +59,28 @@
     <!-- ค้นหาโรงแรม -->
     <section style="margin:24px 0">
       <h2 class="section-title">ค้นหาโรงแรม</h2>
-      <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
+      <div class="widget-like solid">
+        <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
 
-      <!-- Agoda Search Box | Responsive -->
-      <div class="agoda-wrap">
+        <!-- Agoda Search Box -->
         <div id="adgshp-1065502534"></div>
+        <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
+        <script type="text/javascript">
+        var stg = new Object();
+        stg.crt="6875755303030";
+        stg.version="1.04";
+        stg.id=stg.name="adgshp-1065502534";
+        stg.width="900px";
+        stg.height="257px";
+        stg.ReferenceKey="HLoB8knkD3mwE38NHf58lg==";
+        stg.Layout="Oneline";
+        stg.Language="th-th";
+        stg.Cid="1949420";
+        stg.DestinationName="";
+        stg.OverideConf=false;
+        new AgdSherpa(stg).initialize();
+        </script>
       </div>
-      <script src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
-      <script>
-        (function(){
-          var wrap = document.querySelector('.agoda-wrap');
-          var box  = document.getElementById('adgshp-1065502534');
-
-          function initAgoda(){
-            var w = Math.max(320, Math.floor(wrap.clientWidth));
-            box.innerHTML = "";
-            var stg = new Object();
-            stg.crt="6865556955390";
-            stg.version="1.04";
-            stg.id=stg.name="adgshp-1065502534";
-            stg.width=w+"px";
-            stg.height="300px";
-            stg.ReferenceKey="HLoB8knkD3mwE38NHf58lg==";
-            stg.Layout="Oneline";
-            stg.Language="th-th";
-            stg.Cid="1949420";
-            stg.DestinationName="";
-            stg.OverideConf=false;
-            new AgdSherpa(stg).initialize();
-          }
-          initAgoda();
-          var to; window.addEventListener('resize', function(){
-            clearTimeout(to); to = setTimeout(initAgoda, 200);
-          });
-        })();
-      </script>
     </section>
 
     <!-- ปลายทางยอดนิยม (ไทย) -->
@@ -177,7 +134,7 @@
     </div>
   </footer>
 
-  <!-- Scripts: language pop-up + footer auto language -->
+  <!-- Scripts -->
   <script>
     // language pop-up
     (function(){
@@ -192,18 +149,6 @@
       });
       document.addEventListener('click', closeMenu);
       document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
-    })();
-
-    // footer link auto language (TH/EN)
-    (function(){
-      const isEN   = location.pathname.toLowerCase().includes('/en/');
-      const prefix = isEN ? '/en/' : '/';
-      document.querySelectorAll('.site-footer .footer-links a[href]').forEach(a=>{
-        const href = a.getAttribute('href') || '';
-        if (/^(https?:)?\/\//i.test(href) || href.startsWith('mailto:') || href.startsWith('tel:')) return;
-        const clean = href.replace(/^\/en\//i,'').replace(/^\//,'');
-        a.setAttribute('href', prefix + clean);
-      });
     })();
   </script>
 </body>
