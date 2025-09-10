@@ -3,41 +3,34 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Click & Go – Compare hotel prices & book in one click</title>
-  <meta name="description" content="Click & Go helps you search and compare hotel prices across OTAs, then book in one click. Popular destinations in Thailand and worldwide." />
+  <title>Click & Go – Compare Hotel Prices, Book in One Click</title>
+  <meta name="description" content="Click & Go helps you find and compare hotel prices from multiple OTAs, with instant booking links. Covering top destinations in Thailand and worldwide." />
   <link rel="canonical" href="https://clickandgo.asia/en/index.html" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
-  <meta property="og:title" content="Click & Go – Compare hotel prices & book in one click" />
-  <meta property="og:description" content="Find and compare hotel prices from multiple providers, then book instantly." />
+  <meta property="og:title" content="Click & Go – Compare Hotel Prices, Book in One Click" />
+  <meta property="og:description" content="Find and compare hotel prices from multiple providers, with instant booking links." />
   <meta property="og:url" content="https://clickandgo.asia/en/index.html" />
   <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Click & Go – Compare hotel prices & book in one click" />
-  <meta name="twitter:description" content="Find and compare hotel prices from multiple providers, then book instantly." />
+  <meta name="twitter:title" content="Click & Go – Compare Hotel Prices, Book in One Click" />
+  <meta name="twitter:description" content="Find and compare hotel prices from multiple providers, with instant booking links." />
   <meta name="twitter:image" content="https://clickandgo.asia/hero-bg.jpg" />
 
-  <link rel="icon" href="../favicon.ico" />
-  <link rel="stylesheet" href="../style.css" />
-
-  <!-- local helper styles for Agoda box -->
-  <style>
-    /* center the Agoda widget and guard width/height */
-    .agoda-wrap {max-width:1030px; margin:0 auto;}
-    .agoda-inner {min-height:293px; overflow-x:auto;}
-    @media (max-width:1100px){ .agoda-inner{overflow-x:auto;} }
-  </style>
+  <link rel="icon" href="../favicon.ico">
+  <link rel="stylesheet" href="../style.css">
 
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
   <script>
     window.dataLayer=window.dataLayer||[];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js',new Date()); gtag('config','G-1QR2EGFWN3');
+    gtag('js',new Date());
+    gtag('config','G-1QR2EGFWN3');
   </script>
 </head>
 <body>
@@ -66,42 +59,40 @@
 
   <main class="container">
     <!-- Hero -->
-    <section class="hero" aria-label="Hero">
+    <section class="hero" aria-label="Hero banner">
       <img class="hero-img" src="../hero-bg.jpg" alt="Click & Go Thailand" />
     </section>
 
-    <!-- Agoda Search Box -->
+    <!-- Search (Agoda Widget) -->
     <section style="margin:24px 0">
       <h2 class="section-title">Search Hotels</h2>
       <div class="widget-like solid">
         <p class="muted">We’re ready to find the best deals for you</p>
 
-        <!-- Agoda widget wrapper -->
-        <div class="agoda-wrap">
-          <div class="agoda-inner">
-            <!-- Agoda Search Box (EN) -->
-            <div id="adgshp-1762923411"></div>
-            <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
-            <script type="text/javascript">
-              var stg = new Object();
-              stg.crt="8127653320114"; stg.version="1.04";
-              stg.id = stg.name = "adgshp-1762923411";
-              stg.width="1030px"; stg.height="293px";
-              stg.ReferenceKey="kTXcoy+P0WUNEGEcPWXr0A==";
-              stg.Layout="Oneline"; stg.Language="en-us";
-              stg.Cid="1949420";
-              stg.DestinationName="";
-              stg.OverideConf=false;
-              new AgdSherpa(stg).initialize();
-            </script>
-          </div>
-        </div>
+        <!-- Agoda Search Box -->
+        <div id="adgshp-1762923411"></div>
+        <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
+        <script type="text/javascript">
+          var stg = new Object();
+          stg.crt="8131380105591";
+          stg.version="1.04";
+          stg.id=stg.name="adgshp-1762923411";
+          stg.width="1030px";
+          stg.height="293px";
+          stg.ReferenceKey="kTXcoy+P0WUNEGEcPWXr0A==";
+          stg.Layout="Oneline";
+          stg.Language="en-us";
+          stg.Cid="1949420";
+          stg.DestinationName="";
+          stg.OverideConf=false;
+          new AgdSherpa(stg).initialize();
+        </script>
       </div>
     </section>
 
-    <!-- Popular in Thailand -->
+    <!-- Popular Destinations (Thailand) -->
     <section>
-      <h2 class="section-title">Popular Destinations in Thailand</h2>
+      <h2 class="section-title">Top Destinations in Thailand</h2>
       <div class="city-grid">
         <a class="city-card" href="bangkok.html"><figure><img src="../bangkok-tile.webp" alt="Bangkok"><figcaption>Bangkok</figcaption></figure></a>
         <a class="city-card" href="chiangmai.html"><figure><img src="../chiangmai-tile.webp" alt="Chiang Mai"><figcaption>Chiang Mai</figcaption></figure></a>
@@ -112,9 +103,9 @@
       </div>
     </section>
 
-    <!-- Top International Cities -->
+    <!-- Popular Destinations (International) -->
     <section>
-      <h2 class="section-title">Top International Cities</h2>
+      <h2 class="section-title">Popular International Cities</h2>
       <div class="city-grid">
         <a class="city-card" href="tokyo.html"><figure><img src="../tokyo-tile.webp" alt="Tokyo"><figcaption>Tokyo</figcaption></figure></a>
         <a class="city-card" href="seoul.html"><figure><img src="../seoul-tile.webp" alt="Seoul"><figcaption>Seoul</figcaption></figure></a>
@@ -122,6 +113,16 @@
         <a class="city-card" href="hongkong.html"><figure><img src="../hongkong-tile.webp" alt="Hong Kong"><figcaption>Hong Kong</figcaption></figure></a>
         <a class="city-card" href="london.html"><figure><img src="../london-tile.webp" alt="London"><figcaption>London</figcaption></figure></a>
         <a class="city-card" href="paris.html"><figure><img src="../paris-tile.webp" alt="Paris"><figcaption>Paris</figcaption></figure></a>
+      </div>
+    </section>
+
+    <!-- Why Click & Go -->
+    <section>
+      <h2 class="section-title">Why Choose Click & Go</h2>
+      <div class="features">
+        <div class="feature"><h3>Find the Best Deals</h3><p>Connected to global providers, showing real-time prices.</p></div>
+        <div class="feature"><h3>Simple Booking</h3><p>Click through directly to our partners’ hotel pages.</p></div>
+        <div class="feature"><h3>Works Everywhere</h3><p>Easy to use on mobile, tablet, or computer.</p></div>
       </div>
     </section>
   </main>
@@ -155,17 +156,6 @@
       });
       document.addEventListener('click', closeMenu);
       document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
-    })();
-
-    // footer links: ensure /en/ prefix
-    (function(){
-      const prefix = '/en/';
-      document.querySelectorAll('.site-footer .footer-links a[href]').forEach(a=>{
-        const href = a.getAttribute('href') || '';
-        if (/^(https?:)?\/\//i.test(href) || href.startsWith('mailto:') || href.startsWith('tel:')) return;
-        const clean = href.replace(/^\/en\//i,'').replace(/^\//,'');
-        a.setAttribute('href', prefix + clean);
-      });
     })();
   </script>
 </body>
