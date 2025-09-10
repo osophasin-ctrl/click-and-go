@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://click-and-go-navy.vercel.app/sitemap.xml
+Sitemap: https://clickandgo.asia/sitemap.xml
