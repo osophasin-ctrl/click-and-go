@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <title>Hotel Deals & Promotions | Click & Go</title>
   <meta name="description" content="Find hotel promotions and special deals from our partners. Pick your dates and click to book instantly." />
   <link rel="canonical" href="https://clickandgo.asia/en/deals.html" />
@@ -18,44 +19,16 @@
   <link rel="icon" href="../favicon.ico" />
   <link rel="stylesheet" href="../style.css" />
 
-  <!-- Minimal CSS for Guests Popup (local to this page only) -->
-  <style>
-    .guest-btn{
-      height:42px;border:1px solid #d8dbe0;border-radius:10px;
-      background:#fff;padding:0 12px;text-align:left;white-space:nowrap;width:100%;
-    }
-    .guest-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;}
-    .guest-modal.open{display:block;}
-    .guest-panel{
-      background:#fff;max-width:420px;margin:10vh auto;padding:16px 16px 12px;
-      border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,.15);
-    }
-    .guest-panel h3{margin:0 0 10px;font-size:18px}
-    .guest-panel .row{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:10px 0;border-bottom:1px solid #eee;
-    }
-    .guest-panel .row:last-child{border-bottom:none}
-    .ctr button{
-      width:32px;height:32px;border:1px solid #ddd;border-radius:6px;background:#fff;
-    }
-    .ctr span{display:inline-block;width:28px;text-align:center}
-    .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
-    .btn.ghost{background:#f3f4f6;color:#111}
-    /* Keep the 4-column layout spacing consistent on desktop */
-    .search-form.search-4cols { grid-template-columns: 1fr 1fr 1fr auto; }
-    @media (max-width: 720px){
-      .search-form.search-4cols { grid-template-columns: 1fr; }
-    }
-  </style>
+  <!-- Flatpickr (force EN calendar) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-  <!-- GA4 -->
+  <!-- GA4 (unchanged) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
   <script>
     window.dataLayer=window.dataLayer||[];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js',new Date());
-    gtag('config','G-1QR2EGFWN3');
+    gtag('js', new Date()); gtag('config', 'G-1QR2EGFWN3');
   </script>
 </head>
 <body>
@@ -81,38 +54,31 @@
   </header>
 
   <main class="container">
-    <!-- Find hotels -->
+    <!-- Search hotels -->
     <section style="margin:24px 0">
       <h1 class="section-title">Find hotels</h1>
       <div class="widget-like solid">
         <p class="muted">We’re ready to fetch the best offers for you</p>
 
-        <!-- Our Search Box -->
-        <form class="search-form search-4cols" role="search" aria-label="Find hotels">
+        <!-- Our search form (EN) -->
+        <form class="search-form search-4cols" id="search-form" action="/search.html" method="get" role="search" aria-label="Hotel search">
           <!-- Destination -->
-          <input id="dest" type="text" placeholder="Destination e.g., Chiang Mai or hotel name" aria-label="Destination">
+          <input type="text" id="q" name="q" placeholder="Destination e.g., Bangkok or hotel name" aria-label="Destination">
+
           <!-- Check-in -->
           <div class="date-wrap empty" id="checkin-wrap">
-            <input type="date" id="checkin" aria-label="Check-in">
+            <input type="text" id="checkin" name="checkin" aria-label="Check-in" placeholder="Check-in">
             <span class="date-placeholder">Check-in</span>
           </div>
+
           <!-- Check-out -->
           <div class="date-wrap empty" id="checkout-wrap">
-            <input type="date" id="checkout" aria-label="Check-out">
+            <input type="text" id="checkout" name="checkout" aria-label="Check-out" placeholder="Check-out">
             <span class="date-placeholder">Check-out</span>
           </div>
 
-          <!-- Guests (popup) -->
-          <input type="hidden" id="rooms" value="1">
-          <input type="hidden" id="adults" value="2">
-          <input type="hidden" id="children" value="0">
-          <button type="button" class="guest-btn" id="guestBtn"
-                  aria-haspopup="dialog" aria-expanded="false">
-            1 Room, 2 Adults, 0 Children
-          </button>
-
           <!-- Submit -->
-          <button type="button" class="btn" id="submitSearch">Search</button>
+          <button type="submit" class="btn">Search</button>
         </form>
       </div>
     </section>
@@ -131,41 +97,6 @@
     </section>
   </main>
 
-  <!-- Guests Popup -->
-  <div class="guest-modal" id="guestModal" role="dialog" aria-modal="true" aria-labelledby="guestTitle">
-    <div class="guest-panel">
-      <h3 id="guestTitle">Guests</h3>
-      <div class="row">
-        <label>Rooms</label>
-        <div class="ctr">
-          <button type="button" class="minus" data-target="rooms">−</button>
-          <span id="roomsVal">1</span>
-          <button type="button" class="plus" data-target="rooms">+</button>
-        </div>
-      </div>
-      <div class="row">
-        <label>Adults</label>
-        <div class="ctr">
-          <button type="button" class="minus" data-target="adults">−</button>
-          <span id="adultsVal">2</span>
-          <button type="button" class="plus" data-target="adults">+</button>
-        </div>
-      </div>
-      <div class="row">
-        <label>Children</label>
-        <div class="ctr">
-          <button type="button" class="minus" data-target="children">−</button>
-          <span id="childrenVal">0</span>
-          <button type="button" class="plus" data-target="children">+</button>
-        </div>
-      </div>
-      <div class="actions">
-        <button type="button" class="btn ghost" id="guestCancel">Cancel</button>
-        <button type="button" class="btn" id="guestApply">Apply</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
@@ -182,105 +113,62 @@
 
   <!-- Scripts -->
   <script>
-    // language pop-up
+    // Language pop-up
     (function(){
       const btn=document.querySelector('.lang-btn');
       const menu=document.querySelector('.lang-menu');
       if(!btn||!menu) return;
-      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      const close=()=>{ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); };
       btn.addEventListener('click',e=>{
         e.stopPropagation();
         const opened=menu.classList.toggle('open');
         btn.setAttribute('aria-expanded',String(opened));
       });
-      document.addEventListener('click',closeMenu);
-      document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu(); });
+      document.addEventListener('click',close);
+      document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
     })();
 
-    // date placeholder show/hide
+    // Toggle date placeholder classes
     (function(){
-      function bindDatePlaceholder(wrapId,inputId){
-        const wrap=document.getElementById(wrapId);
-        const input=document.getElementById(inputId);
-        if(!wrap||!input) return;
-        const toggle=()=>wrap.classList.toggle('empty',!input.value);
-        toggle(); input.addEventListener('input',toggle); input.addEventListener('change',toggle);
+      function bind(wrapId,inputId){
+        const w=document.getElementById(wrapId), i=document.getElementById(inputId);
+        if(!w||!i) return;
+        const t=()=> w.classList.toggle('empty', !i.value);
+        t(); i.addEventListener('input',t); i.addEventListener('change',t);
       }
-      bindDatePlaceholder('checkin-wrap','checkin');
-      bindDatePlaceholder('checkout-wrap','checkout');
+      bind('checkin-wrap','checkin');
+      bind('checkout-wrap','checkout');
     })();
 
-    // Guests popup logic + redirect to /search.html
+    // Flatpickr (force EN) + logic check-in/out
     (function(){
-      const modal  = document.getElementById('guestModal');
-      const btn    = document.getElementById('guestBtn');
-      const apply  = document.getElementById('guestApply');
-      const cancel = document.getElementById('guestCancel');
+      const addDays=(d,n)=>{ const x=new Date(d.getTime()); x.setDate(x.getDate()+n); return x; };
+      const today=new Date();
+      const tomorrow=addDays(today,1);
 
-      const counters = { rooms: 1, adults: 2, children: 0 };
-      const hidden   = {
-        rooms: document.getElementById('rooms'),
-        adults: document.getElementById('adults'),
-        children: document.getElementById('children')
-      };
+      const fpIn = flatpickr('#checkin', {
+        dateFormat:'Y-m-d',
+        minDate:'today',
+        defaultDate: today,
+        locale:'en'
+      });
 
-      function updateSummary(){
-        btn.textContent = `${counters.rooms} Room${counters.rooms>1?'s':''}, ` +
-                          `${counters.adults} Adult${counters.adults>1?'s':''}, ` +
-                          `${counters.children} Child${counters.children!==1?'ren':''}`;
-      }
-      function sync(){
-        for(const k in counters){
-          hidden[k].value = counters[k];
-          const el = document.getElementById(k+'Val');
-          if(el) el.textContent = counters[k];
+      const fpOut = flatpickr('#checkout', {
+        dateFormat:'Y-m-d',
+        minDate: tomorrow,
+        defaultDate: tomorrow,
+        locale:'en'
+      });
+
+      document.getElementById('checkin').addEventListener('change', function(){
+        const inDate = new Date(this.value);
+        if (isNaN(inDate)) return;
+        const minOut = addDays(inDate,1);
+        fpOut.set('minDate', minOut);
+        const outInput=document.getElementById('checkout');
+        if (!outInput.value || new Date(outInput.value) <= inDate) {
+          fpOut.setDate(minOut, true);
         }
-      }
-
-      document.querySelectorAll('.guest-panel .minus,.guest-panel .plus').forEach(el=>{
-        el.addEventListener('click', e=>{
-          const t = e.currentTarget.dataset.target;
-          const isPlus = e.currentTarget.classList.contains('plus');
-          let v = counters[t];
-          v = isPlus ? v+1 : v-1;
-          if(t==='rooms')    v = Math.max(1,v);
-          if(t==='adults')   v = Math.max(1,v);
-          if(t==='children') v = Math.max(0,v);
-          counters[t] = Math.min(20,v);
-          sync();
-        });
-      });
-
-      btn.addEventListener('click', ()=>{
-        modal.classList.add('open');
-        btn.setAttribute('aria-expanded','true');
-        sync();
-      });
-      cancel.addEventListener('click', ()=>{
-        modal.classList.remove('open');
-        btn.setAttribute('aria-expanded','false');
-      });
-      apply.addEventListener('click', ()=>{
-        updateSummary();
-        modal.classList.remove('open');
-        btn.setAttribute('aria-expanded','false');
-      });
-      document.addEventListener('keydown', e=>{ if(e.key==='Escape') cancel.click(); });
-
-      // init
-      updateSummary(); sync();
-
-      // Submit -> go to /search.html with params
-      document.getElementById('submitSearch').addEventListener('click', ()=>{
-        const dest = document.getElementById('dest').value || '';
-        const ci   = document.getElementById('checkin').value || '';
-        const co   = document.getElementById('checkout').value || '';
-        const r    = document.getElementById('rooms').value || 1;
-        const a    = document.getElementById('adults').value || 2;
-        const c    = document.getElementById('children').value || 0;
-
-        const url = `/search.html?dest=${encodeURIComponent(dest)}&checkin=${ci}&checkout=${co}&rooms=${r}&adults=${a}&children=${c}`;
-        location.href = url;
       });
     })();
   </script>
