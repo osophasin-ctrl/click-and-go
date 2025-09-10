@@ -1,19 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- TH Pages -->
   <url>
-    <loc>https://click-and-go-navy.vercel.app/</loc>
+    <loc>https://clickandgo.asia/</loc>
+    <lastmod>2025-09-10</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://click-and-go-navy.vercel.app/deals.html</loc>
+    <loc>https://clickandgo.asia/deals.html</loc>
+    <lastmod>2025-09-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://clickandgo.asia/search.html</loc>
+    <lastmod>2025-09-10</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://click-and-go-navy.vercel.app/privacy.html</loc>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://click-and-go-navy.vercel.app/terms.html</loc>
-    <priority>0.3</priority>
-  </url>
+
+  <!-- Static pages (TH) -->
+  <url><loc>https://clickandgo.asia/about.html</loc><lastmod>2025-09-10</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://clickandgo.asia/contact.html</loc><lastmod>2025-09-10</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://clickandgo.asia/privacy.html</loc><lastmod>2025-09-10</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://clickandgo.asia/terms.html</loc><lastmod>2025-09-10</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://clickandgo.asia/affiliate.html</loc><lastmod>2025-09-10</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+
+  <!-- City pages (TH) -->
+  <url><loc>https://clickandgo.asia/bangkok.html</loc><lastmod>2025-09-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://clickandgo.asia/chiangmai.html</loc><lastmod>2025-09-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://clickandgo.asia/pattaya.html</loc><lastmod>2025-09-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://clickandgo.asia/phuket.html</loc><lastmod>2025-09-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://clickandgo.asia/krabi.html</loc><lastmod>2025-09-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://clickandgo.asia/hua-hin.html</loc><lastmod>2025-09-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+
+  <url><loc>https://clickandgo.asia/tokyo.html</loc><lastmod>2025-09-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://clickandgo.asia/seoul.html</loc><lastmod>2025-09-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://clickandgo.asia/singapore.html</loc><lastmod>2025-09-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://clickandgo.asia/hongkong.html</loc><lastmod>2025-09-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://clickandgo.asia/london.html</loc><lastmod>2025-09-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://clickandgo.asia/paris.html</loc><lastmod>2025-09-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+
+  <!-- EN Pages -->
+  <url><loc>https://clickandgo.asia/en/index.html</loc><lastmod>2025-09-10</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://clickandgo.asia/en/deals.html</loc><lastmod>2025-09-10</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://clickandgo.asia/en/privacy.html</loc><lastmod>2025-09-10</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://clickandgo.asia/en/terms.html</loc><lastmod>2025-09-10</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://clickandgo.asia/en/affiliate.html</loc><lastmod>2025-09-10</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://clickandgo.asia/en/about.html</loc><lastmod>2025-09-10</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://clickandgo.asia/en/contact.html</loc><lastmod>2025-09-10</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
 </urlset>
