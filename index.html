@@ -5,21 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว</title>
   <meta name="description" content="Click & Go ช่วยค้นหาและเปรียบเทียบราคาโรงแรมจากหลาย OTA พร้อมลิงก์ไปจองทันที ครอบคลุมปลายทางยอดนิยมทั้งในไทยและต่างประเทศ" />
-  <link rel="canonical" href="https://click-and-go-navy.vercel.app/" />
+  <link rel="canonical" href="https://clickandgo.asia/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
   <meta property="og:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว" />
   <meta property="og:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
-  <meta property="og:url" content="https://click-and-go-navy.vercel.app/" />
-  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+  <meta property="og:url" content="https://clickandgo.asia/" />
+  <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว" />
   <meta name="twitter:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
-  <meta name="twitter:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
+  <meta name="twitter:image" content="https://clickandgo.asia/hero-bg.jpg" />
 
   <!-- JSON-LD: WebSite + SearchAction -->
   <script type="application/ld+json">
@@ -27,10 +27,10 @@
     "@context":"https://schema.org",
     "@type":"WebSite",
     "name":"Click & Go",
-    "url":"https://click-and-go-navy.vercel.app/",
+    "url":"https://clickandgo.asia/",
     "potentialAction":{
       "@type":"SearchAction",
-      "target":"https://click-and-go-navy.vercel.app/deals.html?q={search_term_string}",
+      "target":"https://clickandgo.asia/deals.html?q={search_term_string}",
       "query-input":"required name=search_term_string"
     }
   }
@@ -47,6 +47,14 @@
     gtag('js',new Date());
     gtag('config','G-1QR2EGFWN3');
   </script>
+
+  <style>
+    /* ทำให้ Agoda Search Box responsive */
+    .agoda-wrap { max-width:1100px; margin:0 auto; }
+    @media (max-width: 768px){
+      .agoda-wrap{ max-width:100%; }
+    }
+  </style>
 </head>
 <body>
   <!-- Header -->
@@ -81,29 +89,41 @@
     <!-- ค้นหาโรงแรม -->
     <section style="margin:24px 0">
       <h2 class="section-title">ค้นหาโรงแรม</h2>
-      <div class="widget-like solid">
-        <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
+      <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
 
-        <!-- ===== Agoda Search Box (แทนฟอร์มจำลองเดิม) ===== -->
+      <!-- Agoda Search Box | Responsive -->
+      <div class="agoda-wrap">
         <div id="adgshp-1065502534"></div>
-        <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
-        <script type="text/javascript">
-          var stg = new Object();
-          stg.crt = "6865556955390";
-          stg.version = "1.04";
-          stg.id = stg.name = "adgshp-1065502534";
-          stg.width = "100%";
-          stg.height = "300px";
-          stg.ReferenceKey = "HLoB8knkD3mwE38NHf58lg==";
-          stg.Layout = "Oneline";
-          stg.Language = "th-th";
-          stg.Cid = "1949420";
-          stg.DestinationName = "";   // ว่าง = ให้ผู้ใช้พิมพ์เอง
-          stg.OverideConf = false;
-          new AgdSherpa(stg).initialize();
-        </script>
-        <!-- ===== /Agoda Search Box ===== -->
       </div>
+      <script src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
+      <script>
+        (function(){
+          var wrap = document.querySelector('.agoda-wrap');
+          var box  = document.getElementById('adgshp-1065502534');
+
+          function initAgoda(){
+            var w = Math.max(320, Math.floor(wrap.clientWidth));
+            box.innerHTML = "";
+            var stg = new Object();
+            stg.crt="6865556955390";
+            stg.version="1.04";
+            stg.id=stg.name="adgshp-1065502534";
+            stg.width=w+"px";
+            stg.height="300px";
+            stg.ReferenceKey="HLoB8knkD3mwE38NHf58lg==";
+            stg.Layout="Oneline";
+            stg.Language="th-th";
+            stg.Cid="1949420";
+            stg.DestinationName="";
+            stg.OverideConf=false;
+            new AgdSherpa(stg).initialize();
+          }
+          initAgoda();
+          var to; window.addEventListener('resize', function(){
+            clearTimeout(to); to = setTimeout(initAgoda, 200);
+          });
+        })();
+      </script>
     </section>
 
     <!-- ปลายทางยอดนิยม (ไทย) -->
@@ -157,7 +177,7 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Scripts: language pop-up + footer auto language -->
   <script>
     // language pop-up
     (function(){
