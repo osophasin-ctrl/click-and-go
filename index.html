@@ -5,15 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว</title>
   <meta name="description" content="Click & Go ช่วยค้นหาและเปรียบเทียบราคาโรงแรมจากหลาย OTA พร้อมลิงก์ไปจองทันที ครอบคลุมปลายทางยอดนิยมทั้งในไทยและต่างประเทศ" />
-  <link rel="canonical" href="https://clickandgo.asia/index.html" />
+  <link rel="canonical" href="https://clickandgo.asia/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
   <meta property="og:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว" />
   <meta property="og:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
-  <meta property="og:url" content="https://clickandgo.asia/index.html" />
+  <meta property="og:url" content="https://clickandgo.asia/" />
   <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว" />
+  <meta name="twitter:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมจากหลายเจ้า พร้อมลิงก์ไปจองทันที" />
+  <meta name="twitter:image" content="https://clickandgo.asia/hero-bg.jpg" />
+
+  <!-- JSON-LD: WebSite + SearchAction -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"Click & Go",
+    "url":"https://clickandgo.asia/",
+    "potentialAction":{
+      "@type":"SearchAction",
+      "target":"https://clickandgo.asia/deals.html?q={search_term_string}",
+      "query-input":"required name=search_term_string"
+    }
+  }
+  </script>
 
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
@@ -35,6 +56,7 @@
         <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
         <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
+
       <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html" aria-current="page">หน้าแรก</a>
         <a href="deals.html">โปรโมชั่น</a>
@@ -55,31 +77,35 @@
       <img class="hero-img" src="hero-bg.jpg" alt="Click & Go Thailand" />
     </section>
 
-    <!-- Search Box -->
+    <!-- ค้นหาโรงแรม -->
     <section style="margin:24px 0">
       <h2 class="section-title">ค้นหาโรงแรม</h2>
       <div class="widget-like solid">
         <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
 
-        <!-- Agoda Search Box -->
-        <div id="adgshp-1065502534"></div>
-        <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
-        <script type="text/javascript">
-        var stg = new Object();
-        stg.crt="7102906119570";
-        stg.version="1.04";
-        stg.id=stg.name="adgshp-1065502534";
-        stg.width="1022px";
-        stg.height="290px";
-        stg.ReferenceKey="HLoB8knkD3mwE38NHf58lg==";
-        stg.Layout="Oneline";
-        stg.Language="th-th";
-        stg.Cid="1949420";
-        stg.City="9395";
-        stg.DestinationName="กรุงเทพ, ไทย";
-        stg.OverideConf=false;
-        new AgdSherpa(stg).initialize();
-        </script>
+        <!-- Agoda Search Box : Wrapped ให้จัดกึ่งกลางและพอดีกรอบ -->
+        <div class="agoda-embed-wrap" style="display:flex;justify-content:center;align-items:center;padding:8px 0;overflow:hidden;">
+          <!-- Agoda embed START -->
+          <div id="adgshp-1065502534"></div>
+          <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
+          <script type="text/javascript">
+          var stg = new Object(); 
+          stg.crt="6577528008956";
+          stg.version="1.04"; 
+          stg.id=stg.name="adgshp-1065502534"; 
+          stg.width="1030px"; 
+          stg.height="293px";
+          stg.ReferenceKey="HLoB8knkD3mwE38NHf58lg=="; 
+          stg.Layout="Oneline"; 
+          stg.Language="th-th";
+          stg.Cid="1949420"; 
+          stg.City="9395"; 
+          stg.DestinationName="กรุงเทพ, ไทย";
+          stg.OverideConf=false; 
+          new AgdSherpa(stg).initialize();
+          </script>
+          <!-- Agoda embed END -->
+        </div>
       </div>
     </section>
 
@@ -149,6 +175,21 @@
       });
       document.addEventListener('click', closeMenu);
       document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
+    })();
+
+    // (ยังคงสคริปต์เดิม: placeholder วันที่บน mock form — ไม่มีผลกับ Agoda box)
+    (function(){
+      function bindDatePlaceholder(wrapId, inputId){
+        const wrap  = document.getElementById(wrapId);
+        const input = document.getElementById(inputId);
+        if(!wrap || !input) return;
+        const toggle = () => wrap.classList.toggle('empty', !input.value);
+        toggle();
+        input.addEventListener('input',  toggle);
+        input.addEventListener('change', toggle);
+      }
+      bindDatePlaceholder('checkin-wrap','checkin');
+      bindDatePlaceholder('checkout-wrap','checkout');
     })();
 
     // footer link auto language (TH/EN)
