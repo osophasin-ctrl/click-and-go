@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <title>ค้นหาโรงแรม | Click & Go</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    .hotel-card { border: 1px solid #ddd; padding: 12px; margin-bottom: 12px; display: flex; gap: 10px; }
+    .hotel-card img { width: 120px; height: 80px; object-fit: cover; }
+    .hotel-card h3 { margin: 0 0 6px; }
+  </style>
+</head>
+<body>
+  <h1>ผลการค้นหาโรงแรม</h1>
+  <div id="results">Loading...</div>
+
+  <script>
+    async function runSearch() {
+      const params = new URLSearchParams({
+        destination: "Bangkok",
+        checkin: "2025-09-19",
+        checkout: "2025-09-20",
+        guests: "2"
+      });
+      const res = await fetch(`/api/search?${params}`);
+      const data = await res.json();
+      const container = document.getElementById("results");
+      container.innerHTML = "";
+      data.results.forEach(hotel => {
+        const card = document.createElement("div");
+        card.className = "hotel-card";
+        card.innerHTML = `
+          <img src="${hotel.image}" alt="">
+          <div>
+            <h3>${hotel.name}</h3>
+            <p>${hotel.city}</p>
+            <p><strong>${hotel.price} ${hotel.currency}</strong></p>
+            <a href="${hotel.url}" target="_blank">ดูดีล</a>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+    runSearch();
+  </script>
+</body>
+</html>
