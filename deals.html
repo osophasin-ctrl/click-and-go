@@ -3,20 +3,66 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>โปรโมชั่นโรงแรม – ดีลพิเศษ | Click & Go</title>
-  <meta name="description" content="ค้นหาโปรโมชั่นและดีลพิเศษสำหรับโรงแรมจากพาร์ทเนอร์ของเรา เลือกวันที่แล้วคลิกไปจองได้ทันที" />
+
+  <title>โปรโมชั่นโรงแรม – ดีลห้ามพลาด | Click & Go</title>
+  <meta name="description" content="รวมดีลโรงแรมและโปรโมชันจากพาร์ทเนอร์ต่าง ๆ เลือกวันที่แล้วคลิกไปจองได้ทันที" />
   <link rel="canonical" href="https://clickandgo.asia/deals.html" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
-  <meta property="og:title" content="โปรโมชั่นโรงแรม – ดีลพิเศษ | Click & Go" />
-  <meta property="og:description" content="ค้นหาโปรโมชั่นและดีลพิเศษสำหรับโรงแรมจากพาร์ทเนอร์ของเรา เลือกวันที่แล้วคลิกไปจองได้ทันที" />
+  <meta property="og:title" content="โปรโมชั่นโรงแรม – ดีลห้ามพลาด | Click & Go" />
+  <meta property="og:description" content="รวมดีลโรงแรมและโปรโมชันจากพาร์ทเนอร์ต่าง ๆ เลือกวันที่แล้วคลิกไปจองได้ทันที" />
   <meta property="og:url" content="https://clickandgo.asia/deals.html" />
   <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg" />
 
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Flatpickr (datepicker) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
+
+  <style>
+    /* ----- Guest popup styles ----- */
+    .guest-input{
+      width:100%; height:44px; line-height:44px;
+      border:1px solid #d7d7d7; border-radius:8px;
+      padding:0 12px; background:#fff; text-align:left;
+      cursor:pointer; color:#222;
+    }
+    .guest-input:focus{ outline:2px solid #0ea5a0; }
+
+    .modal-backdrop{
+      position:fixed; inset:0; background:rgba(0,0,0,.35);
+      display:none; z-index:999;
+    }
+    .modal{
+      position:fixed; left:50%; top:50%; transform:translate(-50%,-50%);
+      background:#fff; border-radius:12px; width:min(92vw,420px);
+      box-shadow:0 12px 24px rgba(0,0,0,.2); z-index:1000; display:none;
+    }
+    .modal-header,.modal-footer{ padding:14px 16px; }
+    .modal-header{ border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
+    .modal-title{ font-weight:700; font-size:18px; }
+    .modal-body{ padding:10px 16px 0 16px; }
+    .row-ctrl{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; }
+    .row-ctrl + .row-ctrl{ border-top:1px dashed #eee; }
+    .label-wrap{ display:flex; flex-direction:column; gap:2px; }
+    .label-wrap small{ color:#666; }
+    .counter{ display:flex; align-items:center; gap:10px; }
+    .btn-ctrl{
+      width:36px; height:36px; border-radius:50%;
+      border:1px solid #ccc; background:#fff; font-size:18px; cursor:pointer;
+    }
+    .btn-ctrl:disabled{ opacity:.45; cursor:not-allowed; }
+    .count{ min-width:20px; text-align:center; font-weight:700; }
+    .modal-footer{ display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #eee; }
+    .btn-outline{ border:1px solid #bbb; background:#fff; color:#333; border-radius:8px; padding:8px 14px; }
+    .btn-primary{ border:0; background:#0ea5a0; color:#fff; border-radius:8px; padding:8px 14px; }
+    /* ให้ flatpickr ดูเหมือนอินพุตปกติ */
+    .flatpickr-input[readonly]{ background:#fff; }
+  </style>
 </head>
 <body>
   <!-- Header -->
@@ -33,7 +79,7 @@
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
           <div class="lang-menu" role="menu">
             <a role="menuitem" href="#" aria-current="true">ไทย</a>
-            <a role="menuitem" href="en/deals.html">English</a>
+            <a role="menuitem" href="/en/deals.html">English</a>
           </div>
         </div>
       </nav>
@@ -41,35 +87,35 @@
   </header>
 
   <main class="container">
-    <!-- ค้นหาโรงแรม -->
+    <!-- Search hotels -->
     <section style="margin:24px 0">
       <h1 class="section-title">ค้นหาโรงแรม</h1>
       <div class="widget-like solid">
         <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
 
-        <!-- Agoda Search Box (เหมือนหน้า index ภาษาไทย) -->
-        <div id="adgshp-1065502534"></div>
-        <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
-        <script type="text/javascript">
-          var stg = new Object();
-          stg.crt="6577528008956";
-          stg.version="1.04";
-          stg.id=stg.name="adgshp-1065502534";
-          stg.width="1030px";
-          stg.height="293px";
-          stg.ReferenceKey="HLoB8knkD3mwE38NHf58lg==";
-          stg.Layout="Oneline";
-          stg.Language="th-th";
-          stg.Cid="1949420";
-          stg.City="9395";
-          stg.DestinationName="กรุงเทพ, ไทย";
-          stg.OverideConf=false;
-          new AgdSherpa(stg).initialize();
-        </script>
+        <!-- Our Search Form -->
+        <form id="searchForm" class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรม">
+          <input type="text" id="destination" placeholder="ปลายทาง เช่น กรุงเทพฯ หรือชื่อโรงแรม" aria-label="ปลายทาง" />
+
+          <input type="text" id="checkin" class="date" placeholder="เช็คอิน" aria-label="เช็คอิน" readonly>
+          <input type="text" id="checkout" class="date" placeholder="เช็คเอาท์" aria-label="เช็คเอาท์" readonly>
+
+          <!-- Travelers (Rooms / Adults / Children) -->
+          <button type="button" id="guestBtn" class="guest-input" aria-haspopup="dialog" aria-controls="guestModal">
+            1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก
+          </button>
+
+          <button type="submit" class="btn">ค้นหา</button>
+
+          <!-- hidden values for submit -->
+          <input type="hidden" id="rooms" value="1">
+          <input type="hidden" id="adults" value="2">
+          <input type="hidden" id="children" value="0">
+        </form>
       </div>
     </section>
 
-    <!-- ดีลสุดฮอตในเมืองยอดนิยม -->
+    <!-- Hottest deals in popular cities -->
     <section>
       <h2 class="section-title">ดีลสุดฮอตในเมืองยอดนิยม</h2>
       <div class="city-grid">
@@ -83,23 +129,75 @@
     </section>
   </main>
 
+  <!-- Guest Modal -->
+  <div id="guestBackdrop" class="modal-backdrop" aria-hidden="true"></div>
+  <div id="guestModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="guestTitle">
+    <div class="modal-header">
+      <div id="guestTitle" class="modal-title">ผู้เข้าพัก</div>
+      <button type="button" class="btn-outline" id="btnCloseX">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="row-ctrl">
+        <div class="label-wrap">
+          <strong>ห้อง</strong>
+          <small>จำนวนห้องพัก</small>
+        </div>
+        <div class="counter">
+          <button class="btn-ctrl" data-type="rooms" data-op="minus">−</button>
+          <span class="count" id="roomsCount">1</span>
+          <button class="btn-ctrl" data-type="rooms" data-op="plus">+</button>
+        </div>
+      </div>
+
+      <div class="row-ctrl">
+        <div class="label-wrap">
+          <strong>ผู้ใหญ่</strong>
+          <small>อายุ 18 ปีขึ้นไป</small>
+        </div>
+        <div class="counter">
+          <button class="btn-ctrl" data-type="adults" data-op="minus">−</button>
+          <span class="count" id="adultsCount">2</span>
+          <button class="btn-ctrl" data-type="adults" data-op="plus">+</button>
+        </div>
+      </div>
+
+      <div class="row-ctrl">
+        <div class="label-wrap">
+          <strong>เด็ก</strong>
+          <small>อายุ 0–17 ปี</small>
+        </div>
+        <div class="counter">
+          <button class="btn-ctrl" data-type="children" data-op="minus">−</button>
+          <span class="count" id="childrenCount">0</span>
+          <button class="btn-ctrl" data-type="children" data-op="plus">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" id="btnCancel">ยกเลิก</button>
+      <button class="btn-primary" id="btnSaveGuests">บันทึก</button>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="privacy.html">Privacy</a> ·
-        <a href="terms.html">Terms</a> ·
-        <a href="affiliate.html">Affiliate Disclosure</a> ·
-        <a href="about.html">About us</a> ·
-        <a href="contact.html">Contact</a> ·
+        <a href="/privacy.html">Privacy</a> ·
+        <a href="/terms.html">Terms</a> ·
+        <a href="/affiliate.html">Affiliate Disclosure</a> ·
+        <a href="/about.html">About us</a> ·
+        <a href="/contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
   </footer>
 
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
   <script>
-    // language pop-up
+    // เมนูภาษา
     (function(){
       const btn=document.querySelector('.lang-btn');
       const menu=document.querySelector('.lang-menu');
@@ -112,6 +210,115 @@
       });
       document.addEventListener('click',closeMenu);
       document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu(); });
+    })();
+
+    // Datepicker (Flatpickr) – บังคับภาษาไทยทุกอุปกรณ์
+    (function(){
+      const ONE_DAY = 24*60*60*1000;
+
+      const inPicker = flatpickr("#checkin", {
+        locale: 'th',
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "j M Y",
+        minDate: "today",
+        allowInput: false,
+        onChange(dates){
+          if(dates[0]){
+            const next = new Date(dates[0].getTime()+ONE_DAY);
+            outPicker.set('minDate', next);
+            if(!outPicker.selectedDates[0] || outPicker.selectedDates[0] <= dates[0]){
+              outPicker.setDate(next, true);
+            }
+          }
+        }
+      });
+
+      const outPicker = flatpickr("#checkout", {
+        locale: 'th',
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "j M Y",
+        minDate: new Date(Date.now()+ONE_DAY),
+        allowInput: false
+      });
+
+      // ค่าตั้งต้น: วันนี้/พรุ่งนี้
+      const today = new Date();
+      const tomorrow = new Date(Date.now()+ONE_DAY);
+      inPicker.setDate(today, true);
+      outPicker.setDate(tomorrow, true);
+
+      // --- ป๊อปอัปผู้เข้าพัก ---
+      let rooms = 1, adults = 2, children = 0;
+
+      const guestBtn = document.getElementById('guestBtn');
+      const roomsCount = document.getElementById('roomsCount');
+      const adultsCount = document.getElementById('adultsCount');
+      const childrenCount = document.getElementById('childrenCount');
+
+      const hiddenRooms = document.getElementById('rooms');
+      const hiddenAdults = document.getElementById('adults');
+      const hiddenChildren = document.getElementById('children');
+
+      const modal = document.getElementById('guestModal');
+      const backdrop = document.getElementById('guestBackdrop');
+
+      function openModal(){
+        roomsCount.textContent = rooms;
+        adultsCount.textContent = adults;
+        childrenCount.textContent = children;
+        modal.style.display = 'block';
+        backdrop.style.display = 'block';
+      }
+      function closeModal(){
+        modal.style.display = 'none';
+        backdrop.style.display = 'none';
+      }
+      function updateGuestBtn(){
+        guestBtn.textContent = `${rooms} ห้อง, ${adults} ผู้ใหญ่, ${children} เด็ก`;
+      }
+      updateGuestBtn();
+
+      guestBtn.addEventListener('click', openModal);
+      document.getElementById('btnCloseX').addEventListener('click', closeModal);
+      document.getElementById('btnCancel').addEventListener('click', closeModal);
+      backdrop.addEventListener('click', closeModal);
+
+      document.querySelectorAll('.btn-ctrl').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const type = btn.getAttribute('data-type');
+          const op = btn.getAttribute('data-op');
+          let min = 0, val = 0, max = 10;
+          if(type === 'rooms'){ val = rooms; min = 1; }
+          if(type === 'adults'){ val = adults; min = 1; }
+          if(type === 'children'){ val = children; min = 0; }
+
+          if(op === 'plus' && val < max) val++;
+          if(op === 'minus' && val > min) val--;
+
+          if(type === 'rooms'){ rooms = val; roomsCount.textContent = val; }
+          if(type === 'adults'){ adults = val; adultsCount.textContent = val; }
+          if(type === 'children'){ children = val; childrenCount.textContent = val; }
+        });
+      });
+
+      document.getElementById('btnSaveGuests').addEventListener('click', ()=>{
+        hiddenRooms.value = rooms;
+        hiddenAdults.value = adults;
+        hiddenChildren.value = children;
+        updateGuestBtn();
+        closeModal();
+      });
+
+      // submit -> ไปหน้า /search.html
+      document.getElementById('searchForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        const q  = encodeURIComponent(document.getElementById('destination').value || 'กรุงเทพ');
+        const ci = inPicker.formatDate(inPicker.selectedDates[0], 'Y-m-d');
+        const co = outPicker.formatDate(outPicker.selectedDates[0], 'Y-m-d');
+        location.href = `/search.html?q=${q}&checkin=${ci}&checkout=${co}&rooms=${rooms}&adults=${adults}&children=${children}`;
+      });
     })();
   </script>
 </body>
