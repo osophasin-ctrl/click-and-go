@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Search Hotels | Click & Go</title>
+  <meta name="description" content="Find and compare hotel deals from our partners, then click to book instantly." />
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="stylesheet" href="../style.css" />
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config','G-1QR2EGFWN3');
+  </script>
+</head>
+<body>
+  <header class="site-header" role="banner">
+    <div class="inner">
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="../logo.png" alt="Click & Go" width="40" height="40" loading="lazy">
+      </a>
+      <nav class="main-nav" aria-label="Main">
+        <a href="index.html">Home</a>
+        <a href="deals.html">Deals</a>
+        <div class="lang">
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="../search.html">ไทย</a>
+            <a role="menuitem" href="#" aria-current="true">English</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h1 class="section-title">Search Hotels</h1>
+
+      <form id="re-search" class="search-form search-4cols" method="GET" action="search.html">
+        <input name="q" id="q" type="text" placeholder="Destination or hotel name">
+        <div class="date-wrap empty"><input name="checkin" id="checkin" type="date"><span class="date-placeholder">Check-in</span></div>
+        <div class="date-wrap empty"><input name="checkout" id="checkout" type="date"><span class="date-placeholder">Check-out</span></div>
+        <button class="btn" type="submit">Search</button>
+      </form>
+
+      <p id="meta" class="muted" style="margin:10px 0"></p>
+
+      <div id="results" class="deal-grid" style="margin-top:12px"></div>
+      <div id="empty" class="muted" style="display:none;margin-top:12px">No results found.</div>
+      <div id="loading" class="muted" style="margin-top:12px">Loading...</div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html">About us</a> ·
+        <a href="contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  (function(){const b=document.querySelector('.lang-btn'),m=document.querySelector('.lang-menu');if(!b||!m)return;
+    const c=()=>{m.classList.remove('open');b.setAttribute('aria-expanded','false');};
+    b.addEventListener('click',e=>{e.stopPropagation();const o=m.classList.toggle('open');b.setAttribute('aria-expanded',String(o));});
+    document.addEventListener('click',c);document.addEventListener('keydown',e=>{if(e.key==='Escape')c();});
+  })();
+
+  function getParams(){
+    const u=new URL(location.href);
+    const p=Object.fromEntries(u.searchParams.entries());
+    if(!p.lang) p.lang='en-us';
+    if(!p.currency) p.currency='USD';
+    if(!p.adults) p.adults='2';
+    if(!p.rooms) p.rooms='1';
+    return p;
+  }
+  function fillForm(p){
+    const f=document.getElementById('re-search');
+    ['q','checkin','checkout'].forEach(k=>{ if(f[k] && p[k]) f[k].value=p[k]; });
+    document.querySelectorAll('.date-wrap').forEach(w=>{
+      const i=w.querySelector('input[type="date"]');
+      if(i) w.classList.toggle('empty', !i.value);
+      if(i) i.addEventListener('change',()=>w.classList.toggle('empty',!i.value));
+    });
+  }
+  async function run(){
+    const p=getParams(); fillForm(p);
+    const meta=document.getElementById('meta'),loading=document.getElementById('loading'),empty=document.getElementById('empty'),results=document.getElementById('results');
+    meta.textContent = `Destination: ${p.q||'-'}  |  Dates: ${p.checkin||'-'} → ${p.checkout||'-'}  |  Travelers: ${p.adults||'2'} adults, ${p.rooms||'1'} room(s)`;
+    results.innerHTML=''; empty.style.display='none'; loading.style.display='block';
+    try{
+      const qs=new URLSearchParams(p).toString();
+      const resp=await fetch('/api/search?'+qs); const data=await resp.json();
+      loading.style.display='none';
+      if(!data.ok || !Array.isArray(data.items) || data.items.length===0){ empty.style.display='block'; return; }
+      results.innerHTML = data.items.map(h=>`
+        <article class="deal-card">
+          <img class="thumb" src="${h.imageUrl||''}" alt="${h.name||''}">
+          <div class="body"><h3>${h.name||''}</h3><p>${h.city||''}</p></div>
+          <div class="meta">
+            ${h.priceFrom?`<strong>${h.priceFrom.toLocaleString()} ${h.currency||''}</strong>`:''}
+            <a class="btn" target="_blank" rel="nofollow sponsored noopener" href="${h.deeplink}">View deal</a>
+          </div>
+        </article>`).join('');
+    }catch(e){loading.style.display='none';empty.style.display='block';console.error(e);}
+  }
+  run();
+  </script>
+</body>
+</html>
