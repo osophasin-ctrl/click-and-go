@@ -4,313 +4,396 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ผลการค้นหาโรงแรม | Click & Go</title>
-  <meta name="description" content="ค้นหา เปรียบเทียบ และจองโรงแรมกับ Click & Go – แสดงผลพร้อมตัวกรองและเรียงลำดับ" />
-  <link rel="icon" href="/favicon.ico" />
-  <link rel="stylesheet" href="/style.css" />
+  <meta name="description" content="ผลการค้นหาโรงแรม พร้อมตัวกรอง ราคา เรียงลำดับ และโหลดผลลัพธ์เพิ่ม" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+
   <style>
-    /* ===== Toolbar / Filters ===== */
-    .toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between;margin:10px 0 16px}
-    .tool-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-    .tool-right{display:flex;align-items:center;gap:10px}
-    .chip{background:#eef2f2;color:#066; border:1px solid #dde6e6; padding:6px 10px;border-radius:999px;font-size:13px}
-    .btn-outline{border:1px solid #cfd8d8;background:#fff;color:#222;border-radius:8px;height:38px;padding:0 12px;cursor:pointer}
-    .btn-primary{border:0;background:#0ea5a0;color:#fff;border-radius:8px;height:38px;padding:0 14px;cursor:pointer;font-weight:700}
-    .select{height:38px;border:1px solid #d7d7d7;border-radius:8px;padding:0 10px;background:#fff}
+    /* ===== Filter Bar (Sticky) ===== */
+    .filter-bar{
+      position:sticky; top:0; z-index:20;
+      background:#fff; border-bottom:1px solid #eee;
+    }
+    .filter-wrap{
+      max-width:1100px; margin:0 auto; padding:8px 16px;
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .chip{
+      height:36px; display:inline-flex; align-items:center; gap:8px;
+      padding:0 12px; border:1px solid #ddd; border-radius:999px;
+      background:#fff; color:#222; cursor:pointer;
+    }
+    .chip:disabled{ opacity:.5; cursor:not-allowed; }
+    .chip .caret{ font-size:12px; }
 
-    /* ===== List ===== */
-    .result-grid{display:grid;gap:14px;grid-template-columns:1fr}
-    .hotel-card{display:flex;gap:12px;border:1px solid #eee;border-radius:12px;padding:10px;background:#fff;box-shadow:0 1px 8px rgba(0,0,0,.04)}
-    .hotel-card img{width:135px;height:90px;object-fit:cover;border-radius:8px;background:#f3f3f3}
-    .hotel-body{flex:1;display:flex;flex-direction:column;gap:6px}
-    .h-title{font-weight:800;margin:0;color:#222}
-    .h-meta{font-size:13px;color:#666}
-    .h-tags{display:flex;gap:6px;flex-wrap:wrap}
-    .tag{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:2px 6px;font-size:12px;color:#334155}
-    .h-price{margin-left:auto;text-align:right;min-width:92px}
-    .price{font-weight:800;color:#0a766f}
-    .load-more{display:flex;justify-content:center;margin:18px 0}
-    .skeleton{animation:pulse 1.3s ease-in-out infinite;background:linear-gradient(90deg,#f3f4f6 25%,#eceff1 37%,#f3f4f6 63%);background-size:400% 100%}
-    @keyframes pulse{0%{background-position:100% 0}100%{background-position:0 0}}
+    /* ===== Summary ===== */
+    .result-head{
+      max-width:1100px; margin:12px auto 8px; padding:0 16px;
+    }
+    .result-title{ margin:8px 0 4px; font-size:clamp(20px,3vw,28px); font-weight:800; }
+    .result-sub{ color:#555; margin:0; }
 
-    /* ===== Filter sheet (modal) ===== */
-    .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:99}
-    .sheet{position:fixed;right:0;top:0;bottom:0;width:min(92vw,380px);background:#fff;
-      box-shadow:-10px 0 24px rgba(0,0,0,.12);transform:translateX(100%);transition:.25s;z-index:100}
-    .sheet.open{transform:none}
-    .backdrop.show{display:block}
-    .sheet-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eee;padding:12px}
-    .sheet-body{padding:12px}
-    .field{margin:12px 0}
-    .field label{display:block;font-weight:700;margin-bottom:6px}
-    .row{display:flex;gap:10px}
-    .row input[type="number"]{flex:1;height:40px;border:1px solid #d7d7d7;border-radius:8px;padding:0 10px}
-    .stars{display:flex;gap:10px}
-    .stars label{display:flex;gap:6px;align-items:center}
-    .action{display:flex;gap:10px;justify-content:flex-end;border-top:1px solid #eee;padding:12px}
-    @media(min-width:860px){.result-grid{grid-template-columns:1fr 1fr}}
-    @media(min-width:1100px){.result-grid{grid-template-columns:1fr 1fr 1fr}}
+    /* ===== Result grid / card ===== */
+    .result-grid{ max-width:1100px; margin:10px auto; padding:0 16px; display:grid; gap:16px; grid-template-columns: repeat(3,1fr); }
+    @media (max-width:980px){ .result-grid{ grid-template-columns: repeat(2,1fr); } }
+    @media (max-width:620px){ .result-grid{ grid-template-columns: 1fr; } }
+
+    .hotel-card{
+      border:1px solid #eee; border-radius:12px; background:#fff;
+      overflow:hidden; box-shadow:0 1px 10px rgba(0,0,0,.04); display:flex; flex-direction:column;
+    }
+    .hotel-thumb{ width:100%; aspect-ratio:16/9; object-fit:cover; background:#f1f1f1; display:block; }
+    .hotel-body{ padding:12px 12px 10px; }
+    .hotel-name{ margin:0 0 4px; font-size:18px; font-weight:700; color:#222; }
+    .hotel-meta{ font-size:13px; color:#666; }
+    .hotel-foot{ display:flex; align-items:center; justify-content:space-between; padding:0 12px 12px; margin-top:auto; }
+    .price{ font-weight:800; color:#222; }
+    .badge{ display:inline-block; padding:4px 8px; border-radius:999px; font-size:12px; background:#eefaf8; color:#0b8e78; }
+    .btn-more{
+      display:block; margin:12px auto 24px; padding:10px 16px; border-radius:8px; background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700;
+    }
+
+    /* ===== Drawer / Modal ===== */
+    .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:40; }
+    .drawer{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:min(94vw,520px); background:#fff; border-radius:12px; box-shadow:0 20px 40px rgba(0,0,0,.2); display:none; z-index:50; }
+    .drawer-header{ padding:14px 16px; border-bottom:1px solid #eee; font-weight:800; display:flex; justify-content:space-between; align-items:center; }
+    .drawer-body{ padding:14px 16px; }
+    .drawer-footer{ display:flex; justify-content:flex-end; gap:10px; padding:12px 16px; border-top:1px solid #eee; }
+    .btn-outline{ border:1px solid #bbb; background:#fff; color:#333; border-radius:8px; padding:8px 14px; }
+    .btn-primary{ border:0; background:#0ea5a0; color:#fff; border-radius:8px; padding:8px 14px; }
+
+    .field-row{ display:flex; gap:10px; align-items:center; margin:10px 0; flex-wrap:wrap; }
+    .field-row label{ min-width:120px; }
+    .field-row input[type="number"], .field-row select{
+      border:1px solid #ddd; border-radius:8px; padding:8px 10px; height:40px; min-width:120px;
+    }
+
+    /* Sort menu */
+    .menu{ position:absolute; background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,.1); padding:6px; display:none; z-index:60; }
+    .menu a{ display:block; padding:8px 12px; color:#222; text-decoration:none; border-radius:8px; }
+    .menu a:hover{ background:#f6f6f6; }
+
+    /* Toast */
+    .toast{ position:fixed; left:50%; bottom:18px; transform:translateX(-50%); background:#333; color:#fff; padding:8px 12px; border-radius:8px; font-size:14px; display:none; z-index:70; }
   </style>
 </head>
-
 <body>
-  <!-- Header (ใช้ของเดิมในโปรเจ็กต์) -->
-  <header class="site-header" role="banner">
+  <!-- Header (แบบเดิมของเว็บ) -->
+  <header class="site-header">
     <div class="inner">
-      <a href="/index.html" class="brand">
-        <img src="/logo.png" alt="Click & Go" width="40" height="40" />
+      <a href="index.html" class="brand">
+        <img src="logo.png" alt="Click & Go" width="40" height="40" />
         <span class="brand-text">Click & Go</span>
       </a>
       <nav class="main-nav">
-        <a href="/index.html">หน้าแรก</a>
-        <a href="/deals.html">โปรโมชั่น</a>
+        <a href="index.html">หน้าแรก</a>
+        <a href="deals.html">โปรโมชั่น</a>
       </nav>
     </div>
   </header>
 
-  <main class="container" style="margin-top:12px">
-    <h1 class="section-title">ผลการค้นหาโรงแรม</h1>
-    <div id="summary" class="muted" style="margin:-6px 0 8px"></div>
+  <!-- Summary -->
+  <section class="result-head">
+    <h1 class="result-title">ผลการค้นหาโรงแรม</h1>
+    <p class="result-sub" id="summary">กำลังโหลด...</p>
+  </section>
 
-    <!-- === Toolbar === -->
-    <div class="toolbar">
-      <div class="tool-left">
-        <span id="chips" class="chip">แสดง 30 รายการแรก</span>
-      </div>
-      <div class="tool-right">
-        <select id="sort" class="select" aria-label="เรียงลำดับ">
-          <option value="PRICE_ASC">ราคาต่ำ → สูง</option>
-          <option value="PRICE_DESC">ราคาสูง → ต่ำ</option>
-          <option value="STAR_DESC">ดาวมาก → น้อย</option>
-          <option value="REVIEW_DESC">รีวิวดี → แย่</option>
-        </select>
-        <button id="btnOpenFilter" class="btn-outline">ตัวกรอง</button>
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <div class="filter-wrap">
+      <button class="chip" id="btnFilters">ตัวกรอง <span class="caret">▾</span></button>
+      <button class="chip" id="btnPrice">ราคา <span id="priceChipText" class="muted"></span> <span class="caret">▾</span></button>
+      <button class="chip" id="btnSort">เรียงลำดับ <span class="caret">▾</span></button>
+      <button class="chip" id="btnArea" title="เร็วๆ นี้">ย่าน/พื้นที่ <span class="caret">▾</span></button>
+      <div id="sortMenu" class="menu">
+        <a href="#" data-sort="PRICE_ASC">ราคาต่ำ → สูง</a>
+        <a href="#" data-sort="PRICE_DESC">ราคาสูง → ต่ำ</a>
+        <a href="#" data-sort="RATING_DESC">คะแนนรีวิวสูง</a>
+        <a href="#" data-sort="STARS_DESC">ดาวสูง</a>
       </div>
     </div>
+  </div>
 
-    <!-- === Result list === -->
-    <div id="result" class="result-grid"></div>
+  <!-- Results -->
+  <section class="result-grid" id="resultGrid"></section>
+  <div style="text-align:center">
+    <button class="btn-more" id="btnLoadMore" style="display:none">โหลดเพิ่ม</button>
+  </div>
 
-    <div class="load-more">
-      <button id="btnMore" class="btn-primary">โหลดเพิ่มเติม</button>
+  <!-- Drawer: Filters -->
+  <div id="backdrop" class="backdrop"></div>
+  <div id="drawerFilters" class="drawer" role="dialog" aria-modal="true" aria-labelledby="filterTitle">
+    <div class="drawer-header">
+      <div id="filterTitle">ตัวกรอง</div>
+      <button class="btn-outline" id="btnCloseFilter">×</button>
     </div>
-  </main>
+    <div class="drawer-body">
+      <div style="font-weight:700; margin-bottom:8px">จำนวนดาว</div>
+      <label><input type="checkbox" class="ck-star" value="5" checked> 5★</label> &nbsp;
+      <label><input type="checkbox" class="ck-star" value="4" checked> 4★</label> &nbsp;
+      <label><input type="checkbox" class="ck-star" value="3"> 3★</label>
 
-  <!-- === Filter Sheet (Modal) === -->
-  <div id="backdrop" class="backdrop" role="presentation"></div>
-  <aside id="sheet" class="sheet" role="dialog" aria-labelledby="sheetTitle" aria-modal="true">
-    <div class="sheet-head">
-      <div id="sheetTitle" style="font-weight:800">ตัวกรอง</div>
-      <button id="btnCloseSheet" class="btn-outline">✕</button>
-    </div>
-    <div class="sheet-body">
-      <div class="field">
-        <label>ช่วงราคา (THB)</label>
-        <div class="row">
-          <input type="number" id="minPrice" placeholder="ต่ำสุด" min="0">
-          <input type="number" id="maxPrice" placeholder="สูงสุด" min="0">
-        </div>
-      </div>
-
-      <div class="field">
-        <label>จำนวนดาว</label>
-        <div class="stars">
-          <label><input type="checkbox" class="star" value="5" checked> 5★</label>
-          <label><input type="checkbox" class="star" value="4" checked> 4★</label>
-          <label><input type="checkbox" class="star" value="3"> 3★</label>
-        </div>
-      </div>
-
-      <div class="field">
+      <div class="field-row">
         <label>คะแนนรีวิวขั้นต่ำ</label>
-        <select id="reviewMin" class="select" style="width:100%">
-          <option value="">ทั้งหมด</option>
-          <option value="9">9.0+</option>
-          <option value="8" selected>8.0+</option>
+        <select id="reviewMin">
+          <option value="0">ทั้งหมด</option>
+          <option value="6">6.0+</option>
           <option value="7">7.0+</option>
+          <option value="8" selected>8.0+</option>
+          <option value="9">9.0+</option>
         </select>
       </div>
-    </div>
-    <div class="action">
-      <button id="btnReset" class="btn-outline">ล้างค่า</button>
-      <button id="btnApply" class="btn-primary">ปรับใช้ตัวกรอง</button>
-    </div>
-  </aside>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container" style="text-align:center">
-      <div class="footer-links">
-        <a href="/privacy.html">Privacy</a> ·
-        <a href="/terms.html">Terms</a> ·
-        <a href="/about.html">About</a>
+      <div style="font-weight:700; margin:12px 0 6px">สิ่งอำนวยความสะดวก</div>
+      <label><input type="checkbox" id="ckFreeCancel"> ยกเลิกฟรี</label>
+    </div>
+    <div class="drawer-footer">
+      <button class="btn-outline" id="btnResetFilter">ล้างค่า</button>
+      <button class="btn-primary" id="btnApplyFilter">นำไปใช้</button>
+    </div>
+  </div>
+
+  <!-- Drawer: Price -->
+  <div id="drawerPrice" class="drawer" role="dialog" aria-modal="true" aria-labelledby="priceTitle">
+    <div class="drawer-header">
+      <div id="priceTitle">ช่วงราคา (THB)</div>
+      <button class="btn-outline" id="btnClosePrice">×</button>
+    </div>
+    <div class="drawer-body">
+      <div class="field-row">
+        <label>ต่ำสุด</label>
+        <input type="number" id="minPrice" placeholder="0" min="0" step="100" />
+      </div>
+      <div class="field-row">
+        <label>สูงสุด</label>
+        <input type="number" id="maxPrice" placeholder="ไม่จำกัด" min="0" step="100" />
       </div>
     </div>
-  </footer>
+    <div class="drawer-footer">
+      <button class="btn-outline" id="btnResetPrice">ล้างราคา</button>
+      <button class="btn-primary" id="btnApplyPrice">นำไปใช้</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">เร็วๆ นี้</div>
 
   <script>
-    // ---------- Utils ----------
-    const $ = (sel, root=document) => root.querySelector(sel);
-    const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
-    const params = new URLSearchParams(location.search);
-    const q = params.get('q') || 'Bangkok';
-    const checkin  = params.get('checkin')  || new Date().toISOString().slice(0,10);
-    const checkout = params.get('checkout') || new Date(Date.now()+86400000).toISOString().slice(0,10);
-    const rooms = + (params.get('rooms') || 1);
-    const adults = + (params.get('adults') || 2);
-    const children = + (params.get('children') || 0);
-
-    let page = 1, limit = 30, loading=false, done=false;
-
-    // ตัวกรอง (state)
-    let state = {
+    // ----- State -----
+    const state = {
+      q: '', checkin: '', checkout: '',
+      rooms: 1, adults: 2, children: 0,
+      page: 1, limit: 30,
       sort: 'PRICE_ASC',
-      minPrice: params.get('minPrice') ? +params.get('minPrice') : '',
-      maxPrice: params.get('maxPrice') ? +params.get('maxPrice') : '',
-      stars: params.get('stars') ? params.get('stars').split(',').map(s=>+s) : [5,4],
-      reviewMin: params.get('reviewMin') || '8'
+      minPrice: null, maxPrice: null,
+      stars: [5,4], reviewMin: 8,
+      freeCancel: false,
+      total: 0, loading: false
     };
+    const $ = s => document.querySelector(s);
 
-    // ---------- Init UI ----------
-    $('#summary').textContent = `${q} | วันที่: ${checkin} → ${checkout} | ผู้เข้าพัก: ${adults} ผู้ใหญ่, ${children} เด็ก, ${rooms} ห้อง`;
-    $('#sort').value = state.sort;
-    if (state.minPrice) $('#minPrice').value = state.minPrice;
-    if (state.maxPrice) $('#maxPrice').value = state.maxPrice;
-    if (state.reviewMin) $('#reviewMin').value = state.reviewMin;
-    $$('.star').forEach(el => el.checked = state.stars.includes(+el.value));
-    renderChips();
-
-    // ---------- Toolbar events ----------
-    $('#sort').addEventListener('change', () => { state.sort = $('#sort').value; resetAndLoad(); });
-    $('#btnOpenFilter').addEventListener('click', openSheet);
-    $('#btnCloseSheet').addEventListener('click', closeSheet);
-    $('#backdrop').addEventListener('click', closeSheet);
-    $('#btnReset').addEventListener('click', () => {
-      state.minPrice=''; state.maxPrice=''; state.stars=[5,4]; state.reviewMin='8';
-      $('#minPrice').value=''; $('#maxPrice').value=''; $('#reviewMin').value='8';
-      $$('.star').forEach(el=> el.checked = ['5','4'].includes(el.value));
-    });
-    $('#btnApply').addEventListener('click', () => {
-      state.minPrice = $('#minPrice').value ? +$('#minPrice').value : '';
-      state.maxPrice = $('#maxPrice').value ? +$('#maxPrice').value : '';
-      state.stars = $$('.star:checked').map(el=>+el.value);
-      state.reviewMin = $('#reviewMin').value || '';
-      closeSheet(); renderChips(); resetAndLoad();
-    });
-
-    $('#btnMore').addEventListener('click', () => load());
-
-    function openSheet(){ $('#backdrop').classList.add('show'); $('#sheet').classList.add('open'); }
-    function closeSheet(){ $('#backdrop').classList.remove('show'); $('#sheet').classList.remove('open'); }
-
-    function renderChips(){
-      const chips = [];
-      if (state.minPrice) chips.push(`≥ ${state.minPrice}฿`);
-      if (state.maxPrice) chips.push(`≤ ${state.maxPrice}฿`);
-      if (state.stars.length) chips.push(`${state.stars.join('/')}★`);
-      if (state.reviewMin) chips.push(`รีวิว ${state.reviewMin}+`);
-      $('#chips').textContent = chips.length ? chips.join(' · ') : 'แสดง 30 รายการแรก';
+    // ----- UI helpers -----
+    function showToast(msg){
+      const t = $('#toast'); t.textContent = msg || 'เร็วๆ นี้';
+      t.style.display = 'block'; setTimeout(()=>t.style.display='none', 1500);
     }
+    function openDrawer(id){ $('#backdrop').style.display='block'; $(id).style.display='block'; }
+    function closeDrawer(id){ $('#backdrop').style.display='none'; $(id).style.display='none'; }
 
-    // ---------- Load results ----------
-    const container = $('#result');
+    // ----- Parse query from URL -----
+    (function initQuery(){
+      const p = new URLSearchParams(location.search);
+      state.q = p.get('q') || 'Bangkok';
+      state.checkin = p.get('checkin') || new Date().toISOString().slice(0,10);
+      const tomorrow = new Date(Date.now()+24*60*60*1000).toISOString().slice(0,10);
+      state.checkout = p.get('checkout') || tomorrow;
+      state.rooms = +(p.get('rooms') || 1);
+      state.adults = +(p.get('adults') || 2);
+      state.children = +(p.get('children') || 0);
 
-    function resetAndLoad(){
-      page = 1; done = false; container.innerHTML = ''; $('#btnMore').style.display='flex';
-      const newParams = new URLSearchParams({q,checkin,checkout,rooms,adults,children,sort:state.sort,limit});
-      if(state.minPrice) newParams.set('minPrice', state.minPrice);
-      if(state.maxPrice) newParams.set('maxPrice', state.maxPrice);
-      if(state.stars?.length) newParams.set('stars', state.stars.join(','));
-      if(state.reviewMin) newParams.set('reviewMin', state.reviewMin);
-      history.replaceState(null,'',`?${newParams.toString()}`);
-      load();
-    }
+      // สรุปบรรทัดบน
+      $('#summary').textContent =
+        `${state.q} | วันที่: ${state.checkin} → ${state.checkout} | ผู้เข้าพัก: ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
+    })();
 
-    async function load(){
-      if(loading || done) return;
-      loading = true;
-
-      // Skeleton
-      for(let i=0; i<6; i++){
-        const sk = document.createElement('div');
-        sk.className = 'hotel-card skeleton';
-        sk.style.height='110px';
-        container.appendChild(sk);
-      }
+    // ----- Fetch results -----
+    async function fetchResults(append=false){
+      if(state.loading) return;
+      state.loading = true;
+      $('#btnLoadMore').style.display = 'none';
 
       try{
-        const offset = (page-1)*limit;
-        const url = new URL('/api/search', location.origin);
-        url.searchParams.set('q', q);
-        url.searchParams.set('checkin', checkin);
-        url.searchParams.set('checkout', checkout);
-        url.searchParams.set('rooms', rooms);
-        url.searchParams.set('adults', adults);
-        url.searchParams.set('children', children);
-        url.searchParams.set('limit', limit);
-        url.searchParams.set('offset', offset);
-        url.searchParams.set('sort', state.sort);
-        if(state.minPrice) url.searchParams.set('minPrice', state.minPrice);
-        if(state.maxPrice) url.searchParams.set('maxPrice', state.maxPrice);
-        if(state.stars?.length) url.searchParams.set('stars', state.stars.join(','));
-        if(state.reviewMin) url.searchParams.set('reviewMin', state.reviewMin);
+        const qs = new URLSearchParams({
+          q: state.q,
+          checkin: state.checkin,
+          checkout: state.checkout,
+          rooms: state.rooms,
+          adults: state.adults,
+          children: state.children,
+          page: state.page,
+          limit: state.limit,
+          sort: state.sort,
+          minPrice: state.minPrice ?? '',
+          maxPrice: state.maxPrice ?? '',
+          stars: state.stars.join(','),
+          reviewMin: state.reviewMin,
+          freeCancel: state.freeCancel ? '1' : ''
+        });
 
-        const res = await fetch(url.toString());
+        const url = `/api/search?${qs.toString()}`;
+        const res = await fetch(url, { headers:{ 'Accept':'application/json' }});
         const data = await res.json();
 
-        // ลบ skeleton
-        container.querySelectorAll('.skeleton').forEach(el=>el.remove());
+        let items = data.items || [];
+        state.total = data.total || items.length;
 
-        const items = data.items || [];
-        if(items.length === 0 && page === 1){
-          container.innerHTML = `<div class="muted">ไม่พบโรงแรมที่ตรงกับตัวกรอง</div>`;
-          $('#btnMore').style.display='none';
-          done = true; return;
-        }
-        renderList(items);
-        if(items.length < limit){ $('#btnMore').style.display='none'; done = true; }
-        page++;
+        // Fallback filter client-side (เมื่อ backend ยังไม่รองรับ)
+        items = items.filter(it=>{
+          const okPrice = (state.minPrice==null || it.priceFrom >= state.minPrice) &&
+                          (state.maxPrice==null || it.priceFrom <= state.maxPrice);
+          const okStar  = (!state.stars.length) || state.stars.includes(+it.starRating||0);
+          const okRate  = (+it.reviewScore || 0) >= (state.reviewMin||0);
+          const okCancel= !state.freeCancel || !!it.freeCancellation;
+          return okPrice && okStar && okRate && okCancel;
+        });
+
+        // client sort fallback
+        items.sort((a,b)=>{
+          switch(state.sort){
+            case 'PRICE_ASC':  return (a.priceFrom||0) - (b.priceFrom||0);
+            case 'PRICE_DESC': return (b.priceFrom||0) - (a.priceFrom||0);
+            case 'RATING_DESC':return (b.reviewScore||0) - (a.reviewScore||0);
+            case 'STARS_DESC': return (b.starRating||0) - (a.starRating||0);
+            default: return 0;
+          }
+        });
+
+        renderResults(items, append);
+
+        // show load more ถ้าดูแล้วยังมีต่อ
+        if(items.length >= state.limit){ $('#btnLoadMore').style.display='inline-block'; }
+
       }catch(e){
         console.error(e);
-        container.querySelectorAll('.skeleton').forEach(el=>el.remove());
-        if(page===1) container.innerHTML = `<div class="muted">เกิดข้อผิดพลาดในการดึงข้อมูล</div>`;
-        $('#btnMore').style.display='none';
-      } finally {
-        loading = false;
+      }finally{
+        state.loading = false;
       }
     }
 
-    function renderList(items){
-      for(const it of items){
-        const el = document.createElement('div');
-        el.className = 'hotel-card';
-        el.innerHTML = `
-          <img src="${it.imageUrl||'/hero-bg.jpg'}" alt="${escapeHtml(it.name||'Hotel')}">
+    function renderResults(items, append){
+      const grid = $('#resultGrid');
+      if(!append) grid.innerHTML = '';
+      const html = items.map(cardHtml).join('');
+      grid.insertAdjacentHTML('beforeend', html);
+    }
+
+    function cardHtml(h){
+      const stars = '★'.repeat(h.starRating||0);
+      const review = (h.reviewScore!=null) ? `คะแนน ${h.reviewScore}` : '';
+      const city = h.city ? ` · ${h.city}` : '';
+      const price = (h.priceFrom!=null) ? `${h.priceFrom.toLocaleString()} THB` : '-';
+      const fc = h.freeCancellation ? '<span class="badge">ยกเลิกฟรี</span>' : '';
+      const meal = h.mealPlan ? `<span class="badge">${h.mealPlan}</span>` : '';
+      const link = h.deeplink || '#';
+
+      return `
+        <article class="hotel-card">
+          <img class="hotel-thumb" src="${h.imageUrl||'https://picsum.photos/800/450?blur=2'}" loading="lazy" alt="${h.name||''}">
           <div class="hotel-body">
-            <div style="display:flex;gap:10px">
-              <h3 class="h-title">${escapeHtml(it.name)}</h3>
-              <div class="h-price">
-                <div class="price">${formatPrice(it.priceFrom, it.currency||'THB')}</div>
-                <div class="h-meta">${it.freeCancellation?'ยกเลิกฟรี':''}</div>
-              </div>
-            </div>
-            <div class="h-meta">${escapeHtml(it.city||'')} · ${it.starRating||'-'}★ · คะแนน ${it.reviewScore||'-'} (${it.reviewCount||0})</div>
-            <div class="h-tags">
-              ${it.mealPlan?`<span class="tag">${escapeHtml(it.mealPlan)}</span>`:''}
-            </div>
-            <div style="margin-top:auto;display:flex;gap:8px;justify-content:flex-end">
-              <a class="btn-outline" href="${it.deeplink||'#'}" target="_blank" rel="nofollow noopener">ดูดีล</a>
-            </div>
+            <h3 class="hotel-name">${h.name||'-'}</h3>
+            <div class="hotel-meta">${stars} ${review}${city}</div>
           </div>
-        `;
-        container.appendChild(el);
-      }
+          <div class="hotel-foot">
+            <div class="price">${price}</div>
+            <div>${fc} ${meal}</div>
+          </div>
+          <a href="${link}" target="_blank" rel="nofollow noopener" class="btn" style="margin:0 12px 12px">ดูดีล</a>
+        </article>
+      `;
     }
 
-    function formatPrice(p, cur){ if(!p) return '-'; return new Intl.NumberFormat('th-TH').format(p)+' '+cur; }
-    function escapeHtml(s){ return (''+s).replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m])); }
+    // ----- Events: Filter bar -----
+    // Filters drawer
+    $('#btnFilters').addEventListener('click', ()=> openDrawer('#drawerFilters'));
+    $('#btnCloseFilter').addEventListener('click', ()=> closeDrawer('#drawerFilters'));
+    $('#btnResetFilter').addEventListener('click', ()=>{
+      document.querySelectorAll('.ck-star').forEach(el=> el.checked=false);
+      document.querySelector('.ck-star[value="5"]').checked=true;
+      document.querySelector('.ck-star[value="4"]').checked=true;
+      $('#reviewMin').value = '8';
+      $('#ckFreeCancel').checked = false;
+    });
+    $('#btnApplyFilter').addEventListener('click', ()=>{
+      state.stars = Array.from(document.querySelectorAll('.ck-star:checked')).map(el=>+el.value);
+      state.reviewMin = +$('#reviewMin').value;
+      state.freeCancel = $('#ckFreeCancel').checked;
+      state.page = 1;
+      closeDrawer('#drawerFilters');
+      fetchResults(false);
+    });
 
-    // เริ่มโหลดครั้งแรก
-    resetAndLoad();
+    // Price drawer
+    function updatePriceChip(){
+      const a = state.minPrice!=null ? state.minPrice : '';
+      const b = state.maxPrice!=null ? state.maxPrice : '';
+      const text = (a||b) ? `(${a||0}–${b||'∞'})` : '';
+      $('#priceChipText').textContent = text;
+    }
+    $('#btnPrice').addEventListener('click', ()=>{
+      $('#minPrice').value = state.minPrice ?? '';
+      $('#maxPrice').value = state.maxPrice ?? '';
+      openDrawer('#drawerPrice');
+    });
+    $('#btnClosePrice').addEventListener('click', ()=> closeDrawer('#drawerPrice'));
+    $('#btnResetPrice').addEventListener('click', ()=>{
+      $('#minPrice').value = ''; $('#maxPrice').value = '';
+    });
+    $('#btnApplyPrice').addEventListener('click', ()=>{
+      const mi = $('#minPrice').value ? +$('#minPrice').value : null;
+      const ma = $('#maxPrice').value ? +$('#maxPrice').value : null;
+      state.minPrice = mi; state.maxPrice = ma; updatePriceChip();
+      state.page = 1;
+      closeDrawer('#drawerPrice');
+      fetchResults(false);
+    });
+
+    // Sort menu
+    const sortMenu = $('#sortMenu');
+    $('#btnSort').addEventListener('click', (e)=>{
+      const r = e.currentTarget.getBoundingClientRect();
+      sortMenu.style.left = (r.left)+'px';
+      sortMenu.style.top = (r.bottom+6)+'px';
+      sortMenu.style.display = 'block';
+    });
+    document.addEventListener('click', (e)=>{
+      if(!sortMenu.contains(e.target) && e.target.id!=='btnSort') sortMenu.style.display='none';
+    });
+    sortMenu.querySelectorAll('a').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        e.preventDefault();
+        state.sort = a.dataset.sort;
+        state.page = 1;
+        sortMenu.style.display='none';
+        fetchResults(false);
+      });
+    });
+
+    // Area (coming soon)
+    $('#btnArea').addEventListener('click', ()=> showToast('ฟีเจอร์ย่าน/พื้นที่ - เร็วๆ นี้'));
+
+    // Backdrop click → ปิด drawer
+    $('#backdrop').addEventListener('click', ()=>{
+      closeDrawer('#drawerFilters'); closeDrawer('#drawerPrice');
+    });
+
+    // Load more
+    $('#btnLoadMore').addEventListener('click', ()=>{
+      state.page += 1;
+      fetchResults(true);
+    });
+
+    // Init
+    updatePriceChip();
+    fetchResults(false);
   </script>
 </body>
 </html>
