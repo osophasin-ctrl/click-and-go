@@ -36,12 +36,11 @@
       width:100%; background:#fff; border:1px solid var(--border);
       border-radius:var(--radius); box-shadow:var(--shadow);
       padding:16px; display:flex; flex-direction:column; justify-content:center;
-      /* min-height:293px;  // จะขยายตามเนื้อหา */
     }
     .mock-title{ margin:0 0 6px; font-weight:800; font-size:22px; }
     .mock-sub{ margin:0 0 12px; color:var(--muted); }
 
-    /* Layout: 2 คอลัมน์ (Dest = แถว 1 เต็มบรรทัด, แถว 2 = CI/CO, แถว 3 = Guests, แถว 4 = Search) */
+    /* Layout: 2 คอลัมน์ (Dest เต็มบรรทัด, แถวต่อไป CI/CO, Guests เต็มบรรทัด, Search เต็มบรรทัด) */
     .mock-row{
       display:grid; gap:10px; align-items:center;
       grid-template-columns: 1fr 1fr;
@@ -57,6 +56,19 @@
     .mock-btn:active{ transform:translateY(1px); }
     .btn-wide{ width:100%; }
 
+    /* Floating label สำหรับช่องวันที่ */
+    .field{ position:relative; }
+    .field-label{
+      position:absolute; left:12px; top:6px;
+      font-size:12px; line-height:1; color:#6b7280; pointer-events:none;
+    }
+    /* เพิ่มที่ว่างด้านบนเฉพาะช่องที่มี label */
+    .has-label .mock-input,
+    .has-label .flatpickr-input{
+      height:56px;
+      padding-top:18px;   /* ให้ตัวเลขวันที่เลื่อนลง ไม่ทับกับ label */
+    }
+
     /* Suggestion dropdown */
     .suggest-wrap{ position:relative; }
     .suggest-panel{
@@ -70,7 +82,7 @@
     .s-label{ font-weight:600; }
     .s-sub{ color:#777; font-size:13px; }
 
-    /* Modal guests */
+    /* Guests modal */
     .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:999; }
     .modal{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; width:min(92vw,420px); box-shadow:0 12px 24px rgba(0,0,0,.2); z-index:1000; display:none; }
     .modal-header,.modal-footer{ padding:14px 16px; }
@@ -87,7 +99,7 @@
     .btn-outline{ border:1px solid #bbb; background:#fff; color:#333; border-radius:8px; padding:8px 14px; }
     .btn-primary{ border:0; background:var(--brand); color:#fff; border-radius:8px; padding:8px 14px; }
 
-    /* Mobile: 1 คอลัมน์ */
+    /* Mobile */
     @media (max-width: 640px){
       .mock-row{ grid-template-columns: 1fr; }
     }
@@ -114,9 +126,15 @@
             <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="Suggestions"></div>
           </div>
 
-          <!-- 2) Dates: Check-in | Check-out -->
-          <input type="text" id="ci" class="mock-input" placeholder="Check-in" aria-label="Check-in" readonly>
-          <input type="text" id="co" class="mock-input" placeholder="Check-out" aria-label="Check-out" readonly>
+          <!-- 2) Dates: Check-in | Check-out (มี label ภายในกล่อง) -->
+          <div class="field has-label">
+            <span class="field-label">Check-in</span>
+            <input type="text" id="ci" class="mock-input" aria-label="Check-in" readonly>
+          </div>
+          <div class="field has-label">
+            <span class="field-label">Check-out</span>
+            <input type="text" id="co" class="mock-input" aria-label="Check-out" readonly>
+          </div>
 
           <!-- 3) Guests (เต็มบรรทัด) -->
           <button type="button" id="guestBtn" class="guest-input full-row">1 Room, 2 Adults, 0 Children</button>
@@ -215,7 +233,12 @@
     (function(){
       const ONE_DAY = 24*60*60*1000;
       const inPicker = flatpickr("#ci", {
-        dateFormat:"Y-m-d", altInput:true, altFormat:"d M Y", allowInput:false, minDate:"today",
+        dateFormat:"Y-m-d",
+        altInput:true,
+        altFormat:"d M Y",
+        altInputClass:"mock-input",   // ให้กล่องที่มองเห็นใช้คลาสเดียวกับเรา
+        allowInput:false,
+        minDate:"today",
         onChange(d){
           if(d[0]){
             const next = new Date(d[0].getTime()+ONE_DAY);
@@ -225,7 +248,11 @@
         }
       });
       const outPicker = flatpickr("#co", {
-        dateFormat:"Y-m-d", altInput:true, altFormat:"d M Y", allowInput:false,
+        dateFormat:"Y-m-d",
+        altInput:true,
+        altFormat:"d M Y",
+        altInputClass:"mock-input",   // ให้กล่องที่มองเห็นใช้คลาสเดียวกัน
+        allowInput:false,
         minDate:new Date(Date.now()+ONE_DAY)
       });
       inPicker.setDate(new Date(), true);
