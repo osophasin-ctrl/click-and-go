@@ -1,93 +1,92 @@
 // /api/search.js
-// Standardized response schema for hotel search (mock -> ready to swap to real Agoda API)
 export default async function handler(req, res) {
   try {
-    res.setHeader('Cache-Control', 'no-store');
-
     const {
-      q = 'Bangkok',
+      q = '',
       checkin = '',
       checkout = '',
       rooms = '1',
       adults = '2',
       children = '0',
-      lang = 'en-us',      // for deeplink language
-      currency = 'THB'     // default currency
-    } = req.query || {};
+      lang = 'th-th',
+      currency = 'THB',
+    } = req.query;
 
-    // --------- MOCK DATA (shape ล็อกแล้ว) ----------
-    const MOCK = [
+    // --- map ชื่อเมืองหลายภาษา -> อังกฤษ (สำหรับ mock) ---
+    const aliases = {
+      bangkok: ['bangkok', 'bkk', 'กรุงเทพ', 'กรุงเทพฯ'],
+      'chiang mai': ['chiang mai', 'chiangmai', 'cnx', 'เชียงใหม่'],
+      pattaya: ['pattaya', 'พัทยา'],
+      phuket: ['phuket', 'ภูเก็ต'],
+      krabi: ['krabi', 'กระบี่'],
+      'hua hin': ['hua hin', 'huahin', 'หัวหิน'],
+    };
+    function normalizeCity(input = '') {
+      const s = String(input).toLowerCase().trim();
+      for (const [en, arr] of Object.entries(aliases)) {
+        if (arr.some(a => s.includes(a))) return en;
+      }
+      return s; // ถ้าไม่รู้จัก ปล่อยตามที่ส่งมา
+    }
+
+    const normCity = normalizeCity(q);
+
+    // --- ข้อมูลตัวอย่าง (mock) เฉพาะกรุงเทพในตอนนี้ ---
+    const sampleHotels = [
       {
         id: '52120188',
         name: 'Bangkok Riverside Hotel',
         city: 'Bangkok',
-        starRating: 4,
-        reviewScore: 8.7,
-        reviewCount: 214,
-        imageUrl:
-          'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop',
         priceFrom: 1290,
         currency: 'THB',
         freeCancellation: true,
-        mealPlan: 'Breakfast included'
+        mealPlan: 'Breakfast included',
+        deeplink: 'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=52120188',
       },
       {
         id: '1030980',
         name: 'Bangkok Central Hotel',
         city: 'Bangkok',
-        starRating: 3,
-        reviewScore: 8.1,
-        reviewCount: 142,
-        imageUrl:
-          'https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop',
         priceFrom: 980,
         currency: 'THB',
         freeCancellation: false,
-        mealPlan: ''
+        mealPlan: '',
+        deeplink: 'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=1030980',
       },
       {
         id: '444480',
         name: 'Bangkok Boutique Stay',
         city: 'Bangkok',
-        starRating: 4,
-        reviewScore: 9.0,
-        reviewCount: 88,
-        imageUrl:
-          'https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop',
         priceFrom: 1500,
         currency: 'THB',
         freeCancellation: true,
-        mealPlan: ''
-      }
+        mealPlan: '',
+        deeplink: 'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=444480',
+      },
     ];
 
-    // (ตัวอย่าง) แปลงค่า q เพื่อกรอง mock ให้ดูสมจริงขึ้นเล็กน้อย
-    const key = String(q).toLowerCase().trim();
-    const items = MOCK.filter(h =>
-      [h.name, h.city].some(v => v.toLowerCase().includes(key))
-    ).map(h => ({
-      ...h,
-      // คืน deeplink รูปแบบพาร์ตเนอร์ (ตอนต่อ API จริงค่อยแทนลิงก์นี้)
-      deeplink: `https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=${encodeURIComponent(
-        lang
-      )}&hid=${encodeURIComponent(h.id)}&checkin=${encodeURIComponent(
-        checkin
-      )}&checkout=${encodeURIComponent(
-        checkout
-      )}&rooms=${encodeURIComponent(rooms)}&adults=${encodeURIComponent(
-        adults
-      )}&children=${encodeURIComponent(children)}`
-    }));
+    // ถ้าเป็น bangkok ไม่ว่าจะ TH/EN -> คืน sample, อื่น ๆ ตอนนี้ให้ว่าง (หรือจะคืน sample เหมือนกันก็ได้)
+    const isBangkok =
+      normCity === 'bangkok' ||
+      normCity === 'bkk' ||
+      aliases.bangkok.some(a => String(q).toLowerCase().includes(a));
 
+    const items = isBangkok ? sampleHotels : [];
+
+    // --- response ---
+    res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({
       ok: true,
       source: 'mock',
       query: { q, checkin, checkout, rooms, adults, children, lang, currency },
       total: items.length,
-      items
+      items,
     });
-  } catch (e) {
-    console.error('search api error', e);
-    return res.status(500).json({ ok: false, error: 'internal-error' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ ok: false, message: 'server error' });
   }
 }
