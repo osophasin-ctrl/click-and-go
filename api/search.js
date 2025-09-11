@@ -1,92 +1,205 @@
 // /api/search.js
-export default async function handler(req, res) {
-  try {
-    const {
-      q = '',
-      checkin = '',
-      checkout = '',
-      rooms = '1',
-      adults = '2',
-      children = '0',
-      lang = 'th-th',
-      currency = 'THB',
-    } = req.query;
+// Call Agoda Affiliate Lite API (fallback to mock on error)
 
-    // --- map ชื่อเมืองหลายภาษา -> อังกฤษ (สำหรับ mock) ---
-    const aliases = {
-      bangkok: ['bangkok', 'bkk', 'กรุงเทพ', 'กรุงเทพฯ'],
-      'chiang mai': ['chiang mai', 'chiangmai', 'cnx', 'เชียงใหม่'],
-      pattaya: ['pattaya', 'พัทยา'],
-      phuket: ['phuket', 'ภูเก็ต'],
-      krabi: ['krabi', 'กระบี่'],
-      'hua hin': ['hua hin', 'huahin', 'หัวหิน'],
-    };
-    function normalizeCity(input = '') {
-      const s = String(input).toLowerCase().trim();
-      for (const [en, arr] of Object.entries(aliases)) {
-        if (arr.some(a => s.includes(a))) return en;
-      }
-      return s; // ถ้าไม่รู้จัก ปล่อยตามที่ส่งมา
+export default async function handler(req, res) {
+  // ---- 1) รับพารามิเตอร์จาก query ----
+  const {
+    q = 'Bangkok',
+    checkin,
+    checkout,
+    rooms = '1',
+    adults = '2',
+    children = '0',
+    lang = 'en-us',
+    currency = 'THB'
+  } = req.query || {};
+
+  // ---- 2) ดึงค่า ENV (ต้องมี) ----
+  const API_KEY = process.env.AGODA_API_KEY || '';
+  const CID = process.env.AGODA_CID || (API_KEY.includes(':') ? API_KEY.split(':')[0] : '');
+
+  // sanity check
+  if (!API_KEY || !CID) {
+    return res.status(500).json({
+      ok: false,
+      error: 'Missing Agoda credentials',
+      hasKey: !!API_KEY,
+      hasCID: !!CID
+    });
+  }
+
+  // ---- 3) เตรียมเรียก Agoda API ----
+  // *หมายเหตุ: บางบัญชี/เวอร์ชัน endpoint อาจต่างกัน โปรดตรวจเอกสารที่หน้า Tools > API ของคุณ
+  // ด้านล่างนี้ผมใส่ endpoint ตัวอย่าง + header มาตรฐาน หาก HTTP 200 → map ผลลัพธ์
+  // หากไม่ 200 หรือ shape ไม่ตรง → fallback เป็น mock (source:"mock")
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000); // 8s timeout
+
+  // ปรับ endpoint ให้ตรงกับเอกสารของคุณ (อาจเป็น /v2, /v1)
+  const ENDPOINT = 'https://affiliateapi.agoda.com/affiliatelite/v2/search'; // << ปรับตามเอกสารของคุณ
+
+  // รวมพารามิเตอร์ขั้นต่ำที่จำเป็น (บางระบบใช้ชื่อ param แตกต่างกัน)
+  const url = new URL(ENDPOINT);
+  url.searchParams.set('cid', CID);
+  url.searchParams.set('q', String(q));
+  if (checkin) url.searchParams.set('checkin', String(checkin));
+  if (checkout) url.searchParams.set('checkout', String(checkout));
+  url.searchParams.set('rooms', String(rooms));
+  url.searchParams.set('adults', String(adults));
+  url.searchParams.set('children', String(children));
+  url.searchParams.set('lang', String(lang));
+  url.searchParams.set('currency', String(currency));
+
+  // headers ที่พบบ่อยสำหรับ Affiliate Lite (ถ้าเอกสารของคุณระบุชื่อ header อื่น ให้เปลี่ยนตรงนี้)
+  const headers = {
+    'Content-Type': 'application/json',
+    // ใส่ไว้หลายชื่อเพื่อรองรับหลายเวอร์ชันของเอกสาร
+    'x-api-key': API_KEY,
+    'Api-Key': API_KEY,
+    'X-Agoda-ApiKey': API_KEY,
+    'User-Agent': 'ClickAndGo/1.0 (+https://clickandgo.asia)'
+  };
+
+  let data;
+  let source = 'agoda';
+
+  try {
+    const r = await fetch(url.toString(), {
+      method: 'GET',
+      headers,
+      signal: controller.signal
+    });
+
+    clearTimeout(timeout);
+
+    if (!r.ok) {
+      throw new Error(`Agoda API HTTP ${r.status}`);
     }
 
-    const normCity = normalizeCity(q);
+    const raw = await r.json();
 
-    // --- ข้อมูลตัวอย่าง (mock) เฉพาะกรุงเทพในตอนนี้ ---
-    const sampleHotels = [
-      {
-        id: '52120188',
-        name: 'Bangkok Riverside Hotel',
-        city: 'Bangkok',
-        imageUrl: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop',
-        priceFrom: 1290,
-        currency: 'THB',
-        freeCancellation: true,
-        mealPlan: 'Breakfast included',
-        deeplink: 'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=52120188',
-      },
-      {
-        id: '1030980',
-        name: 'Bangkok Central Hotel',
-        city: 'Bangkok',
-        imageUrl: 'https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&w=1200&auto=format&fit=crop',
-        priceFrom: 980,
-        currency: 'THB',
-        freeCancellation: false,
-        mealPlan: '',
-        deeplink: 'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=1030980',
-      },
-      {
-        id: '444480',
-        name: 'Bangkok Boutique Stay',
-        city: 'Bangkok',
-        imageUrl: 'https://images.unsplash.com/photo-1501117716987-c8e02e7ec3c4?q=80&w=1200&auto=format&fit=crop',
-        priceFrom: 1500,
-        currency: 'THB',
-        freeCancellation: true,
-        mealPlan: '',
-        deeplink: 'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1949420&hl=th-th&hid=444480',
-      },
-    ];
+    // ---- 4) Map รูปแบบผลลัพธ์จาก Agoda → โครงสร้างของเรา ----
+    // *** NOTE: โครงสร้างจริงของ Affiliate Lite อาจใช้ชื่อคีย์ต่างไป เช่น `results`, `hotels`, `items` ฯลฯ
+    // ด้านล่างนี้เป็นตัวอย่างการ map ที่ยืดหยุ่น ถ้าไม่พบ array ที่คาดไว้ จะโยน error เพื่อไป fallback mock
+    const itemsRaw =
+      raw?.results ||
+      raw?.hotels ||
+      raw?.items ||
+      raw?.data ||
+      [];
 
-    // ถ้าเป็น bangkok ไม่ว่าจะ TH/EN -> คืน sample, อื่น ๆ ตอนนี้ให้ว่าง (หรือจะคืน sample เหมือนกันก็ได้)
-    const isBangkok =
-      normCity === 'bangkok' ||
-      normCity === 'bkk' ||
-      aliases.bangkok.some(a => String(q).toLowerCase().includes(a));
+    if (!Array.isArray(itemsRaw) || itemsRaw.length === 0) {
+      throw new Error('Empty results from Agoda (shape not matched)');
+    }
 
-    const items = isBangkok ? sampleHotels : [];
+    // map ให้เป็น format กลาง (ระวังชื่อ field ของจริงจากเอกสาร)
+    const items = itemsRaw.slice(0, 20).map((h) => ({
+      id: String(h.id || h.hotelId || h.propertyId || ''),
+      name: h.name || h.title || 'Hotel',
+      city: h.city || h.location?.city || q,
+      starRating: Number(h.starRating || h.stars || 0),
+      reviewScore: Number(h.reviewScore || h.rating || 0),
+      reviewCount: Number(h.reviewCount || h.reviews || 0),
+      imageUrl: h.imageUrl || h.thumbnailUrl || '',
+      priceFrom: Number(
+        h.priceFrom || h.lowestPrice || h.price || h.minPrice || 0
+      ),
+      currency: currency,
+      freeCancellation: Boolean(
+        h.freeCancellation ?? h.cancellation?.free ?? false
+      ),
+      mealPlan: h.mealPlan || (h.breakfastIncluded ? 'Breakfast included' : ''),
+      // deeplink ไปหน้าค้นหา Agoda โดยใส่ cid + q + วันที่ (ถ้า API ให้ hid ของโรงแรมมา ก็สามารถเปลี่ยนเป็นลิงก์หน้าโรงแรมได้)
+      deeplink: buildAgodaSearchLink({ cid: CID, q, checkin, checkout, rooms, adults, children, lang, currency })
+    }));
 
-    // --- response ---
-    res.setHeader('Cache-Control', 'no-store');
-    return res.status(200).json({
+    data = {
       ok: true,
-      source: 'mock',
+      source,
       query: { q, checkin, checkout, rooms, adults, children, lang, currency },
       total: items.length,
-      items,
-    });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ ok: false, message: 'server error' });
+      items
+    };
+  } catch (e) {
+    clearTimeout(timeout);
+    // ---- 5) Fallback: mock data (เพื่อให้ UI ไม่ล่ม) ----
+    console.error('[Agoda API] error:', e?.message);
+    source = 'mock';
+    data = {
+      ok: true,
+      source,
+      query: { q, checkin, checkout, rooms, adults, children, lang, currency },
+      total: MOCK_ITEMS.length,
+      items: MOCK_ITEMS.map((x) => ({
+        ...x,
+        deeplink: buildAgodaSearchLink({ cid: CID, q, checkin, checkout, rooms, adults, children, lang, currency }),
+        currency
+      }))
+    };
   }
+
+  // cache สั้น ๆ กัน spam (จะปรับตามต้องการได้)
+  res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60');
+  return res.status(200).json(data);
 }
+
+// --- helpers ---
+
+function buildAgodaSearchLink({ cid, q, checkin, checkout, rooms, adults, children, lang, currency }) {
+  const base = 'https://www.agoda.com/partners/partnersearch.aspx';
+  const u = new URL(base);
+  u.searchParams.set('cid', cid);
+  if (q) u.searchParams.set('city', q);
+  if (checkin) u.searchParams.set('checkIn', checkin);
+  if (checkout) u.searchParams.set('checkOut', checkout);
+  if (rooms) u.searchParams.set('rooms', rooms);
+  if (adults) u.searchParams.set('adults', adults);
+  if (children) u.searchParams.set('children', children);
+  if (lang) u.searchParams.set('language', lang);
+  if (currency) u.searchParams.set('currency', currency);
+  u.searchParams.set('pcs', '1'); // keep search
+  return u.toString();
+}
+
+// Mock items สำหรับ fallback
+const MOCK_ITEMS = [
+  {
+    id: '52120188',
+    name: 'Bangkok Riverside Hotel',
+    city: 'Bangkok',
+    starRating: 4,
+    reviewScore: 8.7,
+    reviewCount: 214,
+    imageUrl:
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop',
+    priceFrom: 1290,
+    freeCancellation: true,
+    mealPlan: 'Breakfast included'
+  },
+  {
+    id: '52120189',
+    name: 'Bangkok Central Hotel',
+    city: 'Bangkok',
+    starRating: 3,
+    reviewScore: 8.1,
+    reviewCount: 98,
+    imageUrl:
+      'https://images.unsplash.com/photo-1559599101-f09722fb4948?q=80&w=1200&auto=format&fit=crop',
+    priceFrom: 990,
+    freeCancellation: false,
+    mealPlan: ''
+  },
+  {
+    id: '52120190',
+    name: 'Sukhumvit Modern Hotel',
+    city: 'Bangkok',
+    starRating: 5,
+    reviewScore: 9.1,
+    reviewCount: 468,
+    imageUrl:
+      'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=1200&auto=format&fit=crop',
+    priceFrom: 2190,
+    freeCancellation: true,
+    mealPlan: 'Breakfast included'
+  }
+];
