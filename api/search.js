@@ -9,8 +9,8 @@ function num(v, def = 0) {
   return Number.isFinite(n) ? n : def;
 }
 
-function parseInputParams(req) {
-  const q         = String(req.query.q || req.query.city || 'Bangkok');
+function parseQuery(req) {
+  const q         = String(req.query.q || req.query.city || 'Bangkok').trim();
   const checkin   = String(req.query.checkin  || req.query.checkIn  || '');
   const checkout  = String(req.query.checkout || req.query.checkOut || '');
   const rooms     = num(req.query.rooms,    1);
@@ -22,9 +22,9 @@ function parseInputParams(req) {
   const sortOrder = String(req.query.sortOrder || 'PRICE').toUpperCase();
 
   return {
-    cityName : q,
-    checkIn  : checkin,
-    checkOut : checkout,
+    cityName : q,          // เราจะ map -> area
+    checkIn  : checkin,    // เราจะ map -> checkInDate
+    checkOut : checkout,   // เราจะ map -> checkOutDate
     rooms,
     adults,
     children,
@@ -39,8 +39,9 @@ function mockItems(criteria, cid) {
   const city = criteria.cityName || 'Bangkok';
   const ci = criteria.checkIn || '2025-09-24';
   const co = criteria.checkOut || '2025-09-25';
-  const dl = (name) =>
-    `https://www.agoda.com/partners/partnersearch.aspx?cid=${cid}&city=${encodeURIComponent(city)}&checkIn=${ci}&checkOut=${co}`;
+  const dl = () =>
+    `https://www.agoda.com/partners/partnersearch.aspx?cid=${cid}` +
+    `&city=${encodeURIComponent(city)}&checkIn=${ci}&checkOut=${co}`;
 
   return [
     {
@@ -50,13 +51,12 @@ function mockItems(criteria, cid) {
       starRating: 4,
       reviewScore: 8.7,
       reviewCount: 214,
-      imageUrl:
-        'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop',
+      imageUrl: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop',
       priceFrom: 1290,
       currency: criteria.currency || 'THB',
       freeCancellation: true,
       mealPlan: 'Breakfast included',
-      deeplink: dl('riverside'),
+      deeplink: dl(),
     },
     {
       id: '52120199',
@@ -65,13 +65,12 @@ function mockItems(criteria, cid) {
       starRating: 3,
       reviewScore: 8.0,
       reviewCount: 120,
-      imageUrl:
-        'https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?q=80&w=1200&auto=format&fit=crop',
+      imageUrl: 'https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?q=80&w=1200&auto=format&fit=crop',
       priceFrom: 990,
       currency: criteria.currency || 'THB',
       freeCancellation: false,
       mealPlan: '',
-      deeplink: dl('central'),
+      deeplink: dl(),
     },
     {
       id: '52120222',
@@ -80,32 +79,28 @@ function mockItems(criteria, cid) {
       starRating: 5,
       reviewScore: 9.1,
       reviewCount: 84,
-      imageUrl:
-        'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop',
+      imageUrl: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop',
       priceFrom: 2890,
       currency: criteria.currency || 'THB',
       freeCancellation: true,
       mealPlan: 'Breakfast included',
-      deeplink: dl('oldtown'),
+      deeplink: dl(),
     },
   ];
 }
 
-// ---------- normalizer (สำหรับกรณีต่อ API จริงสำเร็จ) ----------
 function normalizeAgodaResponse(raw, criteria, cid) {
-  // *** ตัวอย่างการ map รูปแบบข้อมูล (ปรับตามสคีมา API จริงได้ในอนาคต)
-  // ให้เราสร้าง deeplink กลับไป Agoda พร้อม cid, checkin, checkout, city
+  const city = criteria.cityName || '';
   const ci = criteria.checkIn || '';
   const co = criteria.checkOut || '';
-  const city = criteria.cityName || '';
 
-  const items = (raw?.items || []).map((h) => ({
+  const items = (raw?.items || []).map(h => ({
     id: String(h.id || h.hotelId || ''),
     name: h.name || h.hotelName || '',
     city: h.city || city,
     starRating: Number(h.starRating || h.star || 0),
     reviewScore: Number(h.reviewScore || h.rating || 0),
-    reviewCount: Number(h.reviewCount || h.reviewCount || 0),
+    reviewCount: Number(h.reviewCount || h.reviews || 0),
     imageUrl: h.imageUrl || h.image || '',
     priceFrom: Number(h.priceFrom || h.minRate || 0),
     currency: h.currency || criteria.currency || 'THB',
@@ -123,93 +118,101 @@ function normalizeAgodaResponse(raw, criteria, cid) {
     source: 'agoda',
     query: criteria,
     total: Number(raw.total || items.length),
-    items,
+    items
   };
 }
 
-// ---------- handler ----------
 export default async function handler(req, res) {
   const started = Date.now();
   const key = process.env.AGODA_API_KEY || '';
+  const [cidFromKey] = key.split(':');
+  const CID = process.env.AGODA_CID || cidFromKey || '1949420';
+
+  const input = parseQuery(req);
+  const debug = String(req.query.debug || '') === '1';
+
+  // ถ้าไม่มี key -> mock
   if (!key) {
-    // ไม่มี KEY -> mock
-    const criteria = parseInputParams(req);
-    const cid = '1949420';
     return res.status(200).json({
       ok: true,
       source: 'mock',
       note: 'Missing AGODA_API_KEY -> use mock',
-      query: criteria,
+      query: input,
       total: 3,
-      items: mockItems(criteria, cid),
-      tookMs: Date.now() - started,
+      items: mockItems(input, CID),
+      tookMs: Date.now() - started
     });
   }
 
-  // แยก CID ออกมาจาก "CID:APIKEY"
-  const [cidFromKey] = key.split(':');
-  const CID = process.env.AGODA_CID || cidFromKey || '1949420';
+  // ---- payload ตามสเปค Agoda Lite ----
+  // ใช้ `area` จากชื่อเมือง, วันที่เป็น `checkInDate` / `checkOutDate`
+  // rooms -> array (จำนวนเท่ากับ rooms) แต่ถ้าทุกห้องจำนวนผู้เข้าพักเท่ากัน จะใช้แบบนี้ได้เลย
+  const roomsArray = Array.from({ length: Math.max(1, input.rooms) }).map(() => ({
+    adults: input.adults,
+    children: input.children,
+    childAges: []     // ถ้ามีเด็กและต้องระบุอายุ ให้เติมอายุเป็นตัวเลขลงไป
+  }));
 
-  const criteria = parseInputParams(req);
-  const debug = String(req.query.debug || '').toLowerCase() === '1';
+  const payload = {
+    criteria: {
+      area: input.cityName,               // ถ้ามี cityId ในอนาคตเปลี่ยนเป็น cityId แทน
+      checkInDate:  input.checkIn,
+      checkOutDate: input.checkOut,
+      rooms: roomsArray,
+      currency: input.currency,
+      language: input.language,
+      sortOrder: input.sortOrder,
+      resultCount: input.resultCount
+    }
+  };
 
-  // สร้าง payload ตาม spec ของ Agoda Lite API
-  const payload = { criteria };
-
-  let apiStatus = 0;
-  let rawText = '';
+  let apiStatus = 0, rawText = '';
   try {
     const resp = await fetch(API_URL, {
       method: 'POST',
       headers: {
-        // ตาม spec Agoda Affiliate Lite:
-        // Authorization = "CID:APIKEY" (ตรง ๆ ไม่ใช่ Bearer)
-        Authorization: key,
-        cid: CID,                          // เพิ่ม cid แยกอีกหัว
+        Authorization: key,   // "CID:APIKEY"
+        cid: CID,
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        Accept: 'application/json'
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload)
     });
 
     apiStatus = resp.status;
     rawText = await resp.text();
 
-    // 2xx => พยายาม parse
     if (resp.ok) {
-      let json;
-      try { json = JSON.parse(rawText); } catch (e) { json = null; }
-
+      let json; try { json = JSON.parse(rawText); } catch (e) { json = null; }
       if (json && !json.error) {
-        const normalized = normalizeAgodaResponse(json, criteria, CID);
-        if (debug) normalized._raw = rawText;
-        normalized.tookMs = Date.now() - started;
-        return res.status(200).json(normalized);
+        const out = normalizeAgodaResponse(json, input, CID);
+        if (debug) out._raw = rawText;
+        out.tookMs = Date.now() - started;
+        return res.status(200).json(out);
       }
     }
 
-    // ถ้า Agoda ส่ง error (เช่น 401 / id 108)
-    // => fallback mock พร้อมแนบ _raw ให้ debug
+    // Agoda ยัง error -> mock พร้อมแนบข้อความดิบ
     const out = {
       ok: true,
       source: 'mock',
       note: `agoda api http ${apiStatus}`,
-      query: criteria,
+      query: input,
       total: 3,
-      items: mockItems(criteria, CID),
+      items: mockItems(input, CID)
     };
     if (debug) out._raw = rawText;
     out.tookMs = Date.now() - started;
     return res.status(200).json(out);
+
   } catch (err) {
-    // network หรือ parsing error -> mock
     const out = {
       ok: true,
       source: 'mock',
       note: `agoda api fetch error: ${String(err?.message || err)}`,
-      query: criteria,
+      query: input,
       total: 3,
-      items: mockItems(criteria, CID),
+      items: mockItems(input, CID)
     };
     if (debug) out._raw = rawText;
     out.tookMs = Date.now() - started;
