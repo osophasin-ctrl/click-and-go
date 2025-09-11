@@ -190,3 +190,92 @@ a:hover{ text-decoration:underline; }
 .site-footer{ border-top:1px solid #eee; background:#fafafa; padding:18px 0; margin-top:26px; }
 .site-footer a{ color:var(--brand); }
 .footer-links{ font-weight:700; }
+
+/* =========================================================
+   Mock Search Box (Agoda-like) + Suggestion dropdown
+   (ใช้กับหน้า test/searchbox-mock หรือดีล/อินเด็กซ์ที่ต้องการ)
+   ========================================================= */
+.agoda-wrap{
+  max-width:1030px; width:100%; margin:0 auto;
+}
+
+/* กล่องหลักให้สูงใกล้เคียง Sherpa (293px) */
+.mock-box{
+  min-height:293px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+/* แถวอินพุต 5 ช่อง: Destination | Check-in | Check-out | Guests | Button */
+.mock-row{
+  display:grid;
+  grid-template-columns: 1fr 200px 200px 240px 130px;
+  gap:10px;
+  align-items:center;
+}
+
+/* ให้ input/ปุ่มสูงเท่ากัน */
+.mock-input,
+.guest-input,
+.mock-btn{
+  height:44px;
+  border:1px solid #d7d7d7;
+  border-radius:8px;
+  padding:0 12px;
+  background:#fff;
+}
+
+/* ปุ่ม Search สีน้ำเงินเขียวของแบรนด์ */
+.mock-btn{
+  background:#0ea5a0;
+  color:#fff;
+  border:0;
+  font-weight:700;
+}
+
+/* ------------ Suggestion dropdown ------------- */
+.suggest-wrap{ position:relative; }
+.suggest-panel{
+  position:absolute;
+  left:0; right:0; top:calc(100% + 4px);
+  background:#fff;
+  border:1px solid #ddd;
+  border-radius:10px;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+  max-height:260px;
+  overflow:auto;
+  z-index:999;
+}
+.suggest-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 12px;
+  cursor:pointer;
+}
+.suggest-item:hover{ background:#f5f7f8; }
+.suggest-item .sub{ color:#666; font-size:12px; }
+.suggest-empty{ padding:10px 12px; color:#777; }
+
+/* ให้ altInput ของ flatpickr เหมือน input ปกติ */
+.flatpickr-input[readonly]{ background:#fff; }
+
+/* ---------- Responsive ของ mock-row ---------- */
+@media (max-width: 980px){
+  .mock-row{
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .mock-btn{ grid-column:1 / -1; }
+}
+@media (max-width: 640px){
+  .mock-row{
+    grid-template-columns: 1fr;
+  }
+  .mock-btn{ width:100%; }
+}
