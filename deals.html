@@ -62,6 +62,22 @@
     .btn-primary{ border:0; background:#0ea5a0; color:#fff; border-radius:8px; padding:8px 14px; }
     /* ให้ flatpickr ดูเหมือนอินพุตปกติ */
     .flatpickr-input[readonly]{ background:#fff; }
+
+    /* ===== Suggestion dropdown ===== */
+    .suggest-wrap { position: relative; }
+    .suggest-panel {
+      position: absolute; left: 0; right: 0; top: calc(100% + 4px);
+      background: #fff; border: 1px solid #ddd; border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.08);
+      max-height: 260px; overflow: auto; z-index: 999;
+    }
+    .suggest-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 12px; cursor: pointer;
+    }
+    .suggest-item:hover, .suggest-item.active { background:#f5f7f8; }
+    .suggest-title { font-weight: 600; color:#222; }
+    .suggest-sub  { font-size: 12px; color:#666; }
   </style>
 </head>
 <body>
@@ -95,7 +111,13 @@
 
         <!-- Our Search Form -->
         <form id="searchForm" class="search-form search-4cols" role="search" aria-label="ค้นหาโรงแรม">
-          <input type="text" id="destination" placeholder="ปลายทาง เช่น กรุงเทพฯ หรือชื่อโรงแรม" aria-label="ปลายทาง" />
+          <!-- Destination + Suggestion -->
+          <div class="suggest-wrap">
+            <input type="text" id="destination"
+                   placeholder="ปลายทาง เช่น กรุงเทพ หรือชื่อโรงแรม"
+                   aria-label="ปลายทาง" autocomplete="off" />
+            <div id="suggestPanel" class="suggest-panel" role="listbox" hidden></div>
+          </div>
 
           <input type="text" id="checkin" class="date" placeholder="เช็คอิน" aria-label="เช็คอิน" readonly>
           <input type="text" id="checkout" class="date" placeholder="เช็คเอาท์" aria-label="เช็คเอาท์" readonly>
@@ -196,6 +218,7 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+
   <script>
     // เมนูภาษา
     (function(){
@@ -319,6 +342,80 @@
         const co = outPicker.formatDate(outPicker.selectedDates[0], 'Y-m-d');
         location.href = `/search.html?q=${q}&checkin=${ci}&checkout=${co}&rooms=${rooms}&adults=${adults}&children=${children}`;
       });
+    })();
+
+    // ===== Suggestion Popup (เรียก /api/suggest) =====
+    (function(){
+      const input   = document.getElementById('destination');
+      const panel   = document.getElementById('suggestPanel');
+      if(!input || !panel) return;
+
+      const lang = 'th-th';
+      let timer = null;
+      let items = [];
+      let active = -1;
+
+      function hide(){ panel.hidden = true; panel.innerHTML=''; active = -1; }
+      function show(html){ panel.innerHTML = html; panel.hidden = false; active = -1; }
+
+      function render(list){
+        const html = list.map((it,idx)=>`
+          <div class="suggest-item" role="option" data-idx="${idx}">
+            <div class="suggest-title">${it.label}</div>
+            <div class="suggest-sub">${it.subtitle || ''}</div>
+          </div>`).join('');
+        show(html);
+        panel.querySelectorAll('.suggest-item').forEach(el=>{
+          el.addEventListener('mousedown', e=>{
+            e.preventDefault(); // กัน blur ก่อนคลิก
+            const idx = +el.dataset.idx;
+            if (items[idx]) {
+              input.value = items[idx].label;
+              hide();
+            }
+          });
+        });
+      }
+
+      function fetchSuggest(q){
+        if(!q || q.length < 2){ hide(); return; }
+        fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=${lang}`)
+          .then(r=>r.json())
+          .then(data=>{
+            items = (data && data.items) || [];
+            if(items.length) render(items); else hide();
+          })
+          .catch(()=> hide());
+      }
+
+      // debounce input
+      input.addEventListener('input', ()=>{
+        clearTimeout(timer);
+        timer = setTimeout(()=> fetchSuggest(input.value.trim()), 180);
+      });
+
+      input.addEventListener('focus', ()=>{
+        if (input.value.trim().length >= 2) fetchSuggest(input.value.trim());
+      });
+
+      document.addEventListener('click', (e)=>{
+        if(!panel.contains(e.target) && e.target !== input) hide();
+      });
+
+      // keyboard navigation
+      input.addEventListener('keydown', (e)=>{
+        const list = panel.querySelectorAll('.suggest-item');
+        if(panel.hidden || !list.length) return;
+        if(e.key === 'ArrowDown'){ e.preventDefault(); active = (active+1) % list.length; updateActive(list); }
+        if(e.key === 'ArrowUp'){   e.preventDefault(); active = (active-1+list.length) % list.length; updateActive(list); }
+        if(e.key === 'Enter'){     e.preventDefault(); if(items[active]) { input.value = items[active].label; hide(); } }
+        if(e.key === 'Escape'){    hide(); }
+      });
+
+      function updateActive(list){
+        list.forEach((el,i)=> el.classList.toggle('active', i===active));
+        if(list[active]) list[active].scrollIntoView({block:'nearest'});
+      }
     })();
   </script>
 </body>
