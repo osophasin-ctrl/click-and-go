@@ -19,11 +19,28 @@
   <link rel="icon" href="../favicon.ico" />
   <link rel="stylesheet" href="../style.css" />
 
-  <!-- Flatpickr (datepicker) -->
+  <!-- Flatpickr -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
 
   <style>
+    /* -------- Suggestion dropdown ---------- */
+    .suggest-wrap { position: relative; }
+    .suggest-panel {
+      position: absolute; left: 0; right: 0; top: calc(100% + 4px);
+      background: #fff; border: 1px solid #ddd; border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.08);
+      max-height: 260px; overflow: auto; z-index: 999;
+      display: none;
+    }
+    .suggest-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 12px; cursor: pointer;
+    }
+    .suggest-item:hover { background: #f5f7f8; }
+    .suggest-city { font-weight: 600; color: #222; }
+    .suggest-country { color: #666; font-size: 13px; }
+
     /* ----- Guest popup styles ----- */
     .guest-input{
       width:100%; height:44px; line-height:44px;
@@ -60,23 +77,9 @@
     .modal-footer{ display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #eee; }
     .btn-outline{ border:1px solid #bbb; background:#fff; color:#333; border-radius:8px; padding:8px 14px; }
     .btn-primary{ border:0; background:#0ea5a0; color:#fff; border-radius:8px; padding:8px 14px; }
-    .flatpickr-input[readonly]{ background:#fff; }
 
-    /* ===== Suggestion dropdown ===== */
-    .suggest-wrap { position: relative; }
-    .suggest-panel {
-      position: absolute; left: 0; right: 0; top: calc(100% + 4px);
-      background: #fff; border: 1px solid #ddd; border-radius: 10px;
-      box-shadow: 0 8px 20px rgba(0,0,0,.08);
-      max-height: 260px; overflow: auto; z-index: 999;
-    }
-    .suggest-item {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 12px; cursor: pointer;
-    }
-    .suggest-item:hover, .suggest-item.active { background:#f5f7f8; }
-    .suggest-title { font-weight: 600; color:#222; }
-    .suggest-sub  { font-size: 12px; color:#666; }
+    /* Flatpickr input style */
+    .flatpickr-input[readonly]{ background:#fff; }
   </style>
 </head>
 <body>
@@ -110,25 +113,22 @@
 
         <!-- Our Search Form -->
         <form id="searchForm" class="search-form search-4cols" role="search" aria-label="Hotel search">
-          <!-- Destination + Suggestion -->
           <div class="suggest-wrap">
-            <input type="text" id="destination"
-                   placeholder="Destination e.g., Bangkok or hotel name"
-                   aria-label="Destination" autocomplete="off" />
+            <input type="text" id="destination" placeholder="Destination e.g., Bangkok or hotel name" aria-label="Destination" autocomplete="off" />
             <div id="suggestPanel" class="suggest-panel" role="listbox" hidden></div>
           </div>
 
           <input type="text" id="checkin" class="date" placeholder="Check-in" aria-label="Check-in" readonly>
           <input type="text" id="checkout" class="date" placeholder="Check-out" aria-label="Check-out" readonly>
 
-          <!-- Travelers -->
+          <!-- Travelers (Rooms / Adults / Children) -->
           <button type="button" id="guestBtn" class="guest-input" aria-haspopup="dialog" aria-controls="guestModal">
             1 Room, 2 Adults, 0 Children
           </button>
 
           <button type="submit" class="btn">Search</button>
 
-          <!-- hidden values -->
+          <!-- hidden values for submit -->
           <input type="hidden" id="rooms" value="1">
           <input type="hidden" id="adults" value="2">
           <input type="hidden" id="children" value="0">
@@ -136,7 +136,6 @@
       </div>
     </section>
 
-    <!-- Hottest deals in popular cities -->
     <section>
       <h2 class="section-title">Hottest deals in popular cities</h2>
       <div class="city-grid">
@@ -204,11 +203,11 @@
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="/en/privacy.html">Privacy</a> ·
-        <a href="/en/terms.html">Terms</a> ·
-        <a href="/en/affiliate.html">Affiliate Disclosure</a> ·
-        <a href="/en/about.html">About us</a> ·
-        <a href="/en/contact.html">Contact</a> ·
+        <a href="privacy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html">About us</a> ·
+        <a href="contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
@@ -232,7 +231,6 @@
       document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu(); });
     })();
 
-    // Datepicker (Flatpickr) – force EN
     (function(){
       const ONE_DAY = 24*60*60*1000;
 
@@ -261,24 +259,19 @@
         allowInput: false
       });
 
-      // defaults: today / tomorrow
-      const today = new Date();
-      const tomorrow = new Date(Date.now()+ONE_DAY);
-      inPicker.setDate(today, true);
-      outPicker.setDate(tomorrow, true);
+      // defaults today/tomorrow
+      inPicker.setDate(new Date(), true);
+      outPicker.setDate(new Date(Date.now()+ONE_DAY), true);
 
-      // --- Guest modal ---
+      // Travelers
       let rooms = 1, adults = 2, children = 0;
-
       const guestBtn = document.getElementById('guestBtn');
       const roomsCount = document.getElementById('roomsCount');
       const adultsCount = document.getElementById('adultsCount');
       const childrenCount = document.getElementById('childrenCount');
-
       const hiddenRooms = document.getElementById('rooms');
       const hiddenAdults = document.getElementById('adults');
       const hiddenChildren = document.getElementById('children');
-
       const modal = document.getElementById('guestModal');
       const backdrop = document.getElementById('guestBackdrop');
 
@@ -293,7 +286,7 @@
         modal.style.display = 'none';
         backdrop.style.display = 'none';
       }
-      function plural(n, one, many){ return n === 1 ? one : many; }
+      function plural(n, s1, s2){ return n===1? s1:s2; }
       function updateGuestBtn(){
         guestBtn.textContent = `${rooms} ${plural(rooms,'Room','Rooms')}, ${adults} ${plural(adults,'Adult','Adults')}, ${children} ${plural(children,'Child','Children')}`;
       }
@@ -330,7 +323,67 @@
         closeModal();
       });
 
-      // submit -> go to /search.html (shared results page)
+      // ------- Suggestion dropdown ----------
+      const input = document.getElementById('destination');
+      const panel = document.getElementById('suggestPanel');
+      let timer;
+
+      const fallbackEN = [
+        {city:'Bangkok', country:'Thailand'}, {city:'Chiang Mai', country:'Thailand'},
+        {city:'Phuket', country:'Thailand'}, {city:'Pattaya', country:'Thailand'},
+        {city:'Krabi', country:'Thailand'}, {city:'Hua Hin', country:'Thailand'}
+      ];
+
+      function hideSuggest(){ panel.style.display='none'; panel.setAttribute('hidden',''); panel.innerHTML=''; }
+      function showSuggest(){ panel.style.display='block'; panel.removeAttribute('hidden'); }
+
+      function render(items){
+        if(!items || !items.length){ hideSuggest(); return; }
+        panel.innerHTML = items.map((it)=>`
+          <div class="suggest-item" role="option" data-value="${it.city}">
+            <div class="suggest-city">${it.city}</div>
+            <div class="suggest-country">${it.country||''}</div>
+          </div>
+        `).join('');
+        showSuggest();
+        panel.querySelectorAll('.suggest-item').forEach(el=>{
+          el.addEventListener('click', ()=>{
+            input.value = el.getAttribute('data-value');
+            hideSuggest();
+            input.blur();
+          });
+        });
+      }
+
+      async function fetchSuggest(q){
+        try{
+          const r = await fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=en`);
+          if(!r.ok) throw new Error('bad');
+          const data = await r.json();
+          if(data && Array.isArray(data.items) && data.items.length){
+            return data.items; // expect [{city, country}]
+          }
+          return [];
+        }catch(e){
+          return fallbackEN.filter(x=> x.city.toLowerCase().includes((q||'').toLowerCase()));
+        }
+      }
+
+      function onInput(){
+        const q = (input.value||'').trim();
+        if(q.length < 2){ hideSuggest(); return; }
+        clearTimeout(timer);
+        timer = setTimeout(async ()=>{
+          const list = await fetchSuggest(q);
+          render(list);
+        }, 200);
+      }
+
+      input.addEventListener('input', onInput);
+      input.addEventListener('focus', onInput);
+      input.addEventListener('blur', ()=> setTimeout(hideSuggest, 150));
+
+      // submit -> /search.html
       document.getElementById('searchForm').addEventListener('submit', function(e){
         e.preventDefault();
         const q  = encodeURIComponent(document.getElementById('destination').value || 'Bangkok');
@@ -338,80 +391,6 @@
         const co = outPicker.formatDate(outPicker.selectedDates[0], 'Y-m-d');
         location.href = `/search.html?q=${q}&checkin=${ci}&checkout=${co}&rooms=${rooms}&adults=${adults}&children=${children}`;
       });
-    })();
-
-    // ===== Suggestion Popup (call /api/suggest) =====
-    (function(){
-      const input   = document.getElementById('destination');
-      const panel   = document.getElementById('suggestPanel');
-      if(!input || !panel) return;
-
-      const lang = 'en-us';
-      let timer = null;
-      let items = [];
-      let active = -1;
-
-      function hide(){ panel.hidden = true; panel.innerHTML=''; active = -1; }
-      function show(html){ panel.innerHTML = html; panel.hidden = false; active = -1; }
-
-      function render(list){
-        const html = list.map((it,idx)=>`
-          <div class="suggest-item" role="option" data-idx="${idx}">
-            <div class="suggest-title">${it.label}</div>
-            <div class="suggest-sub">${it.subtitle || ''}</div>
-          </div>`).join('');
-        show(html);
-        panel.querySelectorAll('.suggest-item').forEach(el=>{
-          el.addEventListener('mousedown', e=>{
-            e.preventDefault();
-            const idx = +el.dataset.idx;
-            if (items[idx]) {
-              input.value = items[idx].label;
-              hide();
-            }
-          });
-        });
-      }
-
-      function fetchSuggest(q){
-        if(!q || q.length < 2){ hide(); return; }
-        fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=${lang}`)
-          .then(r=>r.json())
-          .then(data=>{
-            items = (data && data.items) || [];
-            if(items.length) render(items); else hide();
-          })
-          .catch(()=> hide());
-      }
-
-      // debounce input
-      input.addEventListener('input', ()=>{
-        clearTimeout(timer);
-        timer = setTimeout(()=> fetchSuggest(input.value.trim()), 180);
-      });
-
-      input.addEventListener('focus', ()=>{
-        if (input.value.trim().length >= 2) fetchSuggest(input.value.trim());
-      });
-
-      document.addEventListener('click', (e)=>{
-        if(!panel.contains(e.target) && e.target !== input) hide();
-      });
-
-      // keyboard navigation
-      input.addEventListener('keydown', (e)=>{
-        const list = panel.querySelectorAll('.suggest-item');
-        if(panel.hidden || !list.length) return;
-        if(e.key === 'ArrowDown'){ e.preventDefault(); active = (active+1) % list.length; updateActive(list); }
-        if(e.key === 'ArrowUp'){   e.preventDefault(); active = (active-1+list.length) % list.length; updateActive(list); }
-        if(e.key === 'Enter'){     e.preventDefault(); if(items[active]) { input.value = items[active].label; hide(); } }
-        if(e.key === 'Escape'){    hide(); }
-      });
-
-      function updateActive(list){
-        list.forEach((el,i)=> el.classList.toggle('active', i===active));
-        if(list[active]) list[active].scrollIntoView({block:'nearest'});
-      }
     })();
   </script>
 </body>
