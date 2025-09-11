@@ -1,154 +1,115 @@
 <!doctype html>
-<html lang="th">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Click & Go – Mock Search Box (Agoda-like)</title>
-  <meta name="description" content="Prototype search box with the same layout/size as Agoda Oneline (1030×293), no external link." />
-  <link rel="icon" href="favicon.ico" />
+  <title>Click & Go – Mock Search Box</title>
+  <meta name="description" content="Prototype mock search box (no outbound link)" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/style.css" />
 
-  <!-- Flatpickr for dates -->
+  <!-- Flatpickr -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
 
   <style>
-    :root{
-      --brand:#0ea5a0;
-      --bg:#f7f7f8;
-      --card:#fff;
-      --text:#222;
-      --muted:#666;
-      --border:#e5e7eb;
-      --shadow: 0 6px 18px rgba(0,0,0,.08);
-      --radius: 12px;
-    }
-    *{ box-sizing:border-box; }
-    html,body{ margin:0; padding:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text); background:var(--bg); }
+    /* ===== Overrides เฉพาะหน้านี้ เพื่อจัด 4 บรรทัด ===== */
+    .mock-box.stack { padding: 20px; }
+    .mock-title { font-size: clamp(22px, 3vw, 32px); font-weight: 800; margin: 0 0 6px; color:#222; }
+    .mock-sub   { margin: 0 0 14px; color:#6b7280; }
 
-    .container{ max-width:1200px; margin: 18px auto; padding: 0 16px; }
-    .head{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
-    .brand{ display:flex; align-items:center; gap:10px; }
-    .brand img{ width:36px; height:36px; }
-    .brand .tt{ font-weight:800; letter-spacing:.2px; }
-    .btn{ border:1px solid var(--border); background:#fff; color:#111; height:36px; padding:0 12px; border-radius:8px; cursor:pointer; }
-    .lang-indicator{ color:var(--muted); font-size:14px; }
+    .stack .mock-row { display: grid; gap: 10px; grid-template-columns: 1fr; }
+    .stack .mock-row.dates { grid-template-columns: 1fr 1fr; }
+    .stack .mock-row.guests { grid-template-columns: 1fr; }
+    .stack .mock-row.submit .mock-btn { width: 100%; height: 52px; border-radius: 12px; font-size: 18px; }
 
-    /* ===== Mock search box wrap: ขนาดเท่า Agoda ===== */
-    .agoda-wrap { max-width:1030px; width:100%; margin:0 auto; }
-    .mock-box {
-      width:100%;
-      min-height:293px;                  /* ให้สูงรวมเท่า Agoda */
-      background:#ffffff;                /* เอาพื้นหลัง/โลโก้ Agoda ออก */
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 16px;
-      display: flex; flex-direction: column; justify-content: center; /* จัดกลางแนวตั้ง */
+    .mock-input, .guest-input {
+      height: 48px;
+      border: 1px solid #d7d7d7;
+      border-radius: 10px;
+      padding: 0 14px;
+      background: #fff;
+      font-size: 16px;
     }
 
-    .mock-title { margin:0 0 6px; font-weight:800; font-size:22px; }
-    .mock-sub { margin:0 0 12px; color:var(--muted); }
+    /* flatpickr alt input ให้หน้าตากลมกลืน */
+    .flatpickr-input[readonly] { background:#fff; }
 
-    /* แถวฟอร์มให้เหมือน Layout "Oneline" ของ Agoda */
-    .mock-row {
-      display:grid;
-      grid-template-columns: 1fr 200px 200px 240px 130px; /* Destination | Check-in | Check-out | Guests | Search */
-      gap:10px;
-      align-items:center;
+    /* suggestion panel */
+    .suggest-wrap { position: relative; }
+    .suggest-panel {
+      position: absolute; left: 0; right: 0; top: calc(100% + 6px);
+      background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.08);
+      max-height: 260px; overflow: auto; z-index: 999;
     }
-    .mock-input, .mock-select, .mock-btn {
-      height:44px; border:1px solid #d7d7d7; border-radius:8px; padding:0 12px; background:#fff; font-size:15px;
-    }
-    .mock-input{ width:100%; }
-    .mock-btn { background: var(--brand); color:#fff; border: 0; cursor:pointer; font-weight:700; }
-    .mock-btn:active { transform: translateY(1px); }
+    .suggest-item { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; cursor:pointer; }
+    .suggest-item:hover { background:#f5f7f8; }
+    .suggest-item .sub { color:#666; font-size:12px; }
+    .suggest-empty { padding:12px 14px; color:#777; }
 
-    /* Suggestion dropdown (ปลายทาง) */
-    .suggest-wrap{ position:relative; }
-    .suggest-panel{
-      position:absolute; left:0; right:0; top: calc(100% + 4px);
-      background:#fff; border:1px solid #ddd; border-radius:10px;
-      box-shadow:0 8px 20px rgba(0,0,0,.08);
-      max-height:260px; overflow:auto; z-index:999;
-      display:none;
-    }
-    .suggest-item{
-      display:flex; justify-content:space-between; align-items:center;
-      padding:10px 12px; cursor:pointer;
-    }
-    .suggest-item:hover{ background:#f6f6f6; }
-    .s-label{ font-weight:600; }
-    .s-sub{ color:#777; font-size:13px; }
-
-    /* Guests button + modal (แบบย่อ) */
-    .guest-input{ width:100%; height:44px; line-height:44px; border:1px solid #d7d7d7; border-radius:8px; padding:0 12px; background:#fff; text-align:left; cursor:pointer; }
-    .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:999; }
-    .modal{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; width:min(92vw,420px); box-shadow:0 12px 24px rgba(0,0,0,.2); z-index:1000; display:none; }
-    .modal-header,.modal-footer{ padding:14px 16px; }
-    .modal-header{ border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
-    .modal-title{ font-weight:700; font-size:18px; }
-    .modal-body{ padding:10px 16px 0 16px; }
-    .row-ctrl{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; }
-    .row-ctrl + .row-ctrl{ border-top:1px dashed #eee; }
-    .label-wrap{ display:flex; flex-direction:column; gap:2px; }
-    .label-wrap small{ color:#666; }
-    .counter{ display:flex; align-items:center; gap:10px; }
-    .btn-ctrl{ width:36px; height:36px; border-radius:50%; border:1px solid #ccc; background:#fff; font-size:18px; cursor:pointer; }
-    .count{ min-width:20px; text-align:center; font-weight:700; }
-    .btn-outline{ border:1px solid #bbb; background:#fff; color:#333; border-radius:8px; padding:8px 14px; }
-    .btn-primary{ border:0; background:var(--brand); color:#fff; border-radius:8px; padding:8px 14px; }
-
-    /* Responsive */
-    @media (max-width: 980px){
-      .mock-row{ grid-template-columns: 1fr 1fr; }
-      .col-span-2{ grid-column: span 2; }
+    /* responsive ปรับให้สวยในมือถือ */
+    @media (max-width: 560px){
+      .stack .mock-row.dates { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="head">
-      <div class="brand">
-        <img src="logo.png" alt="Click & Go"><div class="tt">Click & Go – Mock Search Box</div>
-      </div>
-      <div>
-        <span class="lang-indicator">Prototype (no outbound link)</span>
-      </div>
+  <header class="site-header">
+    <div class="inner">
+      <a href="/" class="brand"><img src="/logo.png" alt="GO" width="40" height="40"><span class="brand-text">Click & Go</span></a>
+      <nav class="main-nav">
+        <span style="font-weight:700">Click & Go – Mock Search Box</span>
+        <span style="color:#999">Prototype (no outbound link)</span>
+      </nav>
     </div>
+  </header>
 
-    <div class="agoda-wrap">
-      <!-- กล่องค้นหาแบบ mock: ขนาด 1030×293 เทียบกับ Agoda -->
-      <div class="mock-box">
-        <h3 class="mock-title">Find the best deals</h3>
+  <main class="container" style="margin-top:12px">
+    <section class="widget-like solid agoda-wrap">
+      <div class="mock-box stack">
+        <h1 class="mock-title">Find the best deals</h1>
         <p class="mock-sub">Type a city or hotel name, pick your dates, select guests and search.</p>
 
-        <form id="cgForm" class="mock-row" autocomplete="off">
-          <!-- Destination + suggest -->
-          <div class="suggest-wrap">
-            <input type="text" id="dest" class="mock-input" placeholder="Destination e.g., Bangkok or hotel name" aria-label="Destination" />
-            <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="Suggestions"></div>
+        <form id="mockForm" autocomplete="off">
+          <!-- Row 1 : Destination -->
+          <div class="mock-row dest">
+            <div class="suggest-wrap">
+              <input id="destination" class="mock-input" type="text"
+                     placeholder="Destination e.g., Bangkok or hotel name" aria-label="Destination"
+                     autocomplete="off" />
+              <div id="suggestPanel" class="suggest-panel" hidden></div>
+            </div>
           </div>
 
-          <!-- Dates -->
-          <input type="text" id="ci" class="mock-input" placeholder="Check-in" aria-label="Check-in" readonly>
-          <input type="text" id="co" class="mock-input" placeholder="Check-out" aria-label="Check-out" readonly>
+          <!-- Row 2 : Dates -->
+          <div class="mock-row dates" style="margin-top:4px;">
+            <input id="checkin"  class="mock-input date" type="text" placeholder="Check-in"  readonly>
+            <input id="checkout" class="mock-input date" type="text" placeholder="Check-out" readonly>
+          </div>
 
-          <!-- Guests -->
-          <button type="button" id="guestBtn" class="guest-input">1 Room, 2 Adults, 0 Children</button>
+          <!-- Row 3 : Guests -->
+          <div class="mock-row guests" style="margin-top:4px;">
+            <button type="button" id="guestBtn" class="guest-input" aria-haspopup="dialog" aria-controls="guestModal">
+              1 Room, 2 Adults, 0 Children
+            </button>
+          </div>
 
-          <!-- Search -->
-          <button type="submit" class="mock-btn">Search</button>
+          <!-- Row 4 : Search -->
+          <div class="mock-row submit" style="margin-top:4px;">
+            <button type="submit" class="mock-btn">Search</button>
+          </div>
 
-          <!-- hidden fields -->
+          <!-- hidden -->
           <input type="hidden" id="rooms" value="1">
           <input type="hidden" id="adults" value="2">
           <input type="hidden" id="children" value="0">
         </form>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
-  <!-- Guests modal -->
+  <!-- Guest Modal -->
   <div id="guestBackdrop" class="modal-backdrop" aria-hidden="true"></div>
   <div id="guestModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="guestTitle">
     <div class="modal-header">
@@ -157,7 +118,9 @@
     </div>
     <div class="modal-body">
       <div class="row-ctrl">
-        <div class="label-wrap"><strong>Rooms</strong><small>Number of rooms</small></div>
+        <div class="label-wrap">
+          <strong>Rooms</strong><small>Number of rooms</small>
+        </div>
         <div class="counter">
           <button class="btn-ctrl" data-type="rooms" data-op="minus">−</button>
           <span class="count" id="roomsCount">1</span>
@@ -165,7 +128,9 @@
         </div>
       </div>
       <div class="row-ctrl">
-        <div class="label-wrap"><strong>Adults</strong><small>Ages 18+</small></div>
+        <div class="label-wrap">
+          <strong>Adults</strong><small>Ages 18+</small>
+        </div>
         <div class="counter">
           <button class="btn-ctrl" data-type="adults" data-op="minus">−</button>
           <span class="count" id="adultsCount">2</span>
@@ -173,7 +138,9 @@
         </div>
       </div>
       <div class="row-ctrl">
-        <div class="label-wrap"><strong>Children</strong><small>Ages 0–17</small></div>
+        <div class="label-wrap">
+          <strong>Children</strong><small>Ages 0–17</small>
+        </div>
         <div class="counter">
           <button class="btn-ctrl" data-type="children" data-op="minus">−</button>
           <span class="count" id="childrenCount">0</span>
@@ -187,97 +154,76 @@
     </div>
   </div>
 
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="/privacy.html">Privacy</a> ·
+        <a href="/terms.html">Terms</a> ·
+        <a href="/about.html">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
-    // ===== Suggestion (เรียก /api/suggest) =====
-    (function(){
-      const input = document.getElementById('dest');
-      const panel = document.getElementById('suggestPanel');
-      let t = null;
-
-      function hide(){ panel.style.display='none'; panel.innerHTML=''; }
-      function show(){ panel.style.display='block'; }
-
-      input.addEventListener('input', ()=>{
-        const q = input.value.trim();
-        if (t) clearTimeout(t);
-        if (!q) return hide();
-
-        t = setTimeout(async()=>{
-          try{
-            const lang = location.pathname.startsWith('/en/') ? 'en-us' : 'th-th';
-            const url = `/api/suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(lang)}`;
-            const res = await fetch(url);
-            const data = await res.json();
-            if(!data.ok || !data.items) return hide();
-
-            panel.innerHTML = data.items.map(it =>
-              `<div class="suggest-item" data-label="${it.label.replace(/"/g,'&quot;')}">
-                 <div class="s-label">${it.label}</div>
-                 <div class="s-sub">${it.subtitle||''}</div>
-               </div>`).join('');
-            show();
-
-            panel.querySelectorAll('.suggest-item').forEach(el=>{
-              el.addEventListener('click', ()=>{
-                input.value = el.getAttribute('data-label') || '';
-                hide();
-              });
-            });
-          }catch(e){ hide(); }
-        }, 180);
-      });
-      document.addEventListener('click', e=>{
-        if (!panel.contains(e.target) && e.target !== input) hide();
-      });
-    })();
-
-    // ===== Datepickers =====
+    // --- Flatpickr (date pickers) ---
     (function(){
       const ONE_DAY = 24*60*60*1000;
-      const inPicker = flatpickr("#ci", {
-        dateFormat:"Y-m-d", altInput:true, altFormat:"d M Y", allowInput:false, minDate:"today",
-        onChange(d){
-          if(d[0]){
-            const next = new Date(d[0].getTime()+ONE_DAY);
+      const inPicker = flatpickr("#checkin", {
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "d M Y",
+        minDate: "today",
+        onChange(dates){
+          if(dates[0]){
+            const next = new Date(dates[0].getTime()+ONE_DAY);
             outPicker.set('minDate', next);
-            if(!outPicker.selectedDates[0] || outPicker.selectedDates[0] <= d[0]) outPicker.setDate(next,true);
+            if(!outPicker.selectedDates[0] || outPicker.selectedDates[0] <= dates[0]){
+              outPicker.setDate(next, true);
+            }
           }
         }
       });
-      const outPicker = flatpickr("#co", {
-        dateFormat:"Y-m-d", altInput:true, altFormat:"d M Y", allowInput:false,
+      const outPicker = flatpickr("#checkout", {
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "d M Y",
         minDate: new Date(Date.now()+ONE_DAY)
       });
-      inPicker.setDate(new Date(), true);
-      outPicker.setDate(new Date(Date.now()+ONE_DAY), true);
+      const today = new Date();
+      const tomorrow = new Date(Date.now()+ONE_DAY);
+      inPicker.setDate(today, true);
+      outPicker.setDate(tomorrow, true);
 
-      // ===== Guests modal =====
-      let rooms=1, adults=2, children=0;
-      const btn = document.getElementById('guestBtn');
+      // --- Guests popup logic ---
+      let rooms = 1, adults = 2, children = 0;
+      const guestBtn = document.getElementById('guestBtn');
       const roomsCount = document.getElementById('roomsCount');
       const adultsCount = document.getElementById('adultsCount');
       const childrenCount = document.getElementById('childrenCount');
-      const hRooms = document.getElementById('rooms');
-      const hAdults = document.getElementById('adults');
-      const hChildren = document.getElementById('children');
+      const hiddenRooms = document.getElementById('rooms');
+      const hiddenAdults = document.getElementById('adults');
+      const hiddenChildren = document.getElementById('children');
       const modal = document.getElementById('guestModal');
       const backdrop = document.getElementById('guestBackdrop');
 
-      function open(){ roomsCount.textContent=rooms; adultsCount.textContent=adults; childrenCount.textContent=children; modal.style.display='block'; backdrop.style.display='block'; }
-      function close(){ modal.style.display='none'; backdrop.style.display='none'; }
-      function plural(n, one, many){ return n===1?one:many; }
-      function updateBtn(){ btn.textContent = `${rooms} ${plural(rooms,'Room','Rooms')}, ${adults} ${plural(adults,'Adult','Adults')}, ${children} ${plural(children,'Child','Children')}`; }
-      updateBtn();
+      function updateGuestBtn(){
+        guestBtn.textContent = `${rooms} Room${rooms>1?'s':''}, ${adults} Adult${adults>1?'s':''}, ${children} Child${children>1?'ren':''}`;
+      }
+      updateGuestBtn();
 
-      btn.addEventListener('click', open);
-      document.getElementById('btnCloseX').addEventListener('click', close);
-      document.getElementById('btnCancel').addEventListener('click', close);
-      backdrop.addEventListener('click', close);
-      document.querySelectorAll('.btn-ctrl').forEach(b=>{
-        b.addEventListener('click', ()=>{
-          const type=b.getAttribute('data-type'), op=b.getAttribute('data-op');
-          let val=0, min=0, max=10;
+      function openModal(){ roomsCount.textContent=rooms; adultsCount.textContent=adults; childrenCount.textContent=children; modal.style.display='block'; backdrop.style.display='block'; }
+      function closeModal(){ modal.style.display='none'; backdrop.style.display='none'; }
+      guestBtn.addEventListener('click', openModal);
+      document.getElementById('btnCloseX').addEventListener('click', closeModal);
+      document.getElementById('btnCancel').addEventListener('click', closeModal);
+      backdrop.addEventListener('click', closeModal);
+
+      document.querySelectorAll('.btn-ctrl').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const type = btn.getAttribute('data-type'), op = btn.getAttribute('data-op');
+          let min=0, val=0, max=10;
           if(type==='rooms'){ val=rooms; min=1; }
           if(type==='adults'){ val=adults; min=1; }
           if(type==='children'){ val=children; min=0; }
@@ -288,15 +234,61 @@
           if(type==='children'){ children=val; childrenCount.textContent=val; }
         });
       });
-      document.getElementById('btnSaveGuests').addEventListener('click', ()=>{ hRooms.value=rooms; hAdults.value=adults; hChildren.value=children; updateBtn(); close(); });
+      document.getElementById('btnSaveGuests').addEventListener('click', ()=>{
+        hiddenRooms.value = rooms;
+        hiddenAdults.value = adults;
+        hiddenChildren.value = children;
+        updateGuestBtn(); closeModal();
+      });
 
-      // submit -> /search.html (ของเราเอง)  **ไม่มีการลิงก์ออกไป Agoda**
-      document.getElementById('cgForm').addEventListener('submit', (e)=>{
+      // --- Suggestion (popup) ---
+      const input = document.getElementById('destination');
+      const panel = document.getElementById('suggestPanel');
+      let aborter = null;
+      function showPanel(){ panel.hidden = false; }
+      function hidePanel(){ panel.hidden = true; }
+      function render(items){
+        panel.innerHTML = '';
+        if(!items.length){
+          panel.innerHTML = `<div class="suggest-empty">No suggestions</div>`;
+          return;
+        }
+        items.forEach(it=>{
+          const div = document.createElement('div');
+          div.className = 'suggest-item';
+          div.innerHTML = `<span>${it.label}</span><span class="sub">${it.subtitle||''}</span>`;
+          div.addEventListener('click', ()=>{
+            input.value = it.label; hidePanel();
+          });
+          panel.appendChild(div);
+        });
+      }
+      input.addEventListener('input', async ()=>{
+        const q = input.value.trim();
+        if(!q){ hidePanel(); return; }
+        try{
+          if(aborter) aborter.abort();
+          aborter = new AbortController();
+          const lang = 'en-us';
+          const r = await fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=${lang}`,{signal:aborter.signal});
+          const j = await r.json();
+          render(j.items||[]);
+          showPanel();
+        }catch(e){}
+      });
+      input.addEventListener('focus', ()=>{
+        if(input.value.trim()) showPanel();
+      });
+      document.addEventListener('click', (e)=>{
+        if(!panel.contains(e.target) && e.target!==input){ hidePanel(); }
+      });
+
+      // --- Submit (prototype: no outbound) ---
+      document.getElementById('mockForm').addEventListener('submit', (e)=>{
         e.preventDefault();
-        const q  = encodeURIComponent(document.getElementById('dest').value || 'Bangkok');
-        const ci = inPicker.formatDate(inPicker.selectedDates[0], 'Y-m-d');
-        const co = outPicker.formatDate(outPicker.selectedDates[0], 'Y-m-d');
-        location.href = `/search.html?q=${q}&checkin=${ci}&checkout=${co}&rooms=${rooms}&adults=${adults}&children=${children}`;
+        // ถ้าต้องการให้วิ่งไปหน้า search จริง ให้ uncomment บรรทัดล่าง:
+        // location.href = `/search.html?q=${encodeURIComponent(input.value||'Bangkok')}&checkin=${inPicker.formatDate(inPicker.selectedDates[0],'Y-m-d')}&checkout=${outPicker.formatDate(outPicker.selectedDates[0],'Y-m-d')}&rooms=${rooms}&adults=${adults}&children=${children}`;
+        alert('Prototype only: no outbound link.\nYou can enable redirect in the script.');
       });
     })();
   </script>
