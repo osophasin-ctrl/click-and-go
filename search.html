@@ -9,18 +9,22 @@
   <link rel="stylesheet" href="style.css" />
 
   <style>
+    /* ===== Filter Bar (Sticky) ===== */
     .filter-bar{ position:sticky; top:0; z-index:20; background:#fff; border-bottom:1px solid #eee; }
     .filter-wrap{ max-width:1100px; margin:0 auto; padding:8px 16px; display:flex; gap:10px; flex-wrap:wrap; }
     .chip{ height:36px; display:inline-flex; align-items:center; gap:8px; padding:0 12px; border:1px solid #ddd; border-radius:999px; background:#fff; color:#222; cursor:pointer; }
+    .chip:disabled{ opacity:.5; cursor:not-allowed; }
     .chip .caret{ font-size:12px; }
+
+    /* ===== Summary ===== */
     .result-head{ max-width:1100px; margin:12px auto 8px; padding:0 16px; }
     .result-title{ margin:8px 0 4px; font-size:clamp(20px,3vw,28px); font-weight:800; }
     .result-sub{ color:#555; margin:0; }
 
+    /* ===== Result grid / card ===== */
     .result-grid{ max-width:1100px; margin:10px auto; padding:0 16px; display:grid; gap:16px; grid-template-columns: repeat(3,1fr); }
     @media (max-width:980px){ .result-grid{ grid-template-columns: repeat(2,1fr); } }
     @media (max-width:620px){ .result-grid{ grid-template-columns: 1fr; } }
-
     .hotel-card{ border:1px solid #eee; border-radius:12px; background:#fff; overflow:hidden; box-shadow:0 1px 10px rgba(0,0,0,.04); display:flex; flex-direction:column; }
     .hotel-thumb{ width:100%; aspect-ratio:16/9; object-fit:cover; background:#f1f1f1; display:block; }
     .hotel-body{ padding:12px 12px 10px; }
@@ -31,6 +35,7 @@
     .badge{ display:inline-block; padding:4px 8px; border-radius:999px; font-size:12px; background:#eefaf8; color:#0b8e78; }
     .btn-more{ display:block; margin:12px auto 24px; padding:10px 16px; border-radius:8px; background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; }
 
+    /* ===== Drawer / Modal ===== */
     .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:40; }
     .drawer{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:min(94vw,520px); background:#fff; border-radius:12px; box-shadow:0 20px 40px rgba(0,0,0,.2); display:none; z-index:50; }
     .drawer-header{ padding:14px 16px; border-bottom:1px solid #eee; font-weight:800; display:flex; justify-content:space-between; align-items:center; }
@@ -38,19 +43,21 @@
     .drawer-footer{ display:flex; justify-content:flex-end; gap:10px; padding:12px 16px; border-top:1px solid #eee; }
     .btn-outline{ border:1px solid #bbb; background:#fff; color:#333; border-radius:8px; padding:8px 14px; }
     .btn-primary{ border:0; background:#0ea5a0; color:#fff; border-radius:8px; padding:8px 14px; }
-
     .field-row{ display:flex; gap:10px; align-items:center; margin:10px 0; flex-wrap:wrap; }
     .field-row label{ min-width:120px; }
     .field-row input[type="number"], .field-row select{ border:1px solid #ddd; border-radius:8px; padding:8px 10px; height:40px; min-width:120px; }
 
+    /* Sort menu */
     .menu{ position:absolute; background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,.1); padding:6px; display:none; z-index:60; }
     .menu a{ display:block; padding:8px 12px; color:#222; text-decoration:none; border-radius:8px; }
     .menu a:hover{ background:#f6f6f6; }
 
+    /* Toast */
     .toast{ position:fixed; left:50%; bottom:18px; transform:translateX(-50%); background:#333; color:#fff; padding:8px 12px; border-radius:8px; font-size:14px; display:none; z-index:70; }
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header class="site-header">
     <div class="inner">
       <a href="index.html" class="brand">
@@ -64,11 +71,13 @@
     </div>
   </header>
 
+  <!-- Summary -->
   <section class="result-head">
     <h1 class="result-title">ผลการค้นหาโรงแรม</h1>
     <p class="result-sub" id="summary">กำลังโหลด...</p>
   </section>
 
+  <!-- Filter Bar -->
   <div class="filter-bar">
     <div class="filter-wrap">
       <button class="chip" id="btnFilters">ตัวกรอง <span class="caret">▾</span></button>
@@ -84,6 +93,7 @@
     </div>
   </div>
 
+  <!-- Results -->
   <section class="result-grid" id="resultGrid"></section>
   <div style="text-align:center">
     <button class="btn-more" id="btnLoadMore" style="display:none">โหลดเพิ่ม</button>
@@ -98,17 +108,17 @@
     </div>
     <div class="drawer-body">
       <div style="font-weight:700; margin-bottom:8px">จำนวนดาว</div>
-      <label><input type="checkbox" class="ck-star" value="5" checked> 5★</label> &nbsp;
-      <label><input type="checkbox" class="ck-star" value="4" checked> 4★</label> &nbsp;
+      <label><input type="checkbox" class="ck-star" value="5"> 5★</label> &nbsp;
+      <label><input type="checkbox" class="ck-star" value="4"> 4★</label> &nbsp;
       <label><input type="checkbox" class="ck-star" value="3"> 3★</label>
 
       <div class="field-row">
         <label>คะแนนรีวิวขั้นต่ำ</label>
         <select id="reviewMin">
-          <option value="0">ทั้งหมด</option>
+          <option value="0" selected>ทั้งหมด</option>
           <option value="6">6.0+</option>
           <option value="7">7.0+</option>
-          <option value="8" selected>8.0+</option>
+          <option value="8">8.0+</option>
           <option value="9">9.0+</option>
         </select>
       </div>
@@ -147,25 +157,27 @@
   <div id="toast" class="toast">เร็วๆ นี้</div>
 
   <script>
+    // ----- State (เปิดกว้าง) -----
     const state = {
       q: '', checkin: '', checkout: '',
       rooms: 1, adults: 2, children: 0,
       page: 1, limit: 30,
       sort: 'PRICE_ASC',
       minPrice: null, maxPrice: null,
-      stars: [5,4], reviewMin: 8,
+      stars: [],          // [] = ไม่กรองดาว
+      reviewMin: 0,       // 0 = ไม่กรองคะแนนรีวิว
       freeCancel: false,
-      total: 0, loading: false
+      total: 0, loading: false,
+      _relaxedOnce: false // กัน loop ตอนผ่อนตัวกรองอัตโนมัติ
     };
     const $ = s => document.querySelector(s);
 
-    function showToast(msg){
-      const t = $('#toast'); t.textContent = msg || 'เร็วๆ นี้';
-      t.style.display = 'block'; setTimeout(()=>t.style.display='none', 1500);
-    }
+    // ----- UI helpers -----
+    function showToast(msg){ const t = $('#toast'); t.textContent = msg || 'เร็วๆ นี้'; t.style.display = 'block'; setTimeout(()=>t.style.display='none', 1500); }
     function openDrawer(id){ $('#backdrop').style.display='block'; $(id).style.display='block'; }
     function closeDrawer(id){ $('#backdrop').style.display='none'; $(id).style.display='none'; }
 
+    // ----- Parse query from URL -----
     (function initQuery(){
       const p = new URLSearchParams(location.search);
       state.q = p.get('q') || 'Bangkok';
@@ -175,29 +187,10 @@
       state.rooms = +(p.get('rooms') || 1);
       state.adults = +(p.get('adults') || 2);
       state.children = +(p.get('children') || 0);
-
-      $('#summary').textContent =
-        `${state.q} | วันที่: ${state.checkin} → ${state.checkout} | ผู้เข้าพัก: ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
+      $('#summary').textContent = `${state.q} | วันที่: ${state.checkin} → ${state.checkout} | ผู้เข้าพัก: ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
     })();
 
-    // ---- helper: map Agoda -> items ----
-    function mapAgodaResultsToItems(agodaResults){
-      return (agodaResults || []).map(h => ({
-        id: String(h.hotelId ?? ''),
-        name: h.hotelName || '',
-        city: state.q,
-        starRating: h.starRating ?? null,
-        reviewScore: h.reviewScore ?? null,
-        reviewCount: h.reviewCount ?? null,
-        imageUrl: h.imageURL || '',
-        priceFrom: h.dailyRate ?? null,
-        currency: h.currency || 'THB',
-        freeCancellation: h.freeWifi === true ? false : (h.freeCancellation || false), // ไม่มี flag ตรง เลยปล่อย false
-        mealPlan: h.includeBreakfast ? 'Breakfast included' : '',
-        deeplink: h.landingURL || '#'
-      }));
-    }
-
+    // ----- Fetch results -----
     async function fetchResults(append=false){
       if(state.loading) return;
       state.loading = true;
@@ -216,7 +209,7 @@
           sort: state.sort,
           minPrice: state.minPrice ?? '',
           maxPrice: state.maxPrice ?? '',
-          stars: state.stars.join(','),
+          stars: state.stars.join(','),      // backend จะมองข้ามถ้าเป็น ''
           reviewMin: state.reviewMin,
           freeCancel: state.freeCancel ? '1' : ''
         });
@@ -225,27 +218,31 @@
         const res = await fetch(url, { headers:{ 'Accept':'application/json' }});
         const data = await res.json();
 
-        // รองรับทั้งสองรูปแบบ
-        let items = [];
-        if (Array.isArray(data.items)) {
-          items = data.items;
-        } else if (data?.result?.results) {
-          items = mapAgodaResultsToItems(data.result.results);
-        }
-
+        let items = data.items || [];
         state.total = data.total || items.length;
 
-        // filter ฝั่ง client (กันเหนียว)
+        // Fallback filter client-side
         items = items.filter(it=>{
-          const okPrice = (state.minPrice==null || (it.priceFrom ?? 0) >= state.minPrice) &&
-                          (state.maxPrice==null || (it.priceFrom ?? 0) <= state.maxPrice);
+          const okPrice = (state.minPrice==null || it.priceFrom >= state.minPrice) &&
+                          (state.maxPrice==null || it.priceFrom <= state.maxPrice);
           const okStar  = (!state.stars.length) || state.stars.includes(+it.starRating||0);
           const okRate  = (+it.reviewScore || 0) >= (state.reviewMin||0);
           const okCancel= !state.freeCancel || !!it.freeCancellation;
           return okPrice && okStar && okRate && okCancel;
         });
 
-        // sort ฝั่ง client
+        // ถ้าไม่มีผล → ผ่อนตัวกรองอัตโนมัติครั้งเดียว
+        if (items.length === 0 && !state._relaxedOnce && ((state.stars?.length||0) > 0 || (state.reviewMin||0) > 0)) {
+          state._relaxedOnce = true;
+          const hadStars = state.stars.length > 0;
+          const hadRate  = state.reviewMin > 0;
+          state.stars = []; state.reviewMin = 0;
+          showToast('ไม่พบผลลัพธ์ — ผ่อนตัวกรองให้เป็น "ทั้งหมด" ให้ก่อนนะครับ');
+          state.loading = false;
+          return fetchResults(false);
+        }
+
+        // client sort fallback
         items.sort((a,b)=>{
           switch(state.sort){
             case 'PRICE_ASC':  return (a.priceFrom||0) - (b.priceFrom||0);
@@ -277,11 +274,10 @@
       const stars = '★'.repeat(h.starRating||0);
       const review = (h.reviewScore!=null) ? `คะแนน ${h.reviewScore}` : '';
       const city = h.city ? ` · ${h.city}` : '';
-      const price = (h.priceFrom!=null) ? `${Number(h.priceFrom).toLocaleString()} ${h.currency||'THB'}` : '-';
+      const price = (h.priceFrom!=null) ? `${Number(h.priceFrom).toLocaleString()} THB` : '-';
       const fc = h.freeCancellation ? '<span class="badge">ยกเลิกฟรี</span>' : '';
       const meal = h.mealPlan ? `<span class="badge">${h.mealPlan}</span>` : '';
       const link = h.deeplink || '#';
-
       return `
         <article class="hotel-card">
           <img class="hotel-thumb" src="${h.imageUrl||'https://picsum.photos/800/450?blur=2'}" loading="lazy" alt="${h.name||''}">
@@ -298,14 +294,13 @@
       `;
     }
 
-    // เปิด/ปิด drawer & เมนูต่างๆ
+    // ----- Events: Filter bar -----
+    // Filters drawer
     $('#btnFilters').addEventListener('click', ()=> openDrawer('#drawerFilters'));
     $('#btnCloseFilter').addEventListener('click', ()=> closeDrawer('#drawerFilters'));
     $('#btnResetFilter').addEventListener('click', ()=>{
-      document.querySelectorAll('.ck-star').forEach(el=> el.checked=false);
-      document.querySelector('.ck-star[value="5"]').checked=true;
-      document.querySelector('.ck-star[value="4"]').checked=true;
-      $('#reviewMin').value = '8';
+      document.querySelectorAll('.ck-star').forEach(el=> el.checked=false); // ไม่เลือก = ไม่กรองดาว
+      $('#reviewMin').value = '0';
       $('#ckFreeCancel').checked = false;
     });
     $('#btnApplyFilter').addEventListener('click', ()=>{
@@ -313,10 +308,12 @@
       state.reviewMin = +$('#reviewMin').value;
       state.freeCancel = $('#ckFreeCancel').checked;
       state.page = 1;
+      state._relaxedOnce = false; // อนุญาตให้ช่วยผ่อนตัวกรองได้อีก
       closeDrawer('#drawerFilters');
       fetchResults(false);
     });
 
+    // Price drawer
     function updatePriceChip(){
       const a = state.minPrice!=null ? state.minPrice : '';
       const b = state.maxPrice!=null ? state.maxPrice : '';
@@ -339,6 +336,7 @@
       fetchResults(false);
     });
 
+    // Sort menu
     const sortMenu = $('#sortMenu');
     $('#btnSort').addEventListener('click', (e)=>{
       const r = e.currentTarget.getBoundingClientRect();
@@ -354,16 +352,21 @@
         e.preventDefault();
         state.sort = a.dataset.sort;
         state.page = 1;
-        sortMenu.style.display='none';
         fetchResults(false);
+        sortMenu.style.display='none';
       });
     });
 
+    // Area (coming soon)
     $('#btnArea').addEventListener('click', ()=> showToast('ฟีเจอร์ย่าน/พื้นที่ - เร็วๆ นี้'));
+
+    // Backdrop click → ปิด drawer
     $('#backdrop').addEventListener('click', ()=>{ closeDrawer('#drawerFilters'); closeDrawer('#drawerPrice'); });
 
+    // Load more
     $('#btnLoadMore').addEventListener('click', ()=>{ state.page += 1; fetchResults(true); });
 
+    // Init
     updatePriceChip();
     fetchResults(false);
   </script>
