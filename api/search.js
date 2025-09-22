@@ -1,116 +1,104 @@
 // /api/search.js
-// Agoda Affiliate Lite API v2 — using GEO criteria (lat/lng + radius) instead of area/cityId.
-// If Agoda returns error, we fall back to mock data (so UI still works).
+// Click & Go — Agoda Affiliate Lite v1 (the one we already proved works)
+// Env required on Vercel: AGODA_BASE_URL, AGODA_SITE_ID, AGODA_API_KEY
 
 export default async function handler(req, res) {
   const t0 = Date.now();
+
   try {
     const {
+      // q รองรับชื่อเมือง แต่สำหรับ Lite v1 ต้องใช้ cityId ตัวเลข
+      // เลยเปิดให้รับ cityId=... ผ่าน query โดยตรงด้วย
       q = 'Bangkok',
+      cityId: cityIdParam,
       checkin,
       checkout,
-      rooms = '1',
       adults = '2',
       children = '0',
+      rooms = '1',
       lang = 'en-us',
       currency = 'THB',
+      max = '10',
+      sort = 'PriceAsc',           // ตามเอกสาร Lite v1: Recommended | PriceAsc | PriceDesc ...
       debug = '0',
     } = req.query;
 
-    // --- Basic sanitize/parse ---
-    const cityName = String(q || '').trim();
-    const checkIn = String(checkin || '').trim();
-    const checkOut = String(checkout || '').trim();
+    // --- resolve cityId ---
+    // ถ้าผู้ใช้ส่ง cityId มา ก็ใช้ตามนั้น; ไม่งั้น fallback -> Bangkok (9395)
+    const CITY_FALLBACK = 9395; // Bangkok (ยืนยันจากการทดสอบของเรา)
+    const cityId =
+      Number.isFinite(Number(cityIdParam)) && Number(cityIdParam) > 0
+        ? Number(cityIdParam)
+        : CITY_FALLBACK;
+
+    // --- sanitize basic fields ---
+    const checkInDate =
+      (checkin && String(checkin).slice(0, 10)) ||
+      new Date().toISOString().slice(0, 10);
+    const checkOutDate =
+      (checkout && String(checkout).slice(0, 10)) ||
+      new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+    const numberOfAdult = Math.max(1, parseInt(String(adults), 10) || 1);
+    const numberOfChildren = Math.max(0, parseInt(String(children), 10) || 0);
     const numRooms = Math.max(1, parseInt(String(rooms), 10) || 1);
-    const numAdults = Math.max(1, parseInt(String(adults), 10) || 1);
-    const numChildren = Math.max(0, parseInt(String(children), 10) || 0);
+    const resultLimit = Math.min(50, Math.max(1, parseInt(String(max), 10) || 10));
     const language = String(lang || 'en-us').toLowerCase();
     const curr = String(currency || 'THB').toUpperCase();
+    const sortBy = String(sort || 'PriceAsc');
 
-    // --- GEO mapping (lat/lng + radiusKm) for popular cities ---
-    const GEO = {
-      // Thailand
-      'bangkok':        { lat: 13.7563, lng: 100.5018, radiusKm: 25 },
-      'กรุงเทพ':        { lat: 13.7563, lng: 100.5018, radiusKm: 25 },
-      'chiang mai':     { lat: 18.7883, lng: 98.9853,  radiusKm: 20 },
-      'เชียงใหม่':       { lat: 18.7883, lng: 98.9853,  radiusKm: 20 },
-      'phuket':         { lat: 7.8804,  lng: 98.3923,   radiusKm: 25 },
-      'ภูเก็ต':          { lat: 7.8804,  lng: 98.3923,   radiusKm: 25 },
-      'pattaya':        { lat: 12.9236, lng: 100.8825,  radiusKm: 18 },
-      'พัทยา':          { lat: 12.9236, lng: 100.8825,  radiusKm: 18 },
-      'krabi':          { lat: 8.0863,  lng: 98.9063,   radiusKm: 25 },
-      'กระบี่':          { lat: 8.0863,  lng: 98.9063,   radiusKm: 25 },
-      'hua hin':        { lat: 12.5684, lng: 99.9577,   radiusKm: 18 },
-      'หัวหิน':          { lat: 12.5684, lng: 99.9577,   radiusKm: 18 },
-
-      // Intl (examples)
-      'tokyo':          { lat: 35.6762, lng: 139.6503, radiusKm: 25 },
-      'โตเกียว':         { lat: 35.6762, lng: 139.6503, radiusKm: 25 },
-      'seoul':          { lat: 37.5665, lng: 126.9780, radiusKm: 25 },
-      'โซล':            { lat: 37.5665, lng: 126.9780, radiusKm: 25 },
-      'singapore':      { lat: 1.3521,  lng: 103.8198, radiusKm: 20 },
-      'สิงคโปร์':         { lat: 1.3521,  lng: 103.8198, radiusKm: 20 },
-      'hong kong':      { lat: 22.3193, lng: 114.1694, radiusKm: 20 },
-      'ฮ่องกง':          { lat: 22.3193, lng: 114.1694, radiusKm: 20 },
-      'london':         { lat: 51.5074, lng: -0.1278,  radiusKm: 25 },
-      'paris':          { lat: 48.8566, lng: 2.3522,   radiusKm: 25 },
-    };
-
-    // Find normalized key
-    const key = cityName.toLowerCase();
-    const geo = GEO[key] || GEO['bangkok']; // fallback to Bangkok
-    const { lat, lng, radiusKm } = geo;
-
-    // Build Agoda request body
-    // (Structure here follows typical Affiliate Lite examples. If doc differs, adjust field names accordingly.)
-    const criteria = {
-      geo: {
-        latitude: lat,
-        longitude: lng,
-        radius: { unit: 'km', value: radiusKm || 20 }
+    // --- build request body for Lite v1 ---
+    const payload = {
+      criteria: {
+        cityId,
+        checkInDate,
+        checkOutDate,
+        occupancy: {
+          // Lite v1 รองรับผู้ใหญ่เป็นหลัก; เด็ก/ห้องเพิ่มจริง ๆ มีฟิลด์ย่อยอีก
+          // เบื้องต้นให้จำนวนผู้ใหญ่เป็นตัวกำหนดหลัก (ใช้งานจริงค่อยขยายต่อ)
+          numberOfAdult,
+        },
       },
-      checkInDate: checkIn || new Date().toISOString().slice(0, 10),
-      checkOutDate: checkOut || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
-      rooms: [
-        {
-          numberOfAdults: numAdults,
-          childAges: Array.from({ length: numChildren }, () => 8) // default age if user didn't specify
-        }
-      ],
-      resultCount: 10,
-      sortOrder: 'PRICE'
+      additional: {
+        language,
+        currency: curr,
+      },
+      maxResult: resultLimit,
+      sortBy, // e.g. Recommended | PriceAsc | PriceDesc
     };
 
-    // If more than 1 room, duplicate with safe occupancy
-    while (criteria.rooms.length < numRooms) {
-      criteria.rooms.push({ numberOfAdults: 1, childAges: [] });
+    // --- env & endpoint ---
+    const BASE_URL = process.env.AGODA_BASE_URL;   // เช่น http://affiliateapi7643.agoda.com/affiliateservice/lt_v1
+    const SITE_ID  = process.env.AGODA_SITE_ID;
+    const API_KEY  = process.env.AGODA_API_KEY;
+
+    if (!BASE_URL || !SITE_ID || !API_KEY) {
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(500).json({
+        ok: false,
+        error: 'Missing environment variables (AGODA_BASE_URL / AGODA_SITE_ID / AGODA_API_KEY)',
+      });
     }
 
-    const body = {
-      currency: curr,
-      language,
-      criteria
-    };
+    // Lite v1 ของเราที่ทดสอบสำเร็จ: POST ไปที่ BASE_URL ตรง ๆ (ไม่ต้อง /search)
+    const url = BASE_URL;
 
-    // Read credentials from env
-    const PARTNER_ID = process.env.AGODA_PARTNER_ID || '';
-    const API_KEY    = process.env.AGODA_API_KEY    || '';
-    const AGODA_URL  = process.env.AGODA_API_URL   || 'https://affiliate-api.agoda.com/api/v2/hotels/search';
-
+    // --- call Agoda Lite v1 ---
     let agodaOk = false;
-    let agodaJson = null;
     let agodaRaw = '';
+    let agodaJson = null;
 
     try {
-      const resp = await fetch(AGODA_URL, {
+      const resp = await fetch(url, {
         method: 'POST',
         headers: {
+          'x-api-key': API_KEY,
+          'x-site-id': SITE_ID,
           'Content-Type': 'application/json',
-          'Accept':       'application/json',
-          'X-Agoda-APIKey':    API_KEY,
-          'X-Agoda-PartnerId': PARTNER_ID
+          'Accept-Encoding': 'gzip, deflate',
+          'User-Agent': 'click-and-go/1.0',
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify(payload),
       });
 
       agodaRaw = await resp.text();
@@ -121,108 +109,97 @@ export default async function handler(req, res) {
       } else {
         agodaOk = false;
       }
-    } catch (e) {
+    } catch (err) {
       agodaOk = false;
-      agodaRaw = String(e?.message || e);
+      agodaRaw = String(err?.message || err);
     }
 
-    // Map Agoda result -> simplified items
+    // --- map result => items (ปรับตามรูปแบบที่เราเห็นจาก Lite v1)
     const items = [];
-    if (agodaOk && agodaJson) {
-      const list = agodaJson.items || agodaJson.hotels || [];
-      for (const h of list) {
+    if (agodaOk && agodaJson && Array.isArray(agodaJson.results)) {
+      for (const h of agodaJson.results) {
         items.push({
-          id: String(h.id || h.hotelId || ''),
-          name: h.name || h.hotelName || '',
-          city: cityName,
-          starRating: h.starRating || h.star || null,
-          reviewScore: h.reviewScore || h.rating || null,
-          reviewCount: h.reviewCount || null,
-          imageUrl: (h.imageUrl || (h.images && h.images[0])) || '',
-          priceFrom: h.priceFrom || (h.price && h.price.total) || null,
-          currency: curr,
-          freeCancellation: h.freeCancellation || false,
-          mealPlan: h.mealPlan || '',
-          deeplink: h.deeplink || h.url || ''
+          id: String(h.hotelId ?? ''),
+          name: h.hotelName ?? '',
+          city: q || 'Bangkok',
+          starRating: h.starRating ?? null,
+          reviewScore: h.reviewScore ?? null,
+          reviewCount: h.reviewCount ?? null,
+          dailyRate: h.dailyRate ?? null,
+          currency: h.currency ?? curr,
+          imageUrl: h.imageURL ?? '',
+          includeBreakfast: Boolean(h.includeBreakfast),
+          freeWifi: Boolean(h.freeWifi),
+          latitude: h.latitude ?? null,
+          longitude: h.longitude ?? null,
+          // Agoda ให้ลิงก์ดีพ์ลิงก์พร้อมพารามิเตอร์ครบอยู่แล้ว
+          deeplink: h.landingURL ?? '',
         });
       }
-    } else {
-      // Fallback mock data — so UI still works while credentials/format are being finalized
+    }
+
+    // --- fallback mock (ถ้า API ยังไม่พร้อม) ---
+    if (!agodaOk) {
       items.push(
         {
-          id: '52120188',
+          id: 'mock-1',
           name: 'Bangkok Riverside Hotel',
           city: 'Bangkok',
           starRating: 4,
           reviewScore: 8.7,
           reviewCount: 214,
-          imageUrl: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop',
-          priceFrom: 1290,
+          dailyRate: 1290,
           currency: curr,
-          freeCancellation: true,
-          mealPlan: 'Breakfast included',
-          deeplink: `https://www.agoda.com/partners/partnersearch.aspx?cid=1949420&city=Bangkok&checkIn=${criteria.checkInDate}&checkOut=${criteria.checkOutDate}`
+          imageUrl:
+            'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop',
+          includeBreakfast: true,
+          freeWifi: true,
+          deeplink: `https://www.agoda.com/partners/partnersearch.aspx?cid=${SITE_ID}&city=Bangkok&checkin=${checkInDate}&checkout=${checkOutDate}`,
         },
         {
-          id: '52120199',
+          id: 'mock-2',
           name: 'Bangkok Central Hotel',
           city: 'Bangkok',
           starRating: 3,
           reviewScore: 8.0,
           reviewCount: 120,
-          imageUrl: 'https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?q=80&w=1200&auto=format&fit=crop',
-          priceFrom: 990,
+          dailyRate: 990,
           currency: curr,
-          freeCancellation: false,
-          mealPlan: '',
-          deeplink: `https://www.agoda.com/partners/partnersearch.aspx?cid=1949420&city=Bangkok&checkIn=${criteria.checkInDate}&checkOut=${criteria.checkOutDate}`
-        },
-        {
-          id: '52120222',
-          name: 'Old Town Boutique',
-          city: 'Bangkok',
-          starRating: 5,
-          reviewScore: 9.1,
-          reviewCount: 84,
-          imageUrl: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop',
-          priceFrom: 2890,
-          currency: curr,
-          freeCancellation: true,
-          mealPlan: 'Breakfast included',
-          deeplink: `https://www.agoda.com/partners/partnersearch.aspx?cid=1949420&city=Bangkok&checkIn=${criteria.checkInDate}&checkOut=${criteria.checkOutDate}`
+          imageUrl:
+            'https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?q=80&w=1200&auto=format&fit=crop',
+          includeBreakfast: false,
+          freeWifi: false,
+          deeplink: `https://www.agoda.com/partners/partnersearch.aspx?cid=${SITE_ID}&city=Bangkok&checkin=${checkInDate}&checkout=${checkOutDate}`,
         }
       );
     }
 
-    const took = Date.now() - t0;
-    const payload = {
+    const tookMs = Date.now() - t0;
+    const respPayload = {
       ok: true,
       source: agodaOk ? 'agoda' : 'mock',
-      ...(agodaOk ? {} : { note: `agoda api http fallback` }),
       query: {
-        cityName,
-        checkIn: criteria.checkInDate,
-        checkOut: criteria.checkOutDate,
+        cityId,
+        checkInDate,
+        checkOutDate,
+        numberOfAdult,
+        numberOfChildren,
         rooms: numRooms,
-        adults: numAdults,
-        children: numChildren,
         currency: curr,
         language,
-        resultCount: criteria.resultCount,
-        sortOrder: criteria.sortOrder
+        maxResult: resultLimit,
+        sortBy,
       },
       total: items.length,
       items,
-      tookMs: took
+      tookMs,
+      ...(debug === '1' ? { _raw: agodaRaw } : {}),
     };
 
-    if (debug === '1') payload._raw = agodaRaw;
-    res.setHeader('Cache-Control','no-store');
-    return res.status(200).json(payload);
-
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json(respPayload);
   } catch (e) {
-    console.error(e);
-    res.setHeader('Cache-Control','no-store');
+    res.setHeader('Cache-Control', 'no-store');
     return res.status(500).json({ ok: false, error: String(e?.message || e) });
   }
 }
