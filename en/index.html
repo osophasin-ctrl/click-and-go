@@ -3,54 +3,75 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Click & Go – Compare Hotel Prices. Book in One Click</title>
+  <meta name="description" content="Click & Go helps you find and compare hotel prices from multiple providers, then click through to book instantly." />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/style.css" />
 
-  <title>Click & Go – Compare Hotel Prices, Book in One Click</title>
-  <meta name="description" content="Click & Go helps you find and compare hotel prices from multiple OTAs, with instant booking links. Covering top destinations in Thailand and worldwide." />
-  <link rel="canonical" href="https://clickandgo.asia/en/index.html" />
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Click & Go" />
-  <meta property="og:title" content="Click & Go – Compare Hotel Prices, Book in One Click" />
-  <meta property="og:description" content="Find and compare hotel prices from multiple providers, with instant booking links." />
-  <meta property="og:url" content="https://clickandgo.asia/en/index.html" />
-  <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg" />
+  <style>
+    /* Search box (same look as TH deals box) */
+    .mock-wrap{ max-width:1030px; width:100%; margin:0 auto; }
+    .mock-box{ width:100%; background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.08); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+    .mock-title{ margin:0 0 6px; font-weight:800; font-size:22px; }
+    .mock-sub{ margin:0 0 12px; color:#666; }
+    .mock-row{ display:grid; gap:10px; align-items:center; grid-template-columns:1fr 1fr; }
+    .full-row{ grid-column:1 / -1; }
+    .mock-input, .guest-input, .mock-btn{ height:44px; border:1px solid #d7d7d7; border-radius:8px; padding:0 12px; background:#fff; font-size:15px; }
+    .mock-input{ width:100%; } .guest-input{ text-align:left; cursor:pointer; }
+    .mock-btn{ background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; } .mock-btn:active{ transform:translateY(1px); }
+    .btn-wide{ width:100%; }
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Click & Go – Compare Hotel Prices, Book in One Click" />
-  <meta name="twitter:description" content="Find and compare hotel prices from multiple providers, with instant booking links." />
-  <meta name="twitter:image" content="https://clickandgo.asia/hero-bg.jpg" />
+    .field{ position:relative; } .field-label{ position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none; }
+    .has-label .mock-input,.has-label .flatpickr-input{ height:56px; padding-top:18px; }
 
-  <link rel="icon" href="../favicon.ico">
-  <link rel="stylesheet" href="../style.css">
+    .suggest-wrap{ position:relative; }
+    .suggest-panel{ position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,.08); max-height:260px; overflow:auto; z-index:999; display:none; }
+    .suggest-item{ display:flex; justify-content:space-between; align-items:center; padding:10px 12px; cursor:pointer; }
+    .suggest-item:hover{ background:#f6f6f6; }
+    .s-label{ font-weight:600; }
+    .s-sub{ color:#777; font-size:13px; }
 
-  <!-- GA4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
-  <script>
-    window.dataLayer=window.dataLayer||[];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js',new Date());
-    gtag('config','G-1QR2EGFWN3');
-  </script>
+    /* Guests modal */
+    .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:999; }
+    .modal{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; width:min(92vw,420px); box-shadow:0 12px 24px rgba(0,0,0,.2); z-index:1000; display:none; }
+    .modal-header,.modal-footer{ padding:14px 16px; }
+    .modal-header{ border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
+    .modal-title{ font-weight:700; font-size:18px; }
+    .modal-body{ padding:10px 16px 0 16px; }
+    .row-ctrl{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; }
+    .row-ctrl + .row-ctrl{ border-top:1px dashed #eee; }
+    .label-wrap{ display:flex; flex-direction:column; gap:2px; }
+    .label-wrap small{ color:#666; }
+    .counter{ display:flex; align-items:center; gap:10px; }
+    .btn-ctrl{ width:36px; height:36px; border-radius:50%; border:1px solid #ccc; background:#fff; font-size:18px; cursor:pointer; }
+    .count{ min-width:20px; text-align:center; font-weight:700; }
+    .btn-outline{ border:1px solid #bbb; background:#fff; color:#333; border-radius:8px; padding:8px 14px; }
+    .btn-primary{ border:0; background:#0ea5a0; color:#fff; border-radius:8px; padding:8px 14px; }
+
+    @media (max-width:640px){ .mock-row{ grid-template-columns:1fr; } }
+  </style>
 </head>
 <body>
   <!-- Header -->
   <header class="site-header" role="banner">
     <div class="inner">
-      <a href="index.html" class="brand" aria-label="Click & Go">
-        <img src="../logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+      <a href="/en/index.html" class="brand" aria-label="Click & Go">
+        <img src="/logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
         <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
 
-      <nav class="main-nav" aria-label="Main navigation">
-        <a href="index.html" aria-current="page">Home</a>
-        <a href="deals.html">Deals</a>
+      <nav class="main-nav" aria-label="Main menu">
+        <a href="/en/index.html" aria-current="page">Home</a>
+        <a href="/en/deals.html">Deals</a>
         <div class="lang">
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
           <div class="lang-menu" role="menu">
-            <a role="menuitem" href="../index.html">ไทย</a>
-            <a role="menuitem" href="#" aria-current="true">English</a>
+            <a role="menuitem" href="/">ไทย</a>
+            <a role="menuitem" href="/en/index.html" aria-current="true">English</a>
           </div>
         </div>
       </nav>
@@ -59,107 +80,273 @@
 
   <main class="container">
     <!-- Hero -->
-    <section class="hero" aria-label="Hero banner">
-      <img class="hero-img" src="../hero-bg.jpg" alt="Click & Go Thailand" />
+    <section class="hero" aria-label="Hero">
+      <img class="hero-img" src="/hero-bg.jpg" alt="Click & Go Thailand" />
     </section>
 
-    <!-- Search (Agoda Widget) -->
+    <!-- Search -->
     <section style="margin:24px 0">
-      <h2 class="section-title">Search Hotels</h2>
-      <div class="widget-like solid">
-        <p class="muted">We’re ready to find the best deals for you</p>
+      <h2 class="section-title">Find Hotels</h2>
+      <div class="mock-wrap">
+        <div class="mock-box">
+          <h3 class="mock-title">Search the best deals for you</h3>
+          <p class="mock-sub">Enter city or hotel name, choose your dates and guests, then search.</p>
 
-        <!-- Agoda Search Box : Wrapped to center and fit nicely -->
-        <div class="agoda-embed-wrap" style="display:flex;justify-content:center;align-items:center;padding:8px 0;overflow:hidden;">
-          <!-- Agoda embed START -->
-          <div id="adgshp-1762923411"></div>
-          <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
-          <script type="text/javascript">
-            var stg = new Object();
-            stg.crt="8131380105591";
-            stg.version="1.04";
-            stg.id=stg.name="adgshp-1762923411";
-            stg.width="1030px";
-            stg.height="293px";
-            stg.ReferenceKey="kTXcoy+P0WUNEGEcPWXr0A==";
-            stg.Layout="Oneline";
-            stg.Language="en-us";
-            stg.Cid="1949420";
-            stg.DestinationName="";
-            stg.OverideConf=false;
-            new AgdSherpa(stg).initialize();
-          </script>
-          <!-- Agoda embed END -->
+          <!-- Always GET to /search.html -->
+          <form id="cgForm" class="mock-row" method="GET" action="/search.html" autocomplete="off">
+            <!-- Destination -->
+            <div class="suggest-wrap full-row">
+              <input type="text" id="dest" name="q" class="mock-input" placeholder="Destination e.g. Bangkok or hotel name" aria-label="Destination" />
+              <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="Suggestions"></div>
+            </div>
+
+            <!-- Dates -->
+            <div class="field has-label">
+              <span class="field-label">Check-in</span>
+              <input type="text" id="ci" name="checkin" class="mock-input" aria-label="Check-in" readonly>
+            </div>
+            <div class="field has-label">
+              <span class="field-label">Check-out</span>
+              <input type="text" id="co" name="checkout" class="mock-input" aria-label="Check-out" readonly>
+            </div>
+
+            <!-- Guests -->
+            <button type="button" id="guestBtn" class="guest-input full-row">1 room, 2 adults, 0 children</button>
+
+            <!-- Search -->
+            <button type="submit" class="mock-btn btn-wide full-row">Search</button>
+
+            <!-- hidden -->
+            <input type="hidden" id="rooms" name="rooms" value="1">
+            <input type="hidden" id="adults" name="adults" value="2">
+            <input type="hidden" id="children" name="children" value="0">
+            <input type="hidden" name="lang" value="en-us"><!-- important -->
+          </form>
         </div>
       </div>
     </section>
 
-    <!-- Popular Destinations (Thailand) -->
+    <!-- Popular in Thailand -->
     <section>
       <h2 class="section-title">Top Destinations in Thailand</h2>
       <div class="city-grid">
-        <a class="city-card" href="bangkok.html"><figure><img src="../bangkok-tile.webp" alt="Bangkok"><figcaption>Bangkok</figcaption></figure></a>
-        <a class="city-card" href="chiangmai.html"><figure><img src="../chiangmai-tile.webp" alt="Chiang Mai"><figcaption>Chiang Mai</figcaption></figure></a>
-        <a class="city-card" href="pattaya.html"><figure><img src="../pattaya-tile.webp" alt="Pattaya"><figcaption>Pattaya</figcaption></figure></a>
-        <a class="city-card" href="phuket.html"><figure><img src="../phuket-tile.webp" alt="Phuket"><figcaption>Phuket</figcaption></figure></a>
-        <a class="city-card" href="krabi.html"><figure><img src="../krabi-tile.webp" alt="Krabi"><figcaption>Krabi</figcaption></figure></a>
-        <a class="city-card" href="hua-hin.html"><figure><img src="../huahin-tile.webp" alt="Hua Hin"><figcaption>Hua Hin</figcaption></figure></a>
+        <a class="city-card" href="/en/bangkok.html"><figure><img src="/bangkok-tile.webp" alt="Bangkok"><figcaption>Bangkok</figcaption></figure></a>
+        <a class="city-card" href="/en/chiangmai.html"><figure><img src="/chiangmai-tile.webp" alt="Chiang Mai"><figcaption>Chiang Mai</figcaption></figure></a>
+        <a class="city-card" href="/en/pattaya.html"><figure><img src="/pattaya-tile.webp" alt="Pattaya"><figcaption>Pattaya</figcaption></figure></a>
+        <a class="city-card" href="/en/phuket.html"><figure><img src="/phuket-tile.webp" alt="Phuket"><figcaption>Phuket</figcaption></figure></a>
+        <a class="city-card" href="/en/krabi.html"><figure><img src="/krabi-tile.webp" alt="Krabi"><figcaption>Krabi</figcaption></figure></a>
+        <a class="city-card" href="/en/hua-hin.html"><figure><img src="/huahin-tile.webp" alt="Hua Hin"><figcaption>Hua Hin</figcaption></figure></a>
       </div>
     </section>
 
-    <!-- Popular Destinations (International) -->
+    <!-- Popular International -->
     <section>
       <h2 class="section-title">Popular International Cities</h2>
       <div class="city-grid">
-        <a class="city-card" href="tokyo.html"><figure><img src="../tokyo-tile.webp" alt="Tokyo"><figcaption>Tokyo</figcaption></figure></a>
-        <a class="city-card" href="seoul.html"><figure><img src="../seoul-tile.webp" alt="Seoul"><figcaption>Seoul</figcaption></figure></a>
-        <a class="city-card" href="singapore.html"><figure><img src="../singapore-tile.webp" alt="Singapore"><figcaption>Singapore</figcaption></figure></a>
-        <a class="city-card" href="hongkong.html"><figure><img src="../hongkong-tile.webp" alt="Hong Kong"><figcaption>Hong Kong</figcaption></figure></a>
-        <a class="city-card" href="london.html"><figure><img src="../london-tile.webp" alt="London"><figcaption>London</figcaption></figure></a>
-        <a class="city-card" href="paris.html"><figure><img src="../paris-tile.webp" alt="Paris"><figcaption>Paris</figcaption></figure></a>
+        <a class="city-card" href="/en/tokyo.html"><figure><img src="/tokyo-tile.webp" alt="Tokyo"><figcaption>Tokyo</figcaption></figure></a>
+        <a class="city-card" href="/en/seoul.html"><figure><img src="/seoul-tile.webp" alt="Seoul"><figcaption>Seoul</figcaption></figure></a>
+        <a class="city-card" href="/en/singapore.html"><figure><img src="/singapore-tile.webp" alt="Singapore"><figcaption>Singapore</figcaption></figure></a>
+        <a class="city-card" href="/en/hongkong.html"><figure><img src="/hongkong-tile.webp" alt="Hong Kong"><figcaption>Hong Kong</figcaption></figure></a>
+        <a class="city-card" href="/en/london.html"><figure><img src="/london-tile.webp" alt="London"><figcaption>London</figcaption></figure></a>
+        <a class="city-card" href="/en/paris.html"><figure><img src="/paris-tile.webp" alt="Paris"><figcaption>Paris</figcaption></figure></a>
       </div>
     </section>
 
-    <!-- Why Click & Go -->
+    <!-- Why choose -->
     <section>
       <h2 class="section-title">Why Choose Click & Go</h2>
       <div class="features">
-        <div class="feature"><h3>Find the Best Deals</h3><p>Connected to global providers, showing real-time prices.</p></div>
-        <div class="feature"><h3>Simple Booking</h3><p>Click through directly to our partners’ hotel pages.</p></div>
+        <div class="feature"><h3>Find the Best Deals</h3><p>Connected to global providers with real-time prices.</p></div>
+        <div class="feature"><h3>Simple Booking</h3><p>Click through directly to partners’ hotel pages.</p></div>
         <div class="feature"><h3>Works Everywhere</h3><p>Easy to use on mobile, tablet, or computer.</p></div>
       </div>
     </section>
   </main>
 
+  <!-- Guests Modal -->
+  <div id="guestBackdrop" class="modal-backdrop" aria-hidden="true"></div>
+  <div id="guestModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="guestTitle">
+    <div class="modal-header">
+      <div id="guestTitle" class="modal-title">Guests</div>
+      <button type="button" class="btn-outline" id="btnCloseX">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="row-ctrl">
+        <div class="label-wrap"><strong>Rooms</strong><small>Number of rooms</small></div>
+        <div class="counter">
+          <button class="btn-ctrl" data-type="rooms" data-op="minus">−</button>
+          <span class="count" id="roomsCount">1</span>
+          <button class="btn-ctrl" data-type="rooms" data-op="plus">+</button>
+        </div>
+      </div>
+      <div class="row-ctrl">
+        <div class="label-wrap"><strong>Adults</strong><small>18+ years</small></div>
+        <div class="counter">
+          <button class="btn-ctrl" data-type="adults" data-op="minus">−</button>
+          <span class="count" id="adultsCount">2</span>
+          <button class="btn-ctrl" data-type="adults" data-op="plus">+</button>
+        </div>
+      </div>
+      <div class="row-ctrl">
+        <div class="label-wrap"><strong>Children</strong><small>0–17 years</small></div>
+        <div class="counter">
+          <button class="btn-ctrl" data-type="children" data-op="minus">−</button>
+          <span class="count" id="childrenCount">0</span>
+          <button class="btn-ctrl" data-type="children" data-op="plus">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" id="btnCancel">Cancel</button>
+      <button class="btn-primary" id="btnSaveGuests">Save</button>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="privacy.html">Privacy</a> ·
-        <a href="terms.html">Terms</a> ·
-        <a href="affiliate.html">Affiliate Disclosure</a> ·
-        <a href="about.html">About us</a> ·
-        <a href="contact.html">Contact</a> ·
+        <a href="/en/privacy.html">Privacy</a> ·
+        <a href="/en/terms.html">Terms</a> ·
+        <a href="/en/affiliate.html">Affiliate Disclosure</a> ·
+        <a href="/en/about.html">About us</a> ·
+        <a href="/en/contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
   </footer>
 
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
-    // language pop-up
+    // Language menu
     (function(){
-      const btn  = document.querySelector('.lang-btn');
-      const menu = document.querySelector('.lang-menu');
+      const btn=document.querySelector('.lang-btn');
+      const menu=document.querySelector('.lang-menu');
       if(!btn||!menu) return;
       function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-      btn.addEventListener('click', e=>{
+      btn.addEventListener('click',e=>{
         e.stopPropagation();
-        const opened = menu.classList.toggle('open');
-        btn.setAttribute('aria-expanded', String(opened));
+        const opened=menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded',String(opened));
       });
-      document.addEventListener('click', closeMenu);
-      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
+      document.addEventListener('click',closeMenu);
+      document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu(); });
+    })();
+
+    // Suggestion (/api/suggest?lang=en-us)
+    (function(){
+      const input = document.getElementById('dest');
+      const panel = document.getElementById('suggestPanel');
+      if(!input||!panel) return;
+      let t=null;
+      function hide(){ panel.style.display='none'; panel.innerHTML=''; }
+      function show(){ panel.style.display='block'; }
+      input.addEventListener('input', ()=>{
+        const q=input.value.trim();
+        if(t) clearTimeout(t);
+        if(!q) return hide();
+        t=setTimeout(async ()=>{
+          try{
+            const res = await fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=en-us`);
+            const data = await res.json();
+            if(!data.ok||!data.items) return hide();
+            panel.innerHTML = data.items.map(it=>`
+              <div class="suggest-item" data-label="${it.label.replace(/"/g,'&quot;')}">
+                <div class="s-label">${it.label}</div>
+                <div class="s-sub">${it.subtitle||''}</div>
+              </div>`).join('');
+            show();
+            panel.querySelectorAll('.suggest-item').forEach(el=>{
+              el.addEventListener('click', ()=>{ input.value = el.getAttribute('data-label')||''; hide(); });
+            });
+          }catch(e){ hide(); }
+        },180);
+      });
+      document.addEventListener('click', e=>{ if(!panel.contains(e.target) && e.target!==input) hide(); });
+    })();
+
+    // Dates + Guests + Submit
+    (function(){
+      const ONE_DAY = 24*60*60*1000;
+      const ciEl=document.getElementById('ci'), coEl=document.getElementById('co');
+      const today=new Date(), tomorrow=new Date(Date.now()+ONE_DAY);
+      const fmt=d=>d.toISOString().slice(0,10);
+
+      // flatpickr (English by default)
+      if(window.flatpickr){
+        const inPicker = flatpickr("#ci", {
+          dateFormat:"Y-m-d",
+          altInput:true, altFormat:"j M Y", altInputClass:"mock-input",
+          allowInput:false, minDate:"today",
+          onChange(d){
+            if(d[0]){
+              const next = new Date(d[0].getTime()+ONE_DAY);
+              outPicker.set('minDate', next);
+              if(!outPicker.selectedDates[0] || outPicker.selectedDates[0] <= d[0]) outPicker.setDate(next,true);
+            }
+          }
+        });
+        const outPicker = flatpickr("#co", {
+          dateFormat:"Y-m-d",
+          altInput:true, altFormat:"j M Y", altInputClass:"mock-input",
+          allowInput:false, minDate:tomorrow
+        });
+        inPicker.setDate(today, true);
+        outPicker.setDate(tomorrow, true);
+      } else {
+        // Fallback native date
+        ciEl.removeAttribute('readonly'); coEl.removeAttribute('readonly');
+        ciEl.type='date'; coEl.type='date';
+        ciEl.value=fmt(today); ciEl.min=fmt(today);
+        coEl.value=fmt(tomorrow); coEl.min=fmt(tomorrow);
+        ciEl.addEventListener('change', ()=>{
+          const a=new Date(ciEl.value||fmt(today));
+          const next=new Date(a.getTime()+ONE_DAY);
+          if(!coEl.value || new Date(coEl.value) <= a){ coEl.value=fmt(next); coEl.min=fmt(next); }
+        });
+      }
+
+      // Guests modal
+      let rooms=1, adults=2, children=0;
+      const btn=document.getElementById('guestBtn');
+      const roomsCount=document.getElementById('roomsCount');
+      const adultsCount=document.getElementById('adultsCount');
+      const childrenCount=document.getElementById('childrenCount');
+      const hRooms=document.getElementById('rooms');
+      const hAdults=document.getElementById('adults');
+      const hChildren=document.getElementById('children');
+      const modal=document.getElementById('guestModal');
+      const backdrop=document.getElementById('guestBackdrop');
+
+      function open(){ roomsCount.textContent=rooms; adultsCount.textContent=adults; childrenCount.textContent=children; modal.style.display='block'; backdrop.style.display='block'; }
+      function close(){ modal.style.display='none'; backdrop.style.display='none'; }
+      function updateBtn(){ btn.textContent = `${rooms} room${rooms>1?'s':''}, ${adults} adult${adults>1?'s':''}, ${children} child${children!==1?'ren':''}`; }
+      updateBtn();
+
+      btn.addEventListener('click', open);
+      document.getElementById('btnCloseX').addEventListener('click', close);
+      document.getElementById('btnCancel').addEventListener('click', close);
+      backdrop.addEventListener('click', close);
+
+      document.querySelectorAll('.btn-ctrl').forEach(b=>{
+        b.addEventListener('click', ()=>{
+          const type=b.getAttribute('data-type'), op=b.getAttribute('data-op');
+          let val=0, min=0, max=10;
+          if(type==='rooms'){ val=rooms; min=1; }
+          if(type==='adults'){ val=adults; min=1; }
+          if(type==='children'){ val=children; min=0; }
+          if(op==='plus'&&val<max) val++;
+          if(op==='minus'&&val>min) val--;
+          if(type==='rooms'){ rooms=val; roomsCount.textContent=val; }
+          if(type==='adults'){ adults=val; adultsCount.textContent=val; }
+          if(type==='children'){ children=val; childrenCount.textContent=val; }
+        });
+      });
+      document.getElementById('btnSaveGuests').addEventListener('click', ()=>{ hRooms.value=rooms; hAdults.value=adults; hChildren.value=children; updateBtn(); close(); });
+
+      // Ensure q has a default to avoid empty search
+      document.getElementById('cgForm').addEventListener('submit', ()=>{ const q=document.getElementById('dest'); if(!q.value) q.value='Bangkok'; });
     })();
   </script>
 </body>
