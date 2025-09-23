@@ -1,159 +1,232 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ผลการค้นหาโรงแรม | Click & Go</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/style.css">
   <style>
-    .wrap{max-width:1100px;margin:0 auto;padding:16px}
-    .title{font-size:clamp(20px,3vw,28px);font-weight:800;margin:8px 0 6px}
-    .sub{color:#555;margin:0 0 12px}
-    .toolbar{display:flex;gap:8px;align-items:center;margin:8px 0 16px;flex-wrap:wrap}
-    .grid{display:grid;gap:16px;grid-template-columns:repeat(3,1fr)}
-    @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:620px){.grid{grid-template-columns:1fr}}
-    .card{border:1px solid #eee;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 1px 10px rgba(0,0,0,.05);display:flex;flex-direction:column}
-    .thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:#f4f4f4}
-    .body{padding:12px}
-    .hname{margin:0 0 4px;font-weight:800}
-    .meta{color:#666;font-size:13px}
-    .foot{display:flex;justify-content:space-between;align-items:center;padding:0 12px 12px;margin-top:auto}
-    .price{font-weight:800}
-    .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:#0ea5a0;color:#fff;text-decoration:none}
-    .muted{color:#888}
-    select, .pill{height:36px;border:1px solid #d7d7d7;border-radius:8px;background:#fff;padding:0 10px}
+    .container{max-width:1100px;margin:0 auto;padding:16px}
+    .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0 16px}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.cards{grid-template-columns:1fr}}
+    .card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+    .card img{width:100%;height:210px;object-fit:cover;display:block;background:#f4f4f4}
+    .card-body{padding:14px}
+    .price{font-weight:700;margin-top:8px}
+    .btn{display:inline-block;background:#0aa297;color:#fff;border:none;border-radius:10px;padding:10px 14px;cursor:pointer}
+    .header{display:flex;align-items:center;gap:12px;padding:12px 0}
+    .muted{color:#666}
+    .select{height:40px;border:1px solid #ddd;border-radius:10px;padding:0 10px;background:#fff}
+    .skeleton{background:linear-gradient(90deg,#f2f2f2 25%,#e9e9e9 37%,#f2f2f2 63%);animation:s 1.4s ease infinite}
+    @keyframes s{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}
+    .sk-img{height:210px}
+    .sk-line{height:14px;margin-top:8px;border-radius:6px}
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="inner">
-      <a href="index.html" class="brand"><img src="logo.png" width="36" height="36" alt=""/> <strong>Click & Go</strong></a>
-      <nav class="main-nav"><a href="index.html">หน้าแรก</a> <a href="deals.html">โปรโมชั่น</a></nav>
-    </div>
-  </header>
+<header class="site-header" role="banner">
+  <div class="inner">
+    <a href="/index.html" class="brand"><img src="/logo.png" width="40" height="40" alt="Click & Go"><span class="brand-text">Click & Go</span></a>
+    <nav class="main-nav">
+      <a href="/index.html">หน้าแรก</a>
+      <a href="/deals.html">โปรโมชั่น</a>
+    </nav>
+  </div>
+</header>
 
-  <main class="wrap">
-    <h1 class="title">ผลการค้นหาโรงแรม</h1>
-    <p id="summary" class="sub">กำลังโหลด...</p>
+<main class="container">
+  <h1 id="title">ผลการค้นหาโรงแรม</h1>
+  <p class="muted" id="subtitle"></p>
 
-    <div class="toolbar">
-      <label>เรียงโดย
-        <select id="sort">
-          <option value="PriceAsc">ราคาต่ำ → สูง</option>
-          <option value="PriceDesc">ราคาสูง → ต่ำ</option>
-          <option value="Recommended">แนะนำ</option>
-        </select>
-      </label>
-      <label>สกุลเงิน
-        <select id="cur">
-          <option>THB</option>
-          <option>USD</option>
-          <option>EUR</option>
-          <option>JPY</option>
-        </select>
-      </label>
-      <label>แสดง
-        <select id="max">
-          <option>30</option><option>15</option><option>60</option>
-        </select>
-      </label>
-    </div>
+  <div class="toolbar">
+    <label>เรียงโดย
+      <select id="sort" class="select">
+        <option value="rec">แนะนำ</option>
+        <option value="price_asc">ราคาต่ำ → สูง</option>
+        <option value="price_desc">ราคาสูง → ต่ำ</option>
+      </select>
+    </label>
 
-    <section id="grid" class="grid"></section>
-  </main>
+    <label>สกุลเงิน
+      <select id="currency" class="select">
+        <option>THB</option>
+        <option>USD</option>
+        <option>EUR</option>
+        <option>JPY</option>
+      </select>
+    </label>
 
-  <script>
-    const $ = s => document.querySelector(s);
+    <label>แสดง
+      <select id="limit" class="select">
+        <option value="30">30</option>
+        <option value="60">60</option>
+        <option value="90">90</option>
+      </select>
+    </label>
+  </div>
 
-    // map ชื่อเมือง -> cityId
-    const CITY_MAP = {
-      bangkok: 9395, 'กรุงเทพ': 9395,
-      'chiang mai': 9397, 'เชียงใหม่': 9397,
-      pattaya: 9398, 'พัทยา': 9398,
-      phuket: 9396, 'ภูเก็ต': 9396,
-      krabi: 7023, 'กระบี่': 7023,
-      'hua hin': 11278, 'หัวหิน': 11278,
-      tokyo: 6419, seoul: 14690, singapore: 11419, 'hong kong': 4543, london: 17072, paris: 16808
-    };
+  <section id="grid" class="cards" aria-live="polite"></section>
+</main>
 
-    // ---- พารามิเตอร์จาก URL ----
-    const p = new URLSearchParams(location.search);
-    const q         = (p.get('q') || 'Bangkok').trim();
-    const cityid    = parseInt(p.get('cityid') || '', 10) || CITY_MAP[(q||'').toLowerCase()] || 9395;
-    const checkin   = p.get('checkin')  || new Date().toISOString().slice(0,10);
-    const checkout  = p.get('checkout') || new Date(Date.now()+86400000).toISOString().slice(0,10);
-    const rooms     = +(p.get('rooms') || 1);
-    const adults    = +(p.get('adults') || 2);
-    const children  = +(p.get('children') || 0);
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const params = new URLSearchParams(location.search);
 
-    // ค่าเริ่มต้นสกุลเงิน = THB แต่ถ้ามีใน URL ให้ใช้ตามนั้น
-    const currency  = (p.get('currency') || 'THB').toUpperCase();
+  // -------- อ่านพารามิเตอร์ --------
+  const state = {
+    q: params.get('q') || '',
+    cityId: params.get('cityId') || '',
+    city: params.get('city') || '',
+    country: params.get('country') || '',
+    checkin: params.get('checkin'),
+    checkout: params.get('checkout'),
+    rooms: +(params.get('rooms') || 1),
+    adults: +(params.get('adults') || 2),
+    children: +(params.get('children') || 0),
+    lang: params.get('lang') || 'th-th',
+    currency: params.get('currency') || 'THB',
+    limit: +(params.get('limit') || 30),
+    sort: params.get('sort') || 'rec',
+    page: +(params.get('page') || 1)
+  };
 
-    // ภาษา: ตาม URL หรือ path (en-us / th-th)
-    const lang      = (p.get('lang') || (location.pathname.startsWith('/en/') ? 'en-us' : 'th-th')).toLowerCase();
+  // ตั้งค่าส่วนหัว
+  $('#currency').value = state.currency;
+  $('#limit').value = String(state.limit);
+  $('#sort').value = state.sort;
 
-    // ---- ตั้งค่า UI เริ่มต้น ----
-    $('#summary').textContent =
-      `${q} | วันที่: ${checkin} → ${checkout} | ผู้เข้าพัก: ${adults} ผู้ใหญ่, ${children} เด็ก, ${rooms} ห้อง`;
-    $('#cur').value  = currency;
-    $('#max').value  = String(p.get('max') || 30);
-    $('#sort').value = String(p.get('sort') || 'PriceAsc');
+  const human = (() => {
+    const ci = state.checkin?.replaceAll('-', '/');
+    const co = state.checkout?.replaceAll('-', '/');
+    const guestTxt = `ผู้เข้าพัก: ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
+    const place = state.city || state.q || '—';
+    return {place, range: `${ci} → ${co}`, guestTxt};
+  })();
 
-    // ---- โหลดผลลัพธ์ ----
-    async function load() {
-      const qs = new URLSearchParams({
-        cityid, checkin, checkout, rooms, adults, children,
-        currency: $('#cur').value,    // ใช้ค่าปัจจุบันจาก dropdown
-        lang,
-        sort: $('#sort').value,
-        max:  $('#max').value
-      });
-      const res = await fetch(`/api/search?${qs.toString()}`, { headers: { 'Accept': 'application/json' }});
-      const data = await res.json();
-      render(data.items || []);
+  $('#subtitle').textContent = `${human.place} | วันที่: ${human.range} | ${human.guestTxt}`;
+
+  // -------- โหลดผลลัพธ์ --------
+  async function load(){
+    renderSkeleton();
+
+    // ยิงไป API /api/search
+    const api = new URL('/api/search', location.origin);
+    const p = api.searchParams;
+    if (state.cityId) p.set('cityId', state.cityId);
+    if (state.q && !state.cityId) p.set('q', state.q);
+    ['checkin','checkout','rooms','adults','children','lang','currency','page','limit']
+      .forEach(k => p.set(k, state[k]));
+
+    const resp = await fetch(api.toString(), {cache: 'no-store'});
+    const json = await resp.json().catch(()=>({ok:false}));
+
+    if (!json.ok){
+      $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`;
+      return;
     }
 
-    function render(items) {
-      const grid = $('#grid');
-      if (!items.length) {
-        grid.innerHTML = `<div class="muted">ไม่พบรายการที่ตรงเงื่อนไข</div>`;
-        return;
-      }
-      grid.innerHTML = items.map(card).join('');
-    }
+    let items = json.results || [];
 
-    function card(h) {
-      const stars  = '★'.repeat(h.starRating || 0);
-      const review = (h.reviewScore != null) ? ` · คะแนน ${h.reviewScore}` : '';
-      const price  = (h.priceFrom != null) ? `${Number(h.priceFrom).toLocaleString()} ${h.currency || $('#cur').value}` : '-';
-      return `
-        <article class="card">
-          <img class="thumb" src="${h.imageUrl || 'https://picsum.photos/800/450?blur=2'}" alt="${h.name || ''}" loading="lazy">
-          <div class="body">
-            <h3 class="hname">${h.name || '-'}</h3>
-            <div class="meta">${stars}${review}</div>
+    // เรียงลำดับฝั่งหน้า
+    if (state.sort === 'price_asc') items.sort((a,b)=>(a.price||1e15)-(b.price||1e15));
+    if (state.sort === 'price_desc') items.sort((a,b)=>(b.price||0)-(a.price||0));
+
+    render(items);
+  }
+
+  function renderSkeleton(){
+    const sk = Array.from({length: 9}).map(()=>`
+      <article class="card" aria-busy="true">
+        <div class="sk-img skeleton"></div>
+        <div class="card-body">
+          <div class="sk-line skeleton" style="width:70%"></div>
+          <div class="sk-line skeleton" style="width:40%"></div>
+          <div class="sk-line skeleton" style="width:50%"></div>
+        </div>
+      </article>`).join('');
+    $('#grid').innerHTML = sk;
+  }
+
+  function render(list){
+    if (!list.length){
+      $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`;
+      return;
+    }
+    const html = list.map(h => `
+      <article class="card">
+        <img src="${esc(h.thumbnail || '')}" alt="${esc(h.name)}">
+        <div class="card-body">
+          <h3 style="font-size:18px;margin:0 0 6px">${esc(h.name)}</h3>
+          <div class="muted" style="font-size:13px">★ ${h.rating ?? '-'} · คะแนน ${h.reviewScore ?? '-'}</div>
+          <div class="price">${fmt(h.price)} ${esc(h.currency || state.currency)}</div>
+          <div style="margin-top:10px">
+            <a class="btn" href="${esc(h.url || '#')}" target="_blank" rel="nofollow noopener">ดูดีล</a>
           </div>
-          <div class="foot">
-            <div class="price">${price}</div>
-            <a class="btn" href="${h.deeplink || '#'}" target="_blank" rel="nofollow noopener">ดูดีล</a>
-          </div>
-        </article>`;
-    }
+        </div>
+      </article>
+    `).join('');
+    $('#grid').innerHTML = html;
+  }
 
-    // ---- listeners: เปลี่ยนค่าปุ๊บ โหลดใหม่ + บันทึกลง URL ----
-    ['sort','cur','max'].forEach(id=>{
-      $('#'+id).addEventListener('change', ()=>{
-        const url = new URL(location.href);
-        url.searchParams.set('sort', $('#sort').value);
-        url.searchParams.set('currency', $('#cur').value); // เก็บสกุลเงินไว้ใน URL
-        url.searchParams.set('max', $('#max').value);
-        history.replaceState(null,'',url.toString());
-        load();
-      });
-    });
+  function fmt(n){
+    if (n == null) return '-';
+    try { return new Intl.NumberFormat('th-TH',{maximumFractionDigits:2}).format(n); }
+    catch(e){ return String(n); }
+  }
+  function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
+  // -------- UI handlers --------
+  $('#currency').addEventListener('change', e => {
+    state.currency = e.target.value;
+    updateQueryAndReload();
+  });
+  $('#limit').addEventListener('change', e => {
+    state.limit = +e.target.value;
+    updateQueryAndReload(false); // ไม่ต้องรีเซ็ตหน้า
+  });
+  $('#sort').addEventListener('change', e => {
+    state.sort = e.target.value;
+    updateQueryOnly();
     load();
-  </script>
+  });
+
+  function updateQueryAndReload(resetPage = true){
+    if (resetPage) state.page = 1;
+    updateQueryOnly();
+    load();
+  }
+
+  function updateQueryOnly(){
+    const u = new URL(location.href);
+    Object.entries({
+      q: state.q || '',
+      cityId: state.cityId || '',
+      city: state.city || '',
+      country: state.country || '',
+      checkin: state.checkin,
+      checkout: state.checkout,
+      rooms: state.rooms,
+      adults: state.adults,
+      children: state.children,
+      lang: state.lang,
+      currency: state.currency,
+      page: state.page,
+      limit: state.limit,
+      sort: state.sort
+    }).forEach(([k,v])=>{
+      if (v === '' || v == null) u.searchParams.delete(k);
+      else u.searchParams.set(k, v);
+    });
+    history.replaceState({}, '', u);
+  }
+
+  // go!
+  load();
+})();
+</script>
 </body>
 </html>
