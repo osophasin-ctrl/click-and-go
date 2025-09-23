@@ -4,20 +4,20 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Hotel Deals & Promotions | Click & Go</title>
-  <meta name="description" content="Find hotel promotions and special deals from our partners. Pick your dates and click to book instantly." />
+  <title>Hotel Promotions – Unmissable Deals | Click & Go</title>
+  <meta name="description" content="Browse hotel deals and promotions from our partners. Pick your dates and click through to book instantly." />
   <link rel="canonical" href="https://clickandgo.asia/en/deals.html" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
-  <meta property="og:title" content="Hotel Deals & Promotions | Click & Go" />
-  <meta property="og:description" content="Find hotel promotions and special deals from our partners. Pick your dates and click to book instantly." />
+  <meta property="og:title" content="Hotel Promotions – Unmissable Deals | Click & Go" />
+  <meta property="og:description" content="Browse hotel deals and promotions from our partners. Pick your dates and click through to book instantly." />
   <meta property="og:url" content="https://clickandgo.asia/en/deals.html" />
   <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg" />
 
-  <link rel="icon" href="../favicon.ico" />
-  <link rel="stylesheet" href="../style.css" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/style.css" />
 
   <!-- Flatpickr -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -47,7 +47,7 @@
     .mock-btn:active{ transform:translateY(1px); }
     .btn-wide{ width:100%; }
 
-    /* floating label for date inputs */
+    /* floating label */
     .field{ position:relative; }
     .field-label{
       position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none;
@@ -91,18 +91,18 @@
   <!-- Header -->
   <header class="site-header" role="banner">
     <div class="inner">
-      <a href="index.html" class="brand" aria-label="Click & Go">
-        <img src="../logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+      <a href="/en/index.html" class="brand" aria-label="Click & Go">
+        <img src="/logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
         <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
-      <nav class="main-nav" aria-label="Main navigation">
-        <a href="index.html">Home</a>
-        <a href="deals.html" aria-current="page">Deals</a>
+      <nav class="main-nav" aria-label="Main menu">
+        <a href="/en/index.html">Home</a>
+        <a href="/en/deals.html" aria-current="page">Deals</a>
         <div class="lang">
           <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
           <div class="lang-menu" role="menu">
-            <a role="menuitem" href="../deals.html">ไทย</a>
-            <a role="menuitem" href="#" aria-current="true">English</a>
+            <a role="menuitem" href="/">ไทย</a>
+            <a role="menuitem" href="/en/deals.html" aria-current="true">English</a>
           </div>
         </div>
       </nav>
@@ -112,39 +112,40 @@
   <main class="container">
     <!-- Search Box -->
     <section style="margin:24px 0">
-      <h1 class="section-title">Find hotels</h1>
+      <h1 class="section-title">Find Hotels</h1>
       <div class="mock-wrap">
         <div class="mock-box">
-          <h3 class="mock-title">Find the best deals</h3>
-          <p class="mock-sub">Type a city or hotel name, pick your dates, select guests and search.</p>
+          <h3 class="mock-title">Search the best deals for you</h3>
+          <p class="mock-sub">Type a city or hotel, pick dates, set guests, then search.</p>
 
-          <form id="cgForm" class="mock-row" autocomplete="off">
+          <form id="cgForm" class="mock-row" autocomplete="off" method="GET" action="/search.html">
             <!-- Destination -->
             <div class="suggest-wrap full-row">
-              <input type="text" id="dest" class="mock-input" placeholder="Destination e.g., Bangkok or hotel name" aria-label="Destination" />
+              <input type="text" id="dest" name="q" class="mock-input" placeholder="Destination e.g. Bangkok or hotel name" aria-label="Destination" />
               <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="Suggestions"></div>
             </div>
 
             <!-- Dates -->
             <div class="field has-label">
               <span class="field-label">Check-in</span>
-              <input type="text" id="ci" class="mock-input" aria-label="Check-in" readonly>
+              <input type="text" id="ci" name="checkin" class="mock-input" aria-label="Check-in" readonly>
             </div>
             <div class="field has-label">
               <span class="field-label">Check-out</span>
-              <input type="text" id="co" class="mock-input" aria-label="Check-out" readonly>
+              <input type="text" id="co" name="checkout" class="mock-input" aria-label="Check-out" readonly>
             </div>
 
             <!-- Guests -->
-            <button type="button" id="guestBtn" class="guest-input full-row">1 Room, 2 Adults, 0 Children</button>
+            <button type="button" id="guestBtn" class="guest-input full-row">1 room, 2 adults, 0 children</button>
 
             <!-- Search -->
             <button type="submit" class="mock-btn btn-wide full-row">Search</button>
 
             <!-- hidden -->
-            <input type="hidden" id="rooms" value="1">
-            <input type="hidden" id="adults" value="2">
-            <input type="hidden" id="children" value="0">
+            <input type="hidden" id="rooms" name="rooms" value="1">
+            <input type="hidden" id="adults" name="adults" value="2">
+            <input type="hidden" id="children" name="children" value="0">
+            <input type="hidden" name="lang" value="en-us"><!-- important -->
           </form>
         </div>
       </div>
@@ -152,14 +153,14 @@
 
     <!-- Popular cities -->
     <section>
-      <h2 class="section-title">Hottest deals in popular cities</h2>
+      <h2 class="section-title">Hottest Deals in Popular Cities</h2>
       <div class="city-grid">
-        <a class="city-card" href="bangkok.html"><figure><img src="../bangkok-tile.webp" alt="Bangkok"><figcaption>Bangkok</figcaption></figure></a>
-        <a class="city-card" href="chiangmai.html"><figure><img src="../chiangmai-tile.webp" alt="Chiang Mai"><figcaption>Chiang Mai</figcaption></figure></a>
-        <a class="city-card" href="pattaya.html"><figure><img src="../pattaya-tile.webp" alt="Pattaya"><figcaption>Pattaya</figcaption></figure></a>
-        <a class="city-card" href="phuket.html"><figure><img src="../phuket-tile.webp" alt="Phuket"><figcaption>Phuket</figcaption></figure></a>
-        <a class="city-card" href="krabi.html"><figure><img src="../krabi-tile.webp" alt="Krabi"><figcaption>Krabi</figcaption></figure></a>
-        <a class="city-card" href="hua-hin.html"><figure><img src="../huahin-tile.webp" alt="Hua Hin"><figcaption>Hua Hin</figcaption></figure></a>
+        <a class="city-card" href="/en/bangkok.html"><figure><img src="/bangkok-tile.webp" alt="Bangkok"><figcaption>Bangkok</figcaption></figure></a>
+        <a class="city-card" href="/en/chiangmai.html"><figure><img src="/chiangmai-tile.webp" alt="Chiang Mai"><figcaption>Chiang Mai</figcaption></figure></a>
+        <a class="city-card" href="/en/pattaya.html"><figure><img src="/pattaya-tile.webp" alt="Pattaya"><figcaption>Pattaya</figcaption></figure></a>
+        <a class="city-card" href="/en/phuket.html"><figure><img src="/phuket-tile.webp" alt="Phuket"><figcaption>Phuket</figcaption></figure></a>
+        <a class="city-card" href="/en/krabi.html"><figure><img src="/krabi-tile.webp" alt="Krabi"><figcaption>Krabi</figcaption></figure></a>
+        <a class="city-card" href="/en/hua-hin.html"><figure><img src="/huahin-tile.webp" alt="Hua Hin"><figcaption>Hua Hin</figcaption></figure></a>
       </div>
     </section>
   </main>
@@ -168,7 +169,7 @@
   <div id="guestBackdrop" class="modal-backdrop" aria-hidden="true"></div>
   <div id="guestModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="guestTitle">
     <div class="modal-header">
-      <div id="guestTitle" class="modal-title">Travelers</div>
+      <div id="guestTitle" class="modal-title">Guests</div>
       <button type="button" class="btn-outline" id="btnCloseX">×</button>
     </div>
     <div class="modal-body">
@@ -181,7 +182,7 @@
         </div>
       </div>
       <div class="row-ctrl">
-        <div class="label-wrap"><strong>Adults</strong><small>Ages 18+</small></div>
+        <div class="label-wrap"><strong>Adults</strong><small>18+ years</small></div>
         <div class="counter">
           <button class="btn-ctrl" data-type="adults" data-op="minus">−</button>
           <span class="count" id="adultsCount">2</span>
@@ -189,7 +190,7 @@
         </div>
       </div>
       <div class="row-ctrl">
-        <div class="label-wrap"><strong>Children</strong><small>Ages 0–17</small></div>
+        <div class="label-wrap"><strong>Children</strong><small>0–17 years</small></div>
         <div class="counter">
           <button class="btn-ctrl" data-type="children" data-op="minus">−</button>
           <span class="count" id="childrenCount">0</span>
@@ -207,11 +208,11 @@
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="privacy.html">Privacy</a> ·
-        <a href="terms.html">Terms</a> ·
-        <a href="affiliate.html">Affiliate Disclosure</a> ·
-        <a href="about.html">About us</a> ·
-        <a href="contact.html">Contact</a> ·
+        <a href="/en/privacy.html">Privacy</a> ·
+        <a href="/en/terms.html">Terms</a> ·
+        <a href="/en/affiliate.html">Affiliate Disclosure</a> ·
+        <a href="/en/about.html">About us</a> ·
+        <a href="/en/contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
@@ -220,7 +221,7 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
-    // Language pop-up
+    // Language menu
     (function(){
       const btn=document.querySelector('.lang-btn');
       const menu=document.querySelector('.lang-menu');
@@ -235,10 +236,11 @@
       document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu(); });
     })();
 
-    // Suggestion
+    // Suggestion (English)
     (function(){
       const input = document.getElementById('dest');
       const panel = document.getElementById('suggestPanel');
+      if(!input||!panel) return;
       let t=null;
       function hide(){ panel.style.display='none'; panel.innerHTML=''; }
       function show(){ panel.style.display='block'; }
@@ -258,48 +260,57 @@
               </div>`).join('');
             show();
             panel.querySelectorAll('.suggest-item').forEach(el=>{
-              el.addEventListener('click', ()=>{
-                input.value = el.getAttribute('data-label')||'';
-                hide();
-              });
+              el.addEventListener('click', ()=>{ input.value = el.getAttribute('data-label')||''; hide(); });
             });
           }catch(e){ hide(); }
         },180);
       });
-      document.addEventListener('click', e=>{
-        if(!panel.contains(e.target) && e.target!==input) hide();
-      });
+      document.addEventListener('click', e=>{ if(!panel.contains(e.target) && e.target!==input) hide(); });
     })();
 
-    // Dates + Guests + Submit
+    // Dates + Guests + Submit (English)
     (function(){
       const ONE_DAY = 24*60*60*1000;
-      const inPicker = flatpickr("#ci", {
-        dateFormat:"Y-m-d",
-        altInput:true,
-        altFormat:"d M Y",
-        altInputClass:"mock-input",
-        allowInput:false,
-        minDate:"today",
-        onChange(d){
-          if(d[0]){
-            const next = new Date(d[0].getTime()+ONE_DAY);
-            outPicker.set('minDate', next);
-            if(!outPicker.selectedDates[0] || outPicker.selectedDates[0] <= d[0]) outPicker.setDate(next,true);
-          }
-        }
-      });
-      const outPicker = flatpickr("#co", {
-        dateFormat:"Y-m-d",
-        altInput:true,
-        altFormat:"d M Y",
-        altInputClass:"mock-input",
-        allowInput:false,
-        minDate:new Date(Date.now()+ONE_DAY)
-      });
-      inPicker.setDate(new Date(), true);
-      outPicker.setDate(new Date(Date.now()+ONE_DAY), true);
+      const ciEl = document.getElementById('ci');
+      const coEl = document.getElementById('co');
+      const today = new Date();
+      const tomorrow = new Date(Date.now()+ONE_DAY);
+      const fmt = d => d.toISOString().slice(0,10);
 
+      if(window.flatpickr){
+        const inPicker = flatpickr("#ci", {
+          dateFormat:"Y-m-d",
+          altInput:true, altFormat:"j M Y", altInputClass:"mock-input",
+          allowInput:false, minDate:"today",
+          onChange(d){
+            if(d[0]){
+              const next = new Date(d[0].getTime()+ONE_DAY);
+              outPicker.set('minDate', next);
+              if(!outPicker.selectedDates[0] || outPicker.selectedDates[0] <= d[0]) outPicker.setDate(next,true);
+            }
+          }
+        });
+        const outPicker = flatpickr("#co", {
+          dateFormat:"Y-m-d",
+          altInput:true, altFormat:"j M Y", altInputClass:"mock-input",
+          allowInput:false, minDate:tomorrow
+        });
+        inPicker.setDate(today, true);
+        outPicker.setDate(tomorrow, true);
+      } else {
+        // Fallback native date
+        ciEl.removeAttribute('readonly'); coEl.removeAttribute('readonly');
+        ciEl.type='date'; coEl.type='date';
+        ciEl.value=fmt(today); ciEl.min=fmt(today);
+        coEl.value=fmt(tomorrow); coEl.min=fmt(tomorrow);
+        ciEl.addEventListener('change', ()=>{
+          const a=new Date(ciEl.value||fmt(today));
+          const next=new Date(a.getTime()+ONE_DAY);
+          if(!coEl.value || new Date(coEl.value) <= a){ coEl.value=fmt(next); coEl.min=fmt(next); }
+        });
+      }
+
+      // Guests modal
       let rooms=1, adults=2, children=0;
       const btn=document.getElementById('guestBtn');
       const roomsCount=document.getElementById('roomsCount');
@@ -313,14 +324,14 @@
 
       function open(){ roomsCount.textContent=rooms; adultsCount.textContent=adults; childrenCount.textContent=children; modal.style.display='block'; backdrop.style.display='block'; }
       function close(){ modal.style.display='none'; backdrop.style.display='none'; }
-      function plural(n,one,many){ return n===1?one:many; }
-      function updateBtn(){ btn.textContent = `${rooms} ${plural(rooms,'Room','Rooms')}, ${adults} ${plural(adults,'Adult','Adults')}, ${children} ${plural(children,'Child','Children')}`; }
+      function updateBtn(){ btn.textContent = `${rooms} room${rooms>1?'s':''}, ${adults} adult${adults>1?'s':''}, ${children} child${children!==1?'ren':''}`; }
       updateBtn();
 
       btn.addEventListener('click', open);
       document.getElementById('btnCloseX').addEventListener('click', close);
       document.getElementById('btnCancel').addEventListener('click', close);
       backdrop.addEventListener('click', close);
+
       document.querySelectorAll('.btn-ctrl').forEach(b=>{
         b.addEventListener('click', ()=>{
           const type=b.getAttribute('data-type'), op=b.getAttribute('data-op');
@@ -335,17 +346,10 @@
           if(type==='children'){ children=val; childrenCount.textContent=val; }
         });
       });
-      document.getElementById('btnSaveGuests').addEventListener('click', ()=>{
-        hRooms.value=rooms; hAdults.value=adults; hChildren.value=children; updateBtn(); close();
-      });
+      document.getElementById('btnSaveGuests').addEventListener('click', ()=>{ hRooms.value=rooms; hAdults.value=adults; hChildren.value=children; updateBtn(); close(); });
 
-      document.getElementById('cgForm').addEventListener('submit', (e)=>{
-        e.preventDefault();
-        const q  = encodeURIComponent(document.getElementById('dest').value || 'Bangkok');
-        const ci = inPicker.formatDate(inPicker.selectedDates[0], 'Y-m-d');
-        const co = outPicker.formatDate(outPicker.selectedDates[0], 'Y-m-d');
-        location.href = `/search.html?q=${q}&checkin=${ci}&checkout=${co}&rooms=${rooms}&adults=${adults}&children=${children}`;
-      });
+      // Ensure default q
+      document.getElementById('cgForm').addEventListener('submit', ()=>{ const q=document.getElementById('dest'); if(!q.value) q.value='Bangkok'; });
     })();
   </script>
 </body>
