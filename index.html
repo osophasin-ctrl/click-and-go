@@ -19,12 +19,12 @@
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Flatpickr (วันที่ แบบหน้า deals) -->
+  <!-- Flatpickr -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
 
   <style>
-    /* ---------- Search Box (สไตล์เดียวกับ deals) ---------- */
+    /* ---------- Search Box (ดีลส์ต้นฉบับ) ---------- */
     .mock-wrap{ max-width:1030px; width:100%; margin:0 auto; }
     .mock-box{
       width:100%; background:#fff; border:1px solid #e5e7eb;
@@ -115,7 +115,7 @@
       <img class="hero-img" src="hero-bg.jpg" alt="Click & Go Thailand" />
     </section>
 
-    <!-- ===== Search Box (เหมือน deals) ===== -->
+    <!-- Search Box -->
     <section style="margin:24px 0">
       <h2 class="section-title">ค้นหาโรงแรม</h2>
       <div class="mock-wrap">
@@ -154,7 +154,6 @@
         </div>
       </div>
     </section>
-    <!-- ===== /Search Box ===== -->
 
     <!-- ปลายทางยอดนิยมในไทย -->
     <section>
@@ -168,46 +167,44 @@
         <a class="city-card" href="hua-hin.html"><figure><img src="huahin-tile.webp" alt="หัวหิน"><figcaption>หัวหิน</figcaption></figure></a>
       </div>
     </section>
+
+    <!-- เมืองยอดฮิตในต่างประเทศ -->
+    <section>
+      <h2 class="section-title">เมืองยอดฮิตในต่างประเทศ</h2>
+      <div class="city-grid">
+        <a class="city-card" href="tokyo.html"><figure><img src="tokyo-tile.webp" alt="โตเกียว"><figcaption>โตเกียว</figcaption></figure></a>
+        <a class="city-card" href="seoul.html"><figure><img src="seoul-tile.webp" alt="โซล"><figcaption>โซล</figcaption></figure></a>
+        <a class="city-card" href="singapore.html"><figure><img src="singapore-tile.webp" alt="สิงคโปร์"><figcaption>สิงคโปร์</figcaption></figure></a>
+        <a class="city-card" href="hongkong.html"><figure><img src="hongkong-tile.webp" alt="ฮ่องกง"><figcaption>ฮ่องกง</figcaption></figure></a>
+        <a class="city-card" href="london.html"><figure><img src="london-tile.webp" alt="ลอนดอน"><figcaption>ลอนดอน</figcaption></figure></a>
+        <a class="city-card" href="paris.html"><figure><img src="paris-tile.webp" alt="ปารีส"><figcaption>ปารีส</figcaption></figure></a>
+      </div>
+    </section>
+
+    <!-- ทำไมต้อง Click & Go -->
+    <section>
+      <h2 class="section-title">ทำไมต้อง Click & Go</h2>
+      <div class="features">
+        <div class="feature"><h3>ค้นหาข้อเสนอที่ดีที่สุด</h3><p>เชื่อมต่อผู้ให้บริการทั่วโลก ค้นหาราคาแบบเรียลไทม์</p></div>
+        <div class="feature"><h3>ขั้นตอนการจองไม่ยุ่งยาก</h3><p>กดลิงก์ตรงไปยังหน้าโรงแรมของพันธมิตรได้ทันที</p></div>
+        <div class="feature"><h3>รองรับทุกอุปกรณ์</h3><p>ใช้งานง่าย ไม่ว่าจะบนมือถือ แท็บเล็ต หรือคอมพิวเตอร์</p></div>
+      </div>
+    </section>
   </main>
 
-  <!-- Guest Modal -->
-  <div id="guestBackdrop" class="modal-backdrop" aria-hidden="true"></div>
-  <div id="guestModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="guestTitle">
-    <div class="modal-header">
-      <div id="guestTitle" class="modal-title">ผู้เข้าพัก</div>
-      <button type="button" class="btn-outline" id="btnCloseX">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="row-ctrl">
-        <div class="label-wrap"><strong>ห้อง</strong><small>จำนวนห้องพัก</small></div>
-        <div class="counter">
-          <button class="btn-ctrl" data-type="rooms" data-op="minus">−</button>
-          <span class="count" id="roomsCount">1</span>
-          <button class="btn-ctrl" data-type="rooms" data-op="plus">+</button>
-        </div>
-      </div>
-      <div class="row-ctrl">
-        <div class="label-wrap"><strong>ผู้ใหญ่</strong><small>อายุ 18 ปีขึ้นไป</small></div>
-        <div class="counter">
-          <button class="btn-ctrl" data-type="adults" data-op="minus">−</button>
-          <span class="count" id="adultsCount">2</span>
-          <button class="btn-ctrl" data-type="adults" data-op="plus">+</button>
-        </div>
-      </div>
-      <div class="row-ctrl">
-        <div class="label-wrap"><strong>เด็ก</strong><small>อายุ 0–17 ปี</small></div>
-        <div class="counter">
-          <button class="btn-ctrl" data-type="children" data-op="minus">−</button>
-          <span class="count" id="childrenCount">0</span>
-          <button class="btn-ctrl" data-type="children" data-op="plus">+</button>
-        </div>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html">About us</a> ·
+        <a href="contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-outline" id="btnCancel">ยกเลิก</button>
-      <button class="btn-primary" id="btnSaveGuests">บันทึก</button>
-    </div>
-  </div>
+  </footer>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -228,7 +225,7 @@
       document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu(); });
     })();
 
-    // Suggestion (เหมือน deals)
+    // Suggestion
     (function(){
       const input = document.getElementById('dest');
       const panel = document.getElementById('suggestPanel');
@@ -264,23 +261,19 @@
       });
     })();
 
-    // Dates + Guests + Submit  (มีโหมดสำรองถ้า flatpickr โหลดไม่ได้)
+    // Dates + Guests + Submit (มีโหมดสำรองถ้า CDN ล่ม)
     (function(){
       const ONE_DAY = 24*60*60*1000;
       const ciEl = document.getElementById('ci');
       const coEl = document.getElementById('co');
-
       const fmt = d => d.toISOString().slice(0,10);
       const today = new Date();
       const tomorrow = new Date(Date.now()+ONE_DAY);
 
       let inPicker=null, outPicker=null;
-
       if (typeof window.flatpickr === 'function') {
-        // ใช้ Flatpickr แบบ deals
         inPicker = flatpickr("#ci", {
-          locale: 'th',
-          dateFormat:"Y-m-d",
+          locale: 'th', dateFormat:"Y-m-d",
           altInput:true, altFormat:"j M Y", altInputClass:"mock-input",
           allowInput:false, minDate:"today",
           onChange(d){
@@ -292,25 +285,21 @@
           }
         });
         outPicker = flatpickr("#co", {
-          locale:'th',
-          dateFormat:"Y-m-d",
+          locale:'th', dateFormat:"Y-m-d",
           altInput:true, altFormat:"j M Y", altInputClass:"mock-input",
           allowInput:false, minDate:tomorrow
         });
         inPicker.setDate(today, true);
         outPicker.setDate(tomorrow, true);
       } else {
-        // โหมดสำรอง: ใช้ native <input type="date">
         ciEl.removeAttribute('readonly'); coEl.removeAttribute('readonly');
-        ciEl.type = 'date'; coEl.type = 'date';
-        ciEl.value = fmt(today); ciEl.min = fmt(today);
-        coEl.value = fmt(tomorrow); coEl.min = fmt(tomorrow);
-        ciEl.addEventListener('change', () => {
-          const a = new Date(ciEl.value || fmt(today));
-          const next = new Date(a.getTime()+ONE_DAY);
-          if (!coEl.value || new Date(coEl.value) <= a) {
-            coEl.value = fmt(next); coEl.min = fmt(next);
-          }
+        ciEl.type='date'; coEl.type='date';
+        ciEl.value=fmt(today); ciEl.min=fmt(today);
+        coEl.value=fmt(tomorrow); coEl.min=fmt(tomorrow);
+        ciEl.addEventListener('change', ()=>{
+          const a=new Date(ciEl.value||fmt(today));
+          const next=new Date(a.getTime()+ONE_DAY);
+          if(!coEl.value || new Date(coEl.value) <= a){ coEl.value=fmt(next); coEl.min=fmt(next); }
         });
       }
 
@@ -353,11 +342,10 @@
         hRooms.value=rooms; hAdults.value=adults; hChildren.value=children; updateBtn(); close();
       });
 
-      // Submit -> ไป search.html เสมอ
+      // Submit -> search.html
       document.getElementById('cgForm').addEventListener('submit', (e)=>{
         e.preventDefault();
         const q  = encodeURIComponent(document.getElementById('dest').value || 'กรุงเทพ');
-        // อ่านวันที่ให้ถูกทั้งสองโหมด
         let ci, co;
         if (inPicker && outPicker) {
           ci = inPicker.formatDate(inPicker.selectedDates[0], 'Y-m-d');
