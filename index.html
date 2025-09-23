@@ -19,12 +19,12 @@
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Flatpickr (สำหรับวันที่ เหมือน deals) -->
+  <!-- Flatpickr (วันที่ แบบหน้า deals) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
 
   <style>
-    /* ---------- Search Box (ดีลส์ต้นฉบับ) ---------- */
+    /* ---------- Search Box (สไตล์เดียวกับ deals) ---------- */
     .mock-wrap{ max-width:1030px; width:100%; margin:0 auto; }
     .mock-box{
       width:100%; background:#fff; border:1px solid #e5e7eb;
@@ -115,7 +115,7 @@
       <img class="hero-img" src="hero-bg.jpg" alt="Click & Go Thailand" />
     </section>
 
-    <!-- ======  Search Box (เหมือนหน้า deals)  ====== -->
+    <!-- ===== Search Box (เหมือน deals) ===== -->
     <section style="margin:24px 0">
       <h2 class="section-title">ค้นหาโรงแรม</h2>
       <div class="mock-wrap">
@@ -154,7 +154,7 @@
         </div>
       </div>
     </section>
-    <!-- ====== /Search Box ====== -->
+    <!-- ===== /Search Box ===== -->
 
     <!-- ปลายทางยอดนิยมในไทย -->
     <section>
@@ -170,7 +170,7 @@
     </section>
   </main>
 
-  <!-- Guest Modal (เหมือน deals) -->
+  <!-- Guest Modal -->
   <div id="guestBackdrop" class="modal-backdrop" aria-hidden="true"></div>
   <div id="guestModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="guestTitle">
     <div class="modal-header">
@@ -209,20 +209,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container" style="text-align:center">
-      <div class="footer-links">
-        <a href="privacy.html">Privacy</a> ·
-        <a href="terms.html">Terms</a> ·
-        <a href="affiliate.html">Affiliate Disclosure</a> ·
-        <a href="about.html">About us</a> ·
-        <a href="contact.html">Contact</a> ·
-        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
-      </div>
-    </div>
-  </footer>
-
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
@@ -242,7 +228,7 @@
       document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu(); });
     })();
 
-    // Suggestion (เรียก /api/suggest เหมือน deals)
+    // Suggestion (เหมือน deals)
     (function(){
       const input = document.getElementById('dest');
       const panel = document.getElementById('suggestPanel');
@@ -278,37 +264,57 @@
       });
     })();
 
-    // Dates + Guests + Submit (ถอดจาก deals)
+    // Dates + Guests + Submit  (มีโหมดสำรองถ้า flatpickr โหลดไม่ได้)
     (function(){
       const ONE_DAY = 24*60*60*1000;
-      const inPicker = flatpickr("#ci", {
-        locale: 'th',
-        dateFormat:"Y-m-d",
-        altInput:true,
-        altFormat:"j M Y",
-        altInputClass:"mock-input",
-        allowInput:false,
-        minDate:"today",
-        onChange(d){
-          if(d[0]){
-            const next = new Date(d[0].getTime()+ONE_DAY);
-            outPicker.set('minDate', next);
-            if(!outPicker.selectedDates[0] || outPicker.selectedDates[0] <= d[0]) outPicker.setDate(next,true);
-          }
-        }
-      });
-      const outPicker = flatpickr("#co", {
-        locale:'th',
-        dateFormat:"Y-m-d",
-        altInput:true,
-        altFormat:"j M Y",
-        altInputClass:"mock-input",
-        allowInput:false,
-        minDate:new Date(Date.now()+ONE_DAY)
-      });
-      inPicker.setDate(new Date(), true);
-      outPicker.setDate(new Date(Date.now()+ONE_DAY), true);
+      const ciEl = document.getElementById('ci');
+      const coEl = document.getElementById('co');
 
+      const fmt = d => d.toISOString().slice(0,10);
+      const today = new Date();
+      const tomorrow = new Date(Date.now()+ONE_DAY);
+
+      let inPicker=null, outPicker=null;
+
+      if (typeof window.flatpickr === 'function') {
+        // ใช้ Flatpickr แบบ deals
+        inPicker = flatpickr("#ci", {
+          locale: 'th',
+          dateFormat:"Y-m-d",
+          altInput:true, altFormat:"j M Y", altInputClass:"mock-input",
+          allowInput:false, minDate:"today",
+          onChange(d){
+            if(d[0]){
+              const next = new Date(d[0].getTime()+ONE_DAY);
+              outPicker.set('minDate', next);
+              if(!outPicker.selectedDates[0] || outPicker.selectedDates[0] <= d[0]) outPicker.setDate(next,true);
+            }
+          }
+        });
+        outPicker = flatpickr("#co", {
+          locale:'th',
+          dateFormat:"Y-m-d",
+          altInput:true, altFormat:"j M Y", altInputClass:"mock-input",
+          allowInput:false, minDate:tomorrow
+        });
+        inPicker.setDate(today, true);
+        outPicker.setDate(tomorrow, true);
+      } else {
+        // โหมดสำรอง: ใช้ native <input type="date">
+        ciEl.removeAttribute('readonly'); coEl.removeAttribute('readonly');
+        ciEl.type = 'date'; coEl.type = 'date';
+        ciEl.value = fmt(today); ciEl.min = fmt(today);
+        coEl.value = fmt(tomorrow); coEl.min = fmt(tomorrow);
+        ciEl.addEventListener('change', () => {
+          const a = new Date(ciEl.value || fmt(today));
+          const next = new Date(a.getTime()+ONE_DAY);
+          if (!coEl.value || new Date(coEl.value) <= a) {
+            coEl.value = fmt(next); coEl.min = fmt(next);
+          }
+        });
+      }
+
+      // Guests
       let rooms=1, adults=2, children=0;
       const btn=document.getElementById('guestBtn');
       const roomsCount=document.getElementById('roomsCount');
@@ -347,12 +353,29 @@
         hRooms.value=rooms; hAdults.value=adults; hChildren.value=children; updateBtn(); close();
       });
 
+      // Submit -> ไป search.html เสมอ
       document.getElementById('cgForm').addEventListener('submit', (e)=>{
         e.preventDefault();
         const q  = encodeURIComponent(document.getElementById('dest').value || 'กรุงเทพ');
-        const ci = inPicker.formatDate(inPicker.selectedDates[0], 'Y-m-d');
-        const co = outPicker.formatDate(outPicker.selectedDates[0], 'Y-m-d');
-        location.href = `/search.html?q=${q}&checkin=${ci}&checkout=${co}&rooms=${rooms}&adults=${adults}&children=${children}`;
+        // อ่านวันที่ให้ถูกทั้งสองโหมด
+        let ci, co;
+        if (inPicker && outPicker) {
+          ci = inPicker.formatDate(inPicker.selectedDates[0], 'Y-m-d');
+          co = outPicker.formatDate(outPicker.selectedDates[0], 'Y-m-d');
+        } else {
+          ci = ciEl.value || fmt(today);
+          co = coEl.value || fmt(tomorrow);
+        }
+        const url = new URL('search.html', location.href);
+        url.searchParams.set('q', q);
+        url.searchParams.set('checkin', ci);
+        url.searchParams.set('checkout', co);
+        url.searchParams.set('rooms', rooms);
+        url.searchParams.set('adults', adults);
+        url.searchParams.set('children', children);
+        location.href = url.toString();
       });
     })();
-  </scrip
+  </script>
+</body>
+</html>
