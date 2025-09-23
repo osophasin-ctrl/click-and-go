@@ -1,374 +1,243 @@
-<!doctype html>
-<html lang="th">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ผลการค้นหาโรงแรม | Click & Go</title>
-  <meta name="description" content="ผลการค้นหาโรงแรม พร้อมตัวกรอง ราคา เรียงลำดับ และโหลดผลลัพธ์เพิ่ม" />
-  <link rel="icon" href="favicon.ico" />
-  <link rel="stylesheet" href="style.css" />
+// /api/search.js
+// Agoda Affiliate Lite v1 → map เป็น items[] ที่ UI ใช้ได้ทันที
 
-  <style>
-    /* ===== Filter Bar (Sticky) ===== */
-    .filter-bar{ position:sticky; top:0; z-index:20; background:#fff; border-bottom:1px solid #eee; }
-    .filter-wrap{ max-width:1100px; margin:0 auto; padding:8px 16px; display:flex; gap:10px; flex-wrap:wrap; }
-    .chip{ height:36px; display:inline-flex; align-items:center; gap:8px; padding:0 12px; border:1px solid #ddd; border-radius:999px; background:#fff; color:#222; cursor:pointer; }
-    .chip:disabled{ opacity:.5; cursor:not-allowed; }
-    .chip .caret{ font-size:12px; }
+export default async function handler(req, res) {
+  const t0 = Date.now();
 
-    /* ===== Summary ===== */
-    .result-head{ max-width:1100px; margin:12px auto 8px; padding:0 16px; }
-    .result-title{ margin:8px 0 4px; font-size:clamp(20px,3vw,28px); font-weight:800; }
-    .result-sub{ color:#555; margin:0; }
+  // ----- อ่าน environment / ตั้งค่าต้นทาง -----
+  const BASE_URL = process.env.AGODA_BASE_URL || 'http://affiliateapi7643.agoda.com/affiliateservice/lt_v1';
+  const SITE_ID  = process.env.AGODA_SITE_ID  || process.env.AGODA_STTE_ID || ''; // กันพิมพ์ผิด
+  const API_KEY  = process.env.AGODA_API_KEY  || '';
 
-    /* ===== Result grid / card ===== */
-    .result-grid{ max-width:1100px; margin:10px auto; padding:0 16px; display:grid; gap:16px; grid-template-columns: repeat(3,1fr); }
-    @media (max-width:980px){ .result-grid{ grid-template-columns: repeat(2,1fr); } }
-    @media (max-width:620px){ .result-grid{ grid-template-columns: 1fr; } }
-    .hotel-card{ border:1px solid #eee; border-radius:12px; background:#fff; overflow:hidden; box-shadow:0 1px 10px rgba(0,0,0,.04); display:flex; flex-direction:column; }
-    .hotel-thumb{ width:100%; aspect-ratio:16/9; object-fit:cover; background:#f1f1f1; display:block; }
-    .hotel-body{ padding:12px 12px 10px; }
-    .hotel-name{ margin:0 0 4px; font-size:18px; font-weight:700; color:#222; }
-    .hotel-meta{ font-size:13px; color:#666; }
-    .hotel-foot{ display:flex; align-items:center; justify-content:space-between; padding:0 12px 12px; margin-top:auto; }
-    .price{ font-weight:800; color:#222; }
-    .badge{ display:inline-block; padding:4px 8px; border-radius:999px; font-size:12px; background:#eefaf8; color:#0b8e78; }
-    .btn-more{ display:block; margin:12px auto 24px; padding:10px 16px; border-radius:8px; background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; }
+  if (!BASE_URL || !SITE_ID || !API_KEY) {
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(500).json({
+      ok: false,
+      error: 'Missing environment variables (AGODA_BASE_URL / AGODA_SITE_ID / AGODA_API_KEY)'
+    });
+  }
 
-    /* ===== Drawer / Modal ===== */
-    .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:40; }
-    .drawer{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:min(94vw,520px); background:#fff; border-radius:12px; box-shadow:0 20px 40px rgba(0,0,0,.2); display:none; z-index:50; }
-    .drawer-header{ padding:14px 16px; border-bottom:1px solid #eee; font-weight:800; display:flex; justify-content:space-between; align-items:center; }
-    .drawer-body{ padding:14px 16px; }
-    .drawer-footer{ display:flex; justify-content:flex-end; gap:10px; padding:12px 16px; border-top:1px solid #eee; }
-    .btn-outline{ border:1px solid #bbb; background:#fff; color:#333; border-radius:8px; padding:8px 14px; }
-    .btn-primary{ border:0; background:#0ea5a0; color:#fff; border-radius:8px; padding:8px 14px; }
-    .field-row{ display:flex; gap:10px; align-items:center; margin:10px 0; flex-wrap:wrap; }
-    .field-row label{ min-width:120px; }
-    .field-row input[type="number"], .field-row select{ border:1px solid #ddd; border-radius:8px; padding:8px 10px; height:40px; min-width:120px; }
+  // ----- อ่าน query จากหน้า UI -----
+  const {
+    // รองรับสองแบบ: cityid (แนะนำ) หรือ q แล้วจะพยายาม map
+    cityid,
+    q,
 
-    /* Sort menu */
-    .menu{ position:absolute; background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,.1); padding:6px; display:none; z-index:60; }
-    .menu a{ display:block; padding:8px 12px; color:#222; text-decoration:none; border-radius:8px; }
-    .menu a:hover{ background:#f6f6f6; }
+    checkin,
+    checkout,
+    adults    = '2',
+    children  = '0',
+    rooms     = '1',
+    currency  = 'USD',
+    lang      = 'en-us',
 
-    /* Toast */
-    .toast{ position:fixed; left:50%; bottom:18px; transform:translateX(-50%); background:#333; color:#fff; padding:8px 12px; border-radius:8px; font-size:14px; display:none; z-index:70; }
-  </style>
-</head>
-<body>
-  <!-- Header -->
-  <header class="site-header">
-    <div class="inner">
-      <a href="index.html" class="brand">
-        <img src="logo.png" alt="Click & Go" width="40" height="40" />
-        <span class="brand-text">Click & Go</span>
-      </a>
-      <nav class="main-nav">
-        <a href="index.html">หน้าแรก</a>
-        <a href="deals.html">โปรโมชั่น</a>
-      </nav>
-    </div>
-  </header>
+    // ฟีลด์ UI เผื่อไว้ (ไม่ส่งต่อ Agoda ก็มี)
+    sort      = 'PRICE_ASC',     // PRICE_ASC | PRICE_DESC | RATING_DESC | STARS_DESC
+    minPrice, maxPrice,
+    reviewMin,
+    freeCancel,
 
-  <!-- Summary -->
-  <section class="result-head">
-    <h1 class="result-title">ผลการค้นหาโรงแรม</h1>
-    <p class="result-sub" id="summary">กำลังโหลด...</p>
-  </section>
+    // debug
+    debug     = '0'
+  } = req.query;
 
-  <!-- Filter Bar -->
-  <div class="filter-bar">
-    <div class="filter-wrap">
-      <button class="chip" id="btnFilters">ตัวกรอง <span class="caret">▾</span></button>
-      <button class="chip" id="btnPrice">ราคา <span id="priceChipText" class="muted"></span> <span class="caret">▾</span></button>
-      <button class="chip" id="btnSort">เรียงลำดับ <span class="caret">▾</span></button>
-      <button class="chip" id="btnArea" title="เร็วๆ นี้">ย่าน/พื้นที่ <span class="caret">▾</span></button>
-      <div id="sortMenu" class="menu">
-        <a href="#" data-sort="PRICE_ASC">ราคาต่ำ → สูง</a>
-        <a href="#" data-sort="PRICE_DESC">ราคาสูง → ต่ำ</a>
-        <a href="#" data-sort="RATING_DESC">คะแนนรีวิวสูง</a>
-        <a href="#" data-sort="STARS_DESC">ดาวสูง</a>
-      </div>
-    </div>
-  </div>
+  // ----- แปลง/ป้องกันค่าพื้นฐาน -----
+  const safeCheckIn  = (checkin  || new Date().toISOString().slice(0, 10));
+  const safeCheckOut = (checkout || new Date(Date.now() + 86400000).toISOString().slice(0, 10));
+  const nAdults   = Math.max(1, parseInt(String(adults), 10)   || 2);
+  const nChildren = Math.max(0, parseInt(String(children), 10) || 0);
+  const nRooms    = Math.max(1, parseInt(String(rooms), 10)    || 1);
+  const curr      = String(currency || 'USD').toUpperCase();
+  const language  = String(lang || 'en-us').toLowerCase();
 
-  <!-- Results -->
-  <section class="result-grid" id="resultGrid"></section>
-  <div style="text-align:center">
-    <button class="btn-more" id="btnLoadMore" style="display:none">โหลดเพิ่ม</button>
-  </div>
+  // ----- q → cityId mapper (กรณีไม่ได้ส่ง cityid มา) -----
+  const CITY_MAP = {
+    // Thailand
+    'bangkok': 9395, 'กรุงเทพ': 9395,
+    'chiang mai': 9394, 'เชียงใหม่': 9394,
+    'phuket': 9398, 'ภูเก็ต': 9398,
+    'pattaya': 9399, 'พัทยา': 9399,
+    'krabi': 9397, 'กระบี่': 9397,
+    'hua hin': 9396, 'หัวหิน': 9396,
+    // Examples (ถ้ามี cityId จริงสามารถเติมเพิ่มได้)
+    'tokyo':  // ใส่ตามที่คุณมีได้
+      0,
+    'seoul':
+      0,
+    'singapore':
+      0,
+    'hong kong':
+      0,
+  };
 
-  <!-- Drawer: Filters -->
-  <div id="backdrop" class="backdrop"></div>
-  <div id="drawerFilters" class="drawer" role="dialog" aria-modal="true" aria-labelledby="filterTitle">
-    <div class="drawer-header">
-      <div id="filterTitle">ตัวกรอง</div>
-      <button class="btn-outline" id="btnCloseFilter">×</button>
-    </div>
-    <div class="drawer-body">
-      <div style="font-weight:700; margin-bottom:8px">จำนวนดาว</div>
-      <label><input type="checkbox" class="ck-star" value="5"> 5★</label> &nbsp;
-      <label><input type="checkbox" class="ck-star" value="4"> 4★</label> &nbsp;
-      <label><input type="checkbox" class="ck-star" value="3"> 3★</label>
+  let cityId = 0;
+  if (cityid) {
+    cityId = parseInt(String(cityid), 10) || 0;
+  } else if (q) {
+    const key = String(q).trim().toLowerCase();
+    cityId = CITY_MAP[key] || 0;
+  }
 
-      <div class="field-row">
-        <label>คะแนนรีวิวขั้นต่ำ</label>
-        <select id="reviewMin">
-          <option value="0" selected>ทั้งหมด</option>
-          <option value="6">6.0+</option>
-          <option value="7">7.0+</option>
-          <option value="8">8.0+</option>
-          <option value="9">9.0+</option>
-        </select>
-      </div>
+  // ถ้าไม่มี cityId จริงๆ ก็ยังเรียกได้ แต่ Agoda Lite v1 ต้องการ cityId
+  if (!cityId) {
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json({
+      ok: true,
+      source: 'none',
+      note: 'cityId not provided and cannot map from q',
+      query: { q: q || '', cityId, checkIn: safeCheckIn, checkOut: safeCheckOut, currency: curr, language },
+      total: 0,
+      items: [],
+      tookMs: Date.now() - t0
+    });
+  }
 
-      <div style="font-weight:700; margin:12px 0 6px">สิ่งอำนวยความสะดวก</div>
-      <label><input type="checkbox" id="ckFreeCancel"> ยกเลิกฟรี</label>
-    </div>
-    <div class="drawer-footer">
-      <button class="btn-outline" id="btnResetFilter">ล้างค่า</button>
-      <button class="btn-primary" id="btnApplyFilter">นำไปใช้</button>
-    </div>
-  </div>
+  // ----- map sort ให้เข้ากับ Lite v1 -----
+  // Lite v1 ใช้ค่า: PriceAsc | PriceDesc | Recommended (เป็นค่า default) ฯลฯ
+  const SORT_MAP = {
+    'PRICE_ASC':  'PriceAsc',
+    'PRICE_DESC': 'PriceDesc',
+    'RATING_DESC': 'ReviewScoreDesc', // บาง env อาจไม่มี ถ้าไม่มีจะไม่กระทบ เราจะ fallback ด้านล่าง
+    'STARS_DESC':  'StarRatingDesc'
+  };
+  const sortBy = SORT_MAP[String(sort).toUpperCase()] || 'PriceAsc';
 
-  <!-- Drawer: Price -->
-  <div id="drawerPrice" class="drawer" role="dialog" aria-modal="true" aria-labelledby="priceTitle">
-    <div class="drawer-header">
-      <div id="priceTitle">ช่วงราคา (THB)</div>
-      <button class="btn-outline" id="btnClosePrice">×</button>
-    </div>
-    <div class="drawer-body">
-      <div class="field-row">
-        <label>ต่ำสุด</label>
-        <input type="number" id="minPrice" placeholder="0" min="0" step="100" />
-      </div>
-      <div class="field-row">
-        <label>สูงสุด</label>
-        <input type="number" id="maxPrice" placeholder="ไม่จำกัด" min="0" step="100" />
-      </div>
-    </div>
-    <div class="drawer-footer">
-      <button class="btn-outline" id="btnResetPrice">ล้างราคา</button>
-      <button class="btn-primary" id="btnApplyPrice">นำไปใช้</button>
-    </div>
-  </div>
+  // ----- dailyRate จาก minPrice/maxPrice (ถ้ามี) -----
+  const dailyRate = {};
+  if (minPrice && !isNaN(minPrice)) dailyRate.minimum = Number(minPrice);
+  else dailyRate.minimum = 1; // กัน Agoda ค่าต่ำสุด 1
+  if (maxPrice && !isNaN(maxPrice)) dailyRate.maximum = Number(maxPrice);
+  else dailyRate.maximum = 10000;
 
-  <div id="toast" class="toast">เร็วๆ นี้</div>
-
-  <script>
-    // ----- State (เปิดกว้าง) -----
-    const state = {
-      q: '', checkin: '', checkout: '',
-      rooms: 1, adults: 2, children: 0,
-      page: 1, limit: 30,
-      sort: 'PRICE_ASC',
-      minPrice: null, maxPrice: null,
-      stars: [],          // [] = ไม่กรองดาว
-      reviewMin: 0,       // 0 = ไม่กรองคะแนนรีวิว
-      freeCancel: false,
-      total: 0, loading: false,
-      _relaxedOnce: false // กัน loop ตอนผ่อนตัวกรองอัตโนมัติ
-    };
-    const $ = s => document.querySelector(s);
-
-    // ----- UI helpers -----
-    function showToast(msg){ const t = $('#toast'); t.textContent = msg || 'เร็วๆ นี้'; t.style.display = 'block'; setTimeout(()=>t.style.display='none', 1500); }
-    function openDrawer(id){ $('#backdrop').style.display='block'; $(id).style.display='block'; }
-    function closeDrawer(id){ $('#backdrop').style.display='none'; $(id).style.display='none'; }
-
-    // ----- Parse query from URL -----
-    (function initQuery(){
-      const p = new URLSearchParams(location.search);
-      state.q = p.get('q') || 'Bangkok';
-      state.checkin = p.get('checkin') || new Date().toISOString().slice(0,10);
-      const tomorrow = new Date(Date.now()+24*60*60*1000).toISOString().slice(0,10);
-      state.checkout = p.get('checkout') || tomorrow;
-      state.rooms = +(p.get('rooms') || 1);
-      state.adults = +(p.get('adults') || 2);
-      state.children = +(p.get('children') || 0);
-      $('#summary').textContent = `${state.q} | วันที่: ${state.checkin} → ${state.checkout} | ผู้เข้าพัก: ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
-    })();
-
-    // ----- Fetch results -----
-    async function fetchResults(append=false){
-      if(state.loading) return;
-      state.loading = true;
-      $('#btnLoadMore').style.display = 'none';
-
-      try{
-        const qs = new URLSearchParams({
-          q: state.q,
-          checkin: state.checkin,
-          checkout: state.checkout,
-          rooms: state.rooms,
-          adults: state.adults,
-          children: state.children,
-          page: state.page,
-          limit: state.limit,
-          sort: state.sort,
-          minPrice: state.minPrice ?? '',
-          maxPrice: state.maxPrice ?? '',
-          stars: state.stars.join(','),      // backend จะมองข้ามถ้าเป็น ''
-          reviewMin: state.reviewMin,
-          freeCancel: state.freeCancel ? '1' : ''
-        });
-
-        const url = `/api/search?${qs.toString()}`;
-        const res = await fetch(url, { headers:{ 'Accept':'application/json' }});
-        const data = await res.json();
-
-        let items = data.items || [];
-        state.total = data.total || items.length;
-
-        // Fallback filter client-side
-        items = items.filter(it=>{
-          const okPrice = (state.minPrice==null || it.priceFrom >= state.minPrice) &&
-                          (state.maxPrice==null || it.priceFrom <= state.maxPrice);
-          const okStar  = (!state.stars.length) || state.stars.includes(+it.starRating||0);
-          const okRate  = (+it.reviewScore || 0) >= (state.reviewMin||0);
-          const okCancel= !state.freeCancel || !!it.freeCancellation;
-          return okPrice && okStar && okRate && okCancel;
-        });
-
-        // ถ้าไม่มีผล → ผ่อนตัวกรองอัตโนมัติครั้งเดียว
-        if (items.length === 0 && !state._relaxedOnce && ((state.stars?.length||0) > 0 || (state.reviewMin||0) > 0)) {
-          state._relaxedOnce = true;
-          const hadStars = state.stars.length > 0;
-          const hadRate  = state.reviewMin > 0;
-          state.stars = []; state.reviewMin = 0;
-          showToast('ไม่พบผลลัพธ์ — ผ่อนตัวกรองให้เป็น "ทั้งหมด" ให้ก่อนนะครับ');
-          state.loading = false;
-          return fetchResults(false);
-        }
-
-        // client sort fallback
-        items.sort((a,b)=>{
-          switch(state.sort){
-            case 'PRICE_ASC':  return (a.priceFrom||0) - (b.priceFrom||0);
-            case 'PRICE_DESC': return (b.priceFrom||0) - (a.priceFrom||0);
-            case 'RATING_DESC':return (b.reviewScore||0) - (a.reviewScore||0);
-            case 'STARS_DESC': return (b.starRating||0) - (a.starRating||0);
-            default: return 0;
-          }
-        });
-
-        renderResults(items, append);
-        if(items.length >= state.limit){ $('#btnLoadMore').style.display='inline-block'; }
-
-      }catch(e){
-        console.error(e);
-      }finally{
-        state.loading = false;
+  // ----- payload ตาม Lite v1 (City Search) -----
+  const payload = {
+    criteria: {
+      checkInDate:  safeCheckIn,
+      checkOutDate: safeCheckOut,
+      cityId:       cityId,
+      additional: {
+        currency: curr,
+        dailyRate,
+        discountOnly: false,
+        language,
+        maxResult: 10,
+        minimumReviewScore: (reviewMin ? Number(reviewMin) : 0),
+        minimumStarRating:  0,
+        occupancy: {
+          numberOfAdult:   nAdults,     // ตามสเปก Lite v1 ใช้ชื่อนี้
+          numberOfChildren: nChildren
+        },
+        sortBy: sortBy
+        // freeCancel: Lite v1 ปกติไม่มี flag ให้ filter ฝั่ง server → เรา filter ฝั่ง client/หลังแม็พแทน
       }
     }
+  };
 
-    function renderResults(items, append){
-      const grid = $('#resultGrid');
-      if(!append) grid.innerHTML = '';
-      const html = items.map(cardHtml).join('');
-      grid.insertAdjacentHTML('beforeend', html);
+  // ถ้ามีหลายห้อง (Lite v1 ไม่มี rooms array) เราคงส่งได้แค่ 1 เซ็ต
+  // แนะนำให้แตกดีลลิสต์ฝั่ง UI/ดีพ์ลิงก์เองเมื่อมีหลายห้อง
+
+  // ----- เรียก Agoda -----
+  const headers = {
+    'Accept-Encoding': 'gzip,deflate',
+    'Authorization':   `${SITE_ID}:${API_KEY}`,
+    'Content-Type':    'application/json'
+  };
+
+  let agodaOk = false;
+  let agodaJson = null;
+  let agodaRaw  = '';
+  try {
+    const resp = await fetch(BASE_URL, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload)
+    });
+    agodaRaw = await resp.text();
+
+    if (resp.ok) {
+      agodaOk = true;
+      try { agodaJson = JSON.parse(agodaRaw); }
+      catch { agodaJson = null; agodaOk = false; }
+    }
+  } catch (e) {
+    agodaOk = false;
+    agodaRaw = String(e?.message || e);
+  }
+
+  // ----- map Agoda -> items[] ที่ UI ต้องการ -----
+  let items = [];
+  if (agodaOk && agodaJson) {
+    const list = agodaJson?.result?.results || [];
+    items = list.map(h => ({
+      id:           String(h.hotelId ?? ''),
+      name:         h.hotelName ?? '',
+      city:         q ? String(q) : '',               // อ้างจากคำค้น
+      starRating:   Number(h.starRating ?? 0),
+      reviewScore:  Number(h.reviewScore ?? 0),
+      reviewCount:  Number(h.reviewCount ?? 0),
+      imageUrl:     h.imageURL ?? '',
+      priceFrom:    Number(h.dailyRate ?? 0),
+      currency:     h.currency ?? curr,
+      freeCancellation: Boolean(h.freeWifi ?? false) && false, // Lite v1 ไม่ให้ free cancel → กำหนด false
+      mealPlan:     h.includeBreakfast ? 'Breakfast included' : '',
+      deeplink:     h.landingURL ?? '',
+      latitude:     h.latitude ?? null,
+      longitude:    h.longitude ?? null
+    }));
+
+    // กรองฝั่ง server ให้เล็กลงตาม UI ถ้าต้องการ (optional)
+    if (freeCancel === '1') {
+      items = items.filter(x => x.freeCancellation);
+    }
+    if (minPrice && !isNaN(minPrice)) {
+      items = items.filter(x => (x.priceFrom ?? 0) >= Number(minPrice));
+    }
+    if (maxPrice && !isNaN(maxPrice)) {
+      items = items.filter(x => (x.priceFrom ?? 0) <= Number(maxPrice));
+    }
+    if (reviewMin && !isNaN(reviewMin)) {
+      items = items.filter(x => (x.reviewScore ?? 0) >= Number(reviewMin));
     }
 
-    function cardHtml(h){
-      const stars = '★'.repeat(h.starRating||0);
-      const review = (h.reviewScore!=null) ? `คะแนน ${h.reviewScore}` : '';
-      const city = h.city ? ` · ${h.city}` : '';
-      const price = (h.priceFrom!=null) ? `${Number(h.priceFrom).toLocaleString()} THB` : '-';
-      const fc = h.freeCancellation ? '<span class="badge">ยกเลิกฟรี</span>' : '';
-      const meal = h.mealPlan ? `<span class="badge">${h.mealPlan}</span>` : '';
-      const link = h.deeplink || '#';
-      return `
-        <article class="hotel-card">
-          <img class="hotel-thumb" src="${h.imageUrl||'https://picsum.photos/800/450?blur=2'}" loading="lazy" alt="${h.name||''}">
-          <div class="hotel-body">
-            <h3 class="hotel-name">${h.name||'-'}</h3>
-            <div class="hotel-meta">${stars} ${review}${city}</div>
-          </div>
-          <div class="hotel-foot">
-            <div class="price">${price}</div>
-            <div>${fc} ${meal}</div>
-          </div>
-          <a href="${link}" target="_blank" rel="nofollow noopener" class="btn" style="margin:0 12px 12px">ดูดีล</a>
-        </article>
-      `;
-    }
-
-    // ----- Events: Filter bar -----
-    // Filters drawer
-    $('#btnFilters').addEventListener('click', ()=> openDrawer('#drawerFilters'));
-    $('#btnCloseFilter').addEventListener('click', ()=> closeDrawer('#drawerFilters'));
-    $('#btnResetFilter').addEventListener('click', ()=>{
-      document.querySelectorAll('.ck-star').forEach(el=> el.checked=false); // ไม่เลือก = ไม่กรองดาว
-      $('#reviewMin').value = '0';
-      $('#ckFreeCancel').checked = false;
+    // fallback sort ฝั่งเรา (กรณี sortBy ของ Agoda ไม่รองรับบางค่า)
+    items.sort((a,b)=>{
+      switch (String(sort).toUpperCase()) {
+        case 'PRICE_ASC':  return (a.priceFrom||0) - (b.priceFrom||0);
+        case 'PRICE_DESC': return (b.priceFrom||0) - (a.priceFrom||0);
+        case 'RATING_DESC':return (b.reviewScore||0) - (a.reviewScore||0);
+        case 'STARS_DESC': return (b.starRating||0) - (a.starRating||0);
+        default: return 0;
+      }
     });
-    $('#btnApplyFilter').addEventListener('click', ()=>{
-      state.stars = Array.from(document.querySelectorAll('.ck-star:checked')).map(el=>+el.value);
-      state.reviewMin = +$('#reviewMin').value;
-      state.freeCancel = $('#ckFreeCancel').checked;
-      state.page = 1;
-      state._relaxedOnce = false; // อนุญาตให้ช่วยผ่อนตัวกรองได้อีก
-      closeDrawer('#drawerFilters');
-      fetchResults(false);
-    });
+  }
 
-    // Price drawer
-    function updatePriceChip(){
-      const a = state.minPrice!=null ? state.minPrice : '';
-      const b = state.maxPrice!=null ? state.maxPrice : '';
-      const text = (a||b) ? `(${a||0}–${b||'∞'})` : '';
-      $('#priceChipText').textContent = text;
-    }
-    $('#btnPrice').addEventListener('click', ()=>{
-      $('#minPrice').value = state.minPrice ?? '';
-      $('#maxPrice').value = state.maxPrice ?? '';
-      openDrawer('#drawerPrice');
-    });
-    $('#btnClosePrice').addEventListener('click', ()=> closeDrawer('#drawerPrice'));
-    $('#btnResetPrice').addEventListener('click', ()=>{ $('#minPrice').value = ''; $('#maxPrice').value = ''; });
-    $('#btnApplyPrice').addEventListener('click', ()=>{
-      const mi = $('#minPrice').value ? +$('#minPrice').value : null;
-      const ma = $('#maxPrice').value ? +$('#maxPrice').value : null;
-      state.minPrice = mi; state.maxPrice = ma; updatePriceChip();
-      state.page = 1;
-      closeDrawer('#drawerPrice');
-      fetchResults(false);
-    });
+  const took = Date.now() - t0;
 
-    // Sort menu
-    const sortMenu = $('#sortMenu');
-    $('#btnSort').addEventListener('click', (e)=>{
-      const r = e.currentTarget.getBoundingClientRect();
-      sortMenu.style.left = (r.left)+'px';
-      sortMenu.style.top = (r.bottom+6)+'px';
-      sortMenu.style.display = 'block';
-    });
-    document.addEventListener('click', (e)=>{
-      if(!sortMenu.contains(e.target) && e.target.id!=='btnSort') sortMenu.style.display='none';
-    });
-    sortMenu.querySelectorAll('a').forEach(a=>{
-      a.addEventListener('click', (e)=>{
-        e.preventDefault();
-        state.sort = a.dataset.sort;
-        state.page = 1;
-        fetchResults(false);
-        sortMenu.style.display='none';
-      });
-    });
+  // ----- ส่งกลับรูปแบบมาตรฐานของเรา -----
+  const payloadOut = {
+    ok: true,
+    source: agodaOk ? 'agoda' : 'mock',
+    query: {
+      cityId,
+      q: q || '',
+      checkIn: safeCheckIn,
+      checkOut: safeCheckOut,
+      adults: nAdults,
+      children: nChildren,
+      rooms: nRooms,
+      currency: curr,
+      language,
+      sort,
+      minPrice: (minPrice ?? null),
+      maxPrice: (maxPrice ?? null)
+    },
+    total: items.length,
+    items,
+    tookMs: took
+  };
 
-    // Area (coming soon)
-    $('#btnArea').addEventListener('click', ()=> showToast('ฟีเจอร์ย่าน/พื้นที่ - เร็วๆ นี้'));
+  if (debug === '1') payloadOut._raw = agodaRaw;
 
-    // Backdrop click → ปิด drawer
-    $('#backdrop').addEventListener('click', ()=>{ closeDrawer('#drawerFilters'); closeDrawer('#drawerPrice'); });
-
-    // Load more
-    $('#btnLoadMore').addEventListener('click', ()=>{ state.page += 1; fetchResults(true); });
-
-    // Init
-    updatePriceChip();
-    fetchResults(false);
-  </script>
-</body>
-</html>
+  res.setHeader('Cache-Control', 'no-store');
+  return res.status(200).json(payloadOut);
+}
