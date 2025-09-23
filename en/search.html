@@ -1,119 +1,149 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Search Hotels | Click & Go</title>
-  <meta name="description" content="Find and compare hotel deals from our partners, then click to book instantly." />
-  <link rel="icon" href="../favicon.ico" />
-  <link rel="stylesheet" href="../style.css" />
-
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
-  <script>
-    window.dataLayer=window.dataLayer||[];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date()); gtag('config','G-1QR2EGFWN3');
-  </script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Hotel Search Results | Click & Go</title>
+  <link rel="stylesheet" href="/style.css"/>
+  <style>
+    .wrap{max-width:1100px;margin:0 auto;padding:16px}
+    .title{font-size:clamp(20px,3vw,28px);font-weight:800;margin:8px 0 6px}
+    .sub{color:#555;margin:0 0 12px}
+    .toolbar{display:flex;gap:8px;align-items:center;margin:8px 0 16px;flex-wrap:wrap}
+    .grid{display:grid;gap:16px;grid-template-columns:repeat(3,1fr)}
+    @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:620px){.grid{grid-template-columns:1fr}}
+    .card{border:1px solid #eee;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 1px 10px rgba(0,0,0,.05);display:flex;flex-direction:column}
+    .thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:#f4f4f4}
+    .body{padding:12px}
+    .hname{margin:0 0 4px;font-weight:800}
+    .meta{color:#666;font-size:13px}
+    .foot{display:flex;justify-content:space-between;align-items:center;padding:0 12px 12px;margin-top:auto}
+    .price{font-weight:800}
+    .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:#0ea5a0;color:#fff;text-decoration:none}
+    .muted{color:#888}
+    select,.pill{height:36px;border:1px solid #d7d7d7;border-radius:8px;background:#fff;padding:0 10px}
+  </style>
 </head>
 <body>
-  <header class="site-header" role="banner">
+  <header class="site-header">
     <div class="inner">
-      <a href="index.html" class="brand" aria-label="Click & Go">
-        <img src="../logo.png" alt="Click & Go" width="40" height="40" loading="lazy">
-      </a>
-      <nav class="main-nav" aria-label="Main">
-        <a href="index.html">Home</a>
-        <a href="deals.html">Deals</a>
-        <div class="lang">
-          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
-          <div class="lang-menu" role="menu">
-            <a role="menuitem" href="../search.html">ไทย</a>
-            <a role="menuitem" href="#" aria-current="true">English</a>
-          </div>
-        </div>
-      </nav>
+      <a href="/en/index.html" class="brand"><img src="/logo.png" width="36" height="36" alt=""/> <strong>Click & Go</strong></a>
+      <nav class="main-nav"><a href="/en/index.html">Home</a> <a href="/en/deals.html">Deals</a></nav>
     </div>
   </header>
 
-  <main class="container">
-    <section>
-      <h1 class="section-title">Search Hotels</h1>
+  <main class="wrap">
+    <h1 class="title">Hotel Search Results</h1>
+    <p id="summary" class="sub">Loading…</p>
 
-      <form id="re-search" class="search-form search-4cols" method="GET" action="search.html">
-        <input name="q" id="q" type="text" placeholder="Destination or hotel name">
-        <div class="date-wrap empty"><input name="checkin" id="checkin" type="date"><span class="date-placeholder">Check-in</span></div>
-        <div class="date-wrap empty"><input name="checkout" id="checkout" type="date"><span class="date-placeholder">Check-out</span></div>
-        <button class="btn" type="submit">Search</button>
-      </form>
+    <div class="toolbar">
+      <label>Sort by
+        <select id="sort">
+          <option value="PriceAsc">Price: Low → High</option>
+          <option value="PriceDesc">Price: High → Low</option>
+          <option value="Recommended">Recommended</option>
+        </select>
+      </label>
+      <label>Currency
+        <select id="cur">
+          <option>USD</option><option>THB</option><option>EUR</option><option>JPY</option>
+        </select>
+      </label>
+      <label>Show
+        <select id="max">
+          <option>30</option><option>15</option><option>60</option>
+        </select>
+      </label>
+    </div>
 
-      <p id="meta" class="muted" style="margin:10px 0"></p>
-
-      <div id="results" class="deal-grid" style="margin-top:12px"></div>
-      <div id="empty" class="muted" style="display:none;margin-top:12px">No results found.</div>
-      <div id="loading" class="muted" style="margin-top:12px">Loading...</div>
-    </section>
+    <section id="grid" class="grid"></section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container" style="text-align:center">
-      <div class="footer-links">
-        <a href="privacy.html">Privacy</a> ·
-        <a href="terms.html">Terms</a> ·
-        <a href="affiliate.html">Affiliate Disclosure</a> ·
-        <a href="about.html">About us</a> ·
-        <a href="contact.html">Contact</a> ·
-        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
-      </div>
-    </div>
-  </footer>
-
   <script>
-  (function(){const b=document.querySelector('.lang-btn'),m=document.querySelector('.lang-menu');if(!b||!m)return;
-    const c=()=>{m.classList.remove('open');b.setAttribute('aria-expanded','false');};
-    b.addEventListener('click',e=>{e.stopPropagation();const o=m.classList.toggle('open');b.setAttribute('aria-expanded',String(o));});
-    document.addEventListener('click',c);document.addEventListener('keydown',e=>{if(e.key==='Escape')c();});
-  })();
+    const $ = s => document.querySelector(s);
 
-  function getParams(){
-    const u=new URL(location.href);
-    const p=Object.fromEntries(u.searchParams.entries());
-    if(!p.lang) p.lang='en-us';
-    if(!p.currency) p.currency='USD';
-    if(!p.adults) p.adults='2';
-    if(!p.rooms) p.rooms='1';
-    return p;
-  }
-  function fillForm(p){
-    const f=document.getElementById('re-search');
-    ['q','checkin','checkout'].forEach(k=>{ if(f[k] && p[k]) f[k].value=p[k]; });
-    document.querySelectorAll('.date-wrap').forEach(w=>{
-      const i=w.querySelector('input[type="date"]');
-      if(i) w.classList.toggle('empty', !i.value);
-      if(i) i.addEventListener('change',()=>w.classList.toggle('empty',!i.value));
-    });
-  }
-  async function run(){
-    const p=getParams(); fillForm(p);
-    const meta=document.getElementById('meta'),loading=document.getElementById('loading'),empty=document.getElementById('empty'),results=document.getElementById('results');
-    meta.textContent = `Destination: ${p.q||'-'}  |  Dates: ${p.checkin||'-'} → ${p.checkout||'-'}  |  Travelers: ${p.adults||'2'} adults, ${p.rooms||'1'} room(s)`;
-    results.innerHTML=''; empty.style.display='none'; loading.style.display='block';
-    try{
-      const qs=new URLSearchParams(p).toString();
-      const resp=await fetch('/api/search?'+qs); const data=await resp.json();
-      loading.style.display='none';
-      if(!data.ok || !Array.isArray(data.items) || data.items.length===0){ empty.style.display='block'; return; }
-      results.innerHTML = data.items.map(h=>`
-        <article class="deal-card">
-          <img class="thumb" src="${h.imageUrl||''}" alt="${h.name||''}">
-          <div class="body"><h3>${h.name||''}</h3><p>${h.city||''}</p></div>
-          <div class="meta">
-            ${h.priceFrom?`<strong>${h.priceFrom.toLocaleString()} ${h.currency||''}</strong>`:''}
-            <a class="btn" target="_blank" rel="nofollow sponsored noopener" href="${h.deeplink}">View deal</a>
+    // City name → Agoda cityId (quick map)
+    const CITY_MAP = {
+      bangkok: 9395, กรุงเทพ: 9395,
+      'chiang mai': 9397, เชียงใหม่: 9397,
+      pattaya: 9398, พัทยา: 9398,
+      phuket: 9396, ภูเก็ต: 9396,
+      krabi: 7023, กระบี่: 7023,
+      'hua hin': 11278, 'หัวหิน': 11278,
+      tokyo: 6419, seoul: 14690, singapore: 11419, 'hong kong': 4543, london: 17072, paris: 16808
+    };
+
+    // Read URL params
+    const p = new URLSearchParams(location.search);
+    const q         = (p.get('q') || 'Bangkok').trim();
+    const cityid    = parseInt(p.get('cityid') || '', 10) || CITY_MAP[(q||'').toLowerCase()] || 9395;
+    const checkin   = p.get('checkin')  || new Date().toISOString().slice(0,10);
+    const checkout  = p.get('checkout') || new Date(Date.now()+86400000).toISOString().slice(0,10);
+    const rooms     = +(p.get('rooms') || 1);
+    const adults    = +(p.get('adults') || 2);
+    const children  = +(p.get('children') || 0);
+    const currency  = (p.get('currency') || 'USD').toUpperCase();
+    const lang      = (p.get('lang') || 'en-us').toLowerCase(); // default EN here
+
+    // UI summary
+    $('#summary').textContent =
+      `${q} | Dates: ${checkin} → ${checkout} | Guests: ${adults} adult(s), ${children} child(ren), ${rooms} room(s)`;
+    $('#cur').value = currency;
+    $('#max').value = String(p.get('max') || 30);
+    $('#sort').value = String(p.get('sort') || 'PriceAsc');
+
+    async function load() {
+      const qs = new URLSearchParams({
+        cityid, checkin, checkout, rooms, adults, children,
+        currency, lang,                 // pass language through to backend
+        sort: $('#sort').value, max: $('#max').value
+      });
+      const res = await fetch(`/api/search?${qs.toString()}`, { headers: { 'Accept': 'application/json' }});
+      const data = await res.json();
+      render(data.items || []);
+    }
+
+    function render(items) {
+      const grid = $('#grid');
+      if (!items.length) {
+        grid.innerHTML = `<div class="muted">No results match your filters.</div>`;
+        return;
+      }
+      grid.innerHTML = items.map(card).join('');
+    }
+
+    function card(h) {
+      const stars = '★'.repeat(h.starRating || 0);
+      const review = (h.reviewScore != null) ? ` · Rating ${h.reviewScore}` : '';
+      const price = (h.priceFrom != null) ? `${Number(h.priceFrom).toLocaleString()} ${h.currency || ''}` : '-';
+      return `
+        <article class="card">
+          <img class="thumb" src="${h.imageUrl || 'https://picsum.photos/800/450?blur=2'}" alt="${h.name || ''}" loading="lazy">
+          <div class="body">
+            <h3 class="hname">${h.name || '-'}</h3>
+            <div class="meta">${stars}${review}</div>
           </div>
-        </article>`).join('');
-    }catch(e){loading.style.display='none';empty.style.display='block';console.error(e);}
-  }
-  run();
+          <div class="foot">
+            <div class="price">${price}</div>
+            <a class="btn" href="${h.deeplink || '#'}" target="_blank" rel="nofollow noopener">View deal</a>
+          </div>
+        </article>`;
+    }
+
+    // React to toolbar changes
+    ['sort','cur','max'].forEach(id=>{
+      $('#'+id).addEventListener('change', ()=>{
+        const url = new URL(location.href);
+        url.searchParams.set('sort', $('#sort').value);
+        url.searchParams.set('currency', $('#cur').value);
+        url.searchParams.set('max', $('#max').value);
+        history.replaceState(null,'',url.toString());
+        load();
+      });
+    });
+
+    load();
   </script>
 </body>
 </html>
