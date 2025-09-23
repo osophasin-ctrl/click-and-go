@@ -1,140 +1,91 @@
 // /api/suggest.js
-// Live Agoda Suggest + graceful fallback to local static list
-
-// ---- Fallback cities (TH/EN) ใช้เมื่อ API ภายนอกมีปัญหา ----
-const FALLBACK_CITIES = [
-  { id: 'BKK',     en: 'Bangkok',             th: 'กรุงเทพ',              country: 'Thailand' },
-  { id: 'CNX',     en: 'Chiang Mai',          th: 'เชียงใหม่',             country: 'Thailand' },
-  { id: 'PATTAYA', en: 'Pattaya',             th: 'พัทยา',                country: 'Thailand' },
-  { id: 'HKT',     en: 'Phuket',              th: 'ภูเก็ต',                country: 'Thailand' },
-  { id: 'KBV',     en: 'Krabi',               th: 'กระบี่',                country: 'Thailand' },
-  { id: 'HHQ',     en: 'Hua Hin',             th: 'หัวหิน',                country: 'Thailand' },
-  { id: 'USM',     en: 'Koh Samui',           th: 'เกาะสมุย',              country: 'Thailand' },
-  { id: 'CEI',     en: 'Chiang Rai',          th: 'เชียงราย',              country: 'Thailand' },
-  { id: 'RYG',     en: 'Rayong',              th: 'ระยอง',                 country: 'Thailand' },
-  { id: 'TRAT',    en: 'Koh Chang (Trat)',    th: 'เกาะช้าง (ตราด)',       country: 'Thailand' },
-  { id: 'AYU',     en: 'Ayutthaya',           th: 'อยุธยา',                country: 'Thailand' },
-  { id: 'KBI',     en: 'Kanchanaburi',        th: 'กาญจนบุรี',             country: 'Thailand' },
-];
-
-// ---- Helper: สร้างผลลัพธ์จาก fallback ----
-function fallbackSuggest(q, lang = 'th-th') {
-  const qq = (q || '').trim().toLowerCase();
-  if (!qq) return [];
-  return FALLBACK_CITIES
-    .filter(c => c.en.toLowerCase().includes(qq) || c.th.toLowerCase().includes(qq))
-    .slice(0, 8)
-    .map(c => {
-      const label = lang.startsWith('th') ? c.th : c.en;
-      return {
-        id: c.id,
-        label,
-        subtitle: c.country,
-        city: label,
-        country: c.country,
-        en: c.en,
-        th: c.th,
-        _source: 'fallback'
-      };
-    });
-}
-
+// Approach A: Proxy ไป Agoda Suggest API (ถ้ามี ENV) + Fallback list ในตัว
 export default async function handler(req, res) {
-  const t0 = Date.now();
-  try {
-    const q    = String(req.query.q || '').trim();
-    const lang = String(req.query.lang || 'th-th').toLowerCase();
-    const type = String(req.query.type || 'City'); // 'City' | 'All'
+  const q     = String(req.query.q || '').trim();
+  const langQ = String(req.query.lang || 'th-th').toLowerCase();   // th-th | en-us
+  const type  = String(req.query.type || 'mixed');                 // City | Hotel | mixed
+  const limit = Math.min(15, Math.max(1, parseInt(String(req.query.limit || 10), 10)));
 
-    if (!q) {
-      res.setHeader('Cache-Control', 'no-store');
-      return res.status(200).json({ ok: true, items: [], tookMs: Date.now() - t0 });
-    }
+  if (!q) {
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json({ ok: true, items: [] });
+  }
 
-    // ----- ENV & Endpoint -----
-    const SITE_ID   = process.env.AGODA_SITE_ID;
-    const API_KEY   = process.env.AGODA_API_KEY;
-    const SUGGEST_URL =
-      process.env.AGODA_SUGGEST_URL ||
-      process.env.AGODA_BASE_URL || // ใช้ตัวเดียวกับ search ถ้าไม่ได้แยก
-      'http://affiliateapi7643.agoda.com/affiliateservice/lt_v1';
+  const BASE = process.env.AGODA_SUGGEST_URL || '';   // e.g. https://affiliateapiXXXX.agoda.com/affiliateservice/suggest
+  const CID  = process.env.AGODA_SITE_ID || '';
+  const KEY  = process.env.AGODA_API_KEY || '';
 
-    if (!SITE_ID || !API_KEY) {
-      const items = fallbackSuggest(q, lang);
-      res.setHeader('Cache-Control', 'no-store');
-      return res.status(200).json({ ok: true, items, source: 'fallback:no-env', tookMs: Date.now() - t0 });
-    }
-
-    // ----- เรียก Agoda Suggest -----
-    let json = null, raw = '';
-
+  // ----- ถ้า ENV ครบ: ลองยิงไป Agoda -----
+  if (BASE && CID && KEY) {
     try {
-      const resp = await fetch(SUGGEST_URL, {
-        method: 'POST',
-        headers: {
-          'Accept-Encoding': 'gzip,deflate',
-          'Content-Type': 'application/json',
-          'Authorization': `${SITE_ID}:${API_KEY}`
-        },
-        body: JSON.stringify({
-          SearchCriteria: {
-            Keyword: q,
-            Culture: lang,  // 'th-th' | 'en-us'
-            SearchType: type // 'City' (แนะนำ) หรือ 'All' ถ้าต้องการผลชนิดอื่นร่วมด้วย
-          }
-        })
+      // NOTE: พารามิเตอร์จริงของ Agoda Suggest อาจต่างกันเล็กน้อย ขึ้นกับเอกสารของคุณ
+      // ผมทำให้ยืดหยุ่น: ส่ง q, lang, type ไป และรองรับ response shapes ทั่วไป
+      const url = `${BASE}?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(langQ)}&type=${encodeURIComponent(type)}`;
+      const r = await fetch(url, {
+        headers: { 'Authorization': `${CID}:${KEY}`, 'Accept': 'application/json' },
+        cache: 'no-store',
       });
 
-      raw = await resp.text();
-      if (resp.ok) {
-        try { json = JSON.parse(raw); } catch(_) { json = null; }
+      let items = [];
+      if (r.ok) {
+        const j = await r.json();
+
+        // พยายามรองรับรูปทรงที่พบบ่อย: j.items | j.results
+        const rows = (j && (j.items || j.results || [])) || [];
+        items = rows.slice(0, limit).map(it => {
+          // เดาชื่อฟิลด์ทั่วไป
+          const id   = it.id || it.cityId || it.hotelId || it.value || '';
+          const lbl  = it.label || it.name || it.displayName || '';
+          const sub  = it.subtitle || it.country || it.region || '';
+          const t    = (it.type || '').toString().toLowerCase();
+
+          // map เป็น City/Hotel ถ้า endpoint ส่ง string อื่นมา
+          let outType = 'City';
+          if (t.includes('hotel')) outType = 'Hotel';
+          else if (t.includes('city')) outType = 'City';
+          else if (it.hotelId) outType = 'Hotel';
+
+          return { id, label: lbl, subtitle: sub, type: outType };
+        });
       }
-    } catch (e) {
-      // เงียบ ๆ แล้วไป fallback
-    }
 
-    // ----- แปลงผลลัพธ์ -----
-    const results = (json && (json.Results || json.results || json.items)) || [];
-    let items = Array.isArray(results) ? results.map(r => {
-      // พยายามรองรับชื่อคีย์ที่ต่างกันเล็กน้อย
-      const id       = String(r.ObjectId ?? r.Id ?? r.id ?? '');
-      const name     = r.DisplayName ?? r.Name ?? r.label ?? '';
-      const region   = r.RegionName ?? r.Region ?? '';
-      const country  = r.CountryName ?? r.Country ?? '';
-      const label    = String(name || '').trim();
-      const subtitle = String(region || country || '').trim();
-
-      return {
-        id,
-        label,
-        subtitle,
-        city: label,
-        country: country || subtitle || '',
-        _source: 'agoda'
-      };
-    }) : [];
-
-    // ถ้า API ไม่ได้อะไรให้ fallback
-    if (!items.length) {
-      items = fallbackSuggest(q, lang);
       res.setHeader('Cache-Control', 'no-store');
-      return res.status(200).json({ ok: true, items, source: 'fallback:empty', tookMs: Date.now() - t0 });
+      return res.status(200).json({ ok: true, source: 'agoda', items });
+    } catch (e) {
+      // ตกไป fallback ด้านล่าง
+      console.warn('Suggest proxy failed, fallback local:', e?.message || e);
     }
-
-    res.setHeader('Cache-Control', 'no-store');
-    return res.status(200).json({
-      ok: true,
-      items: items.slice(0, 10), // จำกัดจำนวนให้เบา
-      source: 'agoda',
-      tookMs: Date.now() - t0
-    });
-
-  } catch (e) {
-    // กรณี exception สุดท้ายก็ fallback
-    const q = String(req.query.q || '');
-    const lang = String(req.query.lang || 'th-th');
-    const items = fallbackSuggest(q, lang);
-    res.setHeader('Cache-Control', 'no-store');
-    return res.status(200).json({ ok: true, items, source: 'fallback:error', error: String(e?.message || e), tookMs: Date.now() - t0 });
   }
+
+  // ----- Fallback list (กรณีไม่มี ENV/ยิงไม่ผ่าน) -----
+  const lang = langQ.startsWith('th') ? 'th' : 'en';
+  const CITIES = [
+    { id: '9395',  en: 'Bangkok',        th: 'กรุงเทพ',      country: 'Thailand' },
+    { id: '9397',  en: 'Chiang Mai',     th: 'เชียงใหม่',     country: 'Thailand' },
+    { id: '9398',  en: 'Pattaya',        th: 'พัทยา',        country: 'Thailand' },
+    { id: '9396',  en: 'Phuket',         th: 'ภูเก็ต',        country: 'Thailand' },
+    { id: '7023',  en: 'Krabi',          th: 'กระบี่',        country: 'Thailand' },
+    { id: '11278', en: 'Hua Hin',        th: 'หัวหิน',        country: 'Thailand' },
+    { id: '11419', en: 'Singapore',      th: 'สิงคโปร์',      country: 'Singapore' },
+    { id: '6419',  en: 'Tokyo',          th: 'โตเกียว',       country: 'Japan' },
+    { id: '14690', en: 'Seoul',          th: 'โซล',          country: 'Korea'  },
+    { id: '4543',  en: 'Hong Kong',      th: 'ฮ่องกง',        country: 'Hong Kong' },
+    { id: '17072', en: 'London',         th: 'ลอนดอน',       country: 'United Kingdom' },
+    { id: '16808', en: 'Paris',          th: 'ปารีส',         country: 'France' },
+  ];
+
+  const needle = q.toLowerCase();
+  const matched = CITIES.filter(c =>
+    (c.en.toLowerCase().includes(needle) || c.th.toLowerCase().includes(needle))
+  ).slice(0, limit);
+
+  const items = matched.map(c => ({
+    id: c.id,
+    label: lang === 'th' ? c.th : c.en,
+    subtitle: c.country,
+    type: 'City',
+  }));
+
+  res.setHeader('Cache-Control', 'no-store');
+  return res.status(200).json({ ok: true, source: 'fallback', items });
 }
