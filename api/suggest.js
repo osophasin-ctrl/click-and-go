@@ -1,94 +1,100 @@
 // /api/suggest.js
-// City autocomplete จากไฟล์ JSON ที่เตรียมไว้ล่วงหน้า (data/cities.min.json)
-// รองรับ TH/EN, เร็ว, ไม่ง้อ API ภายนอก
+// อ่านไฟล์ JSON หนึ่งครั้งแล้วแคชไว้ในหน่วยความจำของฟังก์ชัน (serverless)
 
 import fs from 'fs';
 import path from 'path';
 
-// ---- เตรียมแคชในหน่วยความจำ (โหลดครั้งเดียว) ----
-let CITY_DATA = null;
+let CACHE = null;
 
-function normalize(s = '') {
-  // แปลงเป็นตัวพิมพ์เล็ก + ตัดวรรณยุกต์/สัญลักษณ์พื้นฐาน
-  return String(s)
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // diacritics
-    .replace(/[^\p{Letter}\p{Number}\s]/gu, '')
-    .trim();
-}
+function loadData() {
+  if (CACHE) return CACHE;
+  const base = process.cwd();
+  const citiesPath = path.join(base, 'data', 'cities_min.json');
+  const hotelsPath = path.join(base, 'data', 'hotels_min.json');
 
-function loadCities() {
-  if (CITY_DATA) return CITY_DATA;
-  const file = path.join(process.cwd(), 'data', 'cities.min.json');
-  const raw = fs.readFileSync(file, 'utf8');
-  const json = JSON.parse(raw);
+  const cities = JSON.parse(fs.readFileSync(citiesPath, 'utf8'));
+  let hotels = [];
+  try {
+    hotels = JSON.parse(fs.readFileSync(hotelsPath, 'utf8'));
+  } catch (e) {
+    hotels = [];
+  }
 
-  // เตรียมฟิลด์ช่วยค้นหา (ทำครั้งเดียว)
-  json.forEach((c) => {
-    c._key_th = normalize(c.name_th + ' ' + c.country_th);
-    c._key_en = normalize(c.name_en + ' ' + c.country_en);
-  });
-  CITY_DATA = json;
-  return CITY_DATA;
+  // สร้าง index เบื้องต้น (ตัวพิมพ์เล็ก)
+  const norm = s => (s || '').toString().toLowerCase();
+
+  const cityIdx = cities.map(c => ({
+    id: c.id,
+    th: c.th,
+    en: c.en || c.th,
+    countryId: c.countryId,
+    th_lc: norm(c.th),
+    en_lc: norm(c.en || c.th),
+  }));
+
+  const hotelIdx = hotels.map(h => ({
+    id: h.id,
+    th: h.th,
+    en: h.en || h.th,
+    cityId: h.cityId,
+    cityName: h.cityName,
+    countryId: h.countryId,
+    th_lc: norm(h.th),
+    en_lc: norm(h.en || h.th),
+  }));
+
+  CACHE = { cityIdx, hotelIdx };
+  return CACHE;
 }
 
 export default function handler(req, res) {
   try {
+    const { cityIdx, hotelIdx } = loadData();
+
     const q = String(req.query.q || '').trim();
+    if (!q) return res.status(200).json({ ok: true, items: [] });
+
     const lang = String(req.query.lang || 'th-th').toLowerCase();
-    const limit = Math.min(15, Math.max(5, parseInt(String(req.query.limit || '8'), 10)));
+    const isTH = lang.startsWith('th');
 
-    if (!q) {
-      return res.status(200).json({ ok: true, items: [] });
-    }
+    const qlc = q.toLowerCase();
 
-    const cities = loadCities();
-    const keyq = normalize(q);
+    // หาเมืองก่อน (ขึ้นก่อน)
+    let cities = cityIdx.filter(c =>
+      c.th_lc.includes(qlc) || c.en_lc.includes(qlc)
+    ).slice(0, 10);
 
-    // ค้นหา: ให้ TH/EN ติดอันดับก่อนตามภาษาที่ขอมา แต่ก็เปิดให้ match ทั้งคู่
-    let matched = [];
-    for (const c of cities) {
-      const hitTH = c._key_th.includes(keyq);
-      const hitEN = c._key_en.includes(keyq);
-      if (hitTH || hitEN) {
-        // ให้คะแนนเล็กน้อยเพื่อเรียงผลลัพธ์สวยขึ้น
-        let score = 0;
-        if (lang.startsWith('th')) {
-          if (hitTH) score += 2;
-          if (hitEN) score += 1;
-        } else {
-          if (hitEN) score += 2;
-          if (hitTH) score += 1;
-        }
-        // ตรงต้นคำ bonus
-        if (c._key_th.startsWith(keyq) || c._key_en.startsWith(keyq)) score += 1;
-        matched.push({ c, score });
-      }
-      if (matched.length > 200) break; // กัน search ยาวเกินไป
-    }
+    // หาโรงแรม (จำกัดให้เบาหน่อย)
+    let hotels = hotelIdx.filter(h =>
+      h.th_lc.includes(qlc) || h.en_lc.includes(qlc)
+    ).slice(0, 10);
 
-    matched.sort((a, b) => b.score - a.score);
-    const out = matched.slice(0, limit).map(({ c }) => {
-      const label = lang.startsWith('th') ? `${c.name_th}` : `${c.name_en}`;
-      const subtitle = lang.startsWith('th') ? c.country_th : c.country_en;
-      return {
-        id: String(c.city_id),           // <-- สำคัญ: cityid ของ Agoda
-        label,                           // ข้อความหลักที่แสดง (ตามภาษา)
-        subtitle,                        // ประเทศ (ตามภาษา)
-        city: label,
-        country: subtitle,
-        // เผื่อใช้
-        name_th: c.name_th,
-        name_en: c.name_en,
-      };
-    });
+    // map ให้อยู่รูปเดียวกับกล่อง suggest ฝั่งหน้า deals
+    const cityItems = cities.map(c => ({
+      type: 'city',
+      id: String(c.id),
+      label: isTH ? c.th : (c.en || c.th),
+      subtitle: isTH ? 'เมือง' : 'City',
+      city: isTH ? c.th : (c.en || c.th),
+      country: '',   // ถ้ามี mapping ประเทศค่อยเติม
+    }));
+
+    const hotelItems = hotels.map(h => ({
+      type: 'hotel',
+      id: String(h.id),
+      label: isTH ? h.th : (h.en || h.th),
+      subtitle: isTH ? (h.cityName || 'โรงแรม') : (h.cityName || 'Hotel'),
+      cityId: h.cityId ? String(h.cityId) : undefined,
+      city: h.cityName || '',
+    }));
+
+    // เมืองอยู่บน โรงแรมตามหลัง
+    const items = [...cityItems, ...hotelItems].slice(0, 10);
 
     res.setHeader('Cache-Control', 'no-store');
-    return res.status(200).json({ ok: true, items: out });
+    return res.status(200).json({ ok: true, items });
   } catch (e) {
     console.error(e);
-    res.setHeader('Cache-Control', 'no-store');
     return res.status(500).json({ ok: false, error: 'internal_error' });
   }
 }
