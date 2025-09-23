@@ -30,7 +30,7 @@
     "url":"https://clickandgo.asia/",
     "potentialAction":{
       "@type":"SearchAction",
-      "target":"https://clickandgo.asia/deals.html?q={search_term_string}",
+      "target":"https://clickandgo.asia/search.html?q={search_term_string}",
       "query-input":"required name=search_term_string"
     }
   }
@@ -43,10 +43,21 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
   <script>
     window.dataLayer=window.dataLayer||[];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag(){dataLayer.push(arguments);} 
     gtag('js',new Date());
     gtag('config','G-1QR2EGFWN3');
   </script>
+
+  <style>
+    /* Search box สไตล์เฉพาะหน้าแรก (prefix cng- ป้องกันชน) */
+    .cng-searchbox{background:#fff;border:1px solid #eee;border-radius:14px;padding:12px;box-shadow:0 6px 20px rgba(0,0,0,.06);max-width:1100px;margin:16px auto}
+    .cng-searchbox .row{display:grid;grid-template-columns:2fr repeat(6,1fr) 1.2fr;gap:10px}
+    .cng-searchbox .field{display:flex;flex-direction:column;font-size:12px;color:#444}
+    .cng-searchbox input,.cng-searchbox select{padding:10px;border:1px solid #ddd;border-radius:10px;font-size:14px}
+    .cng-searchbox .btn{background:#0ea5a0;color:#fff;border:0;border-radius:10px;font-weight:700;cursor:pointer}
+    @media (max-width:980px){.cng-searchbox .row{grid-template-columns:1fr 1fr}}
+    @media (max-width:600px){.cng-searchbox .row{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
   <!-- Header -->
@@ -77,35 +88,62 @@
       <img class="hero-img" src="hero-bg.jpg" alt="Click & Go Thailand" />
     </section>
 
-    <!-- ค้นหาโรงแรม -->
+    <!-- ค้นหาโรงแรม: ใช้ Search Box ของเราแทน Agoda Embed -->
     <section style="margin:24px 0">
       <h2 class="section-title">ค้นหาโรงแรม</h2>
       <div class="widget-like solid">
         <p class="muted">เราพร้อมค้นหาข้อเสนอที่ดีที่สุดให้คุณ</p>
 
-        <!-- Agoda Search Box : Wrapped ให้จัดกึ่งกลางและพอดีกรอบ -->
-        <div class="agoda-embed-wrap" style="display:flex;justify-content:center;align-items:center;padding:8px 0;overflow:hidden;">
-          <!-- Agoda embed START -->
-          <div id="adgshp-1065502534"></div>
-          <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
-          <script type="text/javascript">
-          var stg = new Object(); 
-          stg.crt="6577528008956";
-          stg.version="1.04"; 
-          stg.id=stg.name="adgshp-1065502534"; 
-          stg.width="1030px"; 
-          stg.height="293px";
-          stg.ReferenceKey="HLoB8knkD3mwE38NHf58lg=="; 
-          stg.Layout="Oneline"; 
-          stg.Language="th-th";
-          stg.Cid="1949420"; 
-          stg.City="9395"; 
-          stg.DestinationName="กรุงเทพ, ไทย";
-          stg.OverideConf=false; 
-          new AgdSherpa(stg).initialize();
-          </script>
-          <!-- Agoda embed END -->
-        </div>
+        <!-- ===== Click & Go: HOTEL SEARCH BOX (Drop-in) ===== -->
+        <section class="cng-searchbox">
+          <form id="hotel-search" autocomplete="off">
+            <div class="row">
+              <label class="field">
+                <span>ปลายทาง</span>
+                <input type="text" id="q" name="q" placeholder="กรุงเทพ, Phuket, Tokyo..." required>
+              </label>
+
+              <label class="field">
+                <span>เช็คอิน</span>
+                <input type="date" id="checkin" name="checkin" required>
+              </label>
+
+              <label class="field">
+                <span>เช็คเอาต์</span>
+                <input type="date" id="checkout" name="checkout" required>
+              </label>
+
+              <label class="field">
+                <span>ผู้ใหญ่</span>
+                <input type="number" id="adults" name="adults" min="1" value="2">
+              </label>
+
+              <label class="field">
+                <span>เด็ก</span>
+                <input type="number" id="children" name="children" min="0" value="0">
+              </label>
+
+              <label class="field">
+                <span>ห้อง</span>
+                <input type="number" id="rooms" name="rooms" min="1" value="1">
+              </label>
+
+              <label class="field">
+                <span>สกุลเงิน</span>
+                <select id="currency" name="currency">
+                  <option>THB</option>
+                  <option selected>USD</option>
+                  <option>EUR</option>
+                  <option>JPY</option>
+                  <option>SGD</option>
+                </select>
+              </label>
+
+              <button class="btn" type="submit">ค้นหาโรงแรม</button>
+            </div>
+          </form>
+        </section>
+        <!-- ===== /End HOTEL SEARCH BOX ===== -->
       </div>
     </section>
 
@@ -160,7 +198,6 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
   <script>
     // language pop-up
     (function(){
@@ -177,21 +214,6 @@
       document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
     })();
 
-    // (ยังคงสคริปต์เดิม: placeholder วันที่บน mock form — ไม่มีผลกับ Agoda box)
-    (function(){
-      function bindDatePlaceholder(wrapId, inputId){
-        const wrap  = document.getElementById(wrapId);
-        const input = document.getElementById(inputId);
-        if(!wrap || !input) return;
-        const toggle = () => wrap.classList.toggle('empty', !input.value);
-        toggle();
-        input.addEventListener('input',  toggle);
-        input.addEventListener('change', toggle);
-      }
-      bindDatePlaceholder('checkin-wrap','checkin');
-      bindDatePlaceholder('checkout-wrap','checkout');
-    })();
-
     // footer link auto language (TH/EN)
     (function(){
       const isEN   = location.pathname.toLowerCase().includes('/en/');
@@ -203,6 +225,66 @@
         a.setAttribute('href', prefix + clean);
       });
     })();
+
+    // ===== Search Box Script =====
+    const CNG_CITY_MAP = {
+      bangkok: 9395, 'กรุงเทพ': 9395,
+      'chiang mai': 9397, 'เชียงใหม่': 9397,
+      pattaya: 9398, 'พัทยา': 9398,
+      phuket: 9396, 'ภูเก็ต': 9396,
+      krabi: 7023, 'กระบี่': 7023,
+      'hua hin': 11278, 'หัวหิน': 11278,
+      tokyo: 6419, seoul: 14690, singapore: 11419, 'hong kong': 4543,
+      london: 17072, paris: 16808
+    };
+
+    (function cngInitDates(){
+      const inEl = document.getElementById('checkin');
+      const outEl = document.getElementById('checkout');
+      if(!inEl || !outEl) return;
+      const today = new Date();
+      const tomorrow = new Date(Date.now() + 86400000);
+      const fmt = d => d.toISOString().slice(0,10);
+      inEl.value = fmt(today);
+      outEl.value = fmt(tomorrow);
+      inEl.min = fmt(today);
+      outEl.min = fmt(tomorrow);
+      inEl.addEventListener('change', () => {
+        const ci = new Date(inEl.value);
+        const co = new Date(outEl.value);
+        if (co <= ci) {
+          const next = new Date(ci.getTime() + 86400000);
+          outEl.value = fmt(next);
+          outEl.min = fmt(next);
+        }
+      });
+    })();
+
+    document.getElementById('hotel-search')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = document.getElementById('q').value.trim();
+      const checkin = document.getElementById('checkin').value;
+      const checkout = document.getElementById('checkout').value;
+      const rooms = document.getElementById('rooms').value || 1;
+      const adults = document.getElementById('adults').value || 2;
+      const children = document.getElementById('children').value || 0;
+      const currency = document.getElementById('currency').value || 'USD';
+
+      const cityFromMap = CNG_CITY_MAP[q.toLowerCase()];
+      const u = new URL(location.origin + '/search.html');
+      if (cityFromMap) u.searchParams.set('cityid', cityFromMap); else u.searchParams.set('q', q);
+      u.searchParams.set('checkin', checkin);
+      u.searchParams.set('checkout', checkout);
+      u.searchParams.set('rooms', rooms);
+      u.searchParams.set('adults', adults);
+      u.searchParams.set('children', children);
+      u.searchParams.set('currency', currency);
+      u.searchParams.set('sort', 'Recommended');
+      u.searchParams.set('max', '30');
+
+      location.href = u.toString();
+    });
+    // ===== /Search Box Script =====
   </script>
 </body>
 </html>
