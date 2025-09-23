@@ -1,141 +1,127 @@
 // api/suggest.js
-// Robust suggest endpoint with resilient city data loading + in-memory cache
+// Robust city suggest endpoint with cache + fallback
 
-export const config = {
-  runtime: "edge", // เร็ว และเพียงพอสำหรับงานอ่าน JSON
-};
-
-const DEFAULT_DATA_URL =
+// ---- CONFIG ----
+const FALLBACK_RAW_URL =
   "https://raw.githubusercontent.com/osophasin-ctrl/click-and-go/main/data/cities_min.json";
 
+const MAX_ITEMS = 15;         // จำนวนรายการที่ส่งกลับสูงสุด
+const CACHE_TTL_MS = 15 * 60 * 1000; // cache 15 นาที
+
+// ---- SIMPLE MEMORY CACHE ----
 let memoryCache = {
   loadedAt: 0,
-  items: null,
+  items: null, // array of { id, th, en, countryId }
 };
 
-async function loadCityData() {
-  // ใช้ cache ถ้ายังไม่เกิน 15 นาที
-  const FIFTEEN_MIN = 15 * 60 * 1000;
-  if (memoryCache.items && Date.now() - memoryCache.loadedAt < FIFTEEN_MIN) {
-    return memoryCache.items;
-  }
+// ---- HELPERS ----
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-  const sources = [];
-  // 1) ใช้ ENV ถ้ากำหนด (เช่น https://clickandgo.asia/data/cities_min.json)
-  if (process.env.CITY_DATA_URL) {
-    sources.push(process.env.CITY_DATA_URL);
-  }
-  // 2) ลองไฟล์บนโดเมนโปรดักชันโดยตรง (กันกรณี ENV ไม่ได้ตั้ง)
-  sources.push("https://clickandgo.asia/data/cities_min.json");
-  // 3) Fallback GitHub Raw (อ่านได้แน่)
-  sources.push(DEFAULT_DATA_URL);
+function norm(s) {
+  return (s ?? "").toString().trim().toLowerCase();
+}
 
-  let lastErr = null;
+// Map เป็นโครงเดียวกับที่หน้าเว็บชอบใช้
+function mapCity(c) {
+  return {
+    city_id: c.id,
+    city_name: c.th,
+    city_name_en: c.en,
+    country_id: c.countryId,
+    // เผื่อ component อื่น ๆ ใช้รูปแบบ label/value
+    label: c.th || c.en,
+    value: c.id,
+  };
+}
 
-  for (const url of sources) {
-    try {
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error(`Fetch failed ${res.status} ${res.statusText}`);
-      const data = await res.json();
+async function fetchJson(url) {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  return res.json();
+}
 
-      // normalize ให้กลายเป็น array ของ { id, name, countryId, raw }
-      const items = Array.isArray(data) ? data : data.items || data.cities || [];
-      const normalized = items
-        .map((x) => {
-          // รองรับหลายโครงสร้าง
-          const id =
-            x.city_id ?? x.cityId ?? x.id ?? x.CityId ?? x.CityID ?? null;
+async function loadCityData(debug = false) {
+  // ใช้ cache ถ้ายังไม่หมดอายุ
+  const now = Date.now();
+  if (memoryCache.items && now - memoryCache.loadedAt < CACHE_TTL_MS) return;
 
-          const nameTH =
-            x.city_name_th ?? x.city_name ?? x.name_th ?? x.nameTh ?? null;
-          const nameEN =
-            x.city_name_en ?? x.name_en ?? x.nameEn ?? x.english_name ?? null;
+  const envUrl = process.env.CITY_DATA_URL;
+  const firstUrl = envUrl && envUrl.trim() ? envUrl.trim() : FALLBACK_RAW_URL;
 
-          const name =
-            (typeof nameTH === "string" && nameTH.trim()) ||
-            (typeof nameEN === "string" && nameEN.trim()) ||
-            (typeof x.name === "string" && x.name.trim()) ||
-            null;
-
-          const countryId = x.country_id ?? x.countryId ?? x.CountryId ?? null;
-
-          if (!id || !name) return null;
-
-          return {
-            id: String(id),
-            name: String(name),
-            countryId: countryId != null ? String(countryId) : null,
-            raw: x,
-          };
-        })
-        .filter(Boolean);
-
-      memoryCache = { loadedAt: Date.now(), items: normalized };
-      return normalized;
-    } catch (err) {
-      lastErr = err;
-      // ลองแหล่งถัดไป
+  try {
+    if (debug) console.log("[suggest] fetching:", firstUrl);
+    const json = await fetchJson(firstUrl);
+    if (!Array.isArray(json)) throw new Error("Invalid city JSON");
+    memoryCache.items = json;
+    memoryCache.loadedAt = Date.now();
+    if (debug) console.log("[suggest] loaded", json.length, "cities from first URL");
+  } catch (e) {
+    if (debug) console.error("[suggest] first URL failed:", e?.message || e);
+    // ถ้าล่มและยังไม่ใช่ fallback ให้ลอง fallback
+    if (firstUrl !== FALLBACK_RAW_URL) {
+      if (debug) console.log("[suggest] retrying fallback:", FALLBACK_RAW_URL);
+      await sleep(100); // กัน rate burst เล็กน้อย
+      const json = await fetchJson(FALLBACK_RAW_URL);
+      if (!Array.isArray(json)) throw new Error("Invalid fallback city JSON");
+      memoryCache.items = json;
+      memoryCache.loadedAt = Date.now();
+      if (debug) console.log("[suggest] loaded", json.length, "cities from fallback");
+    } else {
+      // สุดท้าย ถ้ายังพัง ให้ตั้งเป็นอาเรย์ว่าง
+      memoryCache.items = [];
+      memoryCache.loadedAt = Date.now();
     }
   }
-
-  throw lastErr || new Error("Unable to load city dataset from all sources.");
 }
 
-function searchCities(items, q, limit = 15) {
-  const query = (q || "").toString().trim().toLowerCase();
-  if (!query) return [];
+// ---- API HANDLER ----
+export default async function handler(req, res) {
+  // อนุญาต CORS แบบง่าย (ช่วยตอนทดสอบ)
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Cache-Control", "no-store, max-age=0");
 
-  // tokenize เบา ๆ
-  const qTokens = query.split(/\s+/).filter(Boolean);
+  const q = (req.query.query || req.query.q || "").toString().trim();
+  const debug = req.query.debug === "1" || req.query.debug === "true";
 
-  // ให้คะแนนจากการแมตช์ชื่อ
-  const scored = items
-    .map((it) => {
-      const name = it.name.toLowerCase();
-      let score = 0;
-      for (const t of qTokens) {
-        if (name === t) score += 5; // ตรงเป๊ะ
-        else if (name.startsWith(t)) score += 3;
-        else if (name.includes(t)) score += 1;
-      }
-      return { it, score };
-    })
-    .filter((x) => x.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit)
-    .map(({ it }) => ({
-      cityId: it.id,
-      cityName: it.name,
-      countryId: it.countryId,
-    }));
-
-  return scored;
-}
-
-export default async (req) => {
   try {
-    const { searchParams } = new URL(req.url);
-    const query = searchParams.get("query") || searchParams.get("q") || "";
+    await loadCityData(debug);
 
-    // โหลดข้อมูลเมือง (มี cache)
-    const items = await loadCityData();
+    if (!q) {
+      return res.status(200).json({ ok: true, items: [] });
+    }
 
-    const results = searchCities(items, query, 20);
+    const nq = norm(q);
+    const items = memoryCache.items || [];
 
-    // กัน cache ที่ edge/CDN
-    const headers = new Headers();
-    headers.set("Cache-Control", "no-store, max-age=0");
+    // ถ้าผู้ใช้กรอกเป็นตัวเลข ลอง match id ตรง ๆ ก่อน
+    let result = [];
+    if (/^\d+$/.test(nq)) {
+      const idNum = Number(nq);
+      result = items.filter((c) => c.id === idNum).slice(0, MAX_ITEMS).map(mapCity);
+    }
 
-    return new Response(
-      JSON.stringify({ ok: true, items: results }),
-      { status: 200, headers }
-    );
-  } catch (err) {
-    const headers = new Headers();
-    headers.set("Cache-Control", "no-store, max-age=0");
-    return new Response(
-      JSON.stringify({ ok: false, error: String(err && err.message || err) }),
-      { status: 500, headers }
-    );
+    // ถ้ายังว่าง ให้ค้นหาด้วยข้อความ (ไทย/อังกฤษ)
+    if (result.length === 0) {
+      result = items
+        .filter((c) => {
+          const th = norm(c.th);
+          const en = norm(c.en);
+          // match แบบ contains และให้คะแนนเริ่มต้นด้วยก่อน
+          return (
+            th.startsWith(nq) ||
+            en.startsWith(nq) ||
+            th.includes(nq) ||
+            en.includes(nq)
+          );
+        })
+        .slice(0, MAX_ITEMS)
+        .map(mapCity);
+    }
+
+    if (debug) console.log(`[suggest] q="${q}" → ${result.length} results`);
+    return res.status(200).json({ ok: true, items: result });
+  } catch (e) {
+    if (debug) console.error("[suggest] error:", e?.message || e);
+    return res.status(200).json({ ok: true, items: [] }); // ส่งโครงเดียวกันเพื่อกันหน้าเว็บพัง
   }
-};
+}
