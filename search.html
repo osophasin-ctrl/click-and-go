@@ -29,6 +29,11 @@
     .skeleton::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:shimmer 1.2s infinite}
     @keyframes shimmer{100%{transform:translateX(100%)}}
     .line{height:12px;border-radius:6px;margin:8px 0}
+
+    /* controls แถวบน */
+    #controls{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}
+    #controls label{display:flex;align-items:center;gap:6px;font-size:14px}
+    #controls select{padding:6px 8px;border:1px solid #ddd;border-radius:8px}
   </style>
 </head>
 <body>
@@ -42,6 +47,34 @@
   <main class="wrap">
     <h1 class="title">ผลการค้นหาโรงแรม</h1>
     <p id="summary" class="sub">กำลังโหลด...</p>
+
+    <!-- แถบตัวกรองบน -->
+    <div id="controls">
+      <label>เรียงโดย
+        <select id="ctl-sort">
+          <option value="PriceAsc">ราคาต่ำ → สูง</option>
+          <option value="PriceDesc">ราคาสูง → ต่ำ</option>
+          <option value="Recommended">แนะนำ</option>
+        </select>
+      </label>
+      <label>สกุลเงิน
+        <select id="ctl-currency">
+          <option>USD</option>
+          <option>THB</option>
+          <option>EUR</option>
+          <option>JPY</option>
+          <option>SGD</option>
+        </select>
+      </label>
+      <label>แสดง
+        <select id="ctl-max">
+          <option>10</option>
+          <option selected>30</option>
+          <option>50</option>
+        </select> รายการ
+      </label>
+    </div>
+
     <section id="grid" class="grid"></section>
   </main>
 
@@ -94,7 +127,7 @@
 
     async function load() {
       renderSkeleton();
-      // หมายเหตุ: backend ปัจจุบันใช้ชื่อพารามิเตอร์เป็น 'cityid' (ตัวเล็กทั้งหมด)
+      // backend ปัจจุบันใช้ชื่อพารามิเตอร์เป็น 'cityid' (ตัวเล็กทั้งหมด)
       const qs = new URLSearchParams({
         cityid: cityId, checkin, checkout, rooms, adults, children, currency, sort, max
       });
@@ -129,16 +162,26 @@
       grid.innerHTML = items.map(card).join('');
     }
 
+    function formatMoney(value, curr) {
+      try {
+        return new Intl.NumberFormat(curr === 'THB' ? 'th-TH' : 'en-US', {
+          style: 'currency', currency: curr, maximumFractionDigits: 0
+        }).format(Number(value));
+      } catch(_) {
+        return `${Number(value).toLocaleString()} ${curr}`;
+      }
+    }
+
     function card(h) {
       const name    = h.name || h.hotelName || '-';
-      const img     = h.imageUrl || h.thumbnailUrl || (h.images?.[0]?.url) || 'https://picsum.photos/800/450?blur=2';
+      const img     = h.imageUrl || h.thumbnailUrl || (h.images?.[0]?.url || h.images?.[0]) || 'https://picsum.photos/800/450?blur=2';
       const starsN  = Math.max(0, Math.floor(Number(h.starRating || h.stars || 0)));
       const stars   = '★'.repeat(starsN);
       const score   = (h.reviewScore ?? h.rating ?? null);
       const review  = (score != null) ? ` · คะแนน ${score}` : '';
-      const curr    = h.currency || currency || '';
+      const curr    = (h.currency || currency || 'USD').toUpperCase();
       const priceV  = (h.priceFrom ?? h.price ?? null);
-      const price   = (priceV != null) ? `${Number(priceV).toLocaleString()} ${curr}` : '-';
+      const price   = (priceV != null) ? formatMoney(priceV, curr) : '-';
       const link    = h.deeplink || h.deepLink || h.url || '#';
 
       return `
@@ -154,6 +197,24 @@
           </div>
         </article>`;
     }
+
+    // ตั้งค่าเริ่มต้นให้ controls ตาม URL + bind event
+    window.addEventListener('DOMContentLoaded', () => {
+      const selSort = document.getElementById('ctl-sort');
+      const selCurr = document.getElementById('ctl-currency');
+      const selMax  = document.getElementById('ctl-max');
+      if (selSort) selSort.value = sort;
+      if (selCurr) selCurr.value = currency;
+      if (selMax)  selMax.value  = String(max);
+
+      [selSort, selCurr, selMax].forEach(el => el && el.addEventListener('change', () => {
+        const u = new URL(location.href);
+        u.searchParams.set('sort', selSort.value);
+        u.searchParams.set('currency', selCurr.value);
+        u.searchParams.set('max', selMax.value);
+        location.href = u.toString();
+      }));
+    });
 
     load();
   </script>
