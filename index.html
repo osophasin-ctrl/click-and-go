@@ -3,146 +3,352 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว</title>
-  <meta name="description" content="Click & Go ช่วยค้นหาและเปรียบเทียบราคาโรงแรมจากหลาย OTA พร้อมลิงก์ไปจองทันที ครอบคลุมปลายทางยอดนิยมทั้งในไทยและต่างประเทศ" />
-  <link rel="icon" href="favicon.ico" />
-  <link rel="stylesheet" href="style.css" />
+  <title>Click & Go – เปรียบเทียบราคาโรงแรม จองง่าย</title>
+  <meta name="description" content="ค้นหาและเปรียบเทียบราคาโรงแรมแบบเรียลไทม์จากหลายผู้ให้บริการ พร้อมลิงก์จองทันที ใช้งานง่ายทั้งมือถือและคอมพิวเตอร์" />
+  <link rel="canonical" href="https://clickandgo.asia/index.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Click & Go" />
+  <meta property="og:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่าย" />
+  <meta property="og:description" content="ค้นหาและเปรียบเทียบราคาโรงแรมแบบเรียลไทม์จากหลายผู้ให้บริการ พร้อมลิงก์จองทันที" />
+  <meta property="og:url" content="https://clickandgo.asia/index.html" />
+  <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg" />
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/style.css">
+
+  <!-- Flatpickr -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
+
   <style>
-    .mock-wrap{ max-width:1030px; width:100%; margin:0 auto; }
-    .mock-box{ width:100%; background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.08); padding:16px; display:flex; flex-direction:column; justify-content:center; }
-    .mock-title{ margin:0 0 6px; font-weight:800; font-size:22px; }
-    .mock-sub{ margin:0 0 12px; color:#666; }
-    .mock-row{ display:grid; gap:10px; align-items:center; grid-template-columns:1fr 1fr; }
-    .full-row{ grid-column:1 / -1; }
-    .mock-input, .guest-input, .mock-btn{ height:44px; border:1px solid #d7d7d7; border-radius:8px; padding:0 12px; background:#fff; font-size:15px; }
-    .mock-input{ width:100%; } .guest-input{ text-align:left; cursor:pointer; }
-    .mock-btn{ background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; } .mock-btn:active{ transform:translateY(1px); }
-    .btn-wide{ width:100%; }
-    .field{ position:relative; } .field-label{ position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none; }
-    .has-label .mock-input,.has-label .flatpickr-input{ height:56px; padding-top:18px; }
-    .suggest-wrap{ position:relative; } .suggest-panel{ position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,.08); max-height:260px; overflow:auto; z-index:999; display:none; }
-    .suggest-item{ display:flex; justify-content:space-between; align-items:center; padding:10px 12px; cursor:pointer; } .suggest-item:hover{ background:#f6f6f6; }
-    .s-label{ font-weight:600; } .s-sub{ color:#777; font-size:13px; }
-    .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:999; }
-    .modal{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; width:min(92vw,420px); box-shadow:0 12px 24px rgba(0,0,0,.2); z-index:1000; display:none; }
-    .modal-header,.modal-footer{ padding:14px 16px; } .modal-header{ border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
-    .modal-title{ font-weight:700; font-size:18px; } .modal-body{ padding:10px 16px 0 16px; }
-    .row-ctrl{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; } .row-ctrl + .row-ctrl{ border-top:1px dashed #eee; }
-    .label-wrap{ display:flex; flex-direction:column; gap:2px; } .label-wrap small{ color:#666; }
-    .counter{ display:flex; align-items:center; gap:10px; } .btn-ctrl{ width:36px; height:36px; border-radius:50%; border:1px solid #ccc; background:#fff; font-size:18px; cursor:pointer; }
-    .count{ min-width:20px; text-align:center; font-weight:700; }
-    .btn-outline{ border:1px solid #bbb; background:#fff; color:#333; border-radius:8px; padding:8px 14px; } .btn-primary{ border:0; background:#0ea5a0; color:#fff; border-radius:8px; padding:8px 14px; }
-    @media (max-width:640px){ .mock-row{ grid-template-columns:1fr; } }
+    /* ====== เสริมสไตล์สำหรับกล่องแนะนำ ====== */
+    .suggest-wrap { position: relative; }
+    .suggest-panel {
+      position: absolute; left: 0; right: 0; top: 100%;
+      background: #fff; border: 1px solid #e5e7eb; border-top: none;
+      border-radius: 0 0 .5rem .5rem; max-height: 300px; overflow: auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,.08); z-index: 30; display: none;
+    }
+    .suggest-item {
+      padding: .75rem .9rem; cursor: pointer; line-height: 1.4;
+      display: grid; grid-template-columns: 1fr auto; gap: .5rem;
+    }
+    .suggest-item:hover { background: #f3f4f6; }
+    .suggest-title { font-weight: 600; }
+    .suggest-sub { font-size: .9rem; color: #6b7280; }
+    .hidden { display: none !important; }
+
+    /* ปุ่มผู้เข้าพักให้หน้าตาเหมือน input */
+    .guest-input {
+      width: 100%; padding: .9rem 1rem; border-radius: .5rem;
+      border: 1px solid #e5e7eb; text-align: left; background: #fff;
+    }
+
+    /* โมดัลผู้เข้าพักแบบง่าย */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:40}
+    .modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border-radius:.75rem;width:min(520px,92vw);display:none;z-index:50}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #eee}
+    .modal-body{padding:12px 16px 16px}
+    .row{display:flex;justify-content:space-between;align-items:center;padding:10px 0}
+    .counter{display:flex;gap:12px;align-items:center}
+    .btn{padding:.55rem .9rem;border-radius:.5rem;border:1px solid #e5e7eb;background:#fff;cursor:pointer}
+    .btn-prim{background:#10b981;color:#fff;border-color:#10b981}
   </style>
 </head>
 <body>
-  <header class="site-header">
+  <!-- Header -->
+  <header class="site-header" role="banner">
     <div class="inner">
-      <a href="index.html" class="brand"><img src="logo.png" alt="" width="40" height="40"/><span class="brand-text">Click & Go</span></a>
-      <nav class="main-nav"><a href="index.html" aria-current="page">หน้าแรก</a><a href="deals.html">โปรโมชั่น</a>
-        <div class="lang"><button class="lang-btn">ภาษา ▾</button><div class="lang-menu"><a href="#" aria-current="true">ไทย</a><a href="/en/index.html">English</a></div></div>
+      <a href="/index.html" class="brand" aria-label="Click & Go">
+        <img src="/logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
+      </a>
+
+      <nav class="main-nav" aria-label="เมนูหลัก">
+        <a href="/index.html" aria-current="page">หน้าแรก</a>
+        <a href="/deals.html">โปรโมชั่น</a>
+        <div class="lang">
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="#" aria-current="true">ไทย</a>
+            <a role="menuitem" href="/en/index.html">English</a>
+          </div>
+        </div>
       </nav>
     </div>
   </header>
 
   <main class="container">
-    <section class="hero"><img class="hero-img" src="hero-bg.jpg" alt="Click & Go Thailand"></section>
-
-    <section style="margin:24px 0">
-      <h2 class="section-title">ค้นหาโรงแรม</h2>
-      <div class="mock-wrap"><div class="mock-box">
-        <h3 class="mock-title">ค้นหาดีลที่ใช่สำหรับคุณ</h3>
-        <p class="mock-sub">พิมพ์ชื่อเมืองหรือโรงแรม เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา</p>
-
-        <!-- ส่งแบบ GET ไป search.html เสมอ -->
-        <form id="cgForm" class="mock-row" method="GET" action="search.html" autocomplete="off">
-          <div class="suggest-wrap full-row">
-            <input type="text" id="dest" name="q" class="mock-input" placeholder="ปลายทาง เช่น กรุงเทพฯ หรือชื่อโรงแรม" aria-label="ปลายทาง">
-            <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="คำแนะนำ"></div>
-          </div>
-          <div class="field has-label"><span class="field-label">เช็คอิน</span><input type="text" id="ci" name="checkin" class="mock-input" readonly></div>
-          <div class="field has-label"><span class="field-label">เช็คเอาท์</span><input type="text" id="co" name="checkout" class="mock-input" readonly></div>
-          <button type="button" id="guestBtn" class="guest-input full-row">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
-          <button type="submit" class="mock-btn btn-wide full-row">ค้นหา</button>
-          <input type="hidden" id="rooms"   name="rooms"   value="1">
-          <input type="hidden" id="adults"  name="adults"  value="2">
-          <input type="hidden" id="children"name="children"value="0">
-          <input type="hidden"              name="lang"    value="th-th"><!-- สำคัญ -->
-        </form>
-      </div></div>
+    <!-- Hero -->
+    <section class="hero" aria-label="ภาพแบนเนอร์">
+      <img class="hero-img" src="/hero-bg.jpg" alt="Click & Go" />
     </section>
 
-    <!-- ไทย -->
+    <!-- Search Box -->
+    <section style="margin:24px 0">
+      <h2 class="section-title">ค้นหาโรงแรม</h2>
+      <div class="mock-wrap">
+        <div class="mock-box">
+          <h3 class="mock-title">ค้นหาดีลที่ใช่สำหรับคุณ</h3>
+          <p class="mock-sub">พิมพ์ชื่อเมืองหรือโรงแรม เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา</p>
+
+          <form id="cgForm" class="mock-row" method="GET" action="/search.html" autocomplete="off">
+            <div class="suggest-wrap full-row">
+              <input type="text" id="dest" class="mock-input" placeholder="เช่น กรุงเทพ, เชียงใหม่ หรือชื่อโรงแรม" aria-label="ปลายทาง" />
+              <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="ตัวเลือกแนะนำ"></div>
+            </div>
+
+            <div class="field has-label">
+              <span class="field-label">เช็คอิน</span>
+              <input type="text" id="ci" class="mock-input" aria-label="เช็คอิน" readonly>
+            </div>
+            <div class="field has-label">
+              <span class="field-label">เช็คเอาท์</span>
+              <input type="text" id="co" class="mock-input" aria-label="เช็คเอาท์" readonly>
+            </div>
+
+            <button type="button" id="guestBtn" class="guest-input full-row">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
+            <button type="submit" class="mock-btn btn-wide full-row">ค้นหา</button>
+
+            <!-- ส่งค่าพารามิเตอร์ -->
+            <input type="hidden" id="rooms" name="rooms" value="1">
+            <input type="hidden" id="adults" name="adults" value="2">
+            <input type="hidden" id="children" name="children" value="0">
+            <input type="hidden" id="cityId" name="cityId" value="">
+            <input type="hidden" name="lang" value="th-th">
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top destinations in Thailand -->
     <section>
       <h2 class="section-title">ปลายทางยอดนิยมในไทย</h2>
       <div class="city-grid">
-        <a class="city-card" href="bangkok.html"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
-        <a class="city-card" href="chiangmai.html"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
-        <a class="city-card" href="pattaya.html"><figure><img src="pattaya-tile.webp" alt="พัทยา"><figcaption>พัทยา</figcaption></figure></a>
-        <a class="city-card" href="phuket.html"><figure><img src="phuket-tile.webp" alt="ภูเก็ต"><figcaption>ภูเก็ต</figcaption></figure></a>
-        <a class="city-card" href="krabi.html"><figure><img src="krabi-tile.webp" alt="กระบี่"><figcaption>กระบี่</figcaption></figure></a>
-        <a class="city-card" href="hua-hin.html"><figure><img src="huahin-tile.webp" alt="หัวหิน"><figcaption>หัวหิน</figcaption></figure></a>
+        <a class="city-card" href="/bangkok.html"><figure><img src="/bangkok-tile.webp" alt="กรุงเทพ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
+        <a class="city-card" href="/chiangmai.html"><figure><img src="/chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
+        <a class="city-card" href="/pattaya.html"><figure><img src="/pattaya-tile.webp" alt="พัทยา"><figcaption>พัทยา</figcaption></figure></a>
+        <a class="city-card" href="/phuket.html"><figure><img src="/phuket-tile.webp" alt="ภูเก็ต"><figcaption>ภูเก็ต</figcaption></figure></a>
+        <a class="city-card" href="/krabi.html"><figure><img src="/krabi-tile.webp" alt="กระบี่"><figcaption>กระบี่</figcaption></figure></a>
+        <a class="city-card" href="/hua-hin.html"><figure><img src="/huahin-tile.webp" alt="หัวหิน"><figcaption>หัวหิน</figcaption></figure></a>
       </div>
     </section>
 
-    <!-- ต่างประเทศ -->
-    <section>
-      <h2 class="section-title">เมืองยอดฮิตในต่างประเทศ</h2>
-      <div class="city-grid">
-        <a class="city-card" href="tokyo.html"><figure><img src="tokyo-tile.webp" alt="โตเกียว"><figcaption>โตเกียว</figcaption></figure></a>
-        <a class="city-card" href="seoul.html"><figure><img src="seoul-tile.webp" alt="โซล"><figcaption>โซล</figcaption></figure></a>
-        <a class="city-card" href="singapore.html"><figure><img src="singapore-tile.webp" alt="สิงคโปร์"><figcaption>สิงคโปร์</figcaption></figure></a>
-        <a class="city-card" href="hongkong.html"><figure><img src="hongkong-tile.webp" alt="ฮ่องกง"><figcaption>ฮ่องกง</figcaption></figure></a>
-        <a class="city-card" href="london.html"><figure><img src="london-tile.webp" alt="ลอนดอน"><figcaption>ลอนดอน</figcaption></figure></a>
-        <a class="city-card" href="paris.html"><figure><img src="paris-tile.webp" alt="ปารีส"><figcaption>ปารีส</figcaption></figure></a>
-      </div>
-    </section>
-
+    <!-- Why choose -->
     <section>
       <h2 class="section-title">ทำไมต้อง Click & Go</h2>
       <div class="features">
-        <div class="feature"><h3>ค้นหาข้อเสนอที่ดีที่สุด</h3><p>เชื่อมต่อผู้ให้บริการทั่วโลก ค้นหาราคาแบบเรียลไทม์</p></div>
-        <div class="feature"><h3>ขั้นตอนการจองไม่ยุ่งยาก</h3><p>กดลิงก์ตรงไปยังหน้าโรงแรมของพันธมิตรได้ทันที</p></div>
-        <div class="feature"><h3>รองรับทุกอุปกรณ์</h3><p>ใช้งานง่าย ไม่ว่าจะบนมือถือ แท็บเล็ต หรือคอมพิวเตอร์</p></div>
+        <div class="feature"><h3>ดีลดีที่สุด</h3><p>เชื่อมต่อผู้ให้บริการระดับโลก แสดงราคาจริงแบบเรียลไทม์</p></div>
+        <div class="feature"><h3>จองง่าย</h3><p>คลิกไปหน้าจองของพาร์ทเนอร์ได้ทันที</p></div>
+        <div class="feature"><h3>ใช้งานได้ทุกที่</h3><p>รองรับมือถือ แท็บเล็ต และคอมพิวเตอร์</p></div>
       </div>
     </section>
   </main>
 
-  <!-- Guest Modal -->
-  <div id="guestBackdrop" class="modal-backdrop" aria-hidden="true"></div>
-  <div id="guestModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="guestTitle">
-    <div class="modal-header"><div id="guestTitle" class="modal-title">ผู้เข้าพัก</div><button type="button" class="btn-outline" id="btnCloseX">×</button></div>
-    <div class="modal-body">
-      <div class="row-ctrl"><div class="label-wrap"><strong>ห้อง</strong><small>จำนวนห้องพัก</small></div>
-        <div class="counter"><button class="btn-ctrl" data-type="rooms" data-op="minus">−</button><span class="count" id="roomsCount">1</span><button class="btn-ctrl" data-type="rooms" data-op="plus">+</button></div></div>
-      <div class="row-ctrl"><div class="label-wrap"><strong>ผู้ใหญ่</strong><small>อายุ 18 ปีขึ้นไป</small></div>
-        <div class="counter"><button class="btn-ctrl" data-type="adults" data-op="minus">−</button><span class="count" id="adultsCount">2</span><button class="btn-ctrl" data-type="adults" data-op="plus">+</button></div></div>
-      <div class="row-ctrl"><div class="label-wrap"><strong>เด็ก</strong><small>อายุ 0–17 ปี</small></div>
-        <div class="counter"><button class="btn-ctrl" data-type="children" data-op="minus">−</button><span class="count" id="childrenCount">0</span><button class="btn-ctrl" data-type="children" data-op="plus">+</button></div></div>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="/privacy.html">นโยบายความเป็นส่วนตัว</a> ·
+        <a href="/terms.html">เงื่อนไขการใช้งาน</a> ·
+        <a href="/affiliate.html">ข้อกำหนดพาร์ทเนอร์</a> ·
+        <a href="/about.html">เกี่ยวกับเรา</a> ·
+        <a href="/contact.html">ติดต่อ</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
     </div>
-    <div class="modal-footer"><button class="btn-outline" id="btnCancel">ยกเลิก</button><button class="btn-primary" id="btnSaveGuests">บันทึก</button></div>
-  </div>
-
-  <footer class="site-footer"><div class="container" style="text-align:center">
-    <div class="footer-links">
-      <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> ·
-      <a href="affiliate.html">Affiliate Disclosure</a> · <a href="about.html">About us</a> ·
-      <a href="contact.html">Contact</a> · <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
-    </div></div>
   </footer>
 
+  <!-- ====== Scripts ====== -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+
   <script>
-  (function(){const btn=document.querySelector('.lang-btn'),menu=document.querySelector('.lang-menu');if(!btn||!menu)return;function closeM(){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}btn.addEventListener('click',e=>{e.stopPropagation();const o=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(o));});document.addEventListener('click',closeM);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});})();
-  (function(){const input=document.getElementById('dest'),panel=document.getElementById('suggestPanel');if(!input||!panel)return;let t=null;function hide(){panel.style.display='none';panel.innerHTML='';}function show(){panel.style.display='block';}
-    input.addEventListener('input',()=>{const q=input.value.trim();if(t)clearTimeout(t);if(!q)return hide();t=setTimeout(async()=>{try{const r=await fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=th-th`);const d=await r.json();if(!d.ok||!d.items)return hide();panel.innerHTML=d.items.map(it=>`<div class="suggest-item" data-label="${it.label.replace(/"/g,'&quot;')}"><div class="s-label">${it.label}</div><div class="s-sub">${it.subtitle||''}</div></div>`).join('');show();panel.querySelectorAll('.suggest-item').forEach(el=>{el.addEventListener('click',()=>{input.value=el.getAttribute('data-label')||'';hide();});});}catch(e){hide();}},180);});document.addEventListener('click',e=>{if(!panel.contains(e.target)&&e.target!==input)hide();});})();
-  (function(){const ONE=86400000,ci=document.getElementById('ci'),co=document.getElementById('co'),fmt=d=>d.toISOString().slice(0,10),today=new Date(),tom=new Date(Date.now()+ONE);let inP=null,outP=null;if(window.flatpickr){inP=flatpickr("#ci",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",onChange(d){if(d[0]){const n=new Date(d[0].getTime()+ONE);outP.set('minDate',n);if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0])outP.setDate(n,true);}}});outP=flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:tom});inP.setDate(today,true);outP.setDate(tom,true);}else{ci.removeAttribute('readonly');co.removeAttribute('readonly');ci.type='date';co.type='date';ci.value=fmt(today);ci.min=fmt(today);co.value=fmt(tom);co.min=fmt(tom);ci.addEventListener('change',()=>{const a=new Date(ci.value||fmt(today)),n=new Date(a.getTime()+ONE);if(!co.value||new Date(co.value)<=a){co.value=fmt(n);co.min=fmt(n);}});}
-    let rooms=1,adults=2,children=0;const btn=document.getElementById('guestBtn'),roomsC=document.getElementById('roomsCount'),adultsC=document.getElementById('adultsCount'),childrenC=document.getElementById('childrenCount'),hR=document.getElementById('rooms'),hA=document.getElementById('adults'),hC=document.getElementById('children'),modal=document.getElementById('guestModal'),backdrop=document.getElementById('guestBackdrop');function open(){roomsC.textContent=rooms;adultsC.textContent=adults;childrenC.textContent=children;modal.style.display='block';backdrop.style.display='block';}function close(){modal.style.display='none';backdrop.style.display='none';}function upd(){btn.textContent=`${rooms} ห้อง, ${adults} ผู้ใหญ่, ${children} เด็ก`;}upd();btn.addEventListener('click',open);document.getElementById('btnCloseX').addEventListener('click',close);document.getElementById('btnCancel').addEventListener('click',close);backdrop.addEventListener('click',close);document.querySelectorAll('.btn-ctrl').forEach(b=>{b.addEventListener('click',()=>{const t=b.getAttribute('data-type'),op=b.getAttribute('data-op');let v=0,min=0,max=10;if(t==='rooms'){v=rooms;min=1}if(t==='adults'){v=adults;min=1}if(t==='children'){v=children;min=0}if(op==='plus'&&v<max)v++;if(op==='minus'&&v>min)v--;if(t==='rooms'){rooms=v;roomsC.textContent=v}if(t==='adults'){adults=v;adultsC.textContent=v}if(t==='children'){children=v;childrenC.textContent=v}});});document.getElementById('btnSaveGuests').addEventListener('click',()=>{hR.value=rooms;hA.value=adults;hC.value=children;upd();close();});
-    document.getElementById('cgForm').addEventListener('submit',e=>{const q=document.getElementById('dest');if(!q.value) q.value='กรุงเทพ';});
-  })();
+    // ------------------ Datepickers ------------------
+    const ci = document.getElementById('ci');
+    const co = document.getElementById('co');
+
+    const today = new Date();
+    const tomorrow = new Date(today.getTime() + 86400000);
+
+    const fpIn = flatpickr(ci, {
+      dateFormat: 'Y-m-d',
+      minDate: today,
+      defaultDate: today,
+      locale: 'th',
+      onChange: (sel) => {
+        const minCo = new Date(sel[0].getTime() + 86400000);
+        fpOut.set('minDate', minCo);
+        if (!fpOut.selectedDates.length || fpOut.selectedDates[0] <= minCo) {
+          fpOut.setDate(minCo, true);
+        }
+      }
+    });
+
+    const fpOut = flatpickr(co, {
+      dateFormat: 'Y-m-d',
+      minDate: tomorrow,
+      defaultDate: tomorrow,
+      locale: 'th'
+    });
+
+    // ------------------ Guests modal (simple) ------------------
+    const guestBtn = document.getElementById('guestBtn');
+    const roomsEl = document.getElementById('rooms');
+    const adultsEl = document.getElementById('adults');
+    const childrenEl = document.getElementById('children');
+
+    const back = document.createElement('div');
+    back.className = 'modal-backdrop';
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+      <div class="modal-header">
+        <strong>ผู้เข้าพัก</strong>
+        <button class="btn" id="btnCloseX">ปิด</button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div>ห้อง</div>
+          <div class="counter">
+            <button class="btn" data-type="rooms" data-op="-">-</button>
+            <span id="roomsVal">1</span>
+            <button class="btn" data-type="rooms" data-op="+">+</button>
+          </div>
+        </div>
+        <div class="row">
+          <div>ผู้ใหญ่</div>
+          <div class="counter">
+            <button class="btn" data-type="adults" data-op="-">-</button>
+            <span id="adultsVal">2</span>
+            <button class="btn" data-type="adults" data-op="+">+</button>
+          </div>
+        </div>
+        <div class="row">
+          <div>เด็ก</div>
+          <div class="counter">
+            <button class="btn" data-type="children" data-op="-">-</button>
+            <span id="childrenVal">0</span>
+            <button class="btn" data-type="children" data-op="+">+</button>
+          </div>
+        </div>
+        <div style="text-align:right;margin-top:12px">
+          <button class="btn btn-prim" id="btnDoneGuest">เสร็จสิ้น</button>
+        </div>
+      </div>
+    `;
+    document.body.append(back, modal);
+
+    function openGuest() { back.style.display = 'block'; modal.style.display = 'block'; }
+    function closeGuest(){ back.style.display = 'none'; modal.style.display = 'none'; }
+
+    guestBtn.addEventListener('click', openGuest);
+    back.addEventListener('click', closeGuest);
+    modal.querySelector('#btnCloseX').addEventListener('click', closeGuest);
+
+    modal.addEventListener('click', (e) => {
+      const t = e.target;
+      if (t.matches('button[data-type]')) {
+        const type = t.getAttribute('data-type');
+        const op = t.getAttribute('data-op');
+        const valEl = modal.querySelector('#' + type + 'Val');
+        let v = parseInt(valEl.textContent || '0', 10);
+        v = op === '+' ? v + 1 : v - 1;
+        if (type === 'rooms') v = Math.min(Math.max(v, 1), 8);
+        if (type === 'adults') v = Math.min(Math.max(v, 1), 16);
+        if (type === 'children') v = Math.min(Math.max(v, 0), 8);
+        valEl.textContent = v;
+      }
+    });
+
+    modal.querySelector('#btnDoneGuest').addEventListener('click', () => {
+      const r = parseInt(modal.querySelector('#roomsVal').textContent, 10);
+      const a = parseInt(modal.querySelector('#adultsVal').textContent, 10);
+      const c = parseInt(modal.querySelector('#childrenVal').textContent, 10);
+      roomsEl.value = r; adultsEl.value = a; childrenEl.value = c;
+      guestBtn.textContent = `${r} ห้อง, ${a} ผู้ใหญ่, ${c} เด็ก`;
+      closeGuest();
+    });
+
+    // ------------------ Autocomplete (ใช้ /api/suggest.js) ------------------
+    const dest = document.getElementById('dest');
+    const panel = document.getElementById('suggestPanel');
+    const cityIdHidden = document.getElementById('cityId');
+
+    let timer = null;
+    let lastQ = '';
+
+    function showPanel(items) {
+      if (!items || !items.length) { panel.style.display = 'none'; panel.innerHTML=''; return; }
+      panel.innerHTML = items.map(it => `
+        <div class="suggest-item" role="option" data-id="${it.id}" data-city="${(it.label||it.city||'').replace(/"/g,'&quot;')}">
+          <div>
+            <div class="suggest-title">${it.label || it.city}</div>
+            <div class="suggest-sub">${it.subtitle || it.country || ''}</div>
+          </div>
+          <div class="suggest-sub">${it.id}</div>
+        </div>
+      `).join('');
+      panel.style.display = 'block';
+    }
+
+    async function fetchSuggest(q) {
+      const url = `/api/suggest.js?q=${encodeURIComponent(q)}&lang=th-th`;
+      try {
+        const res = await fetch(url, { headers: { 'Cache-Control': 'no-store' } });
+        const data = await res.json();
+        return (data && data.items) ? data.items : [];
+      } catch (e) { return []; }
+    }
+
+    dest.addEventListener('input', () => {
+      cityIdHidden.value = '';   // เคลียร์ cityId ถ้าผู้ใช้พิมพ์ต่อ
+      const q = dest.value.trim();
+      if (q.length < 2) { panel.style.display='none'; panel.innerHTML=''; return; }
+      if (q === lastQ) return;
+      lastQ = q;
+      clearTimeout(timer);
+      timer = setTimeout(async () => {
+        const items = await fetchSuggest(q);
+        showPanel(items);
+      }, 200);
+    });
+
+    panel.addEventListener('click', (e) => {
+      const item = e.target.closest('.suggest-item');
+      if (!item) return;
+      const name = item.getAttribute('data-city') || '';
+      const id = item.getAttribute('data-id') || '';
+      dest.value = name;
+      cityIdHidden.value = id;
+      panel.style.display = 'none';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!panel.contains(e.target) && e.target !== dest) {
+        panel.style.display = 'none';
+      }
+    });
+
+    // ------------------ ตรวจสอบก่อน submit ------------------
+    document.getElementById('cgForm').addEventListener('submit', (e) => {
+      // ถ้าไม่มี cityId ให้ส่งชื่อเมืองใน q เผื่อกรณีผู้ใช้ไม่กดเลือกจากรายการ
+      if (!cityIdHidden.value) {
+        // ฝั่ง /api/search.js จะใช้ q ช่วย fallback
+        const qName = dest.value.trim();
+        if (qName) {
+          // เพิ่มพารามิเตอร์ q โดย dynamic
+          const form = e.target;
+          const qHidden = document.createElement('input');
+          qHidden.type = 'hidden';
+          qHidden.name = 'q';
+          qHidden.value = qName;
+          form.appendChild(qHidden);
+        }
+      }
+    });
   </script>
 </body>
 </html>
