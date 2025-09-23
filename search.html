@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>ผลการค้นหาโรงแรม | Click & Go</title>
   <link rel="stylesheet" href="style.css"/>
-
   <style>
-    /* Layout พื้นฐาน */
     .wrap{max-width:1100px;margin:0 auto;padding:16px}
     .title{font-size:clamp(20px,3vw,28px);font-weight:800;margin:8px 0 6px}
     .sub{color:#555;margin:0 0 12px}
+    .toolbar{display:flex;gap:8px;align-items:center;margin:8px 0 16px;flex-wrap:wrap}
     .grid{display:grid;gap:16px;grid-template-columns:repeat(3,1fr)}
     @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:620px){.grid{grid-template-columns:1fr}}
@@ -23,17 +22,7 @@
     .price{font-weight:800}
     .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:#0ea5a0;color:#fff;text-decoration:none}
     .muted{color:#888}
-
-    /* Loading skeleton แบบบางเบา */
-    .skeleton{position:relative;overflow:hidden;background:#eee}
-    .skeleton::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:shimmer 1.2s infinite}
-    @keyframes shimmer{100%{transform:translateX(100%)}}
-    .line{height:12px;border-radius:6px;margin:8px 0}
-
-    /* controls แถวบน */
-    #controls{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}
-    #controls label{display:flex;align-items:center;gap:6px;font-size:14px}
-    #controls select{padding:6px 8px;border:1px solid #ddd;border-radius:8px}
+    select, .pill{height:36px;border:1px solid #d7d7d7;border-radius:8px;background:#fff;padding:0 10px}
   </style>
 </head>
 <body>
@@ -48,30 +37,23 @@
     <h1 class="title">ผลการค้นหาโรงแรม</h1>
     <p id="summary" class="sub">กำลังโหลด...</p>
 
-    <!-- แถบตัวกรองบน -->
-    <div id="controls">
+    <div class="toolbar">
       <label>เรียงโดย
-        <select id="ctl-sort">
+        <select id="sort">
           <option value="PriceAsc">ราคาต่ำ → สูง</option>
           <option value="PriceDesc">ราคาสูง → ต่ำ</option>
           <option value="Recommended">แนะนำ</option>
         </select>
       </label>
       <label>สกุลเงิน
-        <select id="ctl-currency">
-          <option>USD</option>
-          <option>THB</option>
-          <option>EUR</option>
-          <option>JPY</option>
-          <option>SGD</option>
+        <select id="cur">
+          <option>USD</option><option>THB</option><option>EUR</option><option>JPY</option>
         </select>
       </label>
       <label>แสดง
-        <select id="ctl-max">
-          <option>10</option>
-          <option selected>30</option>
-          <option>50</option>
-        </select> รายการ
+        <select id="max">
+          <option>30</option><option>15</option><option>60</option>
+        </select>
       </label>
     </div>
 
@@ -81,7 +63,7 @@
   <script>
     const $ = s => document.querySelector(s);
 
-    // แผนที่ชื่อเมืองยอดฮิต -> cityId ของ Agoda
+    // map ชื่อเมืองคร่าว ๆ -> cityId
     const CITY_MAP = {
       bangkok: 9395, 'กรุงเทพ': 9395,
       'chiang mai': 9397, 'เชียงใหม่': 9397,
@@ -92,128 +74,70 @@
       tokyo: 6419, seoul: 14690, singapore: 11419, 'hong kong': 4543, london: 17072, paris: 16808
     };
 
-    const params   = new URLSearchParams(location.search);
-    const q        = (params.get('q') || 'Bangkok').trim();
-    const cityFromQ= CITY_MAP[(q||'').toLowerCase()];
-    // อ่านได้ทั้ง cityId และ cityid จาก URL; ถ้าไม่มีให้ fallback เป็น Map/ค่าเริ่มต้น
-    const cityId   = Number(params.get('cityId') || params.get('cityid') || cityFromQ || 9395);
-    const checkin  = params.get('checkin')  || new Date().toISOString().slice(0,10);
-    const checkout = params.get('checkout') || new Date(Date.now()+86400000).toISOString().slice(0,10);
-    const rooms    = Number(params.get('rooms') || 1);
-    const adults   = Number(params.get('adults') || 2);
-    const children = Number(params.get('children') || 0);
-    const currency = (params.get('currency') || 'USD').toUpperCase();
-    const sort     = params.get('sort') || 'PriceAsc';
-    const max      = params.get('max') || '30';
+    // อ่านพารามิเตอร์จาก URL
+    const p = new URLSearchParams(location.search);
+    const q         = (p.get('q') || 'Bangkok').trim();
+    const cityid    = parseInt(p.get('cityid') || '', 10) || CITY_MAP[(q||'').toLowerCase()] || 9395;
+    const checkin   = p.get('checkin')  || new Date().toISOString().slice(0,10);
+    const checkout  = p.get('checkout') || new Date(Date.now()+86400000).toISOString().slice(0,10);
+    const rooms     = +(p.get('rooms') || 1);
+    const adults    = +(p.get('adults') || 2);
+    const children  = +(p.get('children') || 0);
+    const currency  = (p.get('currency') || 'USD').toUpperCase();
+    const lang      = (p.get('lang') || (location.pathname.startsWith('/en/') ? 'en-us' : 'th-th')).toLowerCase();
 
+    // set UI
     $('#summary').textContent =
       `${q} | วันที่: ${checkin} → ${checkout} | ผู้เข้าพัก: ${adults} ผู้ใหญ่, ${children} เด็ก, ${rooms} ห้อง`;
-
-    function renderSkeleton(n=6){
-      const grid = $('#grid');
-      grid.innerHTML = Array.from({length:n}).map(()=>`
-        <article class="card">
-          <div class="thumb skeleton"></div>
-          <div class="body">
-            <div class="line skeleton" style="height:16px;width:70%"></div>
-            <div class="line skeleton" style="width:40%"></div>
-          </div>
-          <div class="foot">
-            <div class="line skeleton" style="width:80px;height:16px"></div>
-            <div class="btn skeleton" style="width:72px;height:34px;border-radius:8px"></div>
-          </div>
-        </article>`).join('');
-    }
+    $('#cur').value = currency;
+    $('#max').value = String(p.get('max') || 30);
+    $('#sort').value = String(p.get('sort') || 'PriceAsc');
 
     async function load() {
-      renderSkeleton();
-      // backend ปัจจุบันใช้ชื่อพารามิเตอร์เป็น 'cityid' (ตัวเล็กทั้งหมด)
       const qs = new URLSearchParams({
-        cityid: cityId, checkin, checkout, rooms, adults, children, currency, sort, max
+        cityid, checkin, checkout, rooms, adults, children,
+        currency, lang,                 // ส่งภาษาต่อให้ backend
+        sort: $('#sort').value, max: $('#max').value
       });
-
-      try {
-        const res = await fetch(`/api/search?${qs.toString()}`, { headers: { 'Accept': 'application/json' } });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-        const data = await res.json();
-        // รองรับทั้ง {items:[...]} และ {results:[...]}
-        const items = Array.isArray(data?.items) ? data.items
-                    : Array.isArray(data?.results) ? data.results
-                    : [];
-        render(items);
-      } catch (err) {
-        console.error(err);
-        showError(`โหลดผลการค้นหาไม่สำเร็จ (${err.message || 'unknown error'})`);
-      }
-    }
-
-    function showError(msg) {
-      const grid = $('#grid');
-      grid.innerHTML = `<div class="muted">${msg}</div>`;
+      const res = await fetch(`/api/search?${qs.toString()}`, { headers: { 'Accept': 'application/json' }});
+      const data = await res.json();
+      render(data.items || []);
     }
 
     function render(items) {
       const grid = $('#grid');
-      if (!items.length) {
-        grid.innerHTML = `<div class="muted">ไม่พบรายการที่ตรงเงื่อนไข</div>`;
-        return;
-      }
+      if (!items.length) { grid.innerHTML = `<div class="muted">ไม่พบรายการที่ตรงเงื่อนไข</div>`; return; }
       grid.innerHTML = items.map(card).join('');
     }
 
-    function formatMoney(value, curr) {
-      try {
-        return new Intl.NumberFormat(curr === 'THB' ? 'th-TH' : 'en-US', {
-          style: 'currency', currency: curr, maximumFractionDigits: 0
-        }).format(Number(value));
-      } catch(_) {
-        return `${Number(value).toLocaleString()} ${curr}`;
-      }
-    }
-
     function card(h) {
-      const name    = h.name || h.hotelName || '-';
-      const img     = h.imageUrl || h.thumbnailUrl || (h.images?.[0]?.url || h.images?.[0]) || 'https://picsum.photos/800/450?blur=2';
-      const starsN  = Math.max(0, Math.floor(Number(h.starRating || h.stars || 0)));
-      const stars   = '★'.repeat(starsN);
-      const score   = (h.reviewScore ?? h.rating ?? null);
-      const review  = (score != null) ? ` · คะแนน ${score}` : '';
-      const curr    = (h.currency || currency || 'USD').toUpperCase();
-      const priceV  = (h.priceFrom ?? h.price ?? null);
-      const price   = (priceV != null) ? formatMoney(priceV, curr) : '-';
-      const link    = h.deeplink || h.deepLink || h.url || '#';
-
+      const stars = '★'.repeat(h.starRating || 0);
+      const review = (h.reviewScore != null) ? ` · คะแนน ${h.reviewScore}` : '';
+      const price = (h.priceFrom != null) ? `${Number(h.priceFrom).toLocaleString()} ${h.currency || ''}` : '-';
       return `
         <article class="card">
-          <img class="thumb" src="${img}" alt="${name}" loading="lazy" onerror="this.src='https://picsum.photos/800/450?blur=2'">
+          <img class="thumb" src="${h.imageUrl || 'https://picsum.photos/800/450?blur=2'}" alt="${h.name || ''}" loading="lazy">
           <div class="body">
-            <h3 class="hname">${name}</h3>
+            <h3 class="hname">${h.name || '-'}</h3>
             <div class="meta">${stars}${review}</div>
           </div>
           <div class="foot">
             <div class="price">${price}</div>
-            <a class="btn" href="${link}" target="_blank" rel="nofollow noopener">ดูดีล</a>
+            <a class="btn" href="${h.deeplink || '#'}" target="_blank" rel="nofollow noopener">ดูดีล</a>
           </div>
         </article>`;
     }
 
-    // ตั้งค่าเริ่มต้นให้ controls ตาม URL + bind event
-    window.addEventListener('DOMContentLoaded', () => {
-      const selSort = document.getElementById('ctl-sort');
-      const selCurr = document.getElementById('ctl-currency');
-      const selMax  = document.getElementById('ctl-max');
-      if (selSort) selSort.value = sort;
-      if (selCurr) selCurr.value = currency;
-      if (selMax)  selMax.value  = String(max);
-
-      [selSort, selCurr, selMax].forEach(el => el && el.addEventListener('change', () => {
-        const u = new URL(location.href);
-        u.searchParams.set('sort', selSort.value);
-        u.searchParams.set('currency', selCurr.value);
-        u.searchParams.set('max', selMax.value);
-        location.href = u.toString();
-      }));
+    // listeners
+    ['sort','cur','max'].forEach(id=>{
+      $('#'+id).addEventListener('change', ()=>{
+        const url = new URL(location.href);
+        url.searchParams.set('sort', $('#sort').value);
+        url.searchParams.set('currency', $('#cur').value);
+        url.searchParams.set('max', $('#max').value);
+        history.replaceState(null,'',url.toString());
+        load();
+      });
     });
 
     load();
