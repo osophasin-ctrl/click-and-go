@@ -3,19 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <title>โปรโมชั่นโรงแรม – ดีลห้ามพลาด | Click & Go</title>
   <meta name="description" content="รวมดีลโรงแรมและโปรโมชันจากพาร์ทเนอร์ต่าง ๆ เลือกวันที่แล้วคลิกไปจองได้ทันที" />
   <link rel="canonical" href="https://clickandgo.asia/deals.html" />
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Click & Go" />
-  <meta property="og:title" content="โปรโมชั่นโรงแรม – ดีลห้ามพลาด | Click & Go" />
-  <meta property="og:description" content="รวมดีลโรงแรมและโปรโมชันจากพาร์ทเนอร์ต่าง ๆ เลือกวันที่แล้วคลิกไปจองได้ทันที" />
-  <meta property="og:url" content="https://clickandgo.asia/deals.html" />
-  <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg" />
-
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="style.css" />
 
@@ -24,7 +14,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
 
   <style>
-    /* ---------- Search Box (Agoda-like 4 แถว) ---------- */
+    /* ---------- Search Box ---------- */
     .mock-wrap{ max-width:1030px; width:100%; margin:0 auto; }
     .mock-box{
       width:100%; background:#fff; border:1px solid #e5e7eb;
@@ -33,7 +23,6 @@
     }
     .mock-title{ margin:0 0 6px; font-weight:800; font-size:22px; }
     .mock-sub{ margin:0 0 12px; color:#666; }
-
     .mock-row{ display:grid; gap:10px; align-items:center; grid-template-columns:1fr 1fr; }
     .full-row{ grid-column:1 / -1; }
 
@@ -47,15 +36,11 @@
     .mock-btn:active{ transform:translateY(1px); }
     .btn-wide{ width:100%; }
 
-    /* floating label */
     .field{ position:relative; }
-    .field-label{
-      position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none;
-    }
-    .has-label .mock-input,
-    .has-label .flatpickr-input{ height:56px; padding-top:18px; }
+    .field-label{ position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none; }
+    .has-label .mock-input,.has-label .flatpickr-input{ height:56px; padding-top:18px; }
 
-    /* suggestion dropdown */
+    /* Suggestion dropdown */
     .suggest-wrap{ position:relative; }
     .suggest-panel{
       position:absolute; left:0; right:0; top:calc(100% + 4px);
@@ -67,7 +52,7 @@
     .s-label{ font-weight:600; }
     .s-sub{ color:#777; font-size:13px; }
 
-    /* guests modal */
+    /* Guests modal */
     .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:999; }
     .modal{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; width:min(92vw,420px); box-shadow:0 12px 24px rgba(0,0,0,.2); z-index:1000; display:none; }
     .modal-header,.modal-footer{ padding:14px 16px; }
@@ -141,16 +126,19 @@
             <!-- Search -->
             <button type="submit" class="mock-btn btn-wide full-row">ค้นหา</button>
 
-            <!-- hidden -->
+            <!-- Hidden (for suggest) -->
             <input type="hidden" id="rooms" value="1">
             <input type="hidden" id="adults" value="2">
             <input type="hidden" id="children" value="0">
+            <input type="hidden" id="cityid" value="">
+            <input type="hidden" id="hid" value="">
+            <input type="hidden" id="selType" value="">
           </form>
         </div>
       </div>
     </section>
 
-    <!-- Popular cities -->
+    <!-- Popular cities (ไทย) -->
     <section>
       <h2 class="section-title">ดีลสุดฮอตในเมืองยอดนิยม</h2>
       <div class="city-grid">
@@ -236,43 +224,7 @@
       document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu(); });
     })();
 
-    // Suggestion
-    (function(){
-      const input = document.getElementById('dest');
-      const panel = document.getElementById('suggestPanel');
-      let t=null;
-      function hide(){ panel.style.display='none'; panel.innerHTML=''; }
-      function show(){ panel.style.display='block'; }
-      input.addEventListener('input', ()=>{
-        const q=input.value.trim();
-        if(t) clearTimeout(t);
-        if(!q) return hide();
-        t=setTimeout(async ()=>{
-          try{
-            const res = await fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=th-th`);
-            const data = await res.json();
-            if(!data.ok||!data.items) return hide();
-            panel.innerHTML = data.items.map(it=>`
-              <div class="suggest-item" data-label="${it.label.replace(/"/g,'&quot;')}">
-                <div class="s-label">${it.label}</div>
-                <div class="s-sub">${it.subtitle||''}</div>
-              </div>`).join('');
-            show();
-            panel.querySelectorAll('.suggest-item').forEach(el=>{
-              el.addEventListener('click', ()=>{
-                input.value = el.getAttribute('data-label')||'';
-                hide();
-              });
-            });
-          }catch(e){ hide(); }
-        },180);
-      });
-      document.addEventListener('click', e=>{
-        if(!panel.contains(e.target) && e.target!==input) hide();
-      });
-    })();
-
-    // Dates + Guests + Submit (TH)
+    // Dates + Guests
     (function(){
       const ONE_DAY = 24*60*60*1000;
       const inPicker = flatpickr("#ci", {
@@ -302,6 +254,8 @@
       });
       inPicker.setDate(new Date(), true);
       outPicker.setDate(new Date(Date.now()+ONE_DAY), true);
+      window._cg_inPicker = inPicker;
+      window._cg_outPicker = outPicker;
 
       let rooms=1, adults=2, children=0;
       const btn=document.getElementById('guestBtn');
@@ -340,13 +294,78 @@
       document.getElementById('btnSaveGuests').addEventListener('click', ()=>{
         hRooms.value=rooms; hAdults.value=adults; hChildren.value=children; updateBtn(); close();
       });
+    })();
 
+    // Suggestion (ใช้ /api/suggest) – TH
+    (function(){
+      const input = document.getElementById('dest');
+      const panel = document.getElementById('suggestPanel');
+      const cityIdEl = document.getElementById('cityid');
+      const hidEl    = document.getElementById('hid');
+      const typeEl   = document.getElementById('selType');
+      const lang = 'th-th';
+      let t=null;
+      function hide(){ panel.style.display='none'; panel.innerHTML=''; }
+      function show(){ panel.style.display='block'; }
+      input.addEventListener('input', ()=>{
+        const q = input.value.trim();
+        cityIdEl.value=''; hidEl.value=''; typeEl.value='';
+        if(t) clearTimeout(t);
+        if(!q) return hide();
+        t=setTimeout(async ()=>{
+          try{
+            const url = `/api/suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(lang)}&type=mixed`;
+            const res = await fetch(url);
+            const data = await res.json();
+            if(!data.ok || !data.items) return hide();
+            panel.innerHTML = data.items.map(it=>`
+              <div class="suggest-item" data-id="${it.id}" data-type="${it.type}" data-label="${(it.label||'').replace(/"/g,'&quot;')}">
+                <div>
+                  <div class="s-label">${it.label||''}</div>
+                  <div class="s-sub">${it.subtitle||''} · ${it.type}</div>
+                </div>
+              </div>
+            `).join('');
+            show();
+            panel.querySelectorAll('.suggest-item').forEach(el=>{
+              el.addEventListener('click', ()=>{
+                const id   = el.getAttribute('data-id') || '';
+                const type = el.getAttribute('data-type') || 'City';
+                const text = el.getAttribute('data-label') || '';
+                input.value = text;
+                typeEl.value = type;
+                cityIdEl.value = (type === 'City')  ? id : '';
+                hidEl.value    = (type === 'Hotel') ? id : '';
+                hide();
+              });
+            });
+          }catch(e){ hide(); }
+        }, 180);
+      });
+      document.addEventListener('click', e=>{ if(!panel.contains(e.target) && e.target!==input) hide(); });
+    })();
+
+    // Submit → ไป search.html ภาษาไทย
+    (function(){
       document.getElementById('cgForm').addEventListener('submit', (e)=>{
         e.preventDefault();
-        const q  = encodeURIComponent(document.getElementById('dest').value || 'กรุงเทพ');
+        const inPicker  = window._cg_inPicker;
+        const outPicker = window._cg_outPicker;
         const ci = inPicker.formatDate(inPicker.selectedDates[0], 'Y-m-d');
         const co = outPicker.formatDate(outPicker.selectedDates[0], 'Y-m-d');
-        location.href = `/search.html?q=${q}&checkin=${ci}&checkout=${co}&rooms=${rooms}&adults=${adults}&children=${children}`;
+        const rooms    = document.getElementById('rooms').value || 1;
+        const adults   = document.getElementById('adults').value || 2;
+        const children = document.getElementById('children').value || 0;
+        const cityid = document.getElementById('cityid').value;
+        const hid    = document.getElementById('hid').value;
+        const q      = document.getElementById('dest').value || '';
+        const base = '/search.html';
+        const qs = new URLSearchParams({ checkin: ci, checkout: co, rooms, adults, children, lang: 'th-th' });
+        if (hid) qs.set('hid', hid);
+        else if (cityid) qs.set('cityid', cityid);
+        else if (q) qs.set('q', q);
+        else qs.set('cityid','9395');
+        location.href = `${base}?${qs.toString()}`;
       });
     })();
   </script>
