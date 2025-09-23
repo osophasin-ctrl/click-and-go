@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
 
   <style>
-    /* ---------- Search Box (Agoda-like 4 rows) ---------- */
+    /* ---------- Search Box (same look as TH) ---------- */
     .mock-wrap{ max-width:1030px; width:100%; margin:0 auto; }
     .mock-box{
       width:100%; background:#fff; border:1px solid #e5e7eb;
@@ -49,11 +49,8 @@
 
     /* floating label */
     .field{ position:relative; }
-    .field-label{
-      position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none;
-    }
-    .has-label .mock-input,
-    .has-label .flatpickr-input{ height:56px; padding-top:18px; }
+    .field-label{ position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none; }
+    .has-label .mock-input, .has-label .flatpickr-input{ height:56px; padding-top:18px; }
 
     /* suggestion dropdown */
     .suggest-wrap{ position:relative; }
@@ -118,7 +115,8 @@
           <h3 class="mock-title">Search the best deals for you</h3>
           <p class="mock-sub">Type a city or hotel, pick dates, set guests, then search.</p>
 
-          <form id="cgForm" class="mock-row" autocomplete="off" method="GET" action="/search.html">
+          <!-- IMPORTANT: go to /en/search.html -->
+          <form id="cgForm" class="mock-row" autocomplete="off" method="GET" action="/en/search.html">
             <!-- Destination -->
             <div class="suggest-wrap full-row">
               <input type="text" id="dest" name="q" class="mock-input" placeholder="Destination e.g. Bangkok or hotel name" aria-label="Destination" />
@@ -145,7 +143,7 @@
             <input type="hidden" id="rooms" name="rooms" value="1">
             <input type="hidden" id="adults" name="adults" value="2">
             <input type="hidden" id="children" name="children" value="0">
-            <input type="hidden" name="lang" value="en-us"><!-- important -->
+            <input type="hidden" name="lang" value="en-us"><!-- enforce EN results -->
           </form>
         </div>
       </div>
@@ -298,7 +296,7 @@
         inPicker.setDate(today, true);
         outPicker.setDate(tomorrow, true);
       } else {
-        // Fallback native date
+        // Native fallback
         ciEl.removeAttribute('readonly'); coEl.removeAttribute('readonly');
         ciEl.type='date'; coEl.type='date';
         ciEl.value=fmt(today); ciEl.min=fmt(today);
@@ -348,7 +346,7 @@
       });
       document.getElementById('btnSaveGuests').addEventListener('click', ()=>{ hRooms.value=rooms; hAdults.value=adults; hChildren.value=children; updateBtn(); close(); });
 
-      // Ensure default q
+      // Ensure default q if empty
       document.getElementById('cgForm').addEventListener('submit', ()=>{ const q=document.getElementById('dest'); if(!q.value) q.value='Bangkok'; });
     })();
   </script>
