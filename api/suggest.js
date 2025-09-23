@@ -1,67 +1,81 @@
 // /api/suggest.js
-// Autocomplete เมือง/จุดหมาย ป้อนกลับเป็นรายการที่มี cityId ชัดเจน
-// ต้องมีไฟล์ข้อมูล: /data/cities_min.json (JSON array)
+// Autocomplete เมือง/จุดหมาย ป้อน q และ lang -> คืนรายการเมือง (TH/EN)
+// อ่านข้อมูลจาก /data/cities_min.json แล้ว cache ไว้ในหน่วยความจำ
 
-import fs from 'fs/promises';
-import path from 'path';
+import { readFile } from "fs/promises";
+import path from "path";
 
 let CITIES_CACHE = null;
 
 async function loadCities() {
   if (CITIES_CACHE) return CITIES_CACHE;
 
-  // ✅ อ่านจาก /data/cities_min.json
-  const filePath = path.join(process.cwd(), 'data', 'cities_min.json');
-  const buf = await fs.readFile(filePath);
-  const data = JSON.parse(buf.toString());
+  // รองรับรันจาก Vercel/Node ปกติ
+  const filePath = path.join(process.cwd(), "data", "cities_min.json");
+  const raw = await readFile(filePath, "utf8");
+  const json = JSON.parse(raw);
 
-  CITIES_CACHE = Array.isArray(data) ? data.map(r => ({
-    city_id: Number(r.city_id ?? r.cityId ?? r.id ?? 0),
-    city_name_en: String(r.city_name_en ?? r.en ?? r.city_en ?? '').trim(),
-    city_name_th: String(r.city_name_th ?? r.th ?? r.city_th ?? '').trim(),
-    country_name: String(r.country_name ?? r.country ?? '').trim(),
-  })) : [];
+  // พยายาม map ฟิลด์ให้ยืดหยุ่น (ไฟล์ที่คุณสร้างอาจใช้ชื่อ field ต่างกันเล็กน้อย)
+  // คาดหวังโครง: { city_id, name_th, name_en, country_th, country_en }
+  CITIES_CACHE = (json || []).map((r) => ({
+    id: Number(r.city_id ?? r.id ?? r.CityID ?? r.cityId ?? 0),
+    th: String(
+      r.name_th ?? r.city_name_th ?? r.th ?? r.CityNameTH ?? ""
+    ).trim(),
+    en: String(
+      r.name_en ?? r.city_name_en ?? r.en ?? r.CityNameEN ?? ""
+    ).trim(),
+    country_th: String(
+      r.country_th ?? r.CountryTH ?? r.countryNameTH ?? ""
+    ).trim(),
+    country_en: String(
+      r.country_en ?? r.CountryEN ?? r.countryNameEN ?? ""
+    ).trim(),
+  })).filter(x => x.id && (x.th || x.en));
 
   return CITIES_CACHE;
 }
 
+function includesFold(haystack, needle) {
+  return haystack.toLowerCase().includes(needle.toLowerCase());
+}
+
 export default async function handler(req, res) {
   try {
-    const q = String(req.query.q || '').trim().toLowerCase();
-    const lang = String(req.query.lang || 'th-th').toLowerCase();
+    const qRaw  = (req.query.q || "").toString().trim();
+    const lang  = (req.query.lang || "th-th").toString().toLowerCase();
 
-    if (!q) {
-      res.setHeader('Cache-Control', 'no-store');
+    if (!qRaw || qRaw.length < 2) {
       return res.status(200).json({ ok: true, items: [] });
     }
 
     const cities = await loadCities();
 
-    const matched = cities.filter(c => {
-      const en = (c.city_name_en || '').toLowerCase();
-      const th = (c.city_name_th || '').toLowerCase();
-      return en.includes(q) || th.includes(q);
-    }).slice(0, 12);
+    // ค้นหาจากทั้งชื่อไทย/อังกฤษ
+    const matched = cities.filter(c =>
+      includesFold(c.th, qRaw) || includesFold(c.en, qRaw)
+    ).slice(0, 10); // จำกัด 10 รายการ
+
+    const isTH = lang.startsWith("th");
 
     const items = matched.map(c => {
-      const label = lang.startsWith('th')
-        ? (c.city_name_th || c.city_name_en || '')
-        : (c.city_name_en || c.city_name_th || '');
-
+      const label   = isTH ? (c.th || c.en) : (c.en || c.th);
+      const country = isTH ? (c.country_th || c.country_en) : (c.country_en || c.country_th);
       return {
-        id: String(c.city_id),
-        cityId: String(c.city_id),
-        label,
-        subtitle: c.country_name || '',
-        city: label,
-        country: c.country_name || ''
+        id: c.id,                 // สำคัญ: ใช้เป็น city_id
+        label,                    // ไว้โชว์บรรทัดบน
+        subtitle: country,        // ไว้โชว์บรรทัดล่าง
+        city: label,              // เผื่อโค้ดฝั่งหน้า deals ใช้
+        country,
+        th: c.th,
+        en: c.en,
       };
     });
 
-    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader("Cache-Control", "public, max-age=300, s-maxage=300");
     return res.status(200).json({ ok: true, items });
-  } catch (e) {
-    console.error('suggest error:', e);
-    return res.status(500).json({ ok: false, error: 'internal_error' });
+  } catch (err) {
+    console.error("suggest error:", err);
+    return res.status(500).json({ ok: false, error: "internal_error" });
   }
 }
