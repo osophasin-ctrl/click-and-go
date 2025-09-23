@@ -22,7 +22,7 @@
     .price{font-weight:800}
     .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:#0ea5a0;color:#fff;text-decoration:none}
     .muted{color:#888}
-    select,.pill{height:36px;border:1px solid #d7d7d7;border-radius:8px;background:#fff;padding:0 10px}
+    select{height:36px;border:1px solid #d7d7d7;border-radius:8px;background:#fff;padding:0 10px}
   </style>
 </head>
 <body>
@@ -40,9 +40,9 @@
     <div class="toolbar">
       <label>Sort by
         <select id="sort">
+          <option value="Recommended">Recommended</option>
           <option value="PriceAsc">Price: Low → High</option>
           <option value="PriceDesc">Price: High → Low</option>
-          <option value="Recommended">Recommended</option>
         </select>
       </label>
       <label>Currency
@@ -63,7 +63,7 @@
   <script>
     const $ = s => document.querySelector(s);
 
-    // City name → Agoda cityId (quick map)
+    // City map for convenience
     const CITY_MAP = {
       bangkok: 9395, กรุงเทพ: 9395,
       'chiang mai': 9397, เชียงใหม่: 9397,
@@ -74,49 +74,73 @@
       tokyo: 6419, seoul: 14690, singapore: 11419, 'hong kong': 4543, london: 17072, paris: 16808
     };
 
-    // Read URL params
-    const p = new URLSearchParams(location.search);
-    const q         = (p.get('q') || 'Bangkok').trim();
-    const cityid    = parseInt(p.get('cityid') || '', 10) || CITY_MAP[(q||'').toLowerCase()] || 9395;
-    const checkin   = p.get('checkin')  || new Date().toISOString().slice(0,10);
-    const checkout  = p.get('checkout') || new Date(Date.now()+86400000).toISOString().slice(0,10);
-    const rooms     = +(p.get('rooms') || 1);
-    const adults    = +(p.get('adults') || 2);
-    const children  = +(p.get('children') || 0);
-    const currency  = (p.get('currency') || 'USD').toUpperCase();
-    const lang      = (p.get('lang') || 'en-us').toLowerCase(); // default EN here
-
-    // UI summary
-    $('#summary').textContent =
-      `${q} | Dates: ${checkin} → ${checkout} | Guests: ${adults} adult(s), ${children} child(ren), ${rooms} room(s)`;
-    $('#cur').value = currency;
-    $('#max').value = String(p.get('max') || 30);
-    $('#sort').value = String(p.get('sort') || 'PriceAsc');
-
-    async function load() {
-      const qs = new URLSearchParams({
-        cityid, checkin, checkout, rooms, adults, children,
-        currency, lang,                 // pass language through to backend
-        sort: $('#sort').value, max: $('#max').value
-      });
-      const res = await fetch(`/api/search?${qs.toString()}`, { headers: { 'Accept': 'application/json' }});
-      const data = await res.json();
-      render(data.items || []);
+    // Read URL params initially
+    function readParams() {
+      const p = new URLSearchParams(location.search);
+      const q         = (p.get('q') || 'Bangkok').trim();
+      const cityid    = parseInt(p.get('cityid') || '', 10) || CITY_MAP[(q||'').toLowerCase()] || 9395;
+      const checkin   = p.get('checkin')  || new Date().toISOString().slice(0,10);
+      const checkout  = p.get('checkout') || new Date(Date.now()+86400000).toISOString().slice(0,10);
+      const rooms     = +(p.get('rooms') || 1);
+      const adults    = +(p.get('adults') || 2);
+      const children  = +(p.get('children') || 0);
+      const currency  = (p.get('currency') || 'USD').toUpperCase();
+      const lang      = (p.get('lang') || 'en-us').toLowerCase();
+      const sort      = p.get('sort') || 'Recommended';
+      const max       = p.get('max') || '30';
+      return {q, cityid, checkin, checkout, rooms, adults, children, currency, lang, sort, max};
     }
 
-    function render(items) {
+    // Sync initial controls & summary
+    let state = readParams();
+    $('#cur').value  = state.currency;
+    $('#max').value  = String(state.max);
+    $('#sort').value = String(state.sort);
+    updateSummary();
+
+    function updateSummary() {
+      $('#summary').textContent =
+        `${state.q} | Dates: ${state.checkin} → ${state.checkout} | ` +
+        `Guests: ${state.adults} adult(s), ${state.children} child(ren), ${state.rooms} room(s)`;
+    }
+
+    async function load() {
+      // IMPORTANT: read current selects every load
+      const cur  = ($('#cur').value || state.currency).toUpperCase();
+      const sort = $('#sort').value || state.sort;
+      const max  = $('#max').value  || state.max;
+
+      const qs = new URLSearchParams({
+        cityid: state.cityid,
+        checkin: state.checkin,
+        checkout: state.checkout,
+        rooms: state.rooms,
+        adults: state.adults,
+        children: state.children,
+        currency: cur,         // use updated currency
+        lang: state.lang,
+        sort,
+        max
+      });
+
+      const res = await fetch(`/api/search?${qs.toString()}`, { headers: { 'Accept': 'application/json' }});
+      const data = await res.json();
+      render(data.items || [], cur);
+    }
+
+    function render(items, cur) {
       const grid = $('#grid');
       if (!items.length) {
         grid.innerHTML = `<div class="muted">No results match your filters.</div>`;
         return;
       }
-      grid.innerHTML = items.map(card).join('');
+      grid.innerHTML = items.map(h => card(h, cur)).join('');
     }
 
-    function card(h) {
+    function card(h, cur) {
       const stars = '★'.repeat(h.starRating || 0);
       const review = (h.reviewScore != null) ? ` · Rating ${h.reviewScore}` : '';
-      const price = (h.priceFrom != null) ? `${Number(h.priceFrom).toLocaleString()} ${h.currency || ''}` : '-';
+      const price = (h.priceFrom != null) ? `${Number(h.priceFrom).toLocaleString()} ${h.currency || cur || ''}` : '-';
       return `
         <article class="card">
           <img class="thumb" src="${h.imageUrl || 'https://picsum.photos/800/450?blur=2'}" alt="${h.name || ''}" loading="lazy">
@@ -131,14 +155,15 @@
         </article>`;
     }
 
-    // React to toolbar changes
+    // React to toolbar changes: also update URL so refresh keeps state
     ['sort','cur','max'].forEach(id=>{
       $('#'+id).addEventListener('change', ()=>{
         const url = new URL(location.href);
         url.searchParams.set('sort', $('#sort').value);
-        url.searchParams.set('currency', $('#cur').value);
+        url.searchParams.set('currency', $('#cur').value.toUpperCase());
         url.searchParams.set('max', $('#max').value);
         history.replaceState(null,'',url.toString());
+        // reload with new params
         load();
       });
     });
