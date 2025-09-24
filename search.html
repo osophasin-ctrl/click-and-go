@@ -79,7 +79,10 @@
   // -------- อ่านพารามิเตอร์ --------
   const state = {
     q: params.get('q') || '',
-    cityId: params.get('cityId') || '',
+    // รองรับทั้ง cityId (เดิม) และ cityid (จาก deals.html ใหม่)
+    cityId: params.get('cityId') || params.get('cityid') || '',
+    // รองรับ hid จาก deals.html
+    hid: params.get('hid') || '',
     city: params.get('city') || '',
     country: params.get('country') || '',
     checkin: params.get('checkin'),
@@ -116,16 +119,23 @@
     // ยิงไป API /api/search
     const api = new URL('/api/search', location.origin);
     const p = api.searchParams;
-    if (state.cityId) p.set('cityId', state.cityId);
-    if (state.q && !state.cityId) p.set('q', state.q);
+
+    // ให้ความสำคัญกับ hid > cityId > q
+    if (state.hid) p.set('hid', state.hid);
+    else if (state.cityId) p.set('cityId', state.cityId);
+    else if (state.q) p.set('q', state.q);
+
     ['checkin','checkout','rooms','adults','children','lang','currency','page','limit']
-      .forEach(k => p.set(k, state[k]));
+      .forEach(k => state[k] != null && p.set(k, state[k]));
 
     const resp = await fetch(api.toString(), {cache: 'no-store'});
     const json = await resp.json().catch(()=>({ok:false}));
 
     if (!json.ok){
-      $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`;
+      // ถ้าไม่มี id/q เลย ให้ข้อความช่วยผู้ใช้
+      const hint = (state.hid || state.cityId || state.q) ? '' :
+        '<br><small class="muted">โปรดกลับไปหน้าโปรโมชั่นและเลือกปลายทางจากรายการแนะนำ</small>';
+      $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา${hint}</p>`;
       return;
     }
 
@@ -205,6 +215,7 @@
     Object.entries({
       q: state.q || '',
       cityId: state.cityId || '',
+      hid: state.hid || '',
       city: state.city || '',
       country: state.country || '',
       checkin: state.checkin,
