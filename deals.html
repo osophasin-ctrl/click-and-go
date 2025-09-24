@@ -211,23 +211,23 @@
   <script>
     // เมนูภาษา
     (function(){
-      const btn=document.querySelector('.lang-btn');
-      const menu=document.querySelector('.lang-menu');
+      var btn=document.querySelector('.lang-btn');
+      var menu=document.querySelector('.lang-menu');
       if(!btn||!menu) return;
       function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-      btn.addEventListener('click',e=>{
+      btn.addEventListener('click',function(e){
         e.stopPropagation();
-        const opened=menu.classList.toggle('open');
+        var opened=menu.classList.toggle('open');
         btn.setAttribute('aria-expanded',String(opened));
       });
       document.addEventListener('click',closeMenu);
-      document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu(); });
+      document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeMenu(); });
     })();
 
     // Dates + Guests
     (function(){
-      const ONE_DAY = 24*60*60*1000;
-      const inPicker = flatpickr("#ci", {
+      var ONE_DAY = 24*60*60*1000;
+      var inPicker = flatpickr("#ci", {
         locale: 'th',
         dateFormat:"Y-m-d",
         altInput:true,
@@ -235,15 +235,15 @@
         altInputClass:"mock-input",
         allowInput:false,
         minDate:"today",
-        onChange(d){
+        onChange:function(d){
           if(d[0]){
-            const next = new Date(d[0].getTime()+ONE_DAY);
+            var next = new Date(d[0].getTime()+ONE_DAY);
             outPicker.set('minDate', next);
             if(!outPicker.selectedDates[0] || outPicker.selectedDates[0] <= d[0]) outPicker.setDate(next,true);
           }
         }
       });
-      const outPicker = flatpickr("#co", {
+      var outPicker = flatpickr("#co", {
         locale:'th',
         dateFormat:"Y-m-d",
         altInput:true,
@@ -257,30 +257,30 @@
       window._cg_inPicker = inPicker;
       window._cg_outPicker = outPicker;
 
-      let rooms=1, adults=2, children=0;
-      const btn=document.getElementById('guestBtn');
-      const roomsCount=document.getElementById('roomsCount');
-      const adultsCount=document.getElementById('adultsCount');
-      const childrenCount=document.getElementById('childrenCount');
-      const hRooms=document.getElementById('rooms');
-      const hAdults=document.getElementById('adults');
-      const hChildren=document.getElementById('children');
-      const modal=document.getElementById('guestModal');
-      const backdrop=document.getElementById('guestBackdrop');
+      var rooms=1, adults=2, children=0;
+      var btn=document.getElementById('guestBtn');
+      var roomsCount=document.getElementById('roomsCount');
+      var adultsCount=document.getElementById('adultsCount');
+      var childrenCount=document.getElementById('childrenCount');
+      var hRooms=document.getElementById('rooms');
+      var hAdults=document.getElementById('adults');
+      var hChildren=document.getElementById('children');
+      var modal=document.getElementById('guestModal');
+      var backdrop=document.getElementById('guestBackdrop');
 
       function open(){ roomsCount.textContent=rooms; adultsCount.textContent=adults; childrenCount.textContent=children; modal.style.display='block'; backdrop.style.display='block'; }
       function close(){ modal.style.display='none'; backdrop.style.display='none'; }
-      function updateBtn(){ btn.textContent = `${rooms} ห้อง, ${adults} ผู้ใหญ่, ${children} เด็ก`; }
+      function updateBtn(){ btn.textContent = rooms+" ห้อง, "+adults+" ผู้ใหญ่, "+children+" เด็ก"; }
       updateBtn();
 
       btn.addEventListener('click', open);
       document.getElementById('btnCloseX').addEventListener('click', close);
       document.getElementById('btnCancel').addEventListener('click', close);
       backdrop.addEventListener('click', close);
-      document.querySelectorAll('.btn-ctrl').forEach(b=>{
-        b.addEventListener('click', ()=>{
-          const type=b.getAttribute('data-type'), op=b.getAttribute('data-op');
-          let val=0, min=0, max=10;
+      Array.prototype.forEach.call(document.querySelectorAll('.btn-ctrl'), function(b){
+        b.addEventListener('click', function(){
+          var type=b.getAttribute('data-type'), op=b.getAttribute('data-op');
+          var val=0, min=0, max=10;
           if(type==='rooms'){ val=rooms; min=1; }
           if(type==='adults'){ val=adults; min=1; }
           if(type==='children'){ val=children; min=0; }
@@ -291,85 +291,120 @@
           if(type==='children'){ children=val; childrenCount.textContent=val; }
         });
       });
-      document.getElementById('btnSaveGuests').addEventListener('click', ()=>{
+      document.getElementById('btnSaveGuests').addEventListener('click', function(){
         hRooms.value=rooms; hAdults.value=adults; hChildren.value=children; updateBtn(); close();
       });
     })();
 
     // Suggestion (ใช้ /api/suggest) – TH
     (function(){
-      const input = document.getElementById('dest');
-      const panel = document.getElementById('suggestPanel');
-      const cityIdEl = document.getElementById('cityid');
-      const hidEl    = document.getElementById('hid');
-      const typeEl   = document.getElementById('selType');
-      const lang = 'th-th';
-      let t=null;
+      var input = document.getElementById('dest');
+      var panel = document.getElementById('suggestPanel');
+      var cityIdEl = document.getElementById('cityid');
+      var hidEl    = document.getElementById('hid');
+      var typeEl   = document.getElementById('selType');
+      var lang = 'th-th';
+      var t=null;
 
       function hide(){ panel.style.display='none'; panel.innerHTML=''; }
       function show(){ panel.style.display='block'; }
 
-      input.addEventListener('input', ()=>{
-        const q = input.value.trim();
+      input.addEventListener('input', function(){
+        var q = (input.value || '').trim();
         cityIdEl.value=''; hidEl.value=''; typeEl.value='';
         if(t) clearTimeout(t);
-        if(!q || q.length < 2) return hide(); // เริ่มแนะนำเมื่อพิมพ์ ≥ 2 ตัว
-        t=setTimeout(async ()=>{
-          try{
-            const url = `/api/suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(lang)}&type=mixed`;
-            const res = await fetch(url);
-            const data = await res.json();
-            if(!data.ok || !data.items) return hide();
+        if(!q || q.length < 2) return hide();
+        t=setTimeout(function(){
+          fetch('/api/suggest?q='+encodeURIComponent(q)+'&lang='+encodeURIComponent(lang)+'&type=mixed')
+            .then(function(res){ return res.json(); })
+            .then(function(data){
+              if(!data || !data.ok || !data.items) { hide(); return; }
+              panel.innerHTML = data.items.map(function(it){
+                var label = (it.label ? String(it.label) : '').replace(/"/g,'&quot;');
+                var subtitle = it.subtitle ? String(it.subtitle) : '';
+                var type = it.type ? String(it.type) : '';
+                var subLine = subtitle ? '<div class="s-sub">'+subtitle+(type ? ' · '+type : '')+'</div>' : '';
+                return '<div class="suggest-item" data-id="'+(it.id||'')+'" data-type="'+type+'" data-label="'+label+'">'+
+                         '<div><div class="s-label">'+label+'</div>'+subLine+'</div>'+
+                       '</div>';
+              }).join('');
+              show();
 
-            panel.innerHTML = data.items.map(it=>{
-              const label = (it.label ?? '').replace(/"/g,'&quot;');
-              const subtitle = it.subtitle ?? '';
-              const type = (it.type ?? '').toString();
-              const subLine = subtitle ? `<div class="s-sub">${subtitle}${type ? ` · ${type}` : ''}</div>` : '';
-              return `
-                <div class="suggest-item" data-id="${it.id ?? ''}" data-type="${type}" data-label="${label}">
-                  <div>
-                    <div class="s-label">${label}</div>
-                    ${subLine}
-                  </div>
-                </div>
-              `;
-            }).join('');
-            show();
+              Array.prototype.forEach.call(panel.querySelectorAll('.suggest-item'), function(el){
+                // ใช้ mousedown กัน blur ของ input แต่ไม่ไปบล็อกอีเวนต์อื่น
+                el.addEventListener('mousedown', function(ev){
+                  ev.preventDefault();
+                  var rawType = String(el.getAttribute('data-type') || '');
+                  var type = rawType.toLowerCase();
+                  var id   = el.getAttribute('data-id') || '';
+                  var text = el.getAttribute('data-label') || '';
 
-            // ใช้ pointerdown ให้คลิกติดก่อน blur
-            panel.querySelectorAll('.suggest-item').forEach(el=>{
-              el.addEventListener('pointerdown', ()=>{
-                const rawType = (el.getAttribute('data-type') || '').toString();
-                const type = rawType.trim().toLowerCase();
-                const id   = el.getAttribute('data-id') || '';
-                const text = el.getAttribute('data-label') || '';
+                  input.value = text;
+                  typeEl.value = rawType;
 
-                input.value = text;
-                typeEl.value = rawType;
+                  cityIdEl.value = '';
+                  hidEl.value = '';
+                  if (type.indexOf('city') !== -1)  cityIdEl.value = id;
+                  if (type.indexOf('hotel') !== -1) hidEl.value    = id;
 
-                cityIdEl.value = '';
-                hidEl.value = '';
-
-                if (type.includes('city'))  cityIdEl.value = id;
-                if (type.includes('hotel')) hidEl.value    = id;
-
-                hide();
+                  hide();
+                });
               });
-            });
-          }catch(e){ hide(); }
+            })
+            .catch(function(){ hide(); });
         }, 180);
       });
-      document.addEventListener('click', e=>{ if(!panel.contains(e.target) && e.target!==input) hide(); });
+
+      document.addEventListener('click', function(e){ if(!panel.contains(e.target) && e.target!==input) hide(); });
     })();
 
-    // Submit → ไป search.html ภาษาไทย (พยายาม resolve อัตโนมัติ)
+    // Submit → ไป search.html (resolve อัตโนมัติถ้ายังไม่มี id)
     (function(){
-      document.getElementById('cgForm').addEventListener('submit', async (e)=>{
+      document.getElementById('cgForm').addEventListener('submit', function(e){
         e.preventDefault();
-        const inPicker  = window._cg_inPicker;
-        const outPicker = window._cg_outPicker;
-        const ci = inPicker.formatDate(inPicker.selectedDates[0], 'Y-m-d');
-        const co = outPicker.formatDate(outPicker.selectedDates[0], 'Y-m-d');
-        const rooms    = document.getElementById('rooms').value || 1;
-        const adults   = docum
+        var inPicker  = window._cg_inPicker;
+        var outPicker = window._cg_outPicker;
+        var ci = inPicker.formatDate(inPicker.selectedDates[0], 'Y-m-d');
+        var co = outPicker.formatDate(outPicker.selectedDates[0], 'Y-m-d');
+        var rooms    = document.getElementById('rooms').value || 1;
+        var adults   = document.getElementById('adults').value || 2;
+        var children = document.getElementById('children').value || 0;
+        var cityid   = (document.getElementById('cityid').value || '').trim();
+        var hid      = (document.getElementById('hid').value || '').trim();
+        var q        = (document.getElementById('dest').value || '').trim();
+        var lang     = 'th-th';
+
+        function go(cityidFinal, hidFinal){
+          var qs = new URLSearchParams({ checkin: ci, checkout: co, rooms: rooms, adults: adults, children: children, lang: lang });
+          if (hidFinal) qs.set('hid', hidFinal);
+          else if (cityidFinal) qs.set('cityid', cityidFinal);
+          else if (q) qs.set('q', q);
+          location.href = '/search.html?' + qs.toString();
+        }
+
+        if (cityid || hid || !q){
+          go(cityid, hid);
+          return;
+        }
+
+        // resolve อัตโนมัติกรณีพิมพ์แล้วกด Enter
+        fetch('/api/suggest?q='+encodeURIComponent(q)+'&lang='+encodeURIComponent(lang)+'&type=mixed')
+          .then(function(res){ return res.json(); })
+          .then(function(data){
+            var idCity='', idHotel='';
+            if (data && data.ok && Array.isArray(data.items)){
+              for (var i=0;i<data.items.length;i++){
+                var it=data.items[i];
+                var t = (it.type ? String(it.type) : '').toLowerCase();
+                if (!idHotel && t.indexOf('hotel') !== -1) idHotel = String(it.id||'');
+                if (!idCity  && t.indexOf('city')  !== -1) idCity  = String(it.id||'');
+              }
+            }
+            go(idCity, idHotel);
+          })
+          .catch(function(){ go('', ''); });
+      });
+    })();
+  </script>
+</body>
+</html>
