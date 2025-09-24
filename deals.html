@@ -305,47 +305,66 @@
       const typeEl   = document.getElementById('selType');
       const lang = 'th-th';
       let t=null;
+
       function hide(){ panel.style.display='none'; panel.innerHTML=''; }
       function show(){ panel.style.display='block'; }
+
       input.addEventListener('input', ()=>{
         const q = input.value.trim();
         cityIdEl.value=''; hidEl.value=''; typeEl.value='';
         if(t) clearTimeout(t);
-        if(!q) return hide();
+        if(!q || q.length < 2) return hide(); // เริ่มแนะนำเมื่อพิมพ์ ≥ 2 ตัว
         t=setTimeout(async ()=>{
           try{
             const url = `/api/suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(lang)}&type=mixed`;
             const res = await fetch(url);
             const data = await res.json();
             if(!data.ok || !data.items) return hide();
-            panel.innerHTML = data.items.map(it=>`
-              <div class="suggest-item" data-id="${it.id}" data-type="${it.type}" data-label="${(it.label||'').replace(/"/g,'&quot;')}">
-                <div>
-                  <div class="s-label">${it.label||''}</div>
-                  <div class="s-sub">${it.subtitle||''} · ${it.type}</div>
+
+            panel.innerHTML = data.items.map(it=>{
+              const label = (it.label ?? '').replace(/"/g,'&quot;');
+              const subtitle = it.subtitle ?? '';
+              const type = (it.type ?? '').toString();
+              const subLine = subtitle ? `<div class="s-sub">${subtitle}${type ? ` · ${type}` : ''}</div>` : '';
+              return `
+                <div class="suggest-item" data-id="${it.id ?? ''}" data-type="${type}" data-label="${label}">
+                  <div>
+                    <div class="s-label">${label}</div>
+                    ${subLine}
+                  </div>
                 </div>
-              </div>
-            `).join('');
+              `;
+            }).join('');
             show();
+
             panel.querySelectorAll('.suggest-item').forEach(el=>{
               el.addEventListener('click', ()=>{
+                const rawType = el.getAttribute('data-type') || '';
+                const type = rawType.toString().toLowerCase(); // normalize
                 const id   = el.getAttribute('data-id') || '';
-                const type = el.getAttribute('data-type') || 'City';
                 const text = el.getAttribute('data-label') || '';
+
                 input.value = text;
-                typeEl.value = type;
-                cityIdEl.value = (type === 'City')  ? id : '';
-                hidEl.value    = (type === 'Hotel') ? id : '';
+                typeEl.value = rawType;
+
+                // เคลียร์ก่อน
+                cityIdEl.value = '';
+                hidEl.value = '';
+
+                if (type === 'city')  cityIdEl.value = id;
+                if (type === 'hotel') hidEl.value    = id;
+
                 hide();
               });
             });
           }catch(e){ hide(); }
         }, 180);
       });
+
       document.addEventListener('click', e=>{ if(!panel.contains(e.target) && e.target!==input) hide(); });
     })();
 
-    // Submit → ไป search.html ภาษาไทย
+    // Submit → ไป search.html ภาษาไทย (ต้องมี cityid หรือ hid)
     (function(){
       document.getElementById('cgForm').addEventListener('submit', (e)=>{
         e.preventDefault();
@@ -356,16 +375,20 @@
         const rooms    = document.getElementById('rooms').value || 1;
         const adults   = document.getElementById('adults').value || 2;
         const children = document.getElementById('children').value || 0;
-        const cityid = document.getElementById('cityid').value;
-        const hid    = document.getElementById('hid').value;
-        const q      = document.getElementById('dest').value || '';
-        const base = '/search.html';
+        const cityid = (document.getElementById('cityid').value || '').trim();
+        const hid    = (document.getElementById('hid').value || '').trim();
         const qs = new URLSearchParams({ checkin: ci, checkout: co, rooms, adults, children, lang: 'th-th' });
-        if (hid) qs.set('hid', hid);
-        else if (cityid) qs.set('cityid', cityid);
-        else if (q) qs.set('q', q);
-        else qs.set('cityid','9395');
-        location.href = `${base}?${qs.toString()}`;
+
+        if (hid) {
+          qs.set('hid', hid);
+        } else if (cityid) {
+          qs.set('cityid', cityid);
+        } else {
+          alert('โปรดเลือกปลายทางจากรายการแนะนำ เพื่อให้ค้นหาได้ถูกต้อง');
+          return;
+        }
+
+        location.href = `/search.html?${qs.toString()}`;
       });
     })();
   </script>
