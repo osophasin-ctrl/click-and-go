@@ -76,12 +76,10 @@
   const $ = s => document.querySelector(s);
   const params = new URLSearchParams(location.search);
 
-  // -------- อ่านพารามิเตอร์ --------
+  // -------- อ่านพารามิเตอร์ (รองรับทั้ง cityId และ cityid) --------
   const state = {
     q: params.get('q') || '',
-    // รองรับทั้ง cityId (เดิม) และ cityid (จาก deals.html ใหม่)
     cityId: params.get('cityId') || params.get('cityid') || '',
-    // รองรับ hid จาก deals.html
     hid: params.get('hid') || '',
     city: params.get('city') || '',
     country: params.get('country') || '',
@@ -112,36 +110,84 @@
 
   $('#subtitle').textContent = `${human.place} | วันที่: ${human.range} | ${human.guestTxt}`;
 
+  // -------- helper: เขียนค่ากลับลง URL โดยไม่รีโหลด --------
+  function updateQueryOnly(){
+    const u = new URL(location.href);
+    Object.entries({
+      q: state.q || '',
+      cityId: state.cityId || '',
+      hid: state.hid || '',
+      city: state.city || '',
+      country: state.country || '',
+      checkin: state.checkin,
+      checkout: state.checkout,
+      rooms: state.rooms,
+      adults: state.adults,
+      children: state.children,
+      lang: state.lang,
+      currency: state.currency,
+      page: state.page,
+      limit: state.limit,
+      sort: state.sort
+    }).forEach(([k,v])=>{
+      if (v === '' || v == null) u.searchParams.delete(k);
+      else u.searchParams.set(k, v);
+    });
+    history.replaceState({}, '', u);
+  }
+
+  // -------- helper: แปลง q -> cityId/hid จาก /api/suggest --------
+  async function resolveDestinationIfNeeded(){
+    if ((state.cityId || state.hid) || !state.q) return;
+    try{
+      const url = `/api/suggest?q=${encodeURIComponent(state.q)}&lang=${encodeURIComponent(state.lang)}&type=mixed`;
+      const res = await fetch(url, {cache:'no-store'});
+      const data = await res.json();
+      if (data && data.ok && Array.isArray(data.items) && data.items.length){
+        // เลือก hotel ก่อน ถ้าไม่มีค่อยเลือก city
+        const firstHotel = data.items.find(it => String(it.type||'').toLowerCase().includes('hotel'));
+        const firstCity  = data.items.find(it => String(it.type||'').toLowerCase().includes('city'));
+        const pick = firstHotel || firstCity || data.items[0];
+        const t = String(pick.type||'').toLowerCase();
+        if (t.includes('hotel')) state.hid = String(pick.id||'');
+        if (t.includes('city'))  state.cityId = String(pick.id||'');
+        state.city = pick.label || state.city; // อัปเดต subtitle ให้ดูดี
+        updateQueryOnly(); // เขียน id กลับลง URL (จะเห็น ?cityId=... หรือ ?hid=...)
+      }
+    }catch(_){}
+  }
+
   // -------- โหลดผลลัพธ์ --------
   async function load(){
     renderSkeleton();
+
+    // ถ้ายังไม่มี id ให้ resolve อัตโนมัติจาก q ก่อน
+    if (!state.cityId && !state.hid && state.q) {
+      await resolveDestinationIfNeeded();
+    }
 
     // ยิงไป API /api/search
     const api = new URL('/api/search', location.origin);
     const p = api.searchParams;
 
-    // ให้ความสำคัญกับ hid > cityId > q
     if (state.hid) p.set('hid', state.hid);
     else if (state.cityId) p.set('cityId', state.cityId);
-    else if (state.q) p.set('q', state.q);
+    else if (state.q) p.set('q', state.q); // เผื่อสุดท้ายหาไม่ได้จริง ๆ (backend จะ guard ไว้)
 
-    ['checkin','checkout','rooms','adults','children','lang','currency','page','limit']
-      .forEach(k => state[k] != null && p.set(k, state[k]));
+    ['checkin','checkout','rooms','adults','children','lang','currency','page','limit','sort']
+      .forEach(k => p.set(k, state[k]));
 
     const resp = await fetch(api.toString(), {cache: 'no-store'});
     const json = await resp.json().catch(()=>({ok:false}));
 
     if (!json.ok){
-      // ถ้าไม่มี id/q เลย ให้ข้อความช่วยผู้ใช้
-      const hint = (state.hid || state.cityId || state.q) ? '' :
-        '<br><small class="muted">โปรดกลับไปหน้าโปรโมชั่นและเลือกปลายทางจากรายการแนะนำ</small>';
-      $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา${hint}</p>`;
+      $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`;
       return;
     }
 
     let items = json.results || [];
 
-    // เรียงลำดับฝั่งหน้า
+    // เรียงลำดับฝั่งหน้า (สำรอง)
     if (state.sort === 'price_asc') items.sort((a,b)=>(a.price||1e15)-(b.price||1e15));
     if (state.sort === 'price_desc') items.sort((a,b)=>(b.price||0)-(a.price||0));
 
@@ -192,48 +238,16 @@
   // -------- UI handlers --------
   $('#currency').addEventListener('change', e => {
     state.currency = e.target.value;
-    updateQueryAndReload();
+    updateQueryOnly(); load();
   });
   $('#limit').addEventListener('change', e => {
     state.limit = +e.target.value;
-    updateQueryAndReload(false); // ไม่ต้องรีเซ็ตหน้า
+    updateQueryOnly(); load();
   });
   $('#sort').addEventListener('change', e => {
     state.sort = e.target.value;
-    updateQueryOnly();
-    load();
+    updateQueryOnly(); load();
   });
-
-  function updateQueryAndReload(resetPage = true){
-    if (resetPage) state.page = 1;
-    updateQueryOnly();
-    load();
-  }
-
-  function updateQueryOnly(){
-    const u = new URL(location.href);
-    Object.entries({
-      q: state.q || '',
-      cityId: state.cityId || '',
-      hid: state.hid || '',
-      city: state.city || '',
-      country: state.country || '',
-      checkin: state.checkin,
-      checkout: state.checkout,
-      rooms: state.rooms,
-      adults: state.adults,
-      children: state.children,
-      lang: state.lang,
-      currency: state.currency,
-      page: state.page,
-      limit: state.limit,
-      sort: state.sort
-    }).forEach(([k,v])=>{
-      if (v === '' || v == null) u.searchParams.delete(k);
-      else u.searchParams.set(k, v);
-    });
-    history.replaceState({}, '', u);
-  }
 
   // go!
   load();
