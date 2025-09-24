@@ -1,5 +1,5 @@
 // /api/search.js — Vercel Serverless (CommonJS)
-// รับ query จากหน้าเว็บ → แปลงเป็น payload lt_v1 → (fallback) resolve q → เรียก Agoda → ส่งกลับผลลัพธ์
+// รับ query → แปลงเป็น payload lt_v1 → (fallback) resolve q จาก /api/suggest → เรียก Agoda
 
 const AGODA_URL = "http://affiliateapi7643.agoda.com/affiliateservice/lt_v1";
 
@@ -37,6 +37,36 @@ function hostOrigin(req) {
   return `${proto}://${host}`;
 }
 
+// ดึง id/label จาก /api/suggest ให้ทนทานหลายรูปแบบ
+function pickFromSuggest(items) {
+  if (!Array.isArray(items) || !items.length) return { cityId: "", hid: "", label: "" };
+
+  // 1) พยายามเลือกโรงแรมก่อน (ถ้ามี)
+  for (const it of items) {
+    const t = String(it.type || "").toLowerCase();
+    const hotelId = it.hotel_id || it.id; // บางสคีมา hotel อยู่ใน id พร้อม type="Hotel"
+    if (t.includes("hotel") || it.hotel_id) {
+      const hid = String(hotelId || "");
+      if (hid) return { cityId: "", hid, label: it.label || it.hotel_name || "" };
+    }
+  }
+
+  // 2) ไม่มีก็เลือกเมือง
+  for (const it of items) {
+    const t = String(it.type || "").toLowerCase();
+    const id = it.city_id ?? it.value ?? it.id; // รองรับ city_id / value / id
+    if (t.includes("city") || it.city_id || it.value) {
+      const cityId = String(id || "");
+      if (cityId) return { cityId, hid: "", label: it.label || it.city_name || "" };
+    }
+  }
+
+  // 3) ไม่รู้ชนิดก็ใช้รายการแรกเป็นเมือง (เช่นกรณีที่มีแค่ city_id/value)
+  const it = items[0];
+  const cityId = String((it && (it.city_id ?? it.value ?? it.id)) || "");
+  return { cityId, hid: "", label: (it && (it.label || it.city_name)) || "" };
+}
+
 module.exports = async function (req, res) {
   try {
     // -------- read query --------
@@ -52,7 +82,7 @@ module.exports = async function (req, res) {
     const limit    = Math.max(1, qint(req, "limit", 30));
     const sortBy   = SORT_MAP[qstr(req, "sort", "rec")] || "Recommended";
 
-    // optional children ages
+    // children ages (optional)
     let childrenAges = toAges(qstr(req, "childrenAges", ""));
     if (children > 0) {
       while (childrenAges.length < children) childrenAges.push(7);
@@ -65,7 +95,7 @@ module.exports = async function (req, res) {
       return res.status(200).json({ ok: false, reason: "missing_dates", results: [] });
     }
 
-    // -------- BACKEND FALLBACK: resolve q -> cityId/hid --------
+    // -------- BACKEND FALLBACK: resolve q -> cityId/hid ด้วย /api/suggest --------
     if (!cityId && !hid && q) {
       try {
         const base = hostOrigin(req);
@@ -73,18 +103,11 @@ module.exports = async function (req, res) {
         const sRes = await fetch(url, { cache: "no-store" });
         const sJson = await sRes.json().catch(() => null);
         if (sJson && sJson.ok && Array.isArray(sJson.items) && sJson.items.length) {
-          // ให้ความสำคัญกับ Hotel ก่อน ถ้าไม่มีค่อย City / อื่น ๆ
-          const toType = (t) => String(t || "").toLowerCase();
-          const hotel  = sJson.items.find((it) => toType(it.type).includes("hotel"));
-          const city   = sJson.items.find((it) => toType(it.type).includes("city"));
-          const pick   = hotel || city || sJson.items[0];
-          const t = toType(pick.type);
-          if (t.includes("hotel")) hid = String(pick.id || "");
-          else cityId = String(pick.id || "");
+          const picked = pickFromSuggest(sJson.items);
+          if (picked.hid) hid = picked.hid;
+          if (picked.cityId) cityId = picked.cityId;
         }
-      } catch (_e) {
-        // เงียบ ๆ ไว้ ถ้า resolve ไม่สำเร็จ ค่อยให้ error ด้านล่างจัดการ
-      }
+      } catch (_) {}
     }
 
     if (!cityId && !hid) {
@@ -178,3 +201,4 @@ module.exports = async function (req, res) {
     return res.status(200).json({ ok: false, reason: "exception", message: String(err), results: [] });
   }
 };
+
