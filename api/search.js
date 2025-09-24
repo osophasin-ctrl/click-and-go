@@ -1,16 +1,13 @@
-// /api/search.js  — Vercel Serverless Function (CommonJS)
-// แปลงพารามิเตอร์จากหน้าเว็บ → payload Agoda lt_v1
+// /api/search.js — Vercel Serverless (CommonJS)
+// รับ query จากหน้าเว็บ → แปลงเป็น payload lt_v1 → เรียก Agoda → ส่งกลับในรูปแบบที่หน้า search.html ใช้ได้
 
 const AGODA_URL = "http://affiliateapi7643.agoda.com/affiliateservice/lt_v1";
 
-// แนะนำให้ตั้งใน Vercel Project Settings → Environment Variables
 const SITE_ID = process.env.AGODA_SITE_ID || "1949420";
 const API_KEY = process.env.AGODA_API_KEY || "b80d95c1-7e21-4935-b319-28feff6a60f1";
 
-// แมปตัวเลือกเรียงจาก UI → Agoda
 const SORT_MAP = { rec: "Recommended", price_asc: "PriceAsc", price_desc: "PriceDesc" };
 
-// helper: อ่านค่า query ปลอดภัย
 function qstr(req, key, def = "") {
   const v = (req.query && req.query[key]) || def;
   return (v == null ? "" : String(v)).trim();
@@ -22,24 +19,17 @@ function qint(req, key, def = 0) {
 
 module.exports = async function (req, res) {
   try {
-    // -------- read query --------
-    const q = qstr(req, "q", "");
     const cityId = qstr(req, "cityId", qstr(req, "cityid", ""));
     const hid = qstr(req, "hid", "");
-
     const checkin = qstr(req, "checkin", "");
     const checkout = qstr(req, "checkout", "");
-
-    const rooms = Math.max(1, qint(req, "rooms", 1)); // (ยังไม่ใช้กับ lt_v1)
     const adults = Math.max(1, qint(req, "adults", 2));
     const children = Math.max(0, qint(req, "children", 0));
-
     const currency = qstr(req, "currency", "THB");
     const lang = qstr(req, "lang", "th-th");
     const limit = Math.max(1, qint(req, "limit", 30));
     const sortBy = SORT_MAP[qstr(req, "sort", "rec")] || "Recommended";
 
-    // validate ขั้นต้น
     if (!checkin || !checkout) {
       return res.status(200).json({ ok: false, reason: "missing_dates", results: [] });
     }
@@ -47,7 +37,6 @@ module.exports = async function (req, res) {
       return res.status(200).json({ ok: false, reason: "missing_id", results: [] });
     }
 
-    // -------- build payload lt_v1 --------
     const payload = {
       criteria: {
         additional: {
@@ -58,7 +47,7 @@ module.exports = async function (req, res) {
           minimumReviewScore: 0,
           minimumStarRating: 0,
           sortBy,
-          dailyRate: { minimum: 1, maximum: 1000000 }, // ผ่อนคลายเพื่อให้มีผลลัพธ์
+          dailyRate: { minimum: 1, maximum: 1000000 },
           occupancy: { numberOfAdult: adults, numberOfChildren: children }
         },
         checkInDate: checkin,
@@ -68,7 +57,6 @@ module.exports = async function (req, res) {
     if (hid) payload.criteria.hotelId = parseInt(hid, 10);
     else payload.criteria.cityId = parseInt(cityId, 10);
 
-    // -------- call Agoda --------
     const resp = await fetch(AGODA_URL, {
       method: "POST",
       headers: {
@@ -79,47 +67,50 @@ module.exports = async function (req, res) {
       body: JSON.stringify(payload)
     });
 
-    let dataText = await resp.text();
-    let dataJson = null;
-    try { dataJson = JSON.parse(dataText); } catch (_e) {}
+    const text = await resp.text();
+    let data = null;
+    try { data = JSON.parse(text); } catch (_) {}
 
     if (!resp.ok) {
       return res.status(200).json({
-        ok: false,
-        reason: `agoda_http_${resp.status}`,
-        message: dataText,
-        results: [],
-        payload
+        ok: false, reason: `agoda_http_${resp.status}`, message: text, results: [], payload
       });
     }
 
-    // -------- normalize results ให้หน้าเว็บ --------
+    // ---------- NORMALIZE: ใช้คีย์ที่เห็นจาก debug ----------
     const arr =
-      (Array.isArray(dataJson && dataJson.results) && dataJson.results) ||
-      (Array.isArray(dataJson && dataJson.hotels) && dataJson.hotels) ||
-      (Array.isArray(dataJson && dataJson.data) && dataJson.data) ||
+      (Array.isArray(data && data.results) && data.results) ||
+      (Array.isArray(data && data.hotels) && data.hotels) ||
+      (Array.isArray(data && data.data) && data.data) ||
       [];
 
     const items = arr.map((r) => {
-      const price =
+      // จาก debug: imageURL, landingURL, dailyRate, hotelName, starRating, reviewScore, currency
+      const priceFromAgoda =
         (r.dailyRate && (r.dailyRate.total || r.dailyRate.dailyTotal || r.dailyRate.minRate)) ||
-        r.lowRate || r.price || null;
-      const url = r.deeplinkUrl || r.deeplink || r.url || r.agodaUrl || "#";
-      const thumb = r.thumbnailUrl || r.imageUrl || r.photoUrl || r.thumbnail || "";
+        r.dailyRate || r.lowRate || r.price || null;
+
+      const currencyFromAgoda = r.currency || currency;
+
+      const thumb =
+        r.imageURL || r.thumbnailUrl || r.imageUrl || r.photoUrl || r.thumbnail || "";
+
+      const url =
+        r.landingURL || r.deeplinkUrl || r.deeplink || r.url || r.agodaUrl || "#";
+
       return {
         name: r.hotelName || r.name || r.propertyName || "",
         thumbnail: thumb,
         rating: r.starRating ?? null,
         reviewScore: r.reviewScore ?? null,
-        price,
-        currency,
+        price: priceFromAgoda,
+        currency: currencyFromAgoda,
         url
       };
     });
 
-    // โหมด debug
     if (qstr(req, "debug", "") === "1") {
-      return res.status(200).json({ ok: true, payload, raw: dataJson ?? dataText, results: items });
+      return res.status(200).json({ ok: true, payload, raw: data ?? text, results: items });
     }
 
     return res.status(200).json({ ok: true, results: items });
