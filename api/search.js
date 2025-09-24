@@ -16,19 +16,42 @@ function qint(req, key, def = 0) {
   const n = parseInt(qstr(req, key, String(def)), 10);
   return Number.isFinite(n) ? n : def;
 }
+function toAges(str) {
+  // แปลง '7,5,10' -> [7,5,10] (กรองค่าที่ไม่ใช่เลข/น้อยกว่า 0/มากกว่า 17)
+  return String(str || "")
+    .split(",")
+    .map(s => parseInt(s.trim(), 10))
+    .filter(n => Number.isFinite(n) && n >= 0 && n <= 17);
+}
+function withUtm(url) {
+  if (!url) return "#";
+  const hasQ = url.includes("?");
+  const sep = hasQ ? "&" : "?";
+  return `${url}${sep}utm_source=clickandgo&utm_medium=affiliate`;
+}
 
 module.exports = async function (req, res) {
   try {
-    const cityId = qstr(req, "cityId", qstr(req, "cityid", ""));
-    const hid = qstr(req, "hid", "");
+    const cityId  = qstr(req, "cityId", qstr(req, "cityid", ""));
+    const hid     = qstr(req, "hid", "");
     const checkin = qstr(req, "checkin", "");
-    const checkout = qstr(req, "checkout", "");
-    const adults = Math.max(1, qint(req, "adults", 2));
-    const children = Math.max(0, qint(req, "children", 0));
-    const currency = qstr(req, "currency", "THB");
-    const lang = qstr(req, "lang", "th-th");
-    const limit = Math.max(1, qint(req, "limit", 30));
-    const sortBy = SORT_MAP[qstr(req, "sort", "rec")] || "Recommended";
+    const checkout= qstr(req, "checkout", "");
+    const adults  = Math.max(1, qint(req, "adults", 2));
+    const children= Math.max(0, qint(req, "children", 0));
+    const currency= qstr(req, "currency", "THB");
+    const lang    = qstr(req, "lang", "th-th");
+    const limit   = Math.max(1, qint(req, "limit", 30));
+    const sortBy  = SORT_MAP[qstr(req, "sort", "rec")] || "Recommended";
+
+    // optional: custom children ages e.g. &childrenAges=7,5
+    let childrenAges = toAges(qstr(req, "childrenAges", ""));
+    if (children > 0) {
+      // ถ้าไม่ได้ส่งมา หรือจำนวนไม่ครบ ให้เติมด้วย 7 จนครบ
+      while (childrenAges.length < children) childrenAges.push(7);
+      if (childrenAges.length > children) childrenAges = childrenAges.slice(0, children);
+    } else {
+      childrenAges = [];
+    }
 
     if (!checkin || !checkout) {
       return res.status(200).json({ ok: false, reason: "missing_dates", results: [] });
@@ -48,7 +71,11 @@ module.exports = async function (req, res) {
           minimumStarRating: 0,
           sortBy,
           dailyRate: { minimum: 1, maximum: 1000000 },
-          occupancy: { numberOfAdult: adults, numberOfChildren: children }
+          occupancy: {
+            numberOfAdult: adults,
+            numberOfChildren: children,
+            ...(children > 0 ? { childrenAges } : {})
+          }
         },
         checkInDate: checkin,
         checkOutDate: checkout
@@ -85,31 +112,31 @@ module.exports = async function (req, res) {
       [];
 
     const items = arr.map((r) => {
-      // จาก debug: imageURL, landingURL, dailyRate, hotelName, starRating, reviewScore, currency
-      const priceFromAgoda =
+      const price =
         (r.dailyRate && (r.dailyRate.total || r.dailyRate.dailyTotal || r.dailyRate.minRate)) ||
         r.dailyRate || r.lowRate || r.price || null;
-
-      const currencyFromAgoda = r.currency || currency;
 
       const thumb =
         r.imageURL || r.thumbnailUrl || r.imageUrl || r.photoUrl || r.thumbnail || "";
 
       const url =
-        r.landingURL || r.deeplinkUrl || r.deeplink || r.url || r.agodaUrl || "#";
+        withUtm(r.landingURL || r.deeplinkUrl || r.deeplink || r.url || r.agodaUrl || "#");
 
       return {
         name: r.hotelName || r.name || r.propertyName || "",
         thumbnail: thumb,
         rating: r.starRating ?? null,
         reviewScore: r.reviewScore ?? null,
-        price: priceFromAgoda,
-        currency: currencyFromAgoda,
+        price,
+        currency: r.currency || currency,
         url
       };
     });
 
-    if (qstr(req, "debug", "") === "1") {
+    // โหมด debug: ปิดใน production
+    const isProd = process.env.NODE_ENV === "production";
+    const wantDebug = qstr(req, "debug", "") === "1";
+    if (wantDebug && !isProd) {
       return res.status(200).json({ ok: true, payload, raw: data ?? text, results: items });
     }
 
