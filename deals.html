@@ -337,22 +337,22 @@
             }).join('');
             show();
 
+            // ใช้ pointerdown ให้คลิกติดก่อน blur
             panel.querySelectorAll('.suggest-item').forEach(el=>{
-              el.addEventListener('click', ()=>{
-                const rawType = el.getAttribute('data-type') || '';
-                const type = rawType.toString().toLowerCase(); // normalize
+              el.addEventListener('pointerdown', ()=>{
+                const rawType = (el.getAttribute('data-type') || '').toString();
+                const type = rawType.trim().toLowerCase();
                 const id   = el.getAttribute('data-id') || '';
                 const text = el.getAttribute('data-label') || '';
 
                 input.value = text;
                 typeEl.value = rawType;
 
-                // เคลียร์ก่อน
                 cityIdEl.value = '';
                 hidEl.value = '';
 
-                if (type === 'city')  cityIdEl.value = id;
-                if (type === 'hotel') hidEl.value    = id;
+                if (type.includes('city'))  cityIdEl.value = id;
+                if (type.includes('hotel')) hidEl.value    = id;
 
                 hide();
               });
@@ -360,37 +360,16 @@
           }catch(e){ hide(); }
         }, 180);
       });
-
       document.addEventListener('click', e=>{ if(!panel.contains(e.target) && e.target!==input) hide(); });
     })();
 
-    // Submit → ไป search.html ภาษาไทย (ต้องมี cityid หรือ hid)
+    // Submit → ไป search.html ภาษาไทย (พยายาม resolve อัตโนมัติ)
     (function(){
-      document.getElementById('cgForm').addEventListener('submit', (e)=>{
+      document.getElementById('cgForm').addEventListener('submit', async (e)=>{
         e.preventDefault();
         const inPicker  = window._cg_inPicker;
         const outPicker = window._cg_outPicker;
         const ci = inPicker.formatDate(inPicker.selectedDates[0], 'Y-m-d');
         const co = outPicker.formatDate(outPicker.selectedDates[0], 'Y-m-d');
         const rooms    = document.getElementById('rooms').value || 1;
-        const adults   = document.getElementById('adults').value || 2;
-        const children = document.getElementById('children').value || 0;
-        const cityid = (document.getElementById('cityid').value || '').trim();
-        const hid    = (document.getElementById('hid').value || '').trim();
-        const qs = new URLSearchParams({ checkin: ci, checkout: co, rooms, adults, children, lang: 'th-th' });
-
-        if (hid) {
-          qs.set('hid', hid);
-        } else if (cityid) {
-          qs.set('cityid', cityid);
-        } else {
-          alert('โปรดเลือกปลายทางจากรายการแนะนำ เพื่อให้ค้นหาได้ถูกต้อง');
-          return;
-        }
-
-        location.href = `/search.html?${qs.toString()}`;
-      });
-    })();
-  </script>
-</body>
-</html>
+        const adults   = docum
