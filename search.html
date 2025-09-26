@@ -169,12 +169,32 @@
     }catch(e){ return 1; }
   }
 
-  /** ลิงก์ไปหน้า /search ของ Agoda โดยตรง + ตัวกันเปิดแอป */
+  /** ลิงก์ไปหน้า partnersearch ของ Agoda (คง cid และเลี่ยงเด้งแอป) */
   function partnerUrl(){
     const langPath = state.lang || 'th-th';
+
+    // ถ้ามี cityId -> ใช้ partnersearch (ดีที่สุดสำหรับ affiliate)
+    if (state.cityId) {
+      const base = `https://www.agoda.com/${langPath}/partners/partnersearch.aspx`;
+      const sp = new URLSearchParams({
+        cid: '1949420',
+        city: String(state.cityId),
+        checkin: state.checkin || '',
+        checkout: state.checkout || '',
+        rooms: String(state.rooms || 1),
+        adults: String(state.adults || 2),
+        children: String(state.children || 0),
+        currency: state.currency || 'THB',
+        utm_source: 'clickandgo',
+        utm_medium: 'affiliate'
+      });
+      return `${base}?${sp.toString()}`;
+    }
+
+    // ไม่มี cityId -> fallback ไปหน้า search ทั่วไป (ยังคง cid)
     const base = `https://www.agoda.com/${langPath}/search`;
     const sp = new URLSearchParams({
-      cid: '1949420',                        // partner id
+      cid: '1949420',
       currency: state.currency || 'THB',
       checkin: state.checkin || '',
       checkout: state.checkout || '',
@@ -182,11 +202,10 @@
       children: String(state.children || 0),
       rooms: String(state.rooms || 1),
       los: String(calcLos(state.checkin, state.checkout)),
-      noapp: '1',                            // พยายามบังคับไม่เปิดแอป
-      pcs: '1'                               // force desktop context
+      utm_source: 'clickandgo',
+      utm_medium: 'affiliate'
     });
-    if (state.cityId) sp.set('city', String(state.cityId));
-    else if (state.q)  sp.set('q', state.q);
+    if (state.q) sp.set('q', state.q);
     return `${base}?${sp.toString()}`;
   }
 
