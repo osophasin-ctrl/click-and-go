@@ -31,20 +31,31 @@ function toAges(str) {
     .map((s) => parseInt(s.trim(), 10))
     .filter((n) => Number.isFinite(n) && n >= 0 && n <= 17);
 }
-
-// ใส่ cid + UTM + กันเด้งเข้าแอปทุกลิงก์จาก Agoda
 function withUtm(url) {
   if (!url) return "#";
-  const u = new URL(url, "https://www.agoda.com"); // เผื่อกรณีส่งเป็น path
-  u.searchParams.set("cid", SITE_ID);
-  u.searchParams.set("utm_source", "clickandgo");
-  u.searchParams.set("utm_medium", "affiliate");
-  // กันเด้งเข้าแอป (ส่วนใหญ่เบราว์เซอร์มือถือจะเคารพพารามฯนี้)
-  u.searchParams.set("noapp", "1");
-  u.searchParams.set("pcs", "1");
-  return u.toString();
+  const hasQ = url.includes("?");
+  const sep = hasQ ? "&" : "?";
+  return `${url}${sep}utm_source=clickandgo&utm_medium=affiliate`;
 }
-
+// ใส่ cid ให้แน่ใจว่าอยู่ในลิงก์เสมอ (ถ้าไม่มี)
+function withCid(url) {
+  if (!url) return "#";
+  try {
+    const u = new URL(url);
+    if (!u.searchParams.has("cid")) u.searchParams.set("cid", SITE_ID);
+    return u.toString();
+  } catch {
+    // เผื่อ URL ไม่ครบ schema → ต่อ string แบบง่าย
+    const hasCid = /([?&])cid=/.test(url);
+    if (hasCid) return url;
+    const sep = url.includes("?") ? "&" : "?";
+    return `${url}${sep}cid=${encodeURIComponent(SITE_ID)}`;
+  }
+}
+// รวม cid + utm
+function withCidAndUtm(url) {
+  return withUtm(withCid(url));
+}
 function guessProto(req) {
   return (req.headers["x-forwarded-proto"] || "https").split(",")[0].trim();
 }
@@ -84,7 +95,7 @@ function pickFromSuggest(items) {
   return { cityId, hid: "", label: (it && (it.label || it.city_name)) || "" };
 }
 
-// สร้างลิงก์ไปหน้าพันธมิตร Agoda (deeplink แบบ partnersearch) สำหรับปุ่ม CTA
+// สร้างลิงก์ไปหน้าพันธมิตร Agoda (deeplink แบบ partnersearch)
 function buildAgodaUrl({ cityId, hid, currency, checkin, checkout, adults, children, rooms = 1 }) {
   const base = `https://www.agoda.com/partners/partnersearch.aspx?cid=${SITE_ID}`;
   const common =
@@ -93,9 +104,7 @@ function buildAgodaUrl({ cityId, hid, currency, checkin, checkout, adults, child
     + `&checkout=${encodeURIComponent(checkout)}`
     + `&NumberofAdults=${adults}`
     + `&NumberofChildren=${children}`
-    + `&Rooms=${rooms}`
-    + `&noapp=1&pcs=1`        // กันเปิดแอป + บังคับเว็บ
-    + `&utm_source=clickandgo&utm_medium=affiliate`;
+    + `&Rooms=${rooms}`;
   if (hid) return `${base}&hid=${encodeURIComponent(hid)}${common}`;
   if (cityId) return `${base}&city=${encodeURIComponent(cityId)}${common}`;
   return "";
@@ -218,8 +227,11 @@ module.exports = async function (req, res) {
       const thumb =
         r.imageURL || r.thumbnailUrl || r.imageUrl || r.photoUrl || r.thumbnail || "";
 
-      const url =
-        withUtm(r.landingURL || r.deeplinkUrl || r.deeplink || r.url || r.agodaUrl || "#");
+      const rawUrl =
+        r.landingURL || r.deeplinkUrl || r.deeplink || r.url || r.agodaUrl || "#";
+
+      // ใส่ cid และ utm ให้แน่ใจทุกลิงก์
+      const url = withCidAndUtm(rawUrl);
 
       return {
         name: r.hotelName || r.name || r.propertyName || "",
@@ -249,3 +261,4 @@ module.exports = async function (req, res) {
     return res.status(200).json({ ok: false, reason: "exception", message: String(err), results: [] });
   }
 };
+```0
