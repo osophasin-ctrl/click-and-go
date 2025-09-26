@@ -6,45 +6,40 @@
   <title>ข้อเสนอที่ดีที่สุด | Click & Go</title>
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/style.css">
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
   <style>
-    :root{
-      --brand:#0aa297;
-      --card-border:#0aa29733;
-      --gold:#d4a017;
-      --muted:#666;
-    }
+    :root{ --brand:#0aa297; --card-border:#0aa29733; --gold:#d4a017; --muted:#666; }
     .container{max-width:1100px;margin:0 auto;padding:16px}
     .main-title{font-size:42px;line-height:1.2;margin:8px 0 6px}
     @media(max-width:640px){.main-title{font-size:34px}}
     .muted{color:var(--muted)}
-    .nowrap{white-space:nowrap}
 
-    /* ---- filter bar (chips) ---- */
+    /* filter chips */
     .bar{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;overflow:auto;padding:8px 0;margin:8px 0 16px}
-    .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;
-      padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer}
-    .chip span{color:#111}
+    .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer}
     .chip small{color:#666}
-    .chip:focus,.chip:focus-visible{outline:3px solid #0aa29755;outline-offset:2px}
 
-    /* ---- dialogs ---- */
-    dialog{border:none;border-radius:14px;max-width:420px;width:calc(100% - 24px);padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
-    dialog::backdrop{background:rgba(0,0,0,.35)}
-    .dlg-title{font-weight:700;margin:0 0 10px}
-    .dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
-    .btn{display:inline-block;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;text-decoration:none}
-    .btn.secondary{background:#e5e7eb;color:#111}
-    .btn.ghost{background:transparent;border:1px solid #ddd;color:#111}
+    /* search box (เหมือน deals) */
+    .mock-wrap{ max-width:1030px; width:100%; margin:0 auto; }
+    .mock-box{ width:100%; background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.08); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+    .mock-title{ margin:0 0 6px; font-weight:800; font-size:22px; }
+    .mock-sub{ margin:0 0 12px; color:#666; }
+    .mock-row{ display:grid; gap:10px; align-items:center; grid-template-columns:1fr 1fr; }
+    .full-row{ grid-column:1 / -1; }
+    .mock-input,.guest-input,.mock-btn{ height:44px; border:1px solid #d7d7d7; border-radius:8px; padding:0 12px; background:#fff; font-size:15px; }
+    .guest-input{ text-align:left; cursor:pointer; }
+    .mock-btn{ background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; }
+    .field{ position:relative; }
+    .field-label{ position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none; }
+    .has-label .mock-input,.has-label .flatpickr-input{ height:56px; padding-top:18px; }
+    .suggest-wrap{ position:relative; }
+    .suggest-panel{ position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,.08); max-height:260px; overflow:auto; z-index:999; display:none; }
 
-    .radio-list{display:flex;flex-direction:column;gap:10px}
-    .radio-item{display:flex;align-items:center;gap:10px;padding:8px 4px}
-
-    /* price range (dual) */
-    .range-wrap{margin:14px 0}
-    .range-labels{display:flex;justify-content:space-between;font-weight:600}
-    .ranges{display:flex;gap:10px;align-items:center;margin-top:10px}
-    .ranges input[type=range]{flex:1}
-    .ranges input[type=number]{width:120px;padding:8px;border:1px solid #ddd;border-radius:8px}
+    /* ทำให้ ci/co อยู่บรรทัดเดียวแม้จอเล็ก */
+    .date-inline{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width:640px){ .mock-row{grid-template-columns:1fr} .date-inline{grid-template-columns:1fr 1fr} }
 
     /* cards */
     .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -66,11 +61,8 @@
     .sk-line{height:14px;margin-top:8px;border-radius:6px}
 
     .cta-wrap{display:flex;justify-content:center;margin:28px 0}
+    .btn{display:inline-block;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;text-decoration:none}
     .cta{padding:12px 22px;border-radius:999px;font-weight:600}
-
-    /* NEW: put check-in & check-out on one row */
-    .date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media(max-width:480px){.date-row{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -85,10 +77,41 @@
 </header>
 
 <main class="container">
-  <h1 id="title" class="main-title">ข้อเสนอที่ดีที่สุด</h1>
-  <!-- ลบสรุปผลลัพธ์: <p class="muted" id="subtitle"></p> -->
+  <h1 class="main-title">ข้อเสนอที่ดีที่สุด</h1>
 
-  <!-- บาร์ฟิลเตอร์ 1 แถว -->
+  <!-- Search Box -->
+  <section style="margin:12px 0 8px">
+    <div class="mock-wrap"><div class="mock-box">
+      <h3 class="mock-title">ค้นหาดีลที่ใช่สำหรับคุณ</h3>
+      <p class="mock-sub">พิมพ์ชื่อเมืองหรือโรงแรม เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา</p>
+
+      <form id="cgForm" class="mock-row" method="GET" action="/search.html" autocomplete="off">
+        <div class="suggest-wrap full-row">
+          <input type="text" id="dest" name="q" class="mock-input" placeholder="กรอกชื่อเมืองหรือโรงแรม" aria-label="ปลายทาง">
+          <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="คำแนะนำ"></div>
+        </div>
+
+        <!-- ci/co อยู่บรรทัดเดียว -->
+        <div class="date-inline full-row">
+          <div class="field has-label"><span class="field-label">เช็คอิน</span><input type="text" id="ci" name="checkin" class="mock-input" readonly></div>
+          <div class="field has-label"><span class="field-label">เช็คเอาท์</span><input type="text" id="co" name="checkout" class="mock-input" readonly></div>
+        </div>
+
+        <button type="button" id="guestBtn" class="guest-input full-row">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
+        <button type="submit" class="mock-btn btn-wide full-row">ค้นหา</button>
+
+        <input type="hidden" id="rooms"   name="rooms"   value="1">
+        <input type="hidden" id="adults"  name="adults"  value="2">
+        <input type="hidden" id="children"name="children"value="0">
+        <input type="hidden"              name="lang"    value="th-th">
+        <input type="hidden" id="cityid"  name="cityid"  value="">
+        <input type="hidden" id="hid"     name="hid"     value="">
+        <input type="hidden" id="selType" value="">
+      </form>
+    </div></div>
+  </section>
+
+  <!-- filter chips -->
   <div class="bar" role="toolbar" aria-label="ตัวกรองการค้นหา">
     <button id="chipSort"   class="chip"><span>เรียงโดย</span><small id="chipSortV">แนะนำ</small></button>
     <button id="chipStars"  class="chip"><span>เรตติ้ง</span><small id="chipStarsV">ทั้งหมด</small></button>
@@ -97,31 +120,6 @@
     <button id="chipApply"  class="chip" style="background:var(--brand);color:#fff;border-color:var(--brand)">ปรับใช้</button>
   </div>
 
-  <!-- Search box (คงเดิม เพียงจัดวันที่ให้แถวเดียว) -->
-  <section class="mock-row" style="grid-template-columns:1fr;gap:10px;margin-bottom:8px">
-    <div class="suggest-wrap">
-      <input type="text" id="dest" class="mock-input" placeholder="กรอกชื่อเมืองหรือโรงแรม" aria-label="ปลายทาง">
-      <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="คำแนะนำ"></div>
-    </div>
-    <div class="date-row">
-      <div class="field has-label">
-        <span class="field-label">เช็คอิน</span>
-        <input type="text" id="ci" class="mock-input" readonly>
-      </div>
-      <div class="field has-label">
-        <span class="field-label">เช็คเอาท์</span>
-        <input type="text" id="co" class="mock-input" readonly>
-      </div>
-    </div>
-    <button type="button" id="guestBtn" class="guest-input">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
-    <button id="btnDoSearch" class="btn" style="width:100%">ค้นหา</button>
-
-    <!-- hidden -->
-    <input type="hidden" id="rooms"   value="1">
-    <input type="hidden" id="adults"  value="2">
-    <input type="hidden" id="children"value="0">
-  </section>
-
   <section id="grid" class="cards" aria-live="polite"></section>
 
   <div class="cta-wrap">
@@ -129,81 +127,144 @@
   </div>
 </main>
 
-<!-- Dialog: เรียงโดย -->
-<dialog id="dlgSort">
-  <h3 class="dlg-title">เรียงโดย</h3>
-  <div class="radio-list">
-    <label class="radio-item"><input type="radio" name="sort" value="rec"> แนะนำ</label>
-    <label class="radio-item"><input type="radio" name="sort" value="price_asc"> ราคาต่ำ → สูง</label>
-    <label class="radio-item"><input type="radio" name="sort" value="price_desc"> ราคาสูง → ต่ำ</label>
+<!-- Guest Modal -->
+<div id="guestBackdrop" class="modal-backdrop" aria-hidden="true"></div>
+<div id="guestModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="guestTitle">
+  <div class="modal-header"><div id="guestTitle" class="modal-title">ผู้เข้าพัก</div><button type="button" class="btn-outline" id="btnCloseX">×</button></div>
+  <div class="modal-body">
+    <div class="row-ctrl"><div class="label-wrap"><strong>ห้อง</strong><small>จำนวนห้องพัก</small></div>
+      <div class="counter"><button class="btn-ctrl" data-type="rooms" data-op="minus">−</button><span class="count" id="roomsCount">1</span><button class="btn-ctrl" data-type="rooms" data-op="plus">+</button></div></div>
+    <div class="row-ctrl"><div class="label-wrap"><strong>ผู้ใหญ่</strong><small>อายุ 18 ปีขึ้นไป</small></div>
+      <div class="counter"><button class="btn-ctrl" data-type="adults" data-op="minus">−</button><span class="count" id="adultsCount">2</span><button class="btn-ctrl" data-type="adults" data-op="plus">+</button></div></div>
+    <div class="row-ctrl"><div class="label-wrap"><strong>เด็ก</strong><small>อายุ 0–17 ปี</small></div>
+      <div class="counter"><button class="btn-ctrl" data-type="children" data-op="minus">−</button><span class="count" id="childrenCount">0</span><button class="btn-ctrl" data-type="children" data-op="plus">+</button></div></div>
   </div>
-  <div class="dlg-actions">
-    <button class="btn secondary" onclick="document.getElementById('dlgSort').close()">ยกเลิก</button>
-    <button class="btn" id="btnSortOk">ตกลง</button>
-  </div>
-</dialog>
+  <div class="modal-footer"><button class="btn-outline" id="btnCancel">ยกเลิก</button><button class="btn-primary" id="btnSaveGuests">บันทึก</button></div>
+</div>
 
-<!-- Dialog: เรตติ้ง -->
-<dialog id="dlgStars">
-  <h3 class="dlg-title">เรตติ้งโรงแรม</h3>
-  <div class="radio-list">
-    <label class="radio-item"><input type="radio" name="stars" value="0"> ทั้งหมด</label>
-    <label class="radio-item"><input type="radio" name="stars" value="2"> 2 ดาวขึ้นไป</label>
-    <label class="radio-item"><input type="radio" name="stars" value="3"> 3 ดาวขึ้นไป</label>
-    <label class="radio-item"><input type="radio" name="stars" value="4"> 4 ดาวขึ้นไป</label>
-    <label class="radio-item"><input type="radio" name="stars" value="5"> 5 ดาวขึ้นไป</label>
-  </div>
-  <div class="dlg-actions">
-    <button class="btn secondary" onclick="document.getElementById('dlgStars').close()">ยกเลิก</button>
-    <button class="btn" id="btnStarsOk">ตกลง</button>
-  </div>
-</dialog>
-
-<!-- Dialog: ราคา -->
-<dialog id="dlgPrice">
-  <h3 class="dlg-title">ช่วงราคา</h3>
-  <div class="range-wrap">
-    <div class="range-labels">
-      <div>฿<span id="pvMin">0</span></div>
-      <div>฿<span id="pvMax">200,000</span></div>
-    </div>
-    <div class="ranges">
-      <input id="rMin" type="range" min="0" max="200000" step="100" value="0">
-      <input id="rMax" type="range" min="0" max="200000" step="100" value="200000">
-    </div>
-    <div class="ranges">
-      <input id="nMin" type="number" min="0" max="200000" step="100" value="0">
-      <input id="nMax" type="number" min="0" max="200000" step="100" value="200000">
-    </div>
-  </div>
-  <div class="dlg-actions">
-    <button class="btn ghost" id="btnPriceReset">ลบ</button>
-    <button class="btn" id="btnPriceOk">ตกลง</button>
-  </div>
-</dialog>
-
-<!-- Dialog: รีวิว -->
-<dialog id="dlgScore">
-  <h3 class="dlg-title">คะแนนรีวิว</h3>
-  <div class="radio-list">
-    <label class="radio-item"><input type="radio" name="score" value="0"> ทั้งหมด</label>
-    <label class="radio-item"><input type="radio" name="score" value="6"> 6 คะแนนขึ้นไป</label>
-    <label class="radio-item"><input type="radio" name="score" value="7"> 7 คะแนนขึ้นไป</label>
-    <label class="radio-item"><input type="radio" name="score" value="8"> 8 คะแนนขึ้นไป</label>
-    <label class="radio-item"><input type="radio" name="score" value="9"> 9 คะแนนขึ้นไป</label>
-  </div>
-  <div class="dlg-actions">
-    <button class="btn secondary" onclick="document.getElementById('dlgScore').close()">ยกเลิก</button>
-    <button class="btn" id="btnScoreOk">ตกลง</button>
-  </div>
-</dialog>
-
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 <script>
+/* ====== เมนูภาษา (ถ้ามี) ====== */
+(function(){
+  const btn=document.querySelector('.lang-btn'),menu=document.querySelector('.lang-menu');
+  if(!btn||!menu) return;
+  function closeM(){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}
+  btn.addEventListener('click',e=>{e.stopPropagation();const o=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(o));});
+  document.addEventListener('click',closeM);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
+})();
+
+/* ====== Suggest ====== */
+(function(){
+  const input=document.getElementById('dest'), panel=document.getElementById('suggestPanel');
+  const cityIdEl=document.getElementById('cityid'), hidEl=document.getElementById('hid'), typeEl=document.getElementById('selType');
+  if(!input||!panel) return; let t=null;
+  function hide(){panel.style.display='none';panel.innerHTML='';}
+  function show(){panel.style.display='block';}
+  input.addEventListener('input',()=>{
+    let q=(input.value||'').trim(); cityIdEl.value=''; hidEl.value=''; typeEl.value='';
+    if(t) clearTimeout(t); if(!q||q.length<2) return hide();
+    t=setTimeout(async()=>{
+      try{
+        const r=await fetch('/api/suggest?q='+encodeURIComponent(q)+'&lang=th-th&type=mixed');
+        const d=await r.json(); if(!d||!d.ok||!d.items) return hide();
+        panel.innerHTML=d.items.map(it=>{
+          const label=String(it.label||'').replace(/"/g,'&quot;');
+          const sub=it.subtitle?String(it.subtitle):''; const type=it.type?String(it.type):'';
+          return `<div class="suggest-item" data-id="${it.id||''}" data-type="${type}" data-label="${label}">
+                    <div><div class="s-label">${label}</div>${sub?`<div class="s-sub">${sub}${type?' · '+type:''}</div>`:''}</div>
+                  </div>`;
+        }).join('');
+        show();
+        panel.querySelectorAll('.suggest-item').forEach(el=>{
+          el.addEventListener('mousedown',ev=>{
+            ev.preventDefault();
+            const rawType=String(el.getAttribute('data-type')||'').toLowerCase();
+            const id=el.getAttribute('data-id')||''; const text=el.getAttribute('data-label')||'';
+            input.value=text; typeEl.value=rawType;
+            cityIdEl.value=''; hidEl.value='';
+            if(rawType.includes('city'))  cityIdEl.value=id;
+            if(rawType.includes('hotel')) hidEl.value=id;
+            hide();
+          });
+        });
+      }catch(_){ hide(); }
+    },180);
+  });
+  document.addEventListener('click',e=>{ if(!panel.contains(e.target)&&e.target!==input) hide(); });
+})();
+
+/* ====== Dates & Guests (เหมือน deals) ====== */
+(function(){
+  const ONE=86400000;
+  const inPicker=flatpickr("#ci",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",
+    onChange(d){if(d[0]){const n=new Date(d[0].getTime()+ONE); outPicker.set('minDate',n); if(!outPicker.selectedDates[0]||outPicker.selectedDates[0]<=d[0]) outPicker.setDate(n,true);}}
+  });
+  const outPicker=flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:new Date(Date.now()+ONE)});
+  inPicker.setDate(new Date(),true); outPicker.setDate(new Date(Date.now()+ONE),true);
+  window._cg_inPicker=inPicker; window._cg_outPicker=outPicker;
+
+  let rooms=1,adults=2,children=0;
+  const btn=document.getElementById('guestBtn'), roomsC=document.getElementById('roomsCount'),
+        adultsC=document.getElementById('adultsCount'), childrenC=document.getElementById('childrenCount'),
+        hR=document.getElementById('rooms'), hA=document.getElementById('adults'), hC=document.getElementById('children'),
+        modal=document.getElementById('guestModal'), backdrop=document.getElementById('guestBackdrop');
+  function open(){ if(roomsC){roomsC.textContent=rooms; adultsC.textContent=adults; childrenC.textContent=children;} modal.style.display='block'; backdrop.style.display='block'; }
+  function close(){ modal.style.display='none'; backdrop.style.display='none'; }
+  function upd(){ btn.textContent=`${rooms} ห้อง, ${adults} ผู้ใหญ่, ${children} เด็ก`; }
+  upd(); btn.addEventListener('click',open);
+  document.getElementById('btnCloseX').addEventListener('click',close);
+  document.getElementById('btnCancel').addEventListener('click',close);
+  backdrop.addEventListener('click',close);
+  document.querySelectorAll('.btn-ctrl').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const t=b.getAttribute('data-type'),op=b.getAttribute('data-op');
+      let v=(t==='rooms'?rooms:(t==='adults'?adults:children)),min=(t==='children'?0:1),max=10;
+      if(op==='plus'&&v<max) v++; if(op==='minus'&&v>min) v--;
+      if(t==='rooms'){rooms=v; roomsC.textContent=v;} if(t==='adults'){adults=v; adultsC.textContent=v;} if(t==='children'){children=v; childrenC.textContent=v;}
+    });
+  });
+  document.getElementById('btnSaveGuests').addEventListener('click',()=>{hR.value=rooms; hA.value=adults; hC.value=children; upd(); close();});
+})();
+
+/* ====== Submit -> search.html (resolve id อัตโนมัติ) ====== */
+(function(){
+  document.getElementById('cgForm').addEventListener('submit',function(e){
+    // ปล่อยให้ form ส่งแบบ GET ตาม action ได้เลย แต่เราช่วยเติม cityid/hid ถ้ายังไม่มี
+    e.preventDefault();
+    const inP=window._cg_inPicker, outP=window._cg_outPicker;
+    const ci=inP.formatDate(inP.selectedDates[0],'Y-m-d');
+    const co=outP.formatDate(outP.selectedDates[0],'Y-m-d');
+    let q=(document.getElementById('dest').value||'').trim();
+    const rooms=document.getElementById('rooms').value||1;
+    const adults=document.getElementById('adults').value||2;
+    const children=document.getElementById('children').value||0;
+    const cityid=(document.getElementById('cityid').value||'').trim();
+    const hid=(document.getElementById('hid').value||'').trim();
+    if(q.indexOf('กรุงเทพฯ')>-1) q=q.replace(/กรุงเทพฯ/g,'กรุงเทพ');
+
+    function go(cid,hh){
+      const sp=new URLSearchParams({checkin:ci,checkout:co,rooms,adults,children,lang:'th-th'});
+      if(hh) sp.set('hid',hh); else if(cid) sp.set('cityid',cid); else if(q) sp.set('q',q);
+      location.href='/search.html?'+sp.toString();
+    }
+    if(cityid||hid||!q){ go(cityid,hid); return; }
+    fetch('/api/suggest?q='+encodeURIComponent(q)+'&lang=th-th&type=mixed')
+      .then(r=>r.json())
+      .then(d=>{
+        let cid='',hh=''; if(d&&d.ok&&Array.isArray(d.items)){
+          for(const it of d.items){const t=String(it.type||'').toLowerCase(); if(!hh&&t.includes('hotel')) hh=String(it.id||''); if(!cid&&t.includes('city')) cid=String(it.id||'');}
+        }
+        go(cid,hh);
+      }).catch(()=>go('',''));
+  });
+})();
+
+/* ====== ส่วนโหลดผลลัพธ์/ตัวกรอง (คงของเดิมทั้งหมด) ====== */
 (function(){
   const $ = s => document.querySelector(s);
   const params = new URLSearchParams(location.search);
-
-  // ----------- main state -----------
   const state = {
     q: params.get('q') || '',
     cityId: params.get('cityId') || params.get('cityid') || '',
@@ -224,34 +285,22 @@
     priceMax: +(params.get('priceMax') || 200000),
     page: +(params.get('page') || 1)
   };
-
-  // ----------- draft state -----------
   const draft = JSON.parse(JSON.stringify(state));
 
-  // (ลบการแสดงผล subtitle)
-  // const human = ...
-  // $('#subtitle').innerHTML = ...
-
-  // ----- ฟังก์ชัน format ราคา -----
   function fmt(n, cur = state.currency){
     if (n == null) return '-';
     const zeroDec = new Set(['THB','JPY','IDR','KRW','VND']);
     const use0 = zeroDec.has(String(cur||'').toUpperCase());
     const val = use0 ? Math.round(n) : n;
     try{
-      return new Intl.NumberFormat('th-TH',{
-        minimumFractionDigits: use0 ? 0 : 0,
-        maximumFractionDigits: use0 ? 0 : 2
-      }).format(val);
-    }catch(_){
-      return use0 ? String(Math.round(val)) : String(val);
-    }
+      return new Intl.NumberFormat('th-TH',{minimumFractionDigits: use0?0:0,maximumFractionDigits: use0?0:2}).format(val);
+    }catch(_){ return use0 ? String(Math.round(val)) : String(val); }
   }
   function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
   function updateChips(){
     $('#chipSortV').textContent = draft.sort==='price_asc'?'ราคาต่ำ → สูง':draft.sort==='price_desc'?'ราคาสูง → ต่ำ':'แนะนำ';
     $('#chipStarsV').textContent = draft.starsMin?`${draft.starsMin} ดาวขึ้นไป`:'ทั้งหมด';
-    const pm = Math.min(draft.priceMin, draft.priceMax), px = Math.max(draft.priceMin, draft.priceMax);
+    const pm=Math.min(draft.priceMin,draft.priceMax), px=Math.max(draft.priceMin,draft.priceMax);
     $('#chipPriceV').textContent = `฿${fmt(pm)} – ฿${fmt(px)}`;
     $('#chipScoreV').textContent = draft.scoreMin?`${draft.scoreMin} คะแนนขึ้นไป`:'ทั้งหมด';
   }
@@ -260,38 +309,22 @@
   function updateQueryOnly(){
     const u = new URL(location.href);
     Object.entries({
-      q: state.q || '',
-      cityId: state.cityId || '',
-      hid: state.hid || '',
-      city: state.city || '',
-      country: state.country || '',
-      checkin: state.checkin,
-      checkout: state.checkout,
-      rooms: state.rooms,
-      adults: state.adults,
-      children: state.children,
-      lang: state.lang,
-      currency: state.currency,
-      page: state.page,
-      sort: state.sort,
-      starsMin: state.starsMin,
-      scoreMin: state.scoreMin,
-      priceMin: state.priceMin,
-      priceMax: state.priceMax
-    }).forEach(([k,v])=>{
-      if (v === '' || v == null) u.searchParams.delete(k);
-      else u.searchParams.set(k, v);
-    });
+      q: state.q || '', cityId: state.cityId || '', hid: state.hid || '',
+      city: state.city || '', country: state.country || '',
+      checkin: state.checkin, checkout: state.checkout,
+      rooms: state.rooms, adults: state.adults, children: state.children,
+      lang: state.lang, currency: state.currency, page: state.page,
+      sort: state.sort, starsMin: state.starsMin, scoreMin: state.scoreMin,
+      priceMin: state.priceMin, priceMax: state.priceMax
+    }).forEach(([k,v])=>{ if(v===''||v==null) u.searchParams.delete(k); else u.searchParams.set(k,v); });
     history.replaceState({}, '', u);
   }
 
-  // resolve q -> id ถ้ายังไม่มี
   async function resolveDestinationIfNeeded(){
     if ((state.cityId || state.hid) || !state.q) return;
     try{
       const url = `/api/suggest?q=${encodeURIComponent(state.q)}&lang=${encodeURIComponent(state.lang)}&type=mixed`;
-      const res = await fetch(url, {cache:'no-store'});
-      const data = await res.json();
+      const res = await fetch(url,{cache:'no-store'}); const data = await res.json();
       if (data && data.ok && Array.isArray(data.items) && data.items.length){
         const firstHotel = data.items.find(it => String(it.type||'').toLowerCase().includes('hotel'));
         const firstCity  = data.items.find(it => String(it.type||'').toLowerCase().includes('city'));
@@ -303,30 +336,18 @@
       }
     }catch(_){}
   }
-
   function calcLos(ci, co){
-    try{
-      const a = new Date(ci+'T12:00:00Z'), b = new Date(co+'T12:00:00Z');
-      const diff = Math.round((b-a)/(1000*60*60*24));
-      return Math.max(1, diff||1);
-    }catch(e){ return 1; }
+    try{ const a=new Date(ci+'T12:00:00Z'), b=new Date(co+'T12:00:00Z'); return Math.max(1, Math.round((b-a)/(1000*60*60*24))||1); }catch(e){ return 1; }
   }
-
   function partnerUrl(){
     const langPath = state.lang || 'th-th';
     if (state.cityId) {
       const base = `https://www.agoda.com/${langPath}/partners/partnersearch.aspx`;
       const sp = new URLSearchParams({
-        cid: '1949420',
-        city: String(state.cityId),
-        checkin: state.checkin || '',
-        checkout: state.checkout || '',
-        rooms: String(state.rooms || 1),
-        adults: String(state.adults || 2),
-        children: String(state.children || 0),
-        currency: state.currency || 'THB',
-        utm_source: 'clickandgo', utm_medium: 'affiliate',
-        noapp:'1', pcs:'1'
+        cid:'1949420', city:String(state.cityId),
+        checkin:state.checkin||'', checkout:state.checkout||'',
+        rooms:String(state.rooms||1), adults:String(state.adults||2), children:String(state.children||0),
+        currency:state.currency||'THB', utm_source:'clickandgo', utm_medium:'affiliate', noapp:'1', pcs:'1'
       });
       return `${base}?${sp.toString()}`;
     }
@@ -341,45 +362,26 @@
     if (state.q) sp.set('q', state.q);
     return `${base}?${sp.toString()}`;
   }
-  function refreshPartnerCta(){
-    $('#partnerMore').setAttribute('href', partnerUrl());
-  }
+  function refreshPartnerCta(){ document.getElementById('partnerMore').setAttribute('href', partnerUrl()); }
 
   async function load(){
     renderSkeleton();
-
-    if (!state.cityId && !state.hid && state.q) {
-      await resolveDestinationIfNeeded();
-    }
-
+    if (!state.cityId && !state.hid && state.q) { await resolveDestinationIfNeeded(); }
     const api = new URL('/api/search', location.origin);
     const p = api.searchParams;
-
     if (state.hid) p.set('hid', state.hid);
     else if (state.cityId) p.set('cityId', state.cityId);
     else if (state.q) p.set('q', state.q);
-
-    ['checkin','checkout','rooms','adults','children','lang','currency','page','sort',
-     'starsMin','scoreMin','priceMin','priceMax'
-    ].forEach(k => p.set(k, state[k]));
-
-    const resp = await fetch(api.toString(), {cache: 'no-store'});
+    ['checkin','checkout','rooms','adults','children','lang','currency','page','sort','starsMin','scoreMin','priceMin','priceMax']
+      .forEach(k => p.set(k, state[k]));
+    const resp = await fetch(api.toString(), {cache:'no-store'});
     const json = await resp.json().catch(()=>({ok:false}));
-
-    if (!json.ok){
-      $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`;
-      refreshPartnerCta();
-      return;
-    }
-
+    if (!json.ok){ document.getElementById('grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`; refreshPartnerCta(); return; }
     let items = json.results || [];
     if (state.sort === 'price_asc') items.sort((a,b)=>(a.price||1e15)-(b.price||1e15));
     if (state.sort === 'price_desc') items.sort((a,b)=>(b.price||0)-(a.price||0));
-
-    render(items);
-    refreshPartnerCta();
+    render(items); refreshPartnerCta();
   }
-
   function renderSkeleton(){
     const sk = Array.from({length: 9}).map(()=>`
       <article class="card" aria-busy="true">
@@ -390,138 +392,55 @@
           <div class="sk-line skeleton" style="width:50%"></div>
         </div>
       </article>`).join('');
-    $('#grid').innerHTML = sk;
+    document.getElementById('grid').innerHTML = sk;
   }
-
   function starIcons(n){
     const c = Math.max(0, Math.min(5, Math.round(n||0)));
-    return `<span class="stars" aria-label="${c} ดาว">` +
-      Array.from({length:c}).map(()=>`
-        <span class="star" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-        </span>`).join('') +
+    return `<span class="stars" aria-label="${c} ดาว">`+
+      Array.from({length:c}).map(()=>`<span class="star" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>`).join('')+
       `</span>`;
   }
-
   function render(list){
-    if (!list.length){
-      $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`;
-      return;
-    }
-    const html = list.map(h => `
+    if (!list.length){ document.getElementById('grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`; return; }
+    const html = list.map(h=>`
       <article class="card">
         <img src="${esc(h.thumbnail || '')}" alt="${esc(h.name)}">
         <div class="card-body">
           <h3 style="font-size:18px;margin:0 0 6px">${esc(h.name)}</h3>
-          <div class="muted" style="font-size:13px">
-            ${starIcons(h.rating ?? 0)}
-            &nbsp;·&nbsp;<span class="score">คะแนนรีวิว ${h.reviewScore ?? '-'}</span>
-          </div>
+          <div class="muted" style="font-size:13px">${starIcons(h.rating ?? 0)}&nbsp;·&nbsp;<span class="score">คะแนนรีวิว ${h.reviewScore ?? '-'}</span></div>
           <div class="price">${h.price!=null?fmt(h.price, h.currency || state.currency):'-'} ${esc(h.currency || state.currency)}</div>
-          <div class="h-actions">
-            <a class="btn" href="${esc(h.url || '#')}" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
-          </div>
+          <div class="h-actions"><a class="btn" href="${esc(h.url || '#')}" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
         </div>
-      </article>
-    `).join('');
-    $('#grid').innerHTML = html;
+      </article>`).join('');
+    document.getElementById('grid').innerHTML = html;
   }
 
-  // --------- chip actions ---------
-  $('#chipSort').addEventListener('click', ()=>{ $('#dlgSort').showModal();
-    [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort));
-  });
-  $('#chipStars').addEventListener('click', ()=>{ $('#dlgStars').showModal();
-    [...document.querySelectorAll('input[name=stars]')].forEach(r=>r.checked=(+r.value===+draft.starsMin));
-  });
-  $('#chipPrice').addEventListener('click', ()=>{
-    $('#dlgPrice').showModal();
-    setPriceWidgets(draft.priceMin, draft.priceMax);
-  });
-  $('#chipScore').addEventListener('click', ()=>{ $('#dlgScore').showModal();
-    [...document.querySelectorAll('input[name=score]')].forEach(r=>r.checked=(+r.value===+draft.scoreMin));
-  });
+  // chips
+  document.getElementById('chipSort').addEventListener('click', ()=>{ dlgSort.showModal(); [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort)); });
+  document.getElementById('chipStars').addEventListener('click', ()=>{ dlgStars.showModal(); [...document.querySelectorAll('input[name=stars]')].forEach(r=>r.checked=(+r.value===+draft.starsMin)); });
+  document.getElementById('chipPrice').addEventListener('click', ()=>{ dlgPrice.showModal(); setPriceWidgets(draft.priceMin,draft.priceMax); });
+  document.getElementById('chipScore').addEventListener('click', ()=>{ dlgScore.showModal(); [...document.querySelectorAll('input[name=score]')].forEach(r=>r.checked=(+r.value===+draft.scoreMin)); });
 
-  $('#btnSortOk').addEventListener('click', ()=>{
-    const v = document.querySelector('input[name=sort]:checked')?.value || 'rec';
-    draft.sort = v; updateChips(); $('#dlgSort').close();
-  });
-  $('#btnStarsOk').addEventListener('click', ()=>{
-    const v = +(document.querySelector('input[name=stars]:checked')?.value || 0);
-    draft.starsMin = v; updateChips(); $('#dlgStars').close();
-  });
-  $('#btnScoreOk').addEventListener('click', ()=>{
-    const v = +(document.querySelector('input[name=score]:checked')?.value || 0);
-    draft.scoreMin = v; updateChips(); $('#dlgScore').close();
-  });
+  document.getElementById('btnSortOk').addEventListener('click', ()=>{ draft.sort=document.querySelector('input[name=sort]:checked')?.value||'rec'; updateChips(); dlgSort.close(); });
+  document.getElementById('btnStarsOk').addEventListener('click', ()=>{ draft.starsMin=+(document.querySelector('input[name=stars]:checked')?.value||0); updateChips(); dlgStars.close(); });
+  document.getElementById('btnScoreOk').addEventListener('click', ()=>{ draft.scoreMin=+(document.querySelector('input[name=score]:checked')?.value||0); updateChips(); dlgScore.close(); });
 
-  // ราคา widgets sync
-  function setPriceWidgets(min, max){
-    const clamp = (n)=>Math.min(200000, Math.max(0, Math.round(n)));
-    const m = clamp(Math.min(min,max)), x = clamp(Math.max(min,max));
-    $('#rMin').value = m; $('#rMax').value = x;
-    $('#nMin').value = m; $('#nMax').value = x;
-    $('#pvMin').textContent = fmt(m); $('#pvMax').textContent = fmt(x);
+  function setPriceWidgets(min,max){
+    const clamp=n=>Math.min(200000,Math.max(0,Math.round(n))), m=clamp(Math.min(min,max)), x=clamp(Math.max(min,max));
+    rMin.value=m; rMax.value=x; nMin.value=m; nMax.value=x; pvMin.textContent=m.toLocaleString('th-TH'); pvMax.textContent=x.toLocaleString('th-TH');
   }
-  function readPriceWidgets(){
-    const m = Math.min(+$('#rMin').value, +$('#rMax').value);
-    const x = Math.max(+$('#rMin').value, +$('#rMax').value);
-    return {m,x};
-  }
-  ['rMin','rMax'].forEach(id=>{
-    $('#'+id).addEventListener('input', ()=>{
-      const {m,x}=readPriceWidgets(); setPriceWidgets(m,x);
-    });
-  });
-  ['nMin','nMax'].forEach(id=>{
-    $('#'+id).addEventListener('input', ()=>{
-      const m = +$('#nMin').value, x = +$('#nMax').value; setPriceWidgets(m,x);
-    });
-  });
-  $('#btnPriceReset').addEventListener('click', ()=> setPriceWidgets(0,200000));
-  $('#btnPriceOk').addEventListener('click', ()=>{
-    const {m,x}=readPriceWidgets();
-    draft.priceMin = m; draft.priceMax = x; updateChips(); $('#dlgPrice').close();
-  });
+  function readPriceWidgets(){ const m=Math.min(+rMin.value,+rMax.value), x=Math.max(+rMin.value,+rMax.value); return {m,x}; }
+  rMin.addEventListener('input',()=>{const {m,x}=readPriceWidgets(); setPriceWidgets(m,x);});
+  rMax.addEventListener('input',()=>{const {m,x}=readPriceWidgets(); setPriceWidgets(m,x);});
+  nMin.addEventListener('input',()=>setPriceWidgets(+nMin.value,+nMax.value));
+  nMax.addEventListener('input',()=>setPriceWidgets(+nMin.value,+nMax.value));
+  btnPriceReset.addEventListener('click',()=>setPriceWidgets(0,200000));
+  btnPriceOk.addEventListener('click',()=>{const {m,x}=readPriceWidgets(); draft.priceMin=m; draft.priceMax=x; updateChips(); dlgPrice.close(); });
 
-  // ปรับใช้ -> คัดลอก draft เข้า state แล้วค่อย load()
-  $('#chipApply').addEventListener('click', ()=>{
-    Object.assign(state, JSON.parse(JSON.stringify(draft)));
-    updateQueryOnly();
-    load();
-  });
-
-  // ปุ่มค้นหา (search box บนหน้า)
-  $('#btnDoSearch').addEventListener('click', ()=>{
-    const inP  = window._cg_inPicker, outP = window._cg_outPicker;
-    state.q = ($('#dest').value||'').trim();
-    state.checkin  = inP.formatDate(inP.selectedDates[0],'Y-m-d');
-    state.checkout = outP.formatDate(outP.selectedDates[0],'Y-m-d');
-    state.rooms = +$('#rooms').value || 1;
-    state.adults = +$('#adults').value || 2;
-    state.children = +$('#children').value || 0;
-    Object.assign(draft, state);
-    updateQueryOnly();
-    load();
-  });
+  chipApply.addEventListener('click',()=>{ Object.assign(state, JSON.parse(JSON.stringify(draft))); updateQueryOnly(); load(); });
 
   // go!
   load();
-})();
-
-/* ===== Flatpickr / Suggest / Guests (คงเดิมจากหน้าอื่น) ===== */
-(function(){
-  const ONE=86400000,ci=document.getElementById('ci'),co=document.getElementById('co'),
-        today=new Date(),tom=new Date(Date.now()+ONE);
-  let inP=null,outP=null;
-  if(window.flatpickr){
-    inP=flatpickr("#ci",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",
-      onChange(d){if(d[0]){const n=new Date(d[0].getTime()+ONE);outP.set('minDate',n);if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0])outP.setDate(n,true);}}
-    });
-    outP=flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:tom});
-    inP.setDate(today,true); outP.setDate(tom,true);
-    window._cg_inPicker=inP; window._cg_outPicker=outP;
-  }
 })();
 </script>
 </body>
