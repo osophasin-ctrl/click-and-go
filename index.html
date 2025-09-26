@@ -69,7 +69,7 @@
           <input type="hidden" id="rooms"   name="rooms"   value="1">
           <input type="hidden" id="adults"  name="adults"  value="2">
           <input type="hidden" id="children"name="children"value="0">
-          <input type="hidden"              name="lang"    value="th-th"><!-- สำคัญ -->
+          <input type="hidden"              name="lang"    value="th-th">
         </form>
       </div></div>
     </section>
@@ -78,12 +78,12 @@
     <section>
       <h2 class="section-title">ปลายทางยอดนิยมในไทย</h2>
       <div class="city-grid">
-        <a class="city-card" href="bangkok.html"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
-        <a class="city-card" href="chiangmai.html"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
-        <a class="city-card" href="pattaya.html"><figure><img src="pattaya-tile.webp" alt="พัทยา"><figcaption>พัทยา</figcaption></figure></a>
-        <a class="city-card" href="phuket.html"><figure><img src="phuket-tile.webp" alt="ภูเก็ต"><figcaption>ภูเก็ต</figcaption></figure></a>
-        <a class="city-card" href="krabi.html"><figure><img src="krabi-tile.webp" alt="กระบี่"><figcaption>กระบี่</figcaption></figure></a>
-        <a class="city-card" href="hua-hin.html"><figure><img src="huahin-tile.webp" alt="หัวหิน"><figcaption>หัวหิน</figcaption></figure></a>
+        <a class="city-card" data-q="กรุงเทพฯ"  href="search.html"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
+        <a class="city-card" data-q="เชียงใหม่"  href="search.html"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
+        <a class="city-card" data-q="พัทยา"    href="search.html"><figure><img src="pattaya-tile.webp" alt="พัทยา"><figcaption>พัทยา</figcaption></figure></a>
+        <a class="city-card" data-q="ภูเก็ต"    href="search.html"><figure><img src="phuket-tile.webp" alt="ภูเก็ต"><figcaption>ภูเก็ต</figcaption></figure></a>
+        <a class="city-card" data-q="กระบี่"    href="search.html"><figure><img src="krabi-tile.webp" alt="กระบี่"><figcaption>กระบี่</figcaption></figure></a>
+        <a class="city-card" data-q="หัวหิน"   href="search.html"><figure><img src="huahin-tile.webp" alt="หัวหิน"><figcaption>หัวหิน</figcaption></figure></a>
       </div>
     </section>
 
@@ -91,12 +91,12 @@
     <section>
       <h2 class="section-title">เมืองยอดฮิตในต่างประเทศ</h2>
       <div class="city-grid">
-        <a class="city-card" href="tokyo.html"><figure><img src="tokyo-tile.webp" alt="โตเกียว"><figcaption>โตเกียว</figcaption></figure></a>
-        <a class="city-card" href="seoul.html"><figure><img src="seoul-tile.webp" alt="โซล"><figcaption>โซล</figcaption></figure></a>
-        <a class="city-card" href="singapore.html"><figure><img src="singapore-tile.webp" alt="สิงคโปร์"><figcaption>สิงคโปร์</figcaption></figure></a>
-        <a class="city-card" href="hongkong.html"><figure><img src="hongkong-tile.webp" alt="ฮ่องกง"><figcaption>ฮ่องกง</figcaption></figure></a>
-        <a class="city-card" href="london.html"><figure><img src="london-tile.webp" alt="ลอนดอน"><figcaption>ลอนดอน</figcaption></figure></a>
-        <a class="city-card" href="paris.html"><figure><img src="paris-tile.webp" alt="ปารีส"><figcaption>ปารีส</figcaption></figure></a>
+        <a class="city-card" data-q="โตเกียว"  href="search.html"><figure><img src="tokyo-tile.webp" alt="โตเกียว"><figcaption>โตเกียว</figcaption></figure></a>
+        <a class="city-card" data-q="โซล"      href="search.html"><figure><img src="seoul-tile.webp" alt="โซล"><figcaption>โซล</figcaption></figure></a>
+        <a class="city-card" data-q="สิงคโปร์" href="search.html"><figure><img src="singapore-tile.webp" alt="สิงคโปร์"><figcaption>สิงคโปร์</figcaption></figure></a>
+        <a class="city-card" data-q="ฮ่องกง"   href="search.html"><figure><img src="hongkong-tile.webp" alt="ฮ่องกง"><figcaption>ฮ่องกง</figcaption></figure></a>
+        <a class="city-card" data-q="ลอนดอน"  href="search.html"><figure><img src="london-tile.webp" alt="ลอนดอน"><figcaption>ลอนดอน</figcaption></figure></a>
+        <a class="city-card" data-q="ปารีส"    href="search.html"><figure><img src="paris-tile.webp" alt="ปารีส"><figcaption>ปารีส</figcaption></figure></a>
       </div>
     </section>
 
@@ -142,6 +142,34 @@
   (function(){const ONE=86400000,ci=document.getElementById('ci'),co=document.getElementById('co'),fmt=d=>d.toISOString().slice(0,10),today=new Date(),tom=new Date(Date.now()+ONE);let inP=null,outP=null;if(window.flatpickr){inP=flatpickr("#ci",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",onChange(d){if(d[0]){const n=new Date(d[0].getTime()+ONE);outP.set('minDate',n);if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0])outP.setDate(n,true);}}});outP=flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:tom});inP.setDate(today,true);outP.setDate(tom,true);}else{ci.removeAttribute('readonly');co.removeAttribute('readonly');ci.type='date';co.type='date';ci.value=fmt(today);ci.min=fmt(today);co.value=fmt(tom);co.min=fmt(tom);ci.addEventListener('change',()=>{const a=new Date(ci.value||fmt(today)),n=new Date(a.getTime()+ONE);if(!co.value||new Date(co.value)<=a){co.value=fmt(n);co.min=fmt(n);}});}
     let rooms=1,adults=2,children=0;const btn=document.getElementById('guestBtn'),roomsC=document.getElementById('roomsCount'),adultsC=document.getElementById('adultsCount'),childrenC=document.getElementById('childrenCount'),hR=document.getElementById('rooms'),hA=document.getElementById('adults'),hC=document.getElementById('children'),modal=document.getElementById('guestModal'),backdrop=document.getElementById('guestBackdrop');function open(){roomsC.textContent=rooms;adultsC.textContent=adults;childrenC.textContent=children;modal.style.display='block';backdrop.style.display='block';}function close(){modal.style.display='none';backdrop.style.display='none';}function upd(){btn.textContent=`${rooms} ห้อง, ${adults} ผู้ใหญ่, ${children} เด็ก`;}upd();btn.addEventListener('click',open);document.getElementById('btnCloseX').addEventListener('click',close);document.getElementById('btnCancel').addEventListener('click',close);backdrop.addEventListener('click',close);document.querySelectorAll('.btn-ctrl').forEach(b=>{b.addEventListener('click',()=>{const t=b.getAttribute('data-type'),op=b.getAttribute('data-op');let v=0,min=0,max=10;if(t==='rooms'){v=rooms;min=1}if(t==='adults'){v=adults;min=1}if(t==='children'){v=children;min=0}if(op==='plus'&&v<max)v++;if(op==='minus'&&v>min)v--;if(t==='rooms'){rooms=v;roomsC.textContent=v}if(t==='adults'){adults=v;adultsC.textContent=v}if(t==='children'){children=v;childrenC.textContent=v}});});document.getElementById('btnSaveGuests').addEventListener('click',()=>{hR.value=rooms;hA.value=adults;hC.value=children;upd();close();});
     document.getElementById('cgForm').addEventListener('submit',e=>{const q=document.getElementById('dest');if(!q.value) q.value='กรุงเทพ';});
+  })();
+
+  /* ---- สร้างลิงก์เมือง -> search.html พร้อมพารามิเตอร์เริ่มต้น (วันนี้-พรุ่งนี้, 2 ผู้ใหญ่, 0 เด็ก, 1 ห้อง) ---- */
+  (function(){
+    const ONE = 86400000;
+    const fmt = d => d.toISOString().slice(0,10);
+    const today = new Date();
+    const tomorrow = new Date(Date.now()+ONE);
+
+    function buildUrl(city){
+      const sp = new URLSearchParams({
+        q: city,
+        checkin: fmt(today),
+        checkout: fmt(tomorrow),
+        rooms: "1",
+        adults: "2",
+        children: "0",
+        lang: "th-th",
+        currency: "THB",
+        sort: "rec"
+      });
+      return `search.html?${sp.toString()}`;
+    }
+
+    document.querySelectorAll('.city-card[data-q]').forEach(a=>{
+      const city = a.getAttribute('data-q');
+      a.setAttribute('href', buildUrl(city));
+    });
   })();
   </script>
 </body>
