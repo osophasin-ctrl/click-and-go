@@ -31,12 +31,20 @@ function toAges(str) {
     .map((s) => parseInt(s.trim(), 10))
     .filter((n) => Number.isFinite(n) && n >= 0 && n <= 17);
 }
+
+// ใส่ cid + UTM + กันเด้งเข้าแอปทุกลิงก์จาก Agoda
 function withUtm(url) {
   if (!url) return "#";
-  const hasQ = url.includes("?");
-  const sep = hasQ ? "&" : "?";
-  return `${url}${sep}utm_source=clickandgo&utm_medium=affiliate`;
+  const u = new URL(url, "https://www.agoda.com"); // เผื่อกรณีส่งเป็น path
+  u.searchParams.set("cid", SITE_ID);
+  u.searchParams.set("utm_source", "clickandgo");
+  u.searchParams.set("utm_medium", "affiliate");
+  // กันเด้งเข้าแอป (ส่วนใหญ่เบราว์เซอร์มือถือจะเคารพพารามฯนี้)
+  u.searchParams.set("noapp", "1");
+  u.searchParams.set("pcs", "1");
+  return u.toString();
 }
+
 function guessProto(req) {
   return (req.headers["x-forwarded-proto"] || "https").split(",")[0].trim();
 }
@@ -76,7 +84,7 @@ function pickFromSuggest(items) {
   return { cityId, hid: "", label: (it && (it.label || it.city_name)) || "" };
 }
 
-// สร้างลิงก์ไปหน้าพันธมิตร Agoda (deeplink แบบ partnersearch)
+// สร้างลิงก์ไปหน้าพันธมิตร Agoda (deeplink แบบ partnersearch) สำหรับปุ่ม CTA
 function buildAgodaUrl({ cityId, hid, currency, checkin, checkout, adults, children, rooms = 1 }) {
   const base = `https://www.agoda.com/partners/partnersearch.aspx?cid=${SITE_ID}`;
   const common =
@@ -85,7 +93,9 @@ function buildAgodaUrl({ cityId, hid, currency, checkin, checkout, adults, child
     + `&checkout=${encodeURIComponent(checkout)}`
     + `&NumberofAdults=${adults}`
     + `&NumberofChildren=${children}`
-    + `&Rooms=${rooms}`;
+    + `&Rooms=${rooms}`
+    + `&noapp=1&pcs=1`        // กันเปิดแอป + บังคับเว็บ
+    + `&utm_source=clickandgo&utm_medium=affiliate`;
   if (hid) return `${base}&hid=${encodeURIComponent(hid)}${common}`;
   if (cityId) return `${base}&city=${encodeURIComponent(cityId)}${common}`;
   return "";
