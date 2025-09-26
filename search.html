@@ -105,9 +105,11 @@
     page: +(params.get('page') || 1)
   };
 
+  // set UI
   $('#currency').value = state.currency;
   $('#sort').value = state.sort;
 
+  // subtitle (ผู้เข้าพัก ให้คงอยู่บรรทัดเดียว)
   const human = (() => {
     const ci = state.checkin?.replaceAll('-', '/');
     const co = state.checkout?.replaceAll('-', '/');
@@ -141,6 +143,7 @@
     history.replaceState({}, '', u);
   }
 
+  // resolve q -> id ถ้ายังไม่มี
   async function resolveDestinationIfNeeded(){
     if ((state.cityId || state.hid) || !state.q) return;
     try{
@@ -160,7 +163,7 @@
     }catch(_){}
   }
 
-  /** คำนวณจำนวนคืน (los) จาก checkin/checkout */
+  // คืนจำนวนคืน
   function calcLos(ci, co){
     try{
       const a = new Date(ci+'T12:00:00Z'), b = new Date(co+'T12:00:00Z');
@@ -169,11 +172,11 @@
     }catch(e){ return 1; }
   }
 
-  /** ลิงก์ไปหน้า partnersearch ของ Agoda (คง cid และเลี่ยงเด้งแอป) */
+  // ลิงก์ CTA ไป Agoda + กันเปิดแอป + ใส่ cid
   function partnerUrl(){
     const langPath = state.lang || 'th-th';
 
-    // ถ้ามี cityId -> ใช้ partnersearch (ดีที่สุดสำหรับ affiliate)
+    // ถ้ามี cityId ใช้ partnersearch (แนะนำสำหรับ affiliate)
     if (state.cityId) {
       const base = `https://www.agoda.com/${langPath}/partners/partnersearch.aspx`;
       const sp = new URLSearchParams({
@@ -186,12 +189,14 @@
         children: String(state.children || 0),
         currency: state.currency || 'THB',
         utm_source: 'clickandgo',
-        utm_medium: 'affiliate'
+        utm_medium: 'affiliate',
+        noapp: '1',
+        pcs: '1'
       });
       return `${base}?${sp.toString()}`;
     }
 
-    // ไม่มี cityId -> fallback ไปหน้า search ทั่วไป (ยังคง cid)
+    // fallback: ใช้ /search พร้อม cid เช่นกัน
     const base = `https://www.agoda.com/${langPath}/search`;
     const sp = new URLSearchParams({
       cid: '1949420',
@@ -203,12 +208,13 @@
       rooms: String(state.rooms || 1),
       los: String(calcLos(state.checkin, state.checkout)),
       utm_source: 'clickandgo',
-      utm_medium: 'affiliate'
+      utm_medium: 'affiliate',
+      noapp: '1',
+      pcs: '1'
     });
     if (state.q) sp.set('q', state.q);
     return `${base}?${sp.toString()}`;
   }
-
   function refreshPartnerCta(){
     $('#partnerMore').setAttribute('href', partnerUrl());
   }
@@ -301,6 +307,7 @@
   }
   function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
+  // events
   $('#currency').addEventListener('change', e => {
     state.currency = e.target.value;
     updateQueryOnly(); load();
