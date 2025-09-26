@@ -19,7 +19,9 @@
     .muted{color:var(--muted)}
     .nowrap{white-space:nowrap}
     .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0 16px}
-    .select{height:40px;border:1px solid #ddd;border-radius:10px;padding:0 10px;background:#fff}
+    .select,.input{height:40px;border:1px solid #ddd;border-radius:10px;padding:0 10px;background:#fff}
+    .input{width:120px}
+    @media(max-width:640px){.input{width:110px}}
     .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
     @media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:640px){.cards{grid-template-columns:1fr}}
@@ -40,6 +42,8 @@
     .sk-line{height:14px;margin-top:8px;border-radius:6px}
     .cta-wrap{display:flex;justify-content:center;margin:28px 0}
     .cta{padding:12px 22px;border-radius:999px;font-weight:600}
+    .sep{opacity:.35;margin:0 4px}
+    .toolbar label{display:flex;gap:6px;align-items:center}
   </style>
 </head>
 <body>
@@ -65,6 +69,35 @@
         <option value="price_desc">ราคาสูง → ต่ำ</option>
       </select>
     </label>
+
+    <span class="sep">|</span>
+
+    <label>ราคาต่ำสุด
+      <input id="priceMin" class="input" type="number" min="1" step="1" placeholder="เช่น 500">
+    </label>
+
+    <label>ราคาสูงสุด
+      <input id="priceMax" class="input" type="number" min="1" step="1" placeholder="เช่น 5000">
+    </label>
+
+    <span class="sep">|</span>
+
+    <label>เรตติ้ง
+      <select id="starsMin" class="select">
+        <option value="0">ทั้งหมด</option>
+        <option value="1">1★ ขึ้นไป</option>
+        <option value="2">2★ ขึ้นไป</option>
+        <option value="3">3★ ขึ้นไป</option>
+        <option value="4">4★ ขึ้นไป</option>
+        <option value="5">5★ เท่านั้น</option>
+      </select>
+    </label>
+
+    <label>คะแนนรีวิว
+      <input id="scoreMin" class="input" type="number" min="0" max="10" step="0.1" placeholder="เช่น 8.0">
+    </label>
+
+    <span class="sep">|</span>
 
     <label>สกุลเงิน
       <select id="currency" class="select">
@@ -102,12 +135,22 @@
     lang: (params.get('lang') || 'th-th').toLowerCase(),
     currency: params.get('currency') || 'THB',
     sort: params.get('sort') || 'rec',
-    page: +(params.get('page') || 1)
+    page: +(params.get('page') || 1),
+
+    // ฟิลเตอร์ใหม่
+    priceMin: +(params.get('priceMin') || 1),
+    priceMax: +(params.get('priceMax') || 1000000),
+    starsMin: +(params.get('starsMin') || 0),
+    scoreMin: +(params.get('scoreMin') || 0)
   };
 
   // set UI
   $('#currency').value = state.currency;
   $('#sort').value = state.sort;
+  $('#priceMin').value = state.priceMin;
+  $('#priceMax').value = state.priceMax;
+  $('#starsMin').value = String(state.starsMin);
+  $('#scoreMin').value = state.scoreMin;
 
   // subtitle (ผู้เข้าพัก ให้คงอยู่บรรทัดเดียว)
   const human = (() => {
@@ -135,7 +178,11 @@
       lang: state.lang,
       currency: state.currency,
       page: state.page,
-      sort: state.sort
+      sort: state.sort,
+      priceMin: state.priceMin,
+      priceMax: state.priceMax,
+      starsMin: state.starsMin,
+      scoreMin: state.scoreMin
     }).forEach(([k,v])=>{
       if (v === '' || v == null) u.searchParams.delete(k);
       else u.searchParams.set(k, v);
@@ -176,7 +223,6 @@
   function partnerUrl(){
     const langPath = state.lang || 'th-th';
 
-    // ถ้ามี cityId ใช้ partnersearch (แนะนำสำหรับ affiliate)
     if (state.cityId) {
       const base = `https://www.agoda.com/${langPath}/partners/partnersearch.aspx`;
       const sp = new URLSearchParams({
@@ -196,7 +242,7 @@
       return `${base}?${sp.toString()}`;
     }
 
-    // fallback: ใช้ /search พร้อม cid เช่นกัน
+    // fallback
     const base = `https://www.agoda.com/${langPath}/search`;
     const sp = new URLSearchParams({
       cid: '1949420',
@@ -233,8 +279,12 @@
     else if (state.cityId) p.set('cityId', state.cityId);
     else if (state.q) p.set('q', state.q);
 
-    ['checkin','checkout','rooms','adults','children','lang','currency','page','sort']
-      .forEach(k => p.set(k, state[k]));
+    ['checkin','checkout','rooms','adults','children','lang','currency','page','sort'].forEach(k => p.set(k, state[k]));
+    // ใส่ฟิลเตอร์ใหม่ไปที่ API
+    p.set('priceMin', state.priceMin);
+    p.set('priceMax', state.priceMax);
+    p.set('starsMin', state.starsMin);
+    p.set('scoreMin', state.scoreMin);
 
     const resp = await fetch(api.toString(), {cache: 'no-store'});
     const json = await resp.json().catch(()=>({ok:false}));
@@ -245,7 +295,15 @@
       return;
     }
 
-    let items = json.results || [];
+    // fallback กรองฝั่งหน้าเพิ่มเล็กน้อย
+    let items = (json.results || []).filter(h=>{
+      const priceOk = !state.priceMin && !state.priceMax ? true :
+        (h.price==null ? true : (h.price >= state.priceMin && h.price <= state.priceMax));
+      const starOk  = (h.rating ?? 0) >= state.starsMin;
+      const scoreOk = (h.reviewScore ?? 0) >= state.scoreMin;
+      return priceOk && starOk && scoreOk;
+    });
+
     if (state.sort === 'price_asc') items.sort((a,b)=>(a.price||1e15)-(b.price||1e15));
     if (state.sort === 'price_desc') items.sort((a,b)=>(b.price||0)-(a.price||0));
 
@@ -316,9 +374,34 @@
     state.sort = e.target.value;
     updateQueryOnly(); load();
   });
+  $('#priceMin').addEventListener('change', e => {
+    state.priceMin = Math.max(1, +e.target.value || 1);
+    if (state.priceMax < state.priceMin) state.priceMax = state.priceMin;
+    $('#priceMax').value = state.priceMax;
+    updateQueryOnly(); load();
+  });
+  $('#priceMax').addEventListener('change', e => {
+    const v = Math.max(1, +e.target.value || 1);
+    state.priceMax = Math.max(state.priceMin, v);
+    e.target.value = state.priceMax;
+    updateQueryOnly(); load();
+  });
+  $('#starsMin').addEventListener('change', e => {
+    state.starsMin = +e.target.value || 0;
+    updateQueryOnly(); load();
+  });
+  $('#scoreMin').addEventListener('change', e => {
+    let v = parseFloat(e.target.value);
+    if (!Number.isFinite(v)) v = 0;
+    v = Math.max(0, Math.min(10, v));
+    state.scoreMin = v;
+    e.target.value = v;
+    updateQueryOnly(); load();
+  });
 
   load();
 })();
 </script>
 </body>
 </html>
+```0
