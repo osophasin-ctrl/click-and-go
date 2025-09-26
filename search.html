@@ -14,6 +14,7 @@
     @media(max-width:640px){.cards{grid-template-columns:1fr}}
     .card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07)}
     .card img{width:100%;height:210px;object-fit:cover;display:block;background:#f4f4f4}
+    /* ปุ่มขวาล่างของการ์ด */
     .card-body{position:relative;padding:14px 14px 64px}
     .price{font-weight:700;margin-top:8px}
     .btn{display:inline-block;background:#0aa297;color:#fff;border:none;border-radius:10px;padding:10px 14px;cursor:pointer}
@@ -60,7 +61,7 @@
         <option>JPY</option>
       </select>
     </label>
-    <!-- เอา “แสดง 30/60/90” ออกตามคำขอ -->
+    <!-- ลบตัวเลือก "แสดง 30/60/90" ตามที่ตกลง -->
   </div>
 
   <section id="grid" class="cards" aria-live="polite"></section>
@@ -85,7 +86,7 @@
     children: +(params.get('children') || 0),
     lang: params.get('lang') || 'th-th',
     currency: params.get('currency') || 'THB',
-    limit: 30,               // ล็อกไว้ที่ 30
+    limit: 30, // ล็อกไว้ที่ 30
     sort: params.get('sort') || 'rec',
     page: +(params.get('page') || 1)
   };
@@ -94,6 +95,7 @@
   $('#currency').value = state.currency;
   $('#sort').value = state.sort;
 
+  // subtitle + กันคำ "ผู้เข้าพัก:" ไม่แยกบรรทัดผิดบนมือถือ
   const human = (() => {
     const ci = state.checkin?.replaceAll('-', '/');
     const co = state.checkout?.replaceAll('-', '/');
@@ -104,8 +106,6 @@
       guestTxt: `<span class="nowrap">ผู้เข้าพัก:</span> ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`
     };
   })();
-
-  // ให้ “ผู้เข้าพัก:” ไม่ตัดคำผิดตำแหน่งบนจอเล็ก
   $('#subtitle').innerHTML = `${human.place} | วันที่: ${human.range} | ${human.guestTxt}`;
 
   // -------- helper: เขียนค่ากลับลง URL โดยไม่รีโหลด --------
@@ -125,7 +125,7 @@
       lang: state.lang,
       currency: state.currency,
       page: state.page,
-      limit: state.limit, // คง param ไว้เป็น 30 เผื่อ backend ใช้
+      limit: state.limit,
       sort: state.sort
     }).forEach(([k,v])=>{
       if (v === '' || v == null) u.searchParams.delete(k);
@@ -176,6 +176,9 @@
     const resp = await fetch(api.toString(), {cache: 'no-store'});
     const json = await resp.json().catch(()=>({ok:false}));
 
+    // เก็บไว้เผื่อใช้ต่อ (เช่น ในขั้นต่อไป)
+    window._lastSearch = json;
+
     if (!json.ok){
       $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`;
       return;
@@ -187,7 +190,7 @@
     if (state.sort === 'price_asc') items.sort((a,b)=>(a.price||1e15)-(b.price||1e15));
     if (state.sort === 'price_desc') items.sort((a,b)=>(b.price||0)-(a.price||0));
 
-    render(items);
+    render(items, json.agodaUrl);
   }
 
   function renderSkeleton(){
@@ -203,12 +206,14 @@
     $('#grid').innerHTML = sk;
   }
 
-  function render(list){
+  // —— การ์ดผลลัพธ์ + การ์ดปุ่มท้ายรายการ —— //
+  function render(list, agodaUrlFromApi){
     if (!list.length){
       $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`;
       return;
     }
-    const html = list.map(h => `
+
+    let html = list.map(h => `
       <article class="card">
         <img src="${esc(h.thumbnail || '')}" alt="${esc(h.name)}">
         <div class="card-body">
@@ -219,7 +224,37 @@
         </div>
       </article>
     `).join('');
+
+    // ถ้ารายการครบ 30 ใบ → เพิ่ม "การ์ดปุ่ม" ใบสุดท้าย
+    if (list.length >= state.limit) {
+      const partnerUrl = agodaUrlFromApi || buildAgodaUrl();
+      html += `
+      <article class="card" style="display:flex;justify-content:center;align-items:center;min-height:120px">
+        <button class="btn" onclick="window.open('${esc(partnerUrl)}','_blank')" style="padding:12px 20px;font-size:16px">
+          ค้นหาเพิ่มเติมจากพันธมิตรของเรา
+        </button>
+      </article>`;
+    }
+
     $('#grid').innerHTML = html;
+  }
+
+  // ถ้า backend ส่ง agodaUrl มา เราใช้ได้เลย; ถ้าไม่มา สร้างลิงก์สำรองเอง
+  function buildAgodaUrl(){
+    const base = "https://www.agoda.com/partners/partnersearch.aspx";
+    const params = new URLSearchParams();
+    params.set("cid", "1949420"); // Affiliate ID
+    if (state.hid) params.set("hid", state.hid);
+    if (!state.hid && state.cityId) params.set("city", state.cityId);
+    if (state.checkin) params.set("checkin", state.checkin);
+    if (state.checkout) params.set("checkout", state.checkout);
+    params.set("NumberofAdults", state.adults);
+    params.set("NumberofChildren", state.children);
+    params.set("Rooms", 1);
+    params.set("currency", state.currency);
+    params.set("utm_source","clickandgo");
+    params.set("utm_medium","affiliate");
+    return `${base}?${params.toString()}`;
   }
 
   function fmt(n){
