@@ -1,1 +1,578 @@
-i
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ข้อเสนอที่ดีที่สุด | Click & Go</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    :root{
+      --brand:#0aa297;
+      --card-border:#0aa29733;
+      --gold:#d4a017;
+      --muted:#666;
+    }
+    .container{max-width:1100px;margin:0 auto;padding:16px}
+    .main-title{font-size:42px;line-height:1.2;margin:8px 0 6px}
+    @media(max-width:640px){.main-title{font-size:34px}}
+    .muted{color:var(--muted)}
+    .nowrap{white-space:nowrap}
+
+    /* ---- mini search strip ---- */
+    .mini{display:grid;gap:8px;grid-template-columns:1.2fr .9fr .9fr .9fr;align-items:center;
+      background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:10px;margin:8px 0 10px}
+    .mini .inp,.mini .btn{height:42px;border:1px solid #d7d7d7;border-radius:8px;padding:0 10px;background:#fff;font-size:14px}
+    .mini .btn{background:var(--brand);color:#fff;border:0;cursor:pointer;font-weight:700}
+    .mini .guest{display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+    @media(max-width:860px){.mini{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.mini{grid-template-columns:1fr}}
+
+    /* guest modal (very small) */
+    .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:30}
+    .gmodal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border-radius:12px;z-index:31;
+      width:min(92vw,380px);box-shadow:0 12px 24px rgba(0,0,0,.2);display:none}
+    .ghead,.gfoot{padding:12px 14px}.ghead{border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+    .grow{display:flex;justify-content:space-between;align-items:center;padding:10px 14px}.grow+.grow{border-top:1px dashed #eee}
+    .ctrl{display:flex;align-items:center;gap:8px}
+    .cbtn{width:34px;height:34px;border-radius:50%;border:1px solid #bbb;background:#fff;font-size:18px;cursor:pointer}
+    .ctxt{min-width:18px;text-align:center;font-weight:700}
+    .gfoot{display:flex;justify-content:flex-end;gap:8px}
+    .btn-sec{border:1px solid #bbb;background:#fff;color:#333;border-radius:8px;padding:8px 12px}
+    .btn-pri{border:0;background:var(--brand);color:#fff;border-radius:8px;padding:8px 12px}
+
+    /* ---- filter bar (chips) ---- */
+    .bar{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;overflow:auto;padding:8px 0;margin:8px 0 16px}
+    .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;
+      padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer}
+    .chip span{color:#111}
+    .chip small{color:#666}
+    .chip:focus,.chip:focus-visible{outline:3px solid #0aa29755;outline-offset:2px}
+
+    /* ---- dialogs ---- */
+    dialog{border:none;border-radius:14px;max-width:420px;width:calc(100% - 24px);padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+    dialog::backdrop{background:rgba(0,0,0,.35)}
+    .dlg-title{font-weight:700;margin:0 0 10px}
+    .dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+    .btn{display:inline-block;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;text-decoration:none}
+    .btn.secondary{background:#e5e7eb;color:#111}
+    .btn.ghost{background:transparent;border:1px solid #ddd;color:#111}
+
+    .radio-list{display:flex;flex-direction:column;gap:10px}
+    .radio-item{display:flex;align-items:center;gap:10px;padding:8px 4px}
+
+    /* price range (dual) */
+    .range-wrap{margin:14px 0}
+    .range-labels{display:flex;justify-content:space-between;font-weight:600}
+    .ranges{display:flex;gap:10px;align-items:center;margin-top:10px}
+    .ranges input[type=range]{flex:1}
+    .ranges input[type=number]{width:120px;padding:8px;border:1px solid #ddd;border-radius:8px}
+
+    /* cards */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.cards{grid-template-columns:1fr}}
+    .card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);border:2px solid var(--card-border)}
+    .card img{width:100%;height:210px;object-fit:cover;display:block;background:#f4f4f4}
+    .card-body{padding:14px;display:flex;flex-direction:column;min-height:180px}
+    .price{font-weight:700;margin-top:8px}
+    .h-actions{margin-top:auto;display:flex;justify-content:flex-end}
+    .stars{display:inline-flex;gap:2px;vertical-align:middle}
+    .star{width:16px;height:16px;display:inline-block}
+    .star svg{width:100%;height:100%;fill:var(--gold)}
+    .score{color:#c62828}
+
+    .skeleton{background:linear-gradient(90deg,#f2f2f2 25%,#e9e9e9 37%,#f2f2f2 63%);animation:s 1.4s ease infinite}
+    @keyframes s{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}
+    .sk-img{height:210px}
+    .sk-line{height:14px;margin-top:8px;border-radius:6px}
+
+    .cta-wrap{display:flex;justify-content:center;margin:28px 0}
+    .cta{padding:12px 22px;border-radius:999px;font-weight:600}
+  </style>
+</head>
+<body>
+<header class="site-header" role="banner">
+  <div class="inner">
+    <a href="/index.html" class="brand"><img src="/logo.png" width="40" height="40" alt="Click & Go"><span class="brand-text">Click & Go</span></a>
+    <nav class="main-nav">
+      <a href="/index.html">หน้าแรก</a>
+      <a href="/deals.html">โปรโมชั่น</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <h1 id="title" class="main-title">ข้อเสนอที่ดีที่สุด</h1>
+  <p class="muted" id="subtitle"></p>
+
+  <!-- mini search strip -->
+  <form id="miniForm" class="mini" autocomplete="off">
+    <input id="miniQ" class="inp" type="text" placeholder="ปลายทาง / โรงแรม">
+    <input id="miniCi" class="inp" type="date">
+    <input id="miniCo" class="inp" type="date">
+    <button type="button" id="miniGuest" class="inp guest"><span id="miniGuestTxt">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</span>▾</button>
+    <button type="submit" class="btn">ค้นหา</button>
+  </form>
+
+  <!-- บาร์ฟิลเตอร์ 1 แถว -->
+  <div class="bar" role="toolbar" aria-label="ตัวกรองการค้นหา">
+    <button id="chipSort"   class="chip"><span>เรียงโดย</span><small id="chipSortV">แนะนำ</small></button>
+    <button id="chipStars"  class="chip"><span>เรตติ้ง</span><small id="chipStarsV">ทั้งหมด</small></button>
+    <button id="chipPrice"  class="chip"><span>ราคา</span><small id="chipPriceV">฿0 – ฿200,000</small></button>
+    <button id="chipScore"  class="chip"><span>รีวิว</span><small id="chipScoreV">ทั้งหมด</small></button>
+    <button id="chipApply"  class="chip" style="background:var(--brand);color:#fff;border-color:var(--brand)">ปรับใช้</button>
+  </div>
+
+  <section id="grid" class="cards" aria-live="polite"></section>
+
+  <div class="cta-wrap">
+    <a id="partnerMore" class="btn cta" href="#" target="_blank" rel="nofollow noopener">ค้นหาเพิ่มเติมจากพันธมิตรของเรา</a>
+  </div>
+</main>
+
+<!-- Guest tiny modal -->
+<div id="gBackdrop" class="backdrop" aria-hidden="true"></div>
+<div id="gModal" class="gmodal" role="dialog" aria-modal="true" aria-labelledby="gTitle">
+  <div class="ghead"><strong id="gTitle">ผู้เข้าพัก</strong><button class="btn-sec" id="gClose">×</button></div>
+  <div class="grow"><span>ห้อง</span><div class="ctrl"><button class="cbtn" data-t="rooms" data-op="-">−</button><span class="ctxt" id="gRooms">1</span><button class="cbtn" data-t="rooms" data-op="+">+</button></div></div>
+  <div class="grow"><span>ผู้ใหญ่</span><div class="ctrl"><button class="cbtn" data-t="adults" data-op="-">−</button><span class="ctxt" id="gAdults">2</span><button class="cbtn" data-t="adults" data-op="+">+</button></div></div>
+  <div class="grow"><span>เด็ก</span><div class="ctrl"><button class="cbtn" data-t="children" data-op="-">−</button><span class="ctxt" id="gChildren">0</span><button class="cbtn" data-t="children" data-op="+">+</button></div></div>
+  <div class="gfoot"><button class="btn-sec" id="gCancel">ยกเลิก</button><button class="btn-pri" id="gSave">บันทึก</button></div>
+</div>
+
+<!-- Dialogs (เรียง/เรตติ้ง/ราคา/รีวิว) -->
+<dialog id="dlgSort">
+  <h3 class="dlg-title">เรียงโดย</h3>
+  <div class="radio-list">
+    <label class="radio-item"><input type="radio" name="sort" value="rec"> แนะนำ</label>
+    <label class="radio-item"><input type="radio" name="sort" value="price_asc"> ราคาต่ำ → สูง</label>
+    <label class="radio-item"><input type="radio" name="sort" value="price_desc"> ราคาสูง → ต่ำ</label>
+  </div>
+  <div class="dlg-actions">
+    <button class="btn secondary" onclick="document.getElementById('dlgSort').close()">ยกเลิก</button>
+    <button class="btn" id="btnSortOk">ตกลง</button>
+  </div>
+</dialog>
+
+<dialog id="dlgStars">
+  <h3 class="dlg-title">เรตติ้งโรงแรม</h3>
+  <div class="radio-list">
+    <label class="radio-item"><input type="radio" name="stars" value="0"> ทั้งหมด</label>
+    <label class="radio-item"><input type="radio" name="stars" value="2"> 2 ดาวขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="stars" value="3"> 3 ดาวขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="stars" value="4"> 4 ดาวขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="stars" value="5"> 5 ดาวขึ้นไป</label>
+  </div>
+  <div class="dlg-actions">
+    <button class="btn secondary" onclick="document.getElementById('dlgStars').close()">ยกเลิก</button>
+    <button class="btn" id="btnStarsOk">ตกลง</button>
+  </div>
+</dialog>
+
+<dialog id="dlgPrice">
+  <h3 class="dlg-title">ช่วงราคา</h3>
+  <div class="range-wrap">
+    <div class="range-labels">
+      <div>฿<span id="pvMin">0</span></div>
+      <div>฿<span id="pvMax">200,000</span></div>
+    </div>
+    <div class="ranges">
+      <input id="rMin" type="range" min="0" max="200000" step="100" value="0">
+      <input id="rMax" type="range" min="0" max="200000" step="100" value="200000">
+    </div>
+    <div class="ranges">
+      <input id="nMin" type="number" min="0" max="200000" step="100" value="0">
+      <input id="nMax" type="number" min="0" max="200000" step="100" value="200000">
+    </div>
+  </div>
+  <div class="dlg-actions">
+    <button class="btn ghost" id="btnPriceReset">ลบ</button>
+    <button class="btn" id="btnPriceOk">ตกลง</button>
+  </div>
+</dialog>
+
+<dialog id="dlgScore">
+  <h3 class="dlg-title">คะแนนรีวิว</h3>
+  <div class="radio-list">
+    <label class="radio-item"><input type="radio" name="score" value="0"> ทั้งหมด</label>
+    <label class="radio-item"><input type="radio" name="score" value="6"> 6 คะแนนขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="score" value="7"> 7 คะแนนขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="score" value="8"> 8 คะแนนขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="score" value="9"> 9 คะแนนขึ้นไป</label>
+  </div>
+  <div class="dlg-actions">
+    <button class="btn secondary" onclick="document.getElementById('dlgScore').close()">ยกเลิก</button>
+    <button class="btn" id="btnScoreOk">ตกลง</button>
+  </div>
+</dialog>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const params = new URLSearchParams(location.search);
+
+  // ----------- main state -----------
+  const state = {
+    q: params.get('q') || '',
+    cityId: params.get('cityId') || params.get('cityid') || '',
+    hid: params.get('hid') || '',
+    city: params.get('city') || '',
+    country: params.get('country') || '',
+    checkin: params.get('checkin'),
+    checkout: params.get('checkout'),
+    rooms: +(params.get('rooms') || 1),
+    adults: +(params.get('adults') || 2),
+    children: +(params.get('children') || 0),
+    lang: (params.get('lang') || 'th-th').toLowerCase(),
+    currency: 'THB',
+    sort: params.get('sort') || 'rec',
+    starsMin: +(params.get('starsMin') || 0),
+    scoreMin: +(params.get('scoreMin') || 0),
+    priceMin: +(params.get('priceMin') || 0),
+    priceMax: +(params.get('priceMax') || 200000),
+    page: +(params.get('page') || 1)
+  };
+
+  // ----------- draft state -----------
+  const draft = JSON.parse(JSON.stringify(state));
+
+  // subtitle
+  const human = (() => {
+    const ci = state.checkin?.replaceAll('-', '/');
+    const co = state.checkout?.replaceAll('-', '/');
+    const guestTxt = `<span class="nowrap">ผู้เข้าพัก:</span> ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
+    const place = state.city || state.q || '—';
+    return {place, range: `${ci} → ${co}`, guestTxt};
+  })();
+  $('#subtitle').innerHTML = `${human.place} | วันที่: ${human.range} | ${human.guestTxt}`;
+
+  // ----- ฟังก์ชัน format ราคา (ปัดเศษสำหรับสกุลที่ไม่ใช้ทศนิยม เช่น THB) -----
+  function fmt(n, cur = state.currency){
+    if (n == null) return '-';
+    const zeroDec = new Set(['THB','JPY','IDR','KRW','VND']);
+    const use0 = zeroDec.has(String(cur||'').toUpperCase());
+    const val = use0 ? Math.round(n) : n;
+    try{
+      return new Intl.NumberFormat('th-TH',{
+        minimumFractionDigits: use0 ? 0 : 0,
+        maximumFractionDigits: use0 ? 0 : 2
+      }).format(val);
+    }catch(_){
+      return use0 ? String(Math.round(val)) : String(val);
+    }
+  }
+  function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&','<':'<','>':'>','"':'"',"'":'''}[m])); }
+  function normalizeQ(q){ return String(q||'').replace(/กรุงเทพฯ/g,'กรุงเทพ').trim(); }
+
+  function updateChips(){
+    $('#chipSortV').textContent = draft.sort==='price_asc'?'ราคาต่ำ → สูง':draft.sort==='price_desc'?'ราคาสูง → ต่ำ':'แนะนำ';
+    $('#chipStarsV').textContent = draft.starsMin?`${draft.starsMin} ดาวขึ้นไป`:'ทั้งหมด';
+    const pm = Math.min(draft.priceMin, draft.priceMax), px = Math.max(draft.priceMin, draft.priceMax);
+    $('#chipPriceV').textContent = `฿${fmt(pm)} – ฿${fmt(px)}`;
+    $('#chipScoreV').textContent = draft.scoreMin?`${draft.scoreMin} คะแนนขึ้นไป`:'ทั้งหมด';
+  }
+  updateChips();
+
+  function updateQueryOnly(){
+    const u = new URL(location.href);
+    Object.entries({
+      q: state.q || '',
+      cityId: state.cityId || '',
+      hid: state.hid || '',
+      city: state.city || '',
+      country: state.country || '',
+      checkin: state.checkin,
+      checkout: state.checkout,
+      rooms: state.rooms,
+      adults: state.adults,
+      children: state.children,
+      lang: state.lang,
+      currency: state.currency,
+      page: state.page,
+      sort: state.sort,
+      starsMin: state.starsMin,
+      scoreMin: state.scoreMin,
+      priceMin: state.priceMin,
+      priceMax: state.priceMax
+    }).forEach(([k,v])=>{
+      if (v === '' || v == null) u.searchParams.delete(k);
+      else u.searchParams.set(k, v);
+    });
+    history.replaceState({}, '', u);
+  }
+
+  // resolve q -> id ถ้ายังไม่มี
+  async function resolveDestinationIfNeeded(){
+    if ((state.cityId || state.hid) || !state.q) return;
+    try{
+      const url = `/api/suggest?q=${encodeURIComponent(state.q)}&lang=${encodeURIComponent(state.lang)}&type=mixed`;
+      const res = await fetch(url, {cache:'no-store'});
+      const data = await res.json();
+      if (data && data.ok && Array.isArray(data.items) && data.items.length){
+        const firstHotel = data.items.find(it => String(it.type||'').toLowerCase().includes('hotel'));
+        const firstCity  = data.items.find(it => String(it.type||'').toLowerCase().includes('city'));
+        const pick = firstHotel || firstCity || data.items[0];
+        const t = String(pick.type||'').toLowerCase();
+        if (t.includes('hotel')) state.hid = String(pick.id||pick.hotel_id||'');
+        if (t.includes('city'))  state.cityId = String(pick.city_id ?? pick.value ?? pick.id ?? '');
+        state.city = pick.label || pick.city_name || state.city;
+      }
+    }catch(_){}
+  }
+
+  // คืนจำนวนคืน
+  function calcLos(ci, co){
+    try{
+      const a = new Date(ci+'T12:00:00Z'), b = new Date(co+'T12:00:00Z');
+      const diff = Math.round((b-a)/(1000*60*60*24));
+      return Math.max(1, diff||1);
+    }catch(e){ return 1; }
+  }
+
+  // ลิงก์ CTA ไป Agoda
+  function partnerUrl(){
+    const langPath = state.lang || 'th-th';
+    if (state.cityId) {
+      const base = `https://www.agoda.com/${langPath}/partners/partnersearch.aspx`;
+      const sp = new URLSearchParams({
+        cid: '1949420',
+        city: String(state.cityId),
+        checkin: state.checkin || '',
+        checkout: state.checkout || '',
+        rooms: String(state.rooms || 1),
+        adults: String(state.adults || 2),
+        children: String(state.children || 0),
+        currency: state.currency || 'THB',
+        utm_source: 'clickandgo', utm_medium: 'affiliate',
+        noapp:'1', pcs:'1'
+      });
+      return `${base}?${sp.toString()}`;
+    }
+    const base = `https://www.agoda.com/${langPath}/search`;
+    const sp = new URLSearchParams({
+      cid:'1949420', currency: state.currency || 'THB',
+      checkin: state.checkin || '', checkout: state.checkout || '',
+      adults: String(state.adults || 2), children: String(state.children || 0),
+      rooms: String(state.rooms || 1), los: String(calcLos(state.checkin, state.checkout)),
+      utm_source:'clickandgo', utm_medium:'affiliate', noapp:'1', pcs:'1'
+    });
+    if (state.q) sp.set('q', state.q);
+    return `${base}?${sp.toString()}`;
+  }
+  function refreshPartnerCta(){
+    $('#partnerMore').setAttribute('href', partnerUrl());
+  }
+
+  async function load(){
+    renderSkeleton();
+
+    if (!state.cityId && !state.hid && state.q) {
+      await resolveDestinationIfNeeded();
+    }
+
+    const api = new URL('/api/search', location.origin);
+    const p = api.searchParams;
+
+    if (state.hid) p.set('hid', state.hid);
+    else if (state.cityId) p.set('cityId', state.cityId);
+    else if (state.q) p.set('q', state.q);
+
+    ['checkin','checkout','rooms','adults','children','lang','currency','page','sort',
+     'starsMin','scoreMin','priceMin','priceMax'
+    ].forEach(k => p.set(k, state[k]));
+
+    const resp = await fetch(api.toString(), {cache: 'no-store'});
+    const json = await resp.json().catch(()=>({ok:false}));
+
+    if (!json.ok){
+      $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`;
+      refreshPartnerCta();
+      return;
+    }
+
+    let items = json.results || [];
+    if (state.sort === 'price_asc') items.sort((a,b)=>(a.price||1e15)-(b.price||1e15));
+    if (state.sort === 'price_desc') items.sort((a,b)=>(b.price||0)-(a.price||0));
+
+    render(items);
+    refreshPartnerCta();
+  }
+
+  function renderSkeleton(){
+    const sk = Array.from({length: 9}).map(()=>`
+      <article class="card" aria-busy="true">
+        <div class="sk-img skeleton"></div>
+        <div class="card-body">
+          <div class="sk-line skeleton" style="width:70%"></div>
+          <div class="sk-line skeleton" style="width:40%"></div>
+          <div class="sk-line skeleton" style="width:50%"></div>
+        </div>
+      </article>`).join('');
+    $('#grid').innerHTML = sk;
+  }
+
+  function starIcons(n){
+    const c = Math.max(0, Math.min(5, Math.round(n||0)));
+    return `<span class="stars" aria-label="${c} ดาว">` +
+      Array.from({length:c}).map(()=>`
+        <span class="star" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+        </span>`).join('') +
+      `</span>`;
+  }
+
+  function render(list){
+    if (!list.length){
+      $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`;
+      return;
+    }
+    const html = list.map(h => `
+      <article class="card">
+        <img src="${esc(h.thumbnail || '')}" alt="${esc(h.name)}">
+        <div class="card-body">
+          <h3 style="font-size:18px;margin:0 0 6px">${esc(h.name)}</h3>
+          <div class="muted" style="font-size:13px">
+            ${starIcons(h.rating ?? 0)}
+             · <span class="score">คะแนนรีวิว ${h.reviewScore ?? '-'}</span>
+          </div>
+          <div class="price">${h.price!=null?fmt(h.price, h.currency || state.currency):'-'} ${esc(h.currency || state.currency)}</div>
+          <div class="h-actions">
+            <a class="btn" href="${esc(h.url || '#')}" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+          </div>
+        </div>
+      </article>
+    `).join('');
+    $('#grid').innerHTML = html;
+  }
+
+  /* ======= mini search behaviours ======= */
+  // init values
+  const miniQ = $('#miniQ'), miniCi = $('#miniCi'), miniCo = $('#miniCo');
+  const ONE = 86400000;
+  function iso(d){ return new Date(d).toISOString().slice(0,10); }
+
+  // set default if missing
+  const today = state.checkin ? new Date(state.checkin) : new Date();
+  const tomorrow = state.checkout ? new Date(state.checkout) : new Date(Date.now()+ONE);
+  miniCi.value = iso(today);
+  miniCo.value = iso(tomorrow);
+  miniCi.min = iso(new Date());
+  miniCo.min = iso(new Date(today.getTime()+ONE));
+  miniQ.value = state.city || state.q || '';
+
+  miniCi.addEventListener('change', ()=>{
+    const a = new Date(miniCi.value || iso(new Date()));
+    const n = new Date(a.getTime()+ONE);
+    if (!miniCo.value || new Date(miniCo.value) <= a) miniCo.value = iso(n);
+    miniCo.min = iso(n);
+  });
+
+  // guest modal
+  let g = {rooms: state.rooms, adults: state.adults, children: state.children};
+  const gTxt = ()=>`${g.rooms} ห้อง, ${g.adults} ผู้ใหญ่, ${g.children} เด็ก`;
+  $('#miniGuestTxt').textContent = gTxt();
+  function openG(){ $('#gBackdrop').style.display='block'; $('#gModal').style.display='block';
+    $('#gRooms').textContent=g.rooms;$('#gAdults').textContent=g.adults;$('#gChildren').textContent=g.children; }
+  function closeG(){ $('#gBackdrop').style.display='none'; $('#gModal').style.display='none'; }
+  $('#miniGuest').addEventListener('click', openG);
+  $('#gClose').addEventListener('click', closeG); $('#gCancel').addEventListener('click', closeG);
+  $('#gBackdrop').addEventListener('click', closeG);
+  document.querySelectorAll('.cbtn').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const t=b.getAttribute('data-t'), op=b.getAttribute('data-op');
+      const lim = {rooms:[1,10], adults:[1,10], children:[0,10]}[t];
+      let v=g[t]; if(op==='+') v=Math.min(lim[1],v+1); else v=Math.max(lim[0],v-1);
+      g[t]=v; (t==='rooms'?$('#gRooms'):t==='adults'?$('#gAdults'):$('#gChildren')).textContent=v;
+    });
+  });
+  $('#gSave').addEventListener('click',()=>{ $('#miniGuestTxt').textContent=gTxt(); closeG(); });
+
+  // mini form submit -> update main state & reload
+  $('#miniForm').addEventListener('submit',(e)=>{
+    e.preventDefault();
+    state.q = normalizeQ(miniQ.value || '');
+    state.cityId = ''; state.hid = ''; // force resolve ใหม่หากพิมพ์เอง
+    state.checkin = miniCi.value;
+    state.checkout = miniCo.value;
+    state.rooms = g.rooms; state.adults = g.adults; state.children = g.children;
+
+    // อัพเดต subtitle ให้ทันใจ
+    const ci = state.checkin?.replaceAll('-', '/');
+    const co = state.checkout?.replaceAll('-', '/');
+    $('#subtitle').innerHTML = `${state.city || state.q || '—'} | วันที่: ${ci} → ${co} | <span class="nowrap">ผู้เข้าพัก:</span> ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
+
+    updateQueryOnly();
+    load();
+  });
+
+  // --------- chip actions ---------
+  $('#chipSort').addEventListener('click', ()=>{ $('#dlgSort').showModal();
+    [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort));
+  });
+  $('#chipStars').addEventListener('click', ()=>{ $('#dlgStars').showModal();
+    [...document.querySelectorAll('input[name=stars]')].forEach(r=>r.checked=(+r.value===+draft.starsMin));
+  });
+  $('#chipPrice').addEventListener('click', ()=>{
+    $('#dlgPrice').showModal();
+    setPriceWidgets(draft.priceMin, draft.priceMax);
+  });
+  $('#chipScore').addEventListener('click', ()=>{ $('#dlgScore').showModal();
+    [...document.querySelectorAll('input[name=score]')].forEach(r=>r.checked=(+r.value===+draft.scoreMin));
+  });
+
+  $('#btnSortOk').addEventListener('click', ()=>{
+    const v = document.querySelector('input[name=sort]:checked')?.value || 'rec';
+    draft.sort = v; updateChips(); $('#dlgSort').close();
+  });
+  $('#btnStarsOk').addEventListener('click', ()=>{
+    const v = +(document.querySelector('input[name=stars]:checked')?.value || 0);
+    draft.starsMin = v; updateChips(); $('#dlgStars').close();
+  });
+  $('#btnScoreOk').addEventListener('click', ()=>{
+    const v = +(document.querySelector('input[name=score]:checked')?.value || 0);
+    draft.scoreMin = v; updateChips(); $('#dlgScore').close();
+  });
+
+  // ราคา widgets sync
+  function setPriceWidgets(min, max){
+    const clamp = (n)=>Math.min(200000, Math.max(0, Math.round(n)));
+    const m = clamp(Math.min(min,max)), x = clamp(Math.max(min,max));
+    $('#rMin').value = m; $('#rMax').value = x;
+    $('#nMin').value = m; $('#nMax').value = x;
+    $('#pvMin').textContent = fmt(m); $('#pvMax').textContent = fmt(x);
+  }
+  function readPriceWidgets(){
+    const m = Math.min(+$('#rMin').value, +$('#rMax').value);
+    const x = Math.max(+$('#rMin').value, +$('#rMax').value);
+    return {m,x};
+  }
+  ['rMin','rMax'].forEach(id=>{
+    $('#'+id).addEventListener('input', ()=>{
+      const {m,x}=readPriceWidgets(); setPriceWidgets(m,x);
+    });
+  });
+  ['nMin','nMax'].forEach(id=>{
+    $('#'+id).addEventListener('input', ()=>{
+      const m = +$('#nMin').value, x = +$('#nMax').value; setPriceWidgets(m,x);
+    });
+  });
+  $('#btnPriceReset').addEventListener('click', ()=> setPriceWidgets(0,200000));
+  $('#btnPriceOk').addEventListener('click', ()=>{
+    const {m,x}=readPriceWidgets();
+    draft.priceMin = m; draft.priceMax = x; updateChips(); $('#dlgPrice').close();
+  });
+
+  // ปรับใช้ -> คัดลอก draft เข้า state แล้วค่อย load()
+  $('#chipApply').addEventListener('click', ()=>{
+    Object.assign(state, JSON.parse(JSON.stringify(draft)));
+    updateQueryOnly();
+    load();
+  });
+
+  // go!
+  load();
+})();
+</script>
+</body>
+</html>
