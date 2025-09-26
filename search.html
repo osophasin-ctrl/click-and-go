@@ -14,9 +14,10 @@
     @media(max-width:640px){.cards{grid-template-columns:1fr}}
     .card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07)}
     .card img{width:100%;height:210px;object-fit:cover;display:block;background:#f4f4f4}
-    .card-body{padding:14px; display:flex; flex-direction:column; min-height:160px}
+    .card-body{position:relative;padding:14px 14px 64px}
     .price{font-weight:700;margin-top:8px}
     .btn{display:inline-block;background:#0aa297;color:#fff;border:none;border-radius:10px;padding:10px 14px;cursor:pointer}
+    .btn-right{position:absolute;right:14px;bottom:14px}
     .header{display:flex;align-items:center;gap:12px;padding:12px 0}
     .muted{color:#666}
     .select{height:40px;border:1px solid #ddd;border-radius:10px;padding:0 10px;background:#fff}
@@ -24,8 +25,7 @@
     @keyframes s{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}
     .sk-img{height:210px}
     .sk-line{height:14px;margin-top:8px;border-radius:6px}
-    /* ตรึงปุ่มไปมุมขวาล่างของการ์ด */
-    .cta{margin-top:auto; display:flex; justify-content:flex-end}
+    .nowrap{white-space:nowrap}
   </style>
 </head>
 <body>
@@ -60,14 +60,7 @@
         <option>JPY</option>
       </select>
     </label>
-
-    <label>แสดง
-      <select id="limit" class="select">
-        <option value="30">30</option>
-        <option value="60">60</option>
-        <option value="90">90</option>
-      </select>
-    </label>
+    <!-- เอา “แสดง 30/60/90” ออกตามคำขอ -->
   </div>
 
   <section id="grid" class="cards" aria-live="polite"></section>
@@ -92,25 +85,28 @@
     children: +(params.get('children') || 0),
     lang: params.get('lang') || 'th-th',
     currency: params.get('currency') || 'THB',
-    limit: +(params.get('limit') || 30),
+    limit: 30,               // ล็อกไว้ที่ 30
     sort: params.get('sort') || 'rec',
     page: +(params.get('page') || 1)
   };
 
   // ตั้งค่าส่วนหัว
   $('#currency').value = state.currency;
-  $('#limit').value = String(state.limit);
   $('#sort').value = state.sort;
 
   const human = (() => {
     const ci = state.checkin?.replaceAll('-', '/');
     const co = state.checkout?.replaceAll('-', '/');
-    const guestTxt = `ผู้เข้าพัก: ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
     const place = state.city || state.q || '—';
-    return {place, range: `${ci} → ${co}`, guestTxt};
+    return {
+      place,
+      range: `${ci} → ${co}`,
+      guestTxt: `<span class="nowrap">ผู้เข้าพัก:</span> ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`
+    };
   })();
 
-  $('#subtitle').textContent = `${human.place} | วันที่: ${human.range} | ${human.guestTxt}`;
+  // ให้ “ผู้เข้าพัก:” ไม่ตัดคำผิดตำแหน่งบนจอเล็ก
+  $('#subtitle').innerHTML = `${human.place} | วันที่: ${human.range} | ${human.guestTxt}`;
 
   // -------- helper: เขียนค่ากลับลง URL โดยไม่รีโหลด --------
   function updateQueryOnly(){
@@ -129,7 +125,7 @@
       lang: state.lang,
       currency: state.currency,
       page: state.page,
-      limit: state.limit,
+      limit: state.limit, // คง param ไว้เป็น 30 เผื่อ backend ใช้
       sort: state.sort
     }).forEach(([k,v])=>{
       if (v === '' || v == null) u.searchParams.delete(k);
@@ -146,15 +142,14 @@
       const res = await fetch(url, {cache:'no-store'});
       const data = await res.json();
       if (data && data.ok && Array.isArray(data.items) && data.items.length){
-        // เลือก hotel ก่อน ถ้าไม่มีค่อยเลือก city
         const firstHotel = data.items.find(it => String(it.type||'').toLowerCase().includes('hotel'));
         const firstCity  = data.items.find(it => String(it.type||'').toLowerCase().includes('city'));
         const pick = firstHotel || firstCity || data.items[0];
         const t = String(pick.type||'').toLowerCase();
-        if (t.includes('hotel')) state.hid = String(pick.id||'');
-        if (t.includes('city'))  state.cityId = String(pick.id||'');
-        state.city = pick.label || state.city; // อัปเดต subtitle ให้ดูดี
-        updateQueryOnly(); // เขียน id กลับลง URL (จะเห็น ?cityId=... หรือ ?hid=...)
+        if (t.includes('hotel')) state.hid = String(pick.id||pick.hotel_id||'');
+        if (t.includes('city'))  state.cityId = String(pick.city_id||pick.value||pick.id||'');
+        state.city = pick.label || pick.city_name || state.city;
+        updateQueryOnly();
       }
     }catch(_){}
   }
@@ -163,7 +158,6 @@
   async function load(){
     renderSkeleton();
 
-    // ถ้ายังไม่มี id ให้ resolve อัตโนมัติจาก q ก่อน
     if (!state.cityId && !state.hid && state.q) {
       await resolveDestinationIfNeeded();
     }
@@ -174,7 +168,7 @@
 
     if (state.hid) p.set('hid', state.hid);
     else if (state.cityId) p.set('cityId', state.cityId);
-    else if (state.q) p.set('q', state.q); // เผื่อสุดท้ายหาไม่ได้จริง ๆ (backend จะ guard ไว้)
+    else if (state.q) p.set('q', state.q);
 
     ['checkin','checkout','rooms','adults','children','lang','currency','page','limit','sort']
       .forEach(k => p.set(k, state[k]));
@@ -221,9 +215,7 @@
           <h3 style="font-size:18px;margin:0 0 6px">${esc(h.name)}</h3>
           <div class="muted" style="font-size:13px">★ ${h.rating ?? '-'} · คะแนน ${h.reviewScore ?? '-'}</div>
           <div class="price">${fmt(h.price)} ${esc(h.currency || state.currency)}</div>
-          <div class="cta">
-            <a class="btn" href="${esc(h.url || '#')}" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
-          </div>
+          <a class="btn btn-right" href="${esc(h.url || '#')}" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
         </div>
       </article>
     `).join('');
@@ -240,10 +232,6 @@
   // -------- UI handlers --------
   $('#currency').addEventListener('change', e => {
     state.currency = e.target.value;
-    updateQueryOnly(); load();
-  });
-  $('#limit').addEventListener('change', e => {
-    state.limit = +e.target.value;
     updateQueryOnly(); load();
   });
   $('#sort').addEventListener('change', e => {
