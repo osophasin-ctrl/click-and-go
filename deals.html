@@ -142,7 +142,7 @@
     <section>
       <h2 class="section-title">ดีลสุดฮอตในเมืองยอดนิยม</h2>
       <div class="city-grid">
-        <!-- เปลี่ยนเป็น data-q + href="#" เพื่อให้ JS สร้างลิงก์ไป search.html ตามวันที่/ผู้เข้าพัก -->
+        <!-- ใช้ data-q + href="#" เพื่อให้ JS สร้างลิงก์ไป search.html -->
         <a class="city-card" href="#" data-q="กรุงเทพฯ"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
         <a class="city-card" href="#" data-q="เชียงใหม่"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
         <a class="city-card" href="#" data-q="พัทยา"><figure><img src="pattaya-tile.webp" alt="พัทยา"><figcaption>พัทยา</figcaption></figure></a>
@@ -407,22 +407,30 @@
       });
     })();
 
-    // ====== คลิกการ์ดเมือง -> ไปหน้า search.html พร้อมวันที่/ผู้เข้าพัก ======
+    /* ====== คลิกการ์ดเมือง -> ไปหน้า search.html พร้อมวันที่/ผู้เข้าพัก (Local time, no UTC bug) ====== */
     (function(){
-      function iso(d){ return new Date(d).toISOString().slice(0,10); }
+      function fmtLocal(d){
+        var p = function(n){ return String(n).padStart(2,'0'); };
+        return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate());
+        }
       var ONE = 24*60*60*1000;
 
       document.querySelectorAll('.city-card').forEach(function(a){
         a.addEventListener('click', function(e){
           e.preventDefault();
           var q = a.getAttribute('data-q') || '';
-          // normalize กรุงเทพฯ
           if(q.indexOf('กรุงเทพฯ')>-1) q = q.replace(/กรุงเทพฯ/g,'กรุงเทพ');
 
-          // ดึงค่าวัน/ผู้เข้าพักปัจจุบันจาก box ถ้าไม่มีให้ default วันนี้-พรุ่งนี้ / 1-2-0
+          // ดึงจาก flatpickr ก่อน ถ้าไม่มีใช้วันนี้-พรุ่งนี้ (ตาม local time)
           var inP  = window._cg_inPicker, outP = window._cg_outPicker;
-          var ci = inP && inP.selectedDates[0] ? inP.formatDate(inP.selectedDates[0],'Y-m-d') : iso(new Date());
-          var co = outP && outP.selectedDates[0] ? outP.formatDate(outP.selectedDates[0],'Y-m-d') : iso(new Date(Date.now()+ONE));
+          var ci = (inP && inP.selectedDates[0]) ? inP.formatDate(inP.selectedDates[0],'Y-m-d') : fmtLocal(new Date());
+          var co = (outP && outP.selectedDates[0]) ? outP.formatDate(outP.selectedDates[0],'Y-m-d') : fmtLocal(new Date(Date.now()+ONE));
+
+          // กันกรณี co <= ci -> บวก 1 คืน
+          var ciDate = new Date(ci + 'T00:00:00');
+          var coDate = new Date(co + 'T00:00:00');
+          if (coDate <= ciDate) co = fmtLocal(new Date(ciDate.getTime()+ONE));
+
           var rooms    = document.getElementById('rooms').value || 1;
           var adults   = document.getElementById('adults').value || 2;
           var children = document.getElementById('children').value || 0;
