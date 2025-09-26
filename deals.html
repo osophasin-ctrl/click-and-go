@@ -142,12 +142,13 @@
     <section>
       <h2 class="section-title">ดีลสุดฮอตในเมืองยอดนิยม</h2>
       <div class="city-grid">
-        <a class="city-card" href="bangkok.html"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
-        <a class="city-card" href="chiangmai.html"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
-        <a class="city-card" href="pattaya.html"><figure><img src="pattaya-tile.webp" alt="พัทยา"><figcaption>พัทยา</figcaption></figure></a>
-        <a class="city-card" href="phuket.html"><figure><img src="phuket-tile.webp" alt="ภูเก็ต"><figcaption>ภูเก็ต</figcaption></figure></a>
-        <a class="city-card" href="krabi.html"><figure><img src="krabi-tile.webp" alt="กระบี่"><figcaption>กระบี่</figcaption></figure></a>
-        <a class="city-card" href="hua-hin.html"><figure><img src="huahin-tile.webp" alt="หัวหิน"><figcaption>หัวหิน</figcaption></figure></a>
+        <!-- เปลี่ยนเป็น data-q + href="#" เพื่อให้ JS สร้างลิงก์ไป search.html ตามวันที่/ผู้เข้าพัก -->
+        <a class="city-card" href="#" data-q="กรุงเทพฯ"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="เชียงใหม่"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="พัทยา"><figure><img src="pattaya-tile.webp" alt="พัทยา"><figcaption>พัทยา</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="ภูเก็ต"><figure><img src="phuket-tile.webp" alt="ภูเก็ต"><figcaption>ภูเก็ต</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="กระบี่"><figure><img src="krabi-tile.webp" alt="กระบี่"><figcaption>กระบี่</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="หัวหิน"><figure><img src="huahin-tile.webp" alt="หัวหิน"><figcaption>หัวหิน</figcaption></figure></a>
       </div>
     </section>
   </main>
@@ -331,7 +332,6 @@
               show();
 
               Array.prototype.forEach.call(panel.querySelectorAll('.suggest-item'), function(el){
-                // ใช้ mousedown กัน blur ของ input แต่ไม่ไปบล็อกอีเวนต์อื่น
                 el.addEventListener('mousedown', function(ev){
                   ev.preventDefault();
                   var rawType = String(el.getAttribute('data-type') || '');
@@ -375,6 +375,8 @@
         var lang     = 'th-th';
 
         function go(cityidFinal, hidFinal){
+          // normalize กรุงเทพฯ -> กรุงเทพ
+          if(q.indexOf('กรุงเทพฯ')>-1) q = q.replace(/กรุงเทพฯ/g,'กรุงเทพ');
           var qs = new URLSearchParams({ checkin: ci, checkout: co, rooms: rooms, adults: adults, children: children, lang: lang });
           if (hidFinal) qs.set('hid', hidFinal);
           else if (cityidFinal) qs.set('cityid', cityidFinal);
@@ -387,7 +389,6 @@
           return;
         }
 
-        // resolve อัตโนมัติกรณีพิมพ์แล้วกด Enter
         fetch('/api/suggest?q='+encodeURIComponent(q)+'&lang='+encodeURIComponent(lang)+'&type=mixed')
           .then(function(res){ return res.json(); })
           .then(function(data){
@@ -403,6 +404,36 @@
             go(idCity, idHotel);
           })
           .catch(function(){ go('', ''); });
+      });
+    })();
+
+    // ====== คลิกการ์ดเมือง -> ไปหน้า search.html พร้อมวันที่/ผู้เข้าพัก ======
+    (function(){
+      function iso(d){ return new Date(d).toISOString().slice(0,10); }
+      var ONE = 24*60*60*1000;
+
+      document.querySelectorAll('.city-card').forEach(function(a){
+        a.addEventListener('click', function(e){
+          e.preventDefault();
+          var q = a.getAttribute('data-q') || '';
+          // normalize กรุงเทพฯ
+          if(q.indexOf('กรุงเทพฯ')>-1) q = q.replace(/กรุงเทพฯ/g,'กรุงเทพ');
+
+          // ดึงค่าวัน/ผู้เข้าพักปัจจุบันจาก box ถ้าไม่มีให้ default วันนี้-พรุ่งนี้ / 1-2-0
+          var inP  = window._cg_inPicker, outP = window._cg_outPicker;
+          var ci = inP && inP.selectedDates[0] ? inP.formatDate(inP.selectedDates[0],'Y-m-d') : iso(new Date());
+          var co = outP && outP.selectedDates[0] ? outP.formatDate(outP.selectedDates[0],'Y-m-d') : iso(new Date(Date.now()+ONE));
+          var rooms    = document.getElementById('rooms').value || 1;
+          var adults   = document.getElementById('adults').value || 2;
+          var children = document.getElementById('children').value || 0;
+
+          var qs = new URLSearchParams({
+            q: q, checkin: ci, checkout: co,
+            rooms: rooms, adults: adults, children: children,
+            lang: 'th-th'
+          });
+          location.href = '/search.html?' + qs.toString();
+        });
       });
     })();
   </script>
