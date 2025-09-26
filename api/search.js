@@ -45,14 +45,12 @@ function withCid(url) {
     if (!u.searchParams.has("cid")) u.searchParams.set("cid", SITE_ID);
     return u.toString();
   } catch {
-    // เผื่อ URL ไม่ครบ schema → ต่อ string แบบง่าย
     const hasCid = /([?&])cid=/.test(url);
     if (hasCid) return url;
     const sep = url.includes("?") ? "&" : "?";
     return `${url}${sep}cid=${encodeURIComponent(SITE_ID)}`;
   }
 }
-// รวม cid + utm
 function withCidAndUtm(url) {
   return withUtm(withCid(url));
 }
@@ -72,7 +70,7 @@ function pickFromSuggest(items) {
   // 1) พยายามเลือกโรงแรมก่อน (ถ้ามี)
   for (const it of items) {
     const t = String(it.type || "").toLowerCase();
-    const hotelId = it.hotel_id || it.id; // บางสคีมา hotel อยู่ใน id พร้อม type="Hotel"
+    const hotelId = it.hotel_id || it.id;
     if (t.includes("hotel") || it.hotel_id) {
       const hid = String(hotelId || "");
       if (hid) return { cityId: "", hid, label: it.label || it.hotel_name || "" };
@@ -82,14 +80,14 @@ function pickFromSuggest(items) {
   // 2) ไม่มีก็เลือกเมือง
   for (const it of items) {
     const t = String(it.type || "").toLowerCase();
-    const id = it.city_id ?? it.value ?? it.id; // รองรับ city_id / value / id
+    const id = it.city_id ?? it.value ?? it.id;
     if (t.includes("city") || it.city_id || it.value) {
       const cityId = String(id || "");
       if (cityId) return { cityId, hid: "", label: it.label || it.city_name || "" };
     }
   }
 
-  // 3) ไม่รู้ชนิดก็ใช้รายการแรกเป็นเมือง (เช่นกรณีที่มีแค่ city_id/value)
+  // 3) ไม่รู้ชนิดก็ใช้รายการแรกเป็นเมือง
   const it = items[0];
   const cityId = String((it && (it.city_id ?? it.value ?? it.id)) || "");
   return { cityId, hid: "", label: (it && (it.label || it.city_name)) || "" };
@@ -127,12 +125,13 @@ module.exports = async function (req, res) {
     const limit    = Math.min(30, limitRaw); // lt_v1 อนุญาตสูงสุด 30
     const sortBy   = SORT_MAP[qstr(req, "sort", "rec")] || "Recommended";
 
-    // ฟิลเตอร์ที่เพิ่มเข้ามา (แมปกับ lt_v1)
+    // ฟิลเตอร์ (แมปกับ lt_v1)
     const priceMin = Math.max(1, qint(req, "priceMin", 1));
     const priceMax = Math.max(priceMin, qint(req, "priceMax", 1000000));
     const starsMin = Math.max(0, qint(req, "starsMin", 0));
     const scoreMin = Math.max(0, Math.min(10, qnum(req, "scoreMin", 0)));
     const discountOnly = qbool(req, "discountOnly", false);
+    const nofallback = qbool(req, "nofallback", false);
 
     // children ages (optional)
     let childrenAges = toAges(qstr(req, "childrenAges", ""));
@@ -166,24 +165,81 @@ module.exports = async function (req, res) {
       return res.status(200).json({ ok: false, reason: "missing_id", results: [] });
     }
 
-    // -------- build payload lt_v1 --------
+    // -------- helper: call Agoda --------
+    async function callAgoda(payload) {
+      const resp = await fetch(AGODA_URL, {
+        method: "POST",
+        headers: {
+          "Accept-Encoding": "gzip,deflate",
+          "Content-Type": "application/json",
+          "Authorization": `${SITE_ID}:${API_KEY}`
+        },
+        body: JSON.stringify(payload)
+      });
+      const text = await resp.text();
+      let data = null;
+      try { data = JSON.parse(text); } catch (_) {}
+
+      if (!resp.ok) {
+        return { ok: false, code: resp.status, text, data, items: [] };
+      }
+      const arr =
+        (Array.isArray(data && data.results) && data.results) ||
+        (Array.isArray(data && data.hotels) && data.hotels) ||
+        (Array.isArray(data && data.data) && data.data) ||
+        [];
+
+      const items = arr.map((r) => {
+        const price =
+          (r.dailyRate && (r.dailyRate.total || r.dailyRate.dailyTotal || r.dailyRate.minRate)) ||
+          r.dailyRate || r.lowRate || r.price || null;
+
+        const thumb =
+          r.imageURL || r.thumbnailUrl || r.imageUrl || r.photoUrl || r.thumbnail || "";
+
+        const rawUrl =
+          r.landingURL || r.deeplinkUrl || r.deeplink || r.url || r.agodaUrl || "#";
+
+        const url = withCidAndUtm(rawUrl);
+
+        return {
+          name: r.hotelName || r.name || r.propertyName || "",
+          thumbnail: thumb,
+          rating: r.starRating ?? null,
+          reviewScore: r.reviewScore ?? null,
+          price,
+          currency: r.currency || currency,
+          url
+        };
+      });
+
+      return { ok: true, data, text, items };
+    }
+
+    // -------- build payload lt_v1 (รอบแรกตามฟิลเตอร์) --------
+    const baseAdditional = {
+      currency,
+      language: lang,
+      maxResult: limit,
+      sortBy,
+      occupancy: {
+        numberOfAdult: adults,
+        numberOfChildren: children,
+        ...(children > 0 ? { childrenAges } : {})
+      }
+    };
+
+    const additionalWithFilters = {
+      ...baseAdditional,
+      discountOnly,
+      minimumReviewScore: scoreMin,
+      minimumStarRating: starsMin,
+      dailyRate: { minimum: priceMin, maximum: priceMax }
+    };
+
     const payload = {
       criteria: {
-        additional: {
-          currency,
-          language: lang,
-          maxResult: limit,
-          discountOnly,
-          minimumReviewScore: scoreMin,
-          minimumStarRating: starsMin,
-          sortBy,
-          dailyRate: { minimum: priceMin, maximum: priceMax },
-          occupancy: {
-            numberOfAdult: adults,
-            numberOfChildren: children,
-            ...(children > 0 ? { childrenAges } : {})
-          }
-        },
+        additional: additionalWithFilters,
         checkInDate: checkin,
         checkOutDate: checkout
       }
@@ -191,58 +247,39 @@ module.exports = async function (req, res) {
     if (hid) payload.criteria.hotelId = parseInt(hid, 10);
     else payload.criteria.cityId = parseInt(cityId, 10);
 
-    // -------- call Agoda --------
-    const resp = await fetch(AGODA_URL, {
-      method: "POST",
-      headers: {
-        "Accept-Encoding": "gzip,deflate",
-        "Content-Type": "application/json",
-        "Authorization": `${SITE_ID}:${API_KEY}`
-      },
-      body: JSON.stringify(payload)
-    });
+    // ---- call #1
+    let { ok, items, data, text } = await callAgoda(payload);
 
-    const text = await resp.text();
-    let data = null;
-    try { data = JSON.parse(text); } catch (_) {}
+    // ถ้า ok แต่ items ว่าง และอนุญาต fallback → ลองปลดฟิลเตอร์หลัก
+    if (ok && items.length === 0 && !nofallback) {
+      const relaxed = {
+        criteria: {
+          additional: {
+            ...baseAdditional,
+            discountOnly: false,
+            minimumReviewScore: 0,
+            minimumStarRating: 0,
+            dailyRate: { minimum: 1, maximum: 1000000 }
+          },
+          checkInDate: checkin,
+          checkOutDate: checkout
+        }
+      };
+      if (hid) relaxed.criteria.hotelId = parseInt(hid, 10);
+      else relaxed.criteria.cityId = parseInt(cityId, 10);
 
-    if (!resp.ok) {
-      return res.status(200).json({
-        ok: false, reason: `agoda_http_${resp.status}`, message: text, results: [], payload
-      });
+      const retry = await callAgoda(relaxed);
+      ok = retry.ok;
+      items = retry.items;
+      data = retry.data;
+      text = retry.text;
     }
 
-    // ---------- normalize ----------
-    const arr =
-      (Array.isArray(data && data.results) && data.results) ||
-      (Array.isArray(data && data.hotels) && data.hotels) ||
-      (Array.isArray(data && data.data) && data.data) ||
-      [];
-
-    const items = arr.map((r) => {
-      const price =
-        (r.dailyRate && (r.dailyRate.total || r.dailyRate.dailyTotal || r.dailyRate.minRate)) ||
-        r.dailyRate || r.lowRate || r.price || null;
-
-      const thumb =
-        r.imageURL || r.thumbnailUrl || r.imageUrl || r.photoUrl || r.thumbnail || "";
-
-      const rawUrl =
-        r.landingURL || r.deeplinkUrl || r.deeplink || r.url || r.agodaUrl || "#";
-
-      // ใส่ cid และ utm ให้แน่ใจทุกลิงก์
-      const url = withCidAndUtm(rawUrl);
-
-      return {
-        name: r.hotelName || r.name || r.propertyName || "",
-        thumbnail: thumb,
-        rating: r.starRating ?? null,
-        reviewScore: r.reviewScore ?? null,
-        price,
-        currency: r.currency || currency,
-        url
-      };
-    });
+    if (!ok) {
+      return res.status(200).json({
+        ok: false, reason: "agoda_http_error", message: text, results: []
+      });
+    }
 
     // —— deeplink สำหรับปุ่ม “ค้นหาเพิ่มเติมจากพันธมิตรของเรา”
     const agodaUrl = buildAgodaUrl({
@@ -253,7 +290,7 @@ module.exports = async function (req, res) {
     const isProd = process.env.NODE_ENV === "production";
     const wantDebug = qstr(req, "debug", "") === "1";
     if (wantDebug && !isProd) {
-      return res.status(200).json({ ok: true, payload, raw: data ?? text, results: items, agodaUrl });
+      return res.status(200).json({ ok: true, results: items, raw: data ?? text, agodaUrl });
     }
 
     return res.status(200).json({ ok: true, results: items, agodaUrl });
@@ -261,4 +298,3 @@ module.exports = async function (req, res) {
     return res.status(200).json({ ok: false, reason: "exception", message: String(err), results: [] });
   }
 };
-```0
