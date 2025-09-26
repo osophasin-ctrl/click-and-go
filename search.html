@@ -174,7 +174,7 @@
   const $ = s => document.querySelector(s);
   const params = new URLSearchParams(location.search);
 
-  // ----------- main state (ใช้จริงเมื่อกด "ปรับใช้") -----------
+  // ----------- main state -----------
   const state = {
     q: params.get('q') || '',
     cityId: params.get('cityId') || params.get('cityid') || '',
@@ -187,7 +187,7 @@
     adults: +(params.get('adults') || 2),
     children: +(params.get('children') || 0),
     lang: (params.get('lang') || 'th-th').toLowerCase(),
-    currency: 'THB',                // คง THB สำหรับหน้าไทย
+    currency: 'THB',
     sort: params.get('sort') || 'rec',
     starsMin: +(params.get('starsMin') || 0),
     scoreMin: +(params.get('scoreMin') || 0),
@@ -196,7 +196,7 @@
     page: +(params.get('page') || 1)
   };
 
-  // ----------- draft state (แก้ใน dialog แต่ยังไม่ใช้) -----------
+  // ----------- draft state -----------
   const draft = JSON.parse(JSON.stringify(state));
 
   // subtitle
@@ -209,8 +209,21 @@
   })();
   $('#subtitle').innerHTML = `${human.place} | วันที่: ${human.range} | ${human.guestTxt}`;
 
-  // helper
-  function fmt(n){ try{ return new Intl.NumberFormat('th-TH').format(n); }catch(_){ return String(n); } }
+  // ----- ฟังก์ชัน format ราคา (ปัดเศษสำหรับสกุลที่ไม่ใช้ทศนิยม เช่น THB) -----
+  function fmt(n, cur = state.currency){
+    if (n == null) return '-';
+    const zeroDec = new Set(['THB','JPY','IDR','KRW','VND']);
+    const use0 = zeroDec.has(String(cur||'').toUpperCase());
+    const val = use0 ? Math.round(n) : n;
+    try{
+      return new Intl.NumberFormat('th-TH',{
+        minimumFractionDigits: use0 ? 0 : 0,
+        maximumFractionDigits: use0 ? 0 : 2
+      }).format(val);
+    }catch(_){
+      return use0 ? String(Math.round(val)) : String(val);
+    }
+  }
   function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
   function updateChips(){
     $('#chipSortV').textContent = draft.sort==='price_asc'?'ราคาต่ำ → สูง':draft.sort==='price_desc'?'ราคาสูง → ต่ำ':'แนะนำ';
@@ -277,7 +290,7 @@
     }catch(e){ return 1; }
   }
 
-  // ลิงก์ CTA ไป Agoda (คงเดิม)
+  // ลิงก์ CTA ไป Agoda
   function partnerUrl(){
     const langPath = state.lang || 'th-th';
     if (state.cityId) {
@@ -383,7 +396,7 @@
             ${starIcons(h.rating ?? 0)}
             &nbsp;·&nbsp;<span class="score">คะแนนรีวิว ${h.reviewScore ?? '-'}</span>
           </div>
-          <div class="price">${h.price!=null?fmt(h.price):'-'} ${esc(h.currency || state.currency)}</div>
+          <div class="price">${h.price!=null?fmt(h.price, h.currency || state.currency):'-'} ${esc(h.currency || state.currency)}</div>
           <div class="h-actions">
             <a class="btn" href="${esc(h.url || '#')}" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
@@ -394,9 +407,7 @@
   }
 
   // --------- chip actions ---------
-  // เปิด dialog
   $('#chipSort').addEventListener('click', ()=>{ $('#dlgSort').showModal();
-    // set current
     [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort));
   });
   $('#chipStars').addEventListener('click', ()=>{ $('#dlgStars').showModal();
@@ -410,7 +421,6 @@
     [...document.querySelectorAll('input[name=score]')].forEach(r=>r.checked=(+r.value===+draft.scoreMin));
   });
 
-  // ตกลงของแต่ละ dialog -> อัปเดต draft + ปิด + อัปเดตข้อความที่ chip
   $('#btnSortOk').addEventListener('click', ()=>{
     const v = document.querySelector('input[name=sort]:checked')?.value || 'rec';
     draft.sort = v; updateChips(); $('#dlgSort').close();
