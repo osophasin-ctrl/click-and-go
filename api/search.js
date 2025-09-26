@@ -16,6 +16,15 @@ function qint(req, key, def = 0) {
   const n = parseInt(qstr(req, key, String(def)), 10);
   return Number.isFinite(n) ? n : def;
 }
+function qnum(req, key, def = 0) {
+  const n = parseFloat(qstr(req, key, String(def)));
+  return Number.isFinite(n) ? n : def;
+}
+function qbool(req, key, def = false) {
+  const v = qstr(req, key, def ? "1" : "");
+  const t = v.toString().toLowerCase();
+  return t === "1" || t === "true" || t === "yes";
+}
 function toAges(str) {
   return String(str || "")
     .split(",")
@@ -67,6 +76,21 @@ function pickFromSuggest(items) {
   return { cityId, hid: "", label: (it && (it.label || it.city_name)) || "" };
 }
 
+// สร้างลิงก์ไปหน้าพันธมิตร Agoda (deeplink แบบ partnersearch)
+function buildAgodaUrl({ cityId, hid, currency, checkin, checkout, adults, children, rooms = 1 }) {
+  const base = `https://www.agoda.com/partners/partnersearch.aspx?cid=${SITE_ID}`;
+  const common =
+    `&currency=${encodeURIComponent(currency)}`
+    + `&checkin=${encodeURIComponent(checkin)}`
+    + `&checkout=${encodeURIComponent(checkout)}`
+    + `&NumberofAdults=${adults}`
+    + `&NumberofChildren=${children}`
+    + `&Rooms=${rooms}`;
+  if (hid) return `${base}&hid=${encodeURIComponent(hid)}${common}`;
+  if (cityId) return `${base}&city=${encodeURIComponent(cityId)}${common}`;
+  return "";
+}
+
 module.exports = async function (req, res) {
   try {
     // -------- read query --------
@@ -77,10 +101,19 @@ module.exports = async function (req, res) {
     const checkout = qstr(req, "checkout", "");
     const adults   = Math.max(1, qint(req, "adults", 2));
     const children = Math.max(0, qint(req, "children", 0));
+    const rooms    = Math.max(1, qint(req, "rooms", 1)); // ใช้สำหรับ deeplink เท่านั้น
     const currency = qstr(req, "currency", "THB");
     const lang     = qstr(req, "lang", "th-th");
-    const limit    = Math.max(1, qint(req, "limit", 30));
+    const limitRaw = Math.max(1, qint(req, "limit", 30));
+    const limit    = Math.min(30, limitRaw); // lt_v1 อนุญาตสูงสุด 30
     const sortBy   = SORT_MAP[qstr(req, "sort", "rec")] || "Recommended";
+
+    // ฟิลเตอร์ที่เพิ่มเข้ามา (แมปกับ lt_v1)
+    const priceMin = Math.max(1, qint(req, "priceMin", 1));
+    const priceMax = Math.max(priceMin, qint(req, "priceMax", 1000000));
+    const starsMin = Math.max(0, qint(req, "starsMin", 0));
+    const scoreMin = Math.max(0, Math.min(10, qnum(req, "scoreMin", 0)));
+    const discountOnly = qbool(req, "discountOnly", false);
 
     // children ages (optional)
     let childrenAges = toAges(qstr(req, "childrenAges", ""));
@@ -121,11 +154,11 @@ module.exports = async function (req, res) {
           currency,
           language: lang,
           maxResult: limit,
-          discountOnly: false,
-          minimumReviewScore: 0,
-          minimumStarRating: 0,
+          discountOnly,
+          minimumReviewScore: scoreMin,
+          minimumStarRating: starsMin,
           sortBy,
-          dailyRate: { minimum: 1, maximum: 1000000 },
+          dailyRate: { minimum: priceMin, maximum: priceMax },
           occupancy: {
             numberOfAdult: adults,
             numberOfChildren: children,
@@ -189,16 +222,20 @@ module.exports = async function (req, res) {
       };
     });
 
+    // —— deeplink สำหรับปุ่ม “ค้นหาเพิ่มเติมจากพันธมิตรของเรา”
+    const agodaUrl = buildAgodaUrl({
+      cityId, hid, currency, checkin, checkout, adults, children, rooms
+    });
+
     // debug (ปิดใน production)
     const isProd = process.env.NODE_ENV === "production";
     const wantDebug = qstr(req, "debug", "") === "1";
     if (wantDebug && !isProd) {
-      return res.status(200).json({ ok: true, payload, raw: data ?? text, results: items });
+      return res.status(200).json({ ok: true, payload, raw: data ?? text, results: items, agodaUrl });
     }
 
-    return res.status(200).json({ ok: true, results: items });
+    return res.status(200).json({ ok: true, results: items, agodaUrl });
   } catch (err) {
     return res.status(200).json({ ok: false, reason: "exception", message: String(err), results: [] });
   }
 };
-
