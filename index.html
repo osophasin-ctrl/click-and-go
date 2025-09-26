@@ -78,12 +78,12 @@
     <section>
       <h2 class="section-title">ปลายทางยอดนิยมในไทย</h2>
       <div class="city-grid">
-        <a class="city-card" data-q="กรุงเทพฯ"  href="search.html"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
-        <a class="city-card" data-q="เชียงใหม่"  href="search.html"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
-        <a class="city-card" data-q="พัทยา"    href="search.html"><figure><img src="pattaya-tile.webp" alt="พัทยา"><figcaption>พัทยา</figcaption></figure></a>
-        <a class="city-card" data-q="ภูเก็ต"    href="search.html"><figure><img src="phuket-tile.webp" alt="ภูเก็ต"><figcaption>ภูเก็ต</figcaption></figure></a>
-        <a class="city-card" data-q="กระบี่"    href="search.html"><figure><img src="krabi-tile.webp" alt="กระบี่"><figcaption>กระบี่</figcaption></figure></a>
-        <a class="city-card" data-q="หัวหิน"   href="search.html"><figure><img src="huahin-tile.webp" alt="หัวหิน"><figcaption>หัวหิน</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="กรุงเทพฯ"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="เชียงใหม่"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="พัทยา"><figure><img src="pattaya-tile.webp" alt="พัทยา"><figcaption>พัทยา</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="ภูเก็ต"><figure><img src="phuket-tile.webp" alt="ภูเก็ต"><figcaption>ภูเก็ต</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="กระบี่"><figure><img src="krabi-tile.webp" alt="กระบี่"><figcaption>กระบี่</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="หัวหิน"><figure><img src="huahin-tile.webp" alt="หัวหิน"><figcaption>หัวหิน</figcaption></figure></a>
       </div>
     </section>
 
@@ -91,12 +91,12 @@
     <section>
       <h2 class="section-title">เมืองยอดฮิตในต่างประเทศ</h2>
       <div class="city-grid">
-        <a class="city-card" data-q="โตเกียว"  href="search.html"><figure><img src="tokyo-tile.webp" alt="โตเกียว"><figcaption>โตเกียว</figcaption></figure></a>
-        <a class="city-card" data-q="โซล"      href="search.html"><figure><img src="seoul-tile.webp" alt="โซล"><figcaption>โซล</figcaption></figure></a>
-        <a class="city-card" data-q="สิงคโปร์" href="search.html"><figure><img src="singapore-tile.webp" alt="สิงคโปร์"><figcaption>สิงคโปร์</figcaption></figure></a>
-        <a class="city-card" data-q="ฮ่องกง"   href="search.html"><figure><img src="hongkong-tile.webp" alt="ฮ่องกง"><figcaption>ฮ่องกง</figcaption></figure></a>
-        <a class="city-card" data-q="ลอนดอน"  href="search.html"><figure><img src="london-tile.webp" alt="ลอนดอน"><figcaption>ลอนดอน</figcaption></figure></a>
-        <a class="city-card" data-q="ปารีส"    href="search.html"><figure><img src="paris-tile.webp" alt="ปารีส"><figcaption>ปารีส</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="โตเกียว"><figure><img src="tokyo-tile.webp" alt="โตเกียว"><figcaption>โตเกียว</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="โซล"><figure><img src="seoul-tile.webp" alt="โซล"><figcaption>โซล</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="สิงคโปร์"><figure><img src="singapore-tile.webp" alt="สิงคโปร์"><figcaption>สิงคโปร์</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="ฮ่องกง"><figure><img src="hongkong-tile.webp" alt="ฮ่องกง"><figcaption>ฮ่องกง</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="ลอนดอน"><figure><img src="london-tile.webp" alt="ลอนดอน"><figcaption>ลอนดอน</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="ปารีส"><figure><img src="paris-tile.webp" alt="ปารีส"><figcaption>ปารีส</figcaption></figure></a>
       </div>
     </section>
 
@@ -138,37 +138,92 @@
   <script>
   (function(){const btn=document.querySelector('.lang-btn'),menu=document.querySelector('.lang-menu');if(!btn||!menu)return;function closeM(){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}btn.addEventListener('click',e=>{e.stopPropagation();const o=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(o));});document.addEventListener('click',closeM);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});})();
   (function(){const input=document.getElementById('dest'),panel=document.getElementById('suggestPanel');if(!input||!panel)return;let t=null;function hide(){panel.style.display='none';panel.innerHTML='';}function show(){panel.style.display='block';}
-    input.addEventListener('input',()=>{const q=input.value.trim();if(t)clearTimeout(t);if(!q)return hide();t=setTimeout(async()=>{try{const r=await fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=th-th`);const d=await r.json();if(!d.ok||!d.items)return hide();panel.innerHTML=d.items.map(it=>`<div class="suggest-item" data-label="${it.label.replace(/"/g,'&quot;')}"><div class="s-label">${it.label}</div><div class="s-sub">${it.subtitle||''}</div></div>`).join('');show();panel.querySelectorAll('.suggest-item').forEach(el=>{el.addEventListener('click',()=>{input.value=el.getAttribute('data-label')||'';hide();});});}catch(e){hide();}},180);});document.addEventListener('click',e=>{if(!panel.contains(e.target)&&e.target!==input)hide();});})();
-  (function(){const ONE=86400000,ci=document.getElementById('ci'),co=document.getElementById('co'),fmt=d=>d.toISOString().slice(0,10),today=new Date(),tom=new Date(Date.now()+ONE);let inP=null,outP=null;if(window.flatpickr){inP=flatpickr("#ci",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",onChange(d){if(d[0]){const n=new Date(d[0].getTime()+ONE);outP.set('minDate',n);if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0])outP.setDate(n,true);}}});outP=flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:tom});inP.setDate(today,true);outP.setDate(tom,true);}else{ci.removeAttribute('readonly');co.removeAttribute('readonly');ci.type='date';co.type='date';ci.value=fmt(today);ci.min=fmt(today);co.value=fmt(tom);co.min=fmt(tom);ci.addEventListener('change',()=>{const a=new Date(ci.value||fmt(today)),n=new Date(a.getTime()+ONE);if(!co.value||new Date(co.value)<=a){co.value=fmt(n);co.min=fmt(n);}});}
-    let rooms=1,adults=2,children=0;const btn=document.getElementById('guestBtn'),roomsC=document.getElementById('roomsCount'),adultsC=document.getElementById('adultsCount'),childrenC=document.getElementById('childrenCount'),hR=document.getElementById('rooms'),hA=document.getElementById('adults'),hC=document.getElementById('children'),modal=document.getElementById('guestModal'),backdrop=document.getElementById('guestBackdrop');function open(){roomsC.textContent=rooms;adultsC.textContent=adults;childrenC.textContent=children;modal.style.display='block';backdrop.style.display='block';}function close(){modal.style.display='none';backdrop.style.display='none';}function upd(){btn.textContent=`${rooms} ห้อง, ${adults} ผู้ใหญ่, ${children} เด็ก`;}upd();btn.addEventListener('click',open);document.getElementById('btnCloseX').addEventListener('click',close);document.getElementById('btnCancel').addEventListener('click',close);backdrop.addEventListener('click',close);document.querySelectorAll('.btn-ctrl').forEach(b=>{b.addEventListener('click',()=>{const t=b.getAttribute('data-type'),op=b.getAttribute('data-op');let v=0,min=0,max=10;if(t==='rooms'){v=rooms;min=1}if(t==='adults'){v=adults;min=1}if(t==='children'){v=children;min=0}if(op==='plus'&&v<max)v++;if(op==='minus'&&v>min)v--;if(t==='rooms'){rooms=v;roomsC.textContent=v}if(t==='adults'){adults=v;adultsC.textContent=v}if(t==='children'){children=v;childrenC.textContent=v}});});document.getElementById('btnSaveGuests').addEventListener('click',()=>{hR.value=rooms;hA.value=adults;hC.value=children;upd();close();});
-    document.getElementById('cgForm').addEventListener('submit',e=>{const q=document.getElementById('dest');if(!q.value) q.value='กรุงเทพ';});
-  })();
-
-  /* ---- สร้างลิงก์เมือง -> search.html พร้อมพารามิเตอร์เริ่มต้น (วันนี้-พรุ่งนี้, 2 ผู้ใหญ่, 0 เด็ก, 1 ห้อง) ---- */
+    input.addEventListener('input',()=>{const q=input.value.trim();if(t)clearTimeout(t);if(!q)return hide();t=setTimeout(async()=>{try{const r=await fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=th-th`);const d=await r.json();if(!d.ok||!d.items)return hide();panel.innerHTML=d.items.map(it=>`<div class="suggest-item" data-label="${it.label.replace(/"/g,'&quot;')}"><div class="s-label">${it.label}</div><div class="s-sub">${it.subtitle||''}</div></div>`).join('');show();panel.querySelectorAll('.suggest-item').forEach(el=>{el.addEventListener('mousedown',ev=>{ev.preventDefault();input.value=el.getAttribute('data-label')||'';hide();});});}catch(e){hide();}},180);});document.addEventListener('click',e=>{if(!panel.contains(e.target)&&e.target!==input)hide();});})();
   (function(){
-    const ONE = 86400000;
-    const fmt = d => d.toISOString().slice(0,10);
-    const today = new Date();
-    const tomorrow = new Date(Date.now()+ONE);
+    const ONE=86400000,
+          ci=document.getElementById('ci'),
+          co=document.getElementById('co');
+    const fmtLocal=(d)=>{const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());};
+    const today=new Date(),tom=new Date(Date.now()+ONE);
+    let inP=null,outP=null;
 
-    function buildUrl(city){
-      const sp = new URLSearchParams({
-        q: city,
-        checkin: fmt(today),
-        checkout: fmt(tomorrow),
-        rooms: "1",
-        adults: "2",
-        children: "0",
-        lang: "th-th",
-        currency: "THB",
-        sort: "rec"
+    if(window.flatpickr){
+      inP=flatpickr("#ci",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",
+        onChange(d){if(d[0]){const n=new Date(d[0].getTime()+ONE);outP.set('minDate',n);if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0])outP.setDate(n,true);}}
       });
-      return `search.html?${sp.toString()}`;
+      outP=flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:tom});
+      inP.setDate(today,true); outP.setDate(tom,true);
+    }else{
+      ci.removeAttribute('readonly'); co.removeAttribute('readonly');
+      ci.type='date'; co.type='date';
+      ci.value=fmtLocal(today); ci.min=fmtLocal(today);
+      co.value=fmtLocal(tom);   co.min=fmtLocal(tom);
+      ci.addEventListener('change',()=>{const a=new Date(ci.value||fmtLocal(today)),n=new Date(a.getTime()+ONE);if(!co.value||new Date(co.value)<=a){co.value=fmtLocal(n);co.min=fmtLocal(n);}});
     }
 
+    let rooms=1,adults=2,children=0;
+    const btn=document.getElementById('guestBtn'),
+          roomsC=document.getElementById('roomsCount'),
+          adultsC=document.getElementById('adultsCount'),
+          childrenC=document.getElementById('childrenCount'),
+          hR=document.getElementById('rooms'),
+          hA=document.getElementById('adults'),
+          hC=document.getElementById('children'),
+          modal=document.getElementById('guestModal'),
+          backdrop=document.getElementById('guestBackdrop');
+    function open(){roomsC.textContent=rooms;adultsC.textContent=adults;childrenC.textContent=children;modal.style.display='block';backdrop.style.display='block';}
+    function close(){modal.style.display='none';backdrop.style.display='none';}
+    function upd(){btn.textContent=`${rooms} ห้อง, ${adults} ผู้ใหญ่, ${children} เด็ก`; }
+    upd();
+    btn.addEventListener('click',open);
+    document.getElementById('btnCloseX').addEventListener('click',close);
+    document.getElementById('btnCancel').addEventListener('click',close);
+    backdrop.addEventListener('click',close);
+    document.querySelectorAll('.btn-ctrl').forEach(b=>{
+      b.addEventListener('click',()=>{
+        const t=b.getAttribute('data-type'),op=b.getAttribute('data-op');
+        let v=0,min=0,max=10;
+        if(t==='rooms'){v=rooms;min=1}
+        if(t==='adults'){v=adults;min=1}
+        if(t==='children'){v=children;min=0}
+        if(op==='plus'&&v<max)v++;
+        if(op==='minus'&&v>min)v--;
+        if(t==='rooms'){rooms=v;roomsC.textContent=v}
+        if(t==='adults'){adults=v;adultsC.textContent=v}
+        if(t==='children'){children=v;childrenC.textContent=v}
+      });
+    });
+    document.getElementById('btnSaveGuests').addEventListener('click',()=>{hR.value=rooms;hA.value=adults;hC.value=children;upd();close();});
+
+    document.getElementById('cgForm').addEventListener('submit',e=>{
+      const q=document.getElementById('dest');
+      if(!q.value) q.value='กรุงเทพ';
+    });
+
+    /* ---- คลิกการ์ดเมือง -> ไป search.html พร้อมค่าปัจจุบัน (Local time) ---- */
+    function fmtLocalStr(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
     document.querySelectorAll('.city-card[data-q]').forEach(a=>{
-      const city = a.getAttribute('data-q');
-      a.setAttribute('href', buildUrl(city));
+      a.addEventListener('click',ev=>{
+        ev.preventDefault();
+        let q=a.getAttribute('data-q')||'';
+        if(q.indexOf('กรุงเทพฯ')>-1) q=q.replace(/กรุงเทพฯ/g,'กรุงเทพ');
+
+        const inP=window.flatpickr && document.querySelector('#ci')._flatpickr;
+        const outP=window.flatpickr && document.querySelector('#co')._flatpickr;
+        let ci = inP && inP.selectedDates[0] ? inP.formatDate(inP.selectedDates[0],'Y-m-d') : fmtLocalStr(new Date());
+        let co = outP && outP.selectedDates[0] ? outP.formatDate(outP.selectedDates[0],'Y-m-d') : fmtLocalStr(new Date(Date.now()+86400000));
+
+        // กัน co <= ci
+        const ciD=new Date(ci+'T00:00:00'), coD=new Date(co+'T00:00:00');
+        if(coD<=ciD) co=fmtLocalStr(new Date(ciD.getTime()+86400000));
+
+        const rooms=document.getElementById('rooms').value||1;
+        const adults=document.getElementById('adults').value||2;
+        const children=document.getElementById('children').value||0;
+
+        const sp=new URLSearchParams({q,checkin:ci,checkout:co,rooms,adults,children,lang:'th-th'});
+        location.href='search.html?'+sp.toString();
+      });
     });
   })();
   </script>
