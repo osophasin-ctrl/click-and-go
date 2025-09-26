@@ -8,56 +8,36 @@
   <link rel="stylesheet" href="/style.css">
   <style>
     :root{
-      --brand:#0aa297;         /* สีโลโก้ */
-      --card-border:#0aa29733; /* เส้นกรอบจาง ๆ */
-      --gold:#d4a017;          /* สีดาว */
+      --brand:#0aa297;
+      --card-border:#0aa29733;
+      --gold:#d4a017;
       --muted:#666;
     }
     .container{max-width:1100px;margin:0 auto;padding:16px}
-    .header{display:flex;align-items:center;gap:12px;padding:12px 0}
-    .brand-text{font-weight:700}
     .main-title{font-size:42px;line-height:1.2;margin:8px 0 6px}
     @media(max-width:640px){.main-title{font-size:34px}}
-
     .muted{color:var(--muted)}
     .nowrap{white-space:nowrap}
-
     .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0 16px}
     .select{height:40px;border:1px solid #ddd;border-radius:10px;padding:0 10px;background:#fff}
-
     .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
     @media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:640px){.cards{grid-template-columns:1fr}}
-
-    .card{
-      background:#fff;border-radius:12px;overflow:hidden;
-      box-shadow:0 2px 10px rgba(0,0,0,.07);
-      border:2px solid var(--card-border);
-    }
+    .card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);border:2px solid var(--card-border)}
     .card img{width:100%;height:210px;object-fit:cover;display:block;background:#f4f4f4}
     .card-body{padding:14px;display:flex;flex-direction:column;min-height:180px}
     .price{font-weight:700;margin-top:8px}
-    .btn{
-      display:inline-block;background:var(--brand);color:#fff;border:none;border-radius:10px;
-      padding:10px 14px;cursor:pointer;text-decoration:none
-    }
+    .btn{display:inline-block;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;text-decoration:none}
     .btn:focus{outline:3px solid #0aa29755;outline-offset:2px}
-
     .h-actions{margin-top:auto;display:flex;justify-content:flex-end}
-
     .stars{display:inline-flex;gap:2px;vertical-align:middle}
     .star{width:16px;height:16px;display:inline-block}
     .star svg{width:100%;height:100%;fill:var(--gold)}
-
-    .score{color:#c62828} /* คำว่า คะแนนรีวิว เป็นสีแดง */
-
-    /* skeleton */
+    .score{color:#c62828}
     .skeleton{background:linear-gradient(90deg,#f2f2f2 25%,#e9e9e9 37%,#f2f2f2 63%);animation:s 1.4s ease infinite}
     @keyframes s{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}
     .sk-img{height:210px}
     .sk-line{height:14px;margin-top:8px;border-radius:6px}
-
-    /* CTA กลางล่าง */
     .cta-wrap{display:flex;justify-content:center;margin:28px 0}
     .cta{padding:12px 22px;border-radius:999px;font-weight:600}
   </style>
@@ -98,7 +78,6 @@
 
   <section id="grid" class="cards" aria-live="polite"></section>
 
-  <!-- CTA: ค้นหาเพิ่มเติมจากพันธมิตรของเรา -->
   <div class="cta-wrap">
     <a id="partnerMore" class="btn cta" href="#" target="_blank" rel="nofollow noopener">ค้นหาเพิ่มเติมจากพันธมิตรของเรา</a>
   </div>
@@ -109,7 +88,6 @@
   const $ = s => document.querySelector(s);
   const params = new URLSearchParams(location.search);
 
-  // -------- อ่านพารามิเตอร์ (รองรับทั้ง cityId และ cityid) --------
   const state = {
     q: params.get('q') || '',
     cityId: params.get('cityId') || params.get('cityid') || '',
@@ -121,13 +99,12 @@
     rooms: +(params.get('rooms') || 1),
     adults: +(params.get('adults') || 2),
     children: +(params.get('children') || 0),
-    lang: params.get('lang') || 'th-th',
+    lang: (params.get('lang') || 'th-th').toLowerCase(),
     currency: params.get('currency') || 'THB',
     sort: params.get('sort') || 'rec',
     page: +(params.get('page') || 1)
   };
 
-  // ตั้งค่า UI เริ่มต้น
   $('#currency').value = state.currency;
   $('#sort').value = state.sort;
 
@@ -138,11 +115,8 @@
     const place = state.city || state.q || '—';
     return {place, range: `${ci} → ${co}`, guestTxt};
   })();
-
-  // ใช้ innerHTML เพื่อห่อ "ผู้เข้าพัก" ด้วย .nowrap กันตกลิงก์บรรทัด
   $('#subtitle').innerHTML = `${human.place} | วันที่: ${human.range} | ${human.guestTxt}`;
 
-  // -------- helper: เขียนค่ากลับลง URL โดยไม่รีโหลด --------
   function updateQueryOnly(){
     const u = new URL(location.href);
     Object.entries({
@@ -167,7 +141,6 @@
     history.replaceState({}, '', u);
   }
 
-  // -------- helper: แปลง q -> cityId/hid จาก /api/suggest --------
   async function resolveDestinationIfNeeded(){
     if ((state.cityId || state.hid) || !state.q) return;
     try{
@@ -187,35 +160,40 @@
     }catch(_){}
   }
 
-  // -------- สร้างลิงก์ไป Agoda (หน้าเมืองเดิม) --------
+  /** คำนวณจำนวนคืน (los) จาก checkin/checkout */
+  function calcLos(ci, co){
+    try{
+      const a = new Date(ci+'T12:00:00Z'), b = new Date(co+'T12:00:00Z');
+      const diff = Math.round((b-a)/(1000*60*60*24));
+      return Math.max(1, diff||1);
+    }catch(e){ return 1; }
+  }
+
+  /** ลิงก์ไปหน้า /search ของ Agoda โดยตรง + ตัวกันเปิดแอป */
   function partnerUrl(){
-    const siteId = '1949420';                         // CID ของเรา
-    const langPath = (state.lang || 'th-th').toLowerCase();
-    const base = `https://www.agoda.com/${langPath}/partners/partnersearch.aspx`;
+    const langPath = state.lang || 'th-th';
+    const base = `https://www.agoda.com/${langPath}/search`;
     const sp = new URLSearchParams({
-      cid: siteId,
+      cid: '1949420',                        // partner id
       currency: state.currency || 'THB',
       checkin: state.checkin || '',
       checkout: state.checkout || '',
-      rooms: String(state.rooms || 1),
       adults: String(state.adults || 2),
-      children: String(state.children || 0)
+      children: String(state.children || 0),
+      rooms: String(state.rooms || 1),
+      los: String(calcLos(state.checkin, state.checkout)),
+      noapp: '1',                            // พยายามบังคับไม่เปิดแอป
+      pcs: '1'                               // force desktop context
     });
-    if (state.cityId) {
-      sp.set('cityid', String(state.cityId));
-      sp.set('cityId', String(state.cityId)); // เผื่อบาง locale
-    } else if (state.q) {
-      sp.set('q', state.q);
-    }
+    if (state.cityId) sp.set('city', String(state.cityId));
+    else if (state.q)  sp.set('q', state.q);
     return `${base}?${sp.toString()}`;
   }
 
-  // เซ็ต href ให้ปุ่ม CTA ท้ายลิสต์
   function refreshPartnerCta(){
     $('#partnerMore').setAttribute('href', partnerUrl());
   }
 
-  // -------- โหลดผลลัพธ์ --------
   async function load(){
     renderSkeleton();
 
@@ -243,7 +221,6 @@
     }
 
     let items = json.results || [];
-
     if (state.sort === 'price_asc') items.sort((a,b)=>(a.price||1e15)-(b.price||1e15));
     if (state.sort === 'price_desc') items.sort((a,b)=>(b.price||0)-(a.price||0));
 
@@ -264,7 +241,6 @@
     $('#grid').innerHTML = sk;
   }
 
-  // วาดดาวตามระดับ
   function starIcons(n){
     const c = Math.max(0, Math.min(5, Math.round(n||0)));
     return `<span class="stars" aria-label="${c} ดาว">` +
@@ -306,7 +282,6 @@
   }
   function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-  // -------- UI handlers --------
   $('#currency').addEventListener('change', e => {
     state.currency = e.target.value;
     updateQueryOnly(); load();
@@ -316,7 +291,6 @@
     updateQueryOnly(); load();
   });
 
-  // go!
   load();
 })();
 </script>
