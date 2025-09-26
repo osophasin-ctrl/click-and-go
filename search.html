@@ -104,7 +104,7 @@
 
 <main class="container">
   <h1 id="title" class="main-title">ข้อเสนอที่ดีที่สุด</h1>
-  <p class="muted" id="subtitle"></p>
+  <!-- **ลบ subtitle ออก** -->
 
   <!-- mini search strip -->
   <form id="miniForm" class="mini" autocomplete="off">
@@ -237,17 +237,7 @@
   // ----------- draft state -----------
   const draft = JSON.parse(JSON.stringify(state));
 
-  // subtitle
-  const human = (() => {
-    const ci = state.checkin?.replaceAll('-', '/');
-    const co = state.checkout?.replaceAll('-', '/');
-    const guestTxt = `<span class="nowrap">ผู้เข้าพัก:</span> ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
-    const place = state.city || state.q || '—';
-    return {place, range: `${ci} → ${co}`, guestTxt};
-  })();
-  $('#subtitle').innerHTML = `${human.place} | วันที่: ${human.range} | ${human.guestTxt}`;
-
-  // ----- ฟังก์ชัน format ราคา (ปัดเศษสำหรับสกุลที่ไม่ใช้ทศนิยม เช่น THB) -----
+  // ----- ฟังก์ชัน format ราคา -----
   function fmt(n, cur = state.currency){
     if (n == null) return '-';
     const zeroDec = new Set(['THB','JPY','IDR','KRW','VND']);
@@ -496,11 +486,6 @@
     state.checkin = miniCi.value;
     state.checkout = miniCo.value;
     state.rooms = g.rooms; state.adults = g.adults; state.children = g.children;
-
-    // อัพเดต subtitle ให้ทันใจ
-    const ci = state.checkin?.replaceAll('-', '/');
-    const co = state.checkout?.replaceAll('-', '/');
-    $('#subtitle').innerHTML = `${state.city || state.q || '—'} | วันที่: ${ci} → ${co} | <span class="nowrap">ผู้เข้าพัก:</span> ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
 
     updateQueryOnly();
     load();
