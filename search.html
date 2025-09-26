@@ -18,10 +18,35 @@
     @media(max-width:640px){.main-title{font-size:34px}}
     .muted{color:var(--muted)}
     .nowrap{white-space:nowrap}
-    .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0 16px}
-    .select,.input{height:40px;border:1px solid #ddd;border-radius:10px;padding:0 10px;background:#fff}
-    .input{width:120px}
-    @media(max-width:640px){.input{width:110px}}
+
+    /* ---- filter bar (chips) ---- */
+    .bar{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;overflow:auto;padding:8px 0;margin:8px 0 16px}
+    .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;
+      padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer}
+    .chip span{color:#111}
+    .chip small{color:#666}
+    .chip:focus,.chip:focus-visible{outline:3px solid #0aa29755;outline-offset:2px}
+
+    /* ---- dialogs ---- */
+    dialog{border:none;border-radius:14px;max-width:420px;width:calc(100% - 24px);padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+    dialog::backdrop{background:rgba(0,0,0,.35)}
+    .dlg-title{font-weight:700;margin:0 0 10px}
+    .dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+    .btn{display:inline-block;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;text-decoration:none}
+    .btn.secondary{background:#e5e7eb;color:#111}
+    .btn.ghost{background:transparent;border:1px solid #ddd;color:#111}
+
+    .radio-list{display:flex;flex-direction:column;gap:10px}
+    .radio-item{display:flex;align-items:center;gap:10px;padding:8px 4px}
+
+    /* price range (dual) */
+    .range-wrap{margin:14px 0}
+    .range-labels{display:flex;justify-content:space-between;font-weight:600}
+    .ranges{display:flex;gap:10px;align-items:center;margin-top:10px}
+    .ranges input[type=range]{flex:1}
+    .ranges input[type=number]{width:120px;padding:8px;border:1px solid #ddd;border-radius:8px}
+
+    /* cards */
     .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
     @media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:640px){.cards{grid-template-columns:1fr}}
@@ -29,21 +54,19 @@
     .card img{width:100%;height:210px;object-fit:cover;display:block;background:#f4f4f4}
     .card-body{padding:14px;display:flex;flex-direction:column;min-height:180px}
     .price{font-weight:700;margin-top:8px}
-    .btn{display:inline-block;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;text-decoration:none}
-    .btn:focus{outline:3px solid #0aa29755;outline-offset:2px}
     .h-actions{margin-top:auto;display:flex;justify-content:flex-end}
     .stars{display:inline-flex;gap:2px;vertical-align:middle}
     .star{width:16px;height:16px;display:inline-block}
     .star svg{width:100%;height:100%;fill:var(--gold)}
     .score{color:#c62828}
+
     .skeleton{background:linear-gradient(90deg,#f2f2f2 25%,#e9e9e9 37%,#f2f2f2 63%);animation:s 1.4s ease infinite}
     @keyframes s{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}
     .sk-img{height:210px}
     .sk-line{height:14px;margin-top:8px;border-radius:6px}
+
     .cta-wrap{display:flex;justify-content:center;margin:28px 0}
     .cta{padding:12px 22px;border-radius:999px;font-weight:600}
-    .sep{opacity:.35;margin:0 4px}
-    .toolbar label{display:flex;gap:6px;align-items:center}
   </style>
 </head>
 <body>
@@ -61,52 +84,13 @@
   <h1 id="title" class="main-title">ข้อเสนอที่ดีที่สุด</h1>
   <p class="muted" id="subtitle"></p>
 
-  <div class="toolbar">
-    <label>เรียงโดย
-      <select id="sort" class="select">
-        <option value="rec">แนะนำ</option>
-        <option value="price_asc">ราคาต่ำ → สูง</option>
-        <option value="price_desc">ราคาสูง → ต่ำ</option>
-      </select>
-    </label>
-
-    <span class="sep">|</span>
-
-    <label>ราคาต่ำสุด
-      <input id="priceMin" class="input" type="number" min="1" step="1" placeholder="เช่น 500">
-    </label>
-
-    <label>ราคาสูงสุด
-      <input id="priceMax" class="input" type="number" min="1" step="1" placeholder="เช่น 5000">
-    </label>
-
-    <span class="sep">|</span>
-
-    <label>เรตติ้ง
-      <select id="starsMin" class="select">
-        <option value="0">ทั้งหมด</option>
-        <option value="1">1★ ขึ้นไป</option>
-        <option value="2">2★ ขึ้นไป</option>
-        <option value="3">3★ ขึ้นไป</option>
-        <option value="4">4★ ขึ้นไป</option>
-        <option value="5">5★ เท่านั้น</option>
-      </select>
-    </label>
-
-    <label>คะแนนรีวิว
-      <input id="scoreMin" class="input" type="number" min="0" max="10" step="0.1" placeholder="เช่น 8.0">
-    </label>
-
-    <span class="sep">|</span>
-
-    <label>สกุลเงิน
-      <select id="currency" class="select">
-        <option>THB</option>
-        <option>USD</option>
-        <option>EUR</option>
-        <option>JPY</option>
-      </select>
-    </label>
+  <!-- บาร์ฟิลเตอร์ 1 แถว -->
+  <div class="bar" role="toolbar" aria-label="ตัวกรองการค้นหา">
+    <button id="chipSort"   class="chip"><span>เรียงโดย</span><small id="chipSortV">แนะนำ</small></button>
+    <button id="chipStars"  class="chip"><span>เรตติ้ง</span><small id="chipStarsV">ทั้งหมด</small></button>
+    <button id="chipPrice"  class="chip"><span>ราคา</span><small id="chipPriceV">฿0 – ฿200,000</small></button>
+    <button id="chipScore"  class="chip"><span>รีวิว</span><small id="chipScoreV">ทั้งหมด</small></button>
+    <button id="chipApply"  class="chip" style="background:var(--brand);color:#fff;border-color:var(--brand)">ปรับใช้</button>
   </div>
 
   <section id="grid" class="cards" aria-live="polite"></section>
@@ -116,11 +100,81 @@
   </div>
 </main>
 
+<!-- Dialog: เรียงโดย -->
+<dialog id="dlgSort">
+  <h3 class="dlg-title">เรียงโดย</h3>
+  <div class="radio-list">
+    <label class="radio-item"><input type="radio" name="sort" value="rec"> แนะนำ</label>
+    <label class="radio-item"><input type="radio" name="sort" value="price_asc"> ราคาต่ำ → สูง</label>
+    <label class="radio-item"><input type="radio" name="sort" value="price_desc"> ราคาสูง → ต่ำ</label>
+  </div>
+  <div class="dlg-actions">
+    <button class="btn secondary" onclick="document.getElementById('dlgSort').close()">ยกเลิก</button>
+    <button class="btn" id="btnSortOk">ตกลง</button>
+  </div>
+</dialog>
+
+<!-- Dialog: เรตติ้ง -->
+<dialog id="dlgStars">
+  <h3 class="dlg-title">เรตติ้งโรงแรม</h3>
+  <div class="radio-list">
+    <label class="radio-item"><input type="radio" name="stars" value="0"> ทั้งหมด</label>
+    <label class="radio-item"><input type="radio" name="stars" value="2"> 2 ดาวขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="stars" value="3"> 3 ดาวขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="stars" value="4"> 4 ดาวขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="stars" value="5"> 5 ดาวขึ้นไป</label>
+  </div>
+  <div class="dlg-actions">
+    <button class="btn secondary" onclick="document.getElementById('dlgStars').close()">ยกเลิก</button>
+    <button class="btn" id="btnStarsOk">ตกลง</button>
+  </div>
+</dialog>
+
+<!-- Dialog: ราคา -->
+<dialog id="dlgPrice">
+  <h3 class="dlg-title">ช่วงราคา</h3>
+  <div class="range-wrap">
+    <div class="range-labels">
+      <div>฿<span id="pvMin">0</span></div>
+      <div>฿<span id="pvMax">200,000</span></div>
+    </div>
+    <div class="ranges">
+      <input id="rMin" type="range" min="0" max="200000" step="100" value="0">
+      <input id="rMax" type="range" min="0" max="200000" step="100" value="200000">
+    </div>
+    <div class="ranges">
+      <input id="nMin" type="number" min="0" max="200000" step="100" value="0">
+      <input id="nMax" type="number" min="0" max="200000" step="100" value="200000">
+    </div>
+  </div>
+  <div class="dlg-actions">
+    <button class="btn ghost" id="btnPriceReset">ลบ</button>
+    <button class="btn" id="btnPriceOk">ตกลง</button>
+  </div>
+</dialog>
+
+<!-- Dialog: รีวิว -->
+<dialog id="dlgScore">
+  <h3 class="dlg-title">คะแนนรีวิว</h3>
+  <div class="radio-list">
+    <label class="radio-item"><input type="radio" name="score" value="0"> ทั้งหมด</label>
+    <label class="radio-item"><input type="radio" name="score" value="6"> 6 คะแนนขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="score" value="7"> 7 คะแนนขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="score" value="8"> 8 คะแนนขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="score" value="9"> 9 คะแนนขึ้นไป</label>
+  </div>
+  <div class="dlg-actions">
+    <button class="btn secondary" onclick="document.getElementById('dlgScore').close()">ยกเลิก</button>
+    <button class="btn" id="btnScoreOk">ตกลง</button>
+  </div>
+</dialog>
+
 <script>
 (function(){
   const $ = s => document.querySelector(s);
   const params = new URLSearchParams(location.search);
 
+  // ----------- main state (ใช้จริงเมื่อกด "ปรับใช้") -----------
   const state = {
     q: params.get('q') || '',
     cityId: params.get('cityId') || params.get('cityid') || '',
@@ -133,26 +187,19 @@
     adults: +(params.get('adults') || 2),
     children: +(params.get('children') || 0),
     lang: (params.get('lang') || 'th-th').toLowerCase(),
-    currency: params.get('currency') || 'THB',
+    currency: 'THB',                // คง THB สำหรับหน้าไทย
     sort: params.get('sort') || 'rec',
-    page: +(params.get('page') || 1),
-
-    // ฟิลเตอร์ใหม่
-    priceMin: +(params.get('priceMin') || 1),
-    priceMax: +(params.get('priceMax') || 1000000),
     starsMin: +(params.get('starsMin') || 0),
-    scoreMin: +(params.get('scoreMin') || 0)
+    scoreMin: +(params.get('scoreMin') || 0),
+    priceMin: +(params.get('priceMin') || 0),
+    priceMax: +(params.get('priceMax') || 200000),
+    page: +(params.get('page') || 1)
   };
 
-  // set UI
-  $('#currency').value = state.currency;
-  $('#sort').value = state.sort;
-  $('#priceMin').value = state.priceMin;
-  $('#priceMax').value = state.priceMax;
-  $('#starsMin').value = String(state.starsMin);
-  $('#scoreMin').value = state.scoreMin;
+  // ----------- draft state (แก้ใน dialog แต่ยังไม่ใช้) -----------
+  const draft = JSON.parse(JSON.stringify(state));
 
-  // subtitle (ผู้เข้าพัก ให้คงอยู่บรรทัดเดียว)
+  // subtitle
   const human = (() => {
     const ci = state.checkin?.replaceAll('-', '/');
     const co = state.checkout?.replaceAll('-', '/');
@@ -161,6 +208,18 @@
     return {place, range: `${ci} → ${co}`, guestTxt};
   })();
   $('#subtitle').innerHTML = `${human.place} | วันที่: ${human.range} | ${human.guestTxt}`;
+
+  // helper
+  function fmt(n){ try{ return new Intl.NumberFormat('th-TH').format(n); }catch(_){ return String(n); } }
+  function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  function updateChips(){
+    $('#chipSortV').textContent = draft.sort==='price_asc'?'ราคาต่ำ → สูง':draft.sort==='price_desc'?'ราคาสูง → ต่ำ':'แนะนำ';
+    $('#chipStarsV').textContent = draft.starsMin?`${draft.starsMin} ดาวขึ้นไป`:'ทั้งหมด';
+    const pm = Math.min(draft.priceMin, draft.priceMax), px = Math.max(draft.priceMin, draft.priceMax);
+    $('#chipPriceV').textContent = `฿${fmt(pm)} – ฿${fmt(px)}`;
+    $('#chipScoreV').textContent = draft.scoreMin?`${draft.scoreMin} คะแนนขึ้นไป`:'ทั้งหมด';
+  }
+  updateChips();
 
   function updateQueryOnly(){
     const u = new URL(location.href);
@@ -179,10 +238,10 @@
       currency: state.currency,
       page: state.page,
       sort: state.sort,
-      priceMin: state.priceMin,
-      priceMax: state.priceMax,
       starsMin: state.starsMin,
-      scoreMin: state.scoreMin
+      scoreMin: state.scoreMin,
+      priceMin: state.priceMin,
+      priceMax: state.priceMax
     }).forEach(([k,v])=>{
       if (v === '' || v == null) u.searchParams.delete(k);
       else u.searchParams.set(k, v);
@@ -205,7 +264,6 @@
         if (t.includes('hotel')) state.hid = String(pick.id||pick.hotel_id||'');
         if (t.includes('city'))  state.cityId = String(pick.city_id ?? pick.value ?? pick.id ?? '');
         state.city = pick.label || pick.city_name || state.city;
-        updateQueryOnly();
       }
     }catch(_){}
   }
@@ -219,10 +277,9 @@
     }catch(e){ return 1; }
   }
 
-  // ลิงก์ CTA ไป Agoda + กันเปิดแอป + ใส่ cid
+  // ลิงก์ CTA ไป Agoda (คงเดิม)
   function partnerUrl(){
     const langPath = state.lang || 'th-th';
-
     if (state.cityId) {
       const base = `https://www.agoda.com/${langPath}/partners/partnersearch.aspx`;
       const sp = new URLSearchParams({
@@ -234,29 +291,18 @@
         adults: String(state.adults || 2),
         children: String(state.children || 0),
         currency: state.currency || 'THB',
-        utm_source: 'clickandgo',
-        utm_medium: 'affiliate',
-        noapp: '1',
-        pcs: '1'
+        utm_source: 'clickandgo', utm_medium: 'affiliate',
+        noapp:'1', pcs:'1'
       });
       return `${base}?${sp.toString()}`;
     }
-
-    // fallback
     const base = `https://www.agoda.com/${langPath}/search`;
     const sp = new URLSearchParams({
-      cid: '1949420',
-      currency: state.currency || 'THB',
-      checkin: state.checkin || '',
-      checkout: state.checkout || '',
-      adults: String(state.adults || 2),
-      children: String(state.children || 0),
-      rooms: String(state.rooms || 1),
-      los: String(calcLos(state.checkin, state.checkout)),
-      utm_source: 'clickandgo',
-      utm_medium: 'affiliate',
-      noapp: '1',
-      pcs: '1'
+      cid:'1949420', currency: state.currency || 'THB',
+      checkin: state.checkin || '', checkout: state.checkout || '',
+      adults: String(state.adults || 2), children: String(state.children || 0),
+      rooms: String(state.rooms || 1), los: String(calcLos(state.checkin, state.checkout)),
+      utm_source:'clickandgo', utm_medium:'affiliate', noapp:'1', pcs:'1'
     });
     if (state.q) sp.set('q', state.q);
     return `${base}?${sp.toString()}`;
@@ -279,12 +325,9 @@
     else if (state.cityId) p.set('cityId', state.cityId);
     else if (state.q) p.set('q', state.q);
 
-    ['checkin','checkout','rooms','adults','children','lang','currency','page','sort'].forEach(k => p.set(k, state[k]));
-    // ใส่ฟิลเตอร์ใหม่ไปที่ API
-    p.set('priceMin', state.priceMin);
-    p.set('priceMax', state.priceMax);
-    p.set('starsMin', state.starsMin);
-    p.set('scoreMin', state.scoreMin);
+    ['checkin','checkout','rooms','adults','children','lang','currency','page','sort',
+     'starsMin','scoreMin','priceMin','priceMax'
+    ].forEach(k => p.set(k, state[k]));
 
     const resp = await fetch(api.toString(), {cache: 'no-store'});
     const json = await resp.json().catch(()=>({ok:false}));
@@ -295,15 +338,7 @@
       return;
     }
 
-    // fallback กรองฝั่งหน้าเพิ่มเล็กน้อย
-    let items = (json.results || []).filter(h=>{
-      const priceOk = !state.priceMin && !state.priceMax ? true :
-        (h.price==null ? true : (h.price >= state.priceMin && h.price <= state.priceMax));
-      const starOk  = (h.rating ?? 0) >= state.starsMin;
-      const scoreOk = (h.reviewScore ?? 0) >= state.scoreMin;
-      return priceOk && starOk && scoreOk;
-    });
-
+    let items = json.results || [];
     if (state.sort === 'price_asc') items.sort((a,b)=>(a.price||1e15)-(b.price||1e15));
     if (state.sort === 'price_desc') items.sort((a,b)=>(b.price||0)-(a.price||0));
 
@@ -348,7 +383,7 @@
             ${starIcons(h.rating ?? 0)}
             &nbsp;·&nbsp;<span class="score">คะแนนรีวิว ${h.reviewScore ?? '-'}</span>
           </div>
-          <div class="price">${fmt(h.price)} ${esc(h.currency || state.currency)}</div>
+          <div class="price">${h.price!=null?fmt(h.price):'-'} ${esc(h.currency || state.currency)}</div>
           <div class="h-actions">
             <a class="btn" href="${esc(h.url || '#')}" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
@@ -358,50 +393,76 @@
     $('#grid').innerHTML = html;
   }
 
-  function fmt(n){
-    if (n == null) return '-';
-    try { return new Intl.NumberFormat('th-TH',{maximumFractionDigits:2}).format(n); }
-    catch(e){ return String(n); }
+  // --------- chip actions ---------
+  // เปิด dialog
+  $('#chipSort').addEventListener('click', ()=>{ $('#dlgSort').showModal();
+    // set current
+    [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort));
+  });
+  $('#chipStars').addEventListener('click', ()=>{ $('#dlgStars').showModal();
+    [...document.querySelectorAll('input[name=stars]')].forEach(r=>r.checked=(+r.value===+draft.starsMin));
+  });
+  $('#chipPrice').addEventListener('click', ()=>{
+    $('#dlgPrice').showModal();
+    setPriceWidgets(draft.priceMin, draft.priceMax);
+  });
+  $('#chipScore').addEventListener('click', ()=>{ $('#dlgScore').showModal();
+    [...document.querySelectorAll('input[name=score]')].forEach(r=>r.checked=(+r.value===+draft.scoreMin));
+  });
+
+  // ตกลงของแต่ละ dialog -> อัปเดต draft + ปิด + อัปเดตข้อความที่ chip
+  $('#btnSortOk').addEventListener('click', ()=>{
+    const v = document.querySelector('input[name=sort]:checked')?.value || 'rec';
+    draft.sort = v; updateChips(); $('#dlgSort').close();
+  });
+  $('#btnStarsOk').addEventListener('click', ()=>{
+    const v = +(document.querySelector('input[name=stars]:checked')?.value || 0);
+    draft.starsMin = v; updateChips(); $('#dlgStars').close();
+  });
+  $('#btnScoreOk').addEventListener('click', ()=>{
+    const v = +(document.querySelector('input[name=score]:checked')?.value || 0);
+    draft.scoreMin = v; updateChips(); $('#dlgScore').close();
+  });
+
+  // ราคา widgets sync
+  function setPriceWidgets(min, max){
+    const clamp = (n)=>Math.min(200000, Math.max(0, Math.round(n)));
+    const m = clamp(Math.min(min,max)), x = clamp(Math.max(min,max));
+    $('#rMin').value = m; $('#rMax').value = x;
+    $('#nMin').value = m; $('#nMax').value = x;
+    $('#pvMin').textContent = fmt(m); $('#pvMax').textContent = fmt(x);
   }
-  function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
-  // events
-  $('#currency').addEventListener('change', e => {
-    state.currency = e.target.value;
-    updateQueryOnly(); load();
+  function readPriceWidgets(){
+    const m = Math.min(+$('#rMin').value, +$('#rMax').value);
+    const x = Math.max(+$('#rMin').value, +$('#rMax').value);
+    return {m,x};
+  }
+  ['rMin','rMax'].forEach(id=>{
+    $('#'+id).addEventListener('input', ()=>{
+      const {m,x}=readPriceWidgets(); setPriceWidgets(m,x);
+    });
   });
-  $('#sort').addEventListener('change', e => {
-    state.sort = e.target.value;
-    updateQueryOnly(); load();
+  ['nMin','nMax'].forEach(id=>{
+    $('#'+id).addEventListener('input', ()=>{
+      const m = +$('#nMin').value, x = +$('#nMax').value; setPriceWidgets(m,x);
+    });
   });
-  $('#priceMin').addEventListener('change', e => {
-    state.priceMin = Math.max(1, +e.target.value || 1);
-    if (state.priceMax < state.priceMin) state.priceMax = state.priceMin;
-    $('#priceMax').value = state.priceMax;
-    updateQueryOnly(); load();
-  });
-  $('#priceMax').addEventListener('change', e => {
-    const v = Math.max(1, +e.target.value || 1);
-    state.priceMax = Math.max(state.priceMin, v);
-    e.target.value = state.priceMax;
-    updateQueryOnly(); load();
-  });
-  $('#starsMin').addEventListener('change', e => {
-    state.starsMin = +e.target.value || 0;
-    updateQueryOnly(); load();
-  });
-  $('#scoreMin').addEventListener('change', e => {
-    let v = parseFloat(e.target.value);
-    if (!Number.isFinite(v)) v = 0;
-    v = Math.max(0, Math.min(10, v));
-    state.scoreMin = v;
-    e.target.value = v;
-    updateQueryOnly(); load();
+  $('#btnPriceReset').addEventListener('click', ()=> setPriceWidgets(0,200000));
+  $('#btnPriceOk').addEventListener('click', ()=>{
+    const {m,x}=readPriceWidgets();
+    draft.priceMin = m; draft.priceMax = x; updateChips(); $('#dlgPrice').close();
   });
 
+  // ปรับใช้ -> คัดลอก draft เข้า state แล้วค่อย load()
+  $('#chipApply').addEventListener('click', ()=>{
+    Object.assign(state, JSON.parse(JSON.stringify(draft)));
+    updateQueryOnly();
+    load();
+  });
+
+  // go!
   load();
 })();
 </script>
 </body>
 </html>
-```0
