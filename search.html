@@ -19,28 +19,6 @@
     .muted{color:var(--muted)}
     .nowrap{white-space:nowrap}
 
-    /* ---- mini search strip ---- */
-    .mini{display:grid;gap:8px;grid-template-columns:1.2fr .9fr .9fr .9fr;align-items:center;
-      background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:10px;margin:8px 0 10px}
-    .mini .inp,.mini .btn{height:42px;border:1px solid #d7d7d7;border-radius:8px;padding:0 10px;background:#fff;font-size:14px}
-    .mini .btn{background:var(--brand);color:#fff;border:0;cursor:pointer;font-weight:700}
-    .mini .guest{display:flex;align-items:center;justify-content:space-between;cursor:pointer}
-    @media(max-width:860px){.mini{grid-template-columns:1fr 1fr}}
-    @media(max-width:520px){.mini{grid-template-columns:1fr}}
-
-    /* guest modal (very small) */
-    .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:30}
-    .gmodal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border-radius:12px;z-index:31;
-      width:min(92vw,380px);box-shadow:0 12px 24px rgba(0,0,0,.2);display:none}
-    .ghead,.gfoot{padding:12px 14px}.ghead{border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
-    .grow{display:flex;justify-content:space-between;align-items:center;padding:10px 14px}.grow+.grow{border-top:1px dashed #eee}
-    .ctrl{display:flex;align-items:center;gap:8px}
-    .cbtn{width:34px;height:34px;border-radius:50%;border:1px solid #bbb;background:#fff;font-size:18px;cursor:pointer}
-    .ctxt{min-width:18px;text-align:center;font-weight:700}
-    .gfoot{display:flex;justify-content:flex-end;gap:8px}
-    .btn-sec{border:1px solid #bbb;background:#fff;color:#333;border-radius:8px;padding:8px 12px}
-    .btn-pri{border:0;background:var(--brand);color:#fff;border-radius:8px;padding:8px 12px}
-
     /* ---- filter bar (chips) ---- */
     .bar{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;overflow:auto;padding:8px 0;margin:8px 0 16px}
     .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;
@@ -89,6 +67,10 @@
 
     .cta-wrap{display:flex;justify-content:center;margin:28px 0}
     .cta{padding:12px 22px;border-radius:999px;font-weight:600}
+
+    /* NEW: put check-in & check-out on one row */
+    .date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:480px){.date-row{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -104,16 +86,7 @@
 
 <main class="container">
   <h1 id="title" class="main-title">ข้อเสนอที่ดีที่สุด</h1>
-  <p class="muted" id="subtitle"></p>
-
-  <!-- mini search strip -->
-  <form id="miniForm" class="mini" autocomplete="off">
-    <input id="miniQ" class="inp" type="text" placeholder="ปลายทาง / โรงแรม">
-    <input id="miniCi" class="inp" type="date">
-    <input id="miniCo" class="inp" type="date">
-    <button type="button" id="miniGuest" class="inp guest"><span id="miniGuestTxt">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</span>▾</button>
-    <button type="submit" class="btn">ค้นหา</button>
-  </form>
+  <!-- ลบสรุปผลลัพธ์: <p class="muted" id="subtitle"></p> -->
 
   <!-- บาร์ฟิลเตอร์ 1 แถว -->
   <div class="bar" role="toolbar" aria-label="ตัวกรองการค้นหา">
@@ -124,6 +97,31 @@
     <button id="chipApply"  class="chip" style="background:var(--brand);color:#fff;border-color:var(--brand)">ปรับใช้</button>
   </div>
 
+  <!-- Search box (คงเดิม เพียงจัดวันที่ให้แถวเดียว) -->
+  <section class="mock-row" style="grid-template-columns:1fr;gap:10px;margin-bottom:8px">
+    <div class="suggest-wrap">
+      <input type="text" id="dest" class="mock-input" placeholder="กรอกชื่อเมืองหรือโรงแรม" aria-label="ปลายทาง">
+      <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="คำแนะนำ"></div>
+    </div>
+    <div class="date-row">
+      <div class="field has-label">
+        <span class="field-label">เช็คอิน</span>
+        <input type="text" id="ci" class="mock-input" readonly>
+      </div>
+      <div class="field has-label">
+        <span class="field-label">เช็คเอาท์</span>
+        <input type="text" id="co" class="mock-input" readonly>
+      </div>
+    </div>
+    <button type="button" id="guestBtn" class="guest-input">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
+    <button id="btnDoSearch" class="btn" style="width:100%">ค้นหา</button>
+
+    <!-- hidden -->
+    <input type="hidden" id="rooms"   value="1">
+    <input type="hidden" id="adults"  value="2">
+    <input type="hidden" id="children"value="0">
+  </section>
+
   <section id="grid" class="cards" aria-live="polite"></section>
 
   <div class="cta-wrap">
@@ -131,17 +129,7 @@
   </div>
 </main>
 
-<!-- Guest tiny modal -->
-<div id="gBackdrop" class="backdrop" aria-hidden="true"></div>
-<div id="gModal" class="gmodal" role="dialog" aria-modal="true" aria-labelledby="gTitle">
-  <div class="ghead"><strong id="gTitle">ผู้เข้าพัก</strong><button class="btn-sec" id="gClose">×</button></div>
-  <div class="grow"><span>ห้อง</span><div class="ctrl"><button class="cbtn" data-t="rooms" data-op="-">−</button><span class="ctxt" id="gRooms">1</span><button class="cbtn" data-t="rooms" data-op="+">+</button></div></div>
-  <div class="grow"><span>ผู้ใหญ่</span><div class="ctrl"><button class="cbtn" data-t="adults" data-op="-">−</button><span class="ctxt" id="gAdults">2</span><button class="cbtn" data-t="adults" data-op="+">+</button></div></div>
-  <div class="grow"><span>เด็ก</span><div class="ctrl"><button class="cbtn" data-t="children" data-op="-">−</button><span class="ctxt" id="gChildren">0</span><button class="cbtn" data-t="children" data-op="+">+</button></div></div>
-  <div class="gfoot"><button class="btn-sec" id="gCancel">ยกเลิก</button><button class="btn-pri" id="gSave">บันทึก</button></div>
-</div>
-
-<!-- Dialogs (เรียง/เรตติ้ง/ราคา/รีวิว) -->
+<!-- Dialog: เรียงโดย -->
 <dialog id="dlgSort">
   <h3 class="dlg-title">เรียงโดย</h3>
   <div class="radio-list">
@@ -155,6 +143,7 @@
   </div>
 </dialog>
 
+<!-- Dialog: เรตติ้ง -->
 <dialog id="dlgStars">
   <h3 class="dlg-title">เรตติ้งโรงแรม</h3>
   <div class="radio-list">
@@ -170,6 +159,7 @@
   </div>
 </dialog>
 
+<!-- Dialog: ราคา -->
 <dialog id="dlgPrice">
   <h3 class="dlg-title">ช่วงราคา</h3>
   <div class="range-wrap">
@@ -192,6 +182,7 @@
   </div>
 </dialog>
 
+<!-- Dialog: รีวิว -->
 <dialog id="dlgScore">
   <h3 class="dlg-title">คะแนนรีวิว</h3>
   <div class="radio-list">
@@ -237,17 +228,11 @@
   // ----------- draft state -----------
   const draft = JSON.parse(JSON.stringify(state));
 
-  // subtitle
-  const human = (() => {
-    const ci = state.checkin?.replaceAll('-', '/');
-    const co = state.checkout?.replaceAll('-', '/');
-    const guestTxt = `<span class="nowrap">ผู้เข้าพัก:</span> ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
-    const place = state.city || state.q || '—';
-    return {place, range: `${ci} → ${co}`, guestTxt};
-  })();
-  $('#subtitle').innerHTML = `${human.place} | วันที่: ${human.range} | ${human.guestTxt}`;
+  // (ลบการแสดงผล subtitle)
+  // const human = ...
+  // $('#subtitle').innerHTML = ...
 
-  // ----- ฟังก์ชัน format ราคา (ปัดเศษสำหรับสกุลที่ไม่ใช้ทศนิยม เช่น THB) -----
+  // ----- ฟังก์ชัน format ราคา -----
   function fmt(n, cur = state.currency){
     if (n == null) return '-';
     const zeroDec = new Set(['THB','JPY','IDR','KRW','VND']);
@@ -263,8 +248,6 @@
     }
   }
   function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-  function normalizeQ(q){ return String(q||'').replace(/กรุงเทพฯ/g,'กรุงเทพ').trim(); }
-
   function updateChips(){
     $('#chipSortV').textContent = draft.sort==='price_asc'?'ราคาต่ำ → สูง':draft.sort==='price_desc'?'ราคาสูง → ต่ำ':'แนะนำ';
     $('#chipStarsV').textContent = draft.starsMin?`${draft.starsMin} ดาวขึ้นไป`:'ทั้งหมด';
@@ -321,7 +304,6 @@
     }catch(_){}
   }
 
-  // คืนจำนวนคืน
   function calcLos(ci, co){
     try{
       const a = new Date(ci+'T12:00:00Z'), b = new Date(co+'T12:00:00Z');
@@ -330,7 +312,6 @@
     }catch(e){ return 1; }
   }
 
-  // ลิงก์ CTA ไป Agoda
   function partnerUrl(){
     const langPath = state.lang || 'th-th';
     if (state.cityId) {
@@ -446,66 +427,6 @@
     $('#grid').innerHTML = html;
   }
 
-  /* ======= mini search behaviours ======= */
-  // init values
-  const miniQ = $('#miniQ'), miniCi = $('#miniCi'), miniCo = $('#miniCo');
-  const ONE = 86400000;
-  function iso(d){ return new Date(d).toISOString().slice(0,10); }
-
-  // set default if missing
-  const today = state.checkin ? new Date(state.checkin) : new Date();
-  const tomorrow = state.checkout ? new Date(state.checkout) : new Date(Date.now()+ONE);
-  miniCi.value = iso(today);
-  miniCo.value = iso(tomorrow);
-  miniCi.min = iso(new Date());
-  miniCo.min = iso(new Date(today.getTime()+ONE));
-  miniQ.value = state.city || state.q || '';
-
-  miniCi.addEventListener('change', ()=>{
-    const a = new Date(miniCi.value || iso(new Date()));
-    const n = new Date(a.getTime()+ONE);
-    if (!miniCo.value || new Date(miniCo.value) <= a) miniCo.value = iso(n);
-    miniCo.min = iso(n);
-  });
-
-  // guest modal
-  let g = {rooms: state.rooms, adults: state.adults, children: state.children};
-  const gTxt = ()=>`${g.rooms} ห้อง, ${g.adults} ผู้ใหญ่, ${g.children} เด็ก`;
-  $('#miniGuestTxt').textContent = gTxt();
-  function openG(){ $('#gBackdrop').style.display='block'; $('#gModal').style.display='block';
-    $('#gRooms').textContent=g.rooms;$('#gAdults').textContent=g.adults;$('#gChildren').textContent=g.children; }
-  function closeG(){ $('#gBackdrop').style.display='none'; $('#gModal').style.display='none'; }
-  $('#miniGuest').addEventListener('click', openG);
-  $('#gClose').addEventListener('click', closeG); $('#gCancel').addEventListener('click', closeG);
-  $('#gBackdrop').addEventListener('click', closeG);
-  document.querySelectorAll('.cbtn').forEach(b=>{
-    b.addEventListener('click',()=>{
-      const t=b.getAttribute('data-t'), op=b.getAttribute('data-op');
-      const lim = {rooms:[1,10], adults:[1,10], children:[0,10]}[t];
-      let v=g[t]; if(op==='+') v=Math.min(lim[1],v+1); else v=Math.max(lim[0],v-1);
-      g[t]=v; (t==='rooms'?$('#gRooms'):t==='adults'?$('#gAdults'):$('#gChildren')).textContent=v;
-    });
-  });
-  $('#gSave').addEventListener('click',()=>{ $('#miniGuestTxt').textContent=gTxt(); closeG(); });
-
-  // mini form submit -> update main state & reload
-  $('#miniForm').addEventListener('submit',(e)=>{
-    e.preventDefault();
-    state.q = normalizeQ(miniQ.value || '');
-    state.cityId = ''; state.hid = ''; // force resolve ใหม่หากพิมพ์เอง
-    state.checkin = miniCi.value;
-    state.checkout = miniCo.value;
-    state.rooms = g.rooms; state.adults = g.adults; state.children = g.children;
-
-    // อัพเดต subtitle ให้ทันใจ
-    const ci = state.checkin?.replaceAll('-', '/');
-    const co = state.checkout?.replaceAll('-', '/');
-    $('#subtitle').innerHTML = `${state.city || state.q || '—'} | วันที่: ${ci} → ${co} | <span class="nowrap">ผู้เข้าพัก:</span> ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
-
-    updateQueryOnly();
-    load();
-  });
-
   // --------- chip actions ---------
   $('#chipSort').addEventListener('click', ()=>{ $('#dlgSort').showModal();
     [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort));
@@ -570,8 +491,37 @@
     load();
   });
 
+  // ปุ่มค้นหา (search box บนหน้า)
+  $('#btnDoSearch').addEventListener('click', ()=>{
+    const inP  = window._cg_inPicker, outP = window._cg_outPicker;
+    state.q = ($('#dest').value||'').trim();
+    state.checkin  = inP.formatDate(inP.selectedDates[0],'Y-m-d');
+    state.checkout = outP.formatDate(outP.selectedDates[0],'Y-m-d');
+    state.rooms = +$('#rooms').value || 1;
+    state.adults = +$('#adults').value || 2;
+    state.children = +$('#children').value || 0;
+    Object.assign(draft, state);
+    updateQueryOnly();
+    load();
+  });
+
   // go!
   load();
+})();
+
+/* ===== Flatpickr / Suggest / Guests (คงเดิมจากหน้าอื่น) ===== */
+(function(){
+  const ONE=86400000,ci=document.getElementById('ci'),co=document.getElementById('co'),
+        today=new Date(),tom=new Date(Date.now()+ONE);
+  let inP=null,outP=null;
+  if(window.flatpickr){
+    inP=flatpickr("#ci",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",
+      onChange(d){if(d[0]){const n=new Date(d[0].getTime()+ONE);outP.set('minDate',n);if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0])outP.setDate(n,true);}}
+    });
+    outP=flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:tom});
+    inP.setDate(today,true); outP.setDate(tom,true);
+    window._cg_inPicker=inP; window._cg_outPicker=outP;
+  }
 })();
 </script>
 </body>
