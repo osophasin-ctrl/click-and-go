@@ -19,27 +19,22 @@
     .muted{color:var(--muted)}
     .nowrap{white-space:nowrap}
 
-    /* ▸ บรรทัดข้อความ + ปุ่มเปลี่ยนแปลง (อัปเดต) */
+    /* ข้อความ + ปุ่มเปลี่ยนแปลง */
     .change-row{
-      display:flex; align-items:center; gap:10px;   /* ปุ่มจะอยู่ชิดข้อความ */
+      display:flex; align-items:center; gap:10px; flex-wrap:nowrap;
       margin:4px 0 12px;
-      flex-wrap:nowrap;                              /* พยายามให้อยู่บรรทัดเดียว */
     }
-    .change-row .hint{
-      color:#d32f2f;                                 /* สีแดงตามที่ขอ */
-      font-weight:500;
-    }
+    .change-row .hint{color:#d32f2f;font-weight:500}
     .change-row .btn{
-      background:var(--brand); color:#fff; border:0; border-radius:999px;
-      padding:10px 16px; font-weight:700; cursor:pointer; flex:0 0 auto;
+      background:var(--brand);color:#fff;border:0;border-radius:999px;
+      padding:10px 16px;font-weight:700;cursor:pointer;flex:0 0 auto;
     }
-    /* มือถือ: ทำตัวหนังสือเล็กลงอีกเพื่อให้ปุ่มอยู่บรรทัดเดียวกันง่ายขึ้น และลดช่องว่าง */
     @media(max-width:640px){
       .change-row{gap:8px}
       .change-row .hint{font-size:13.5px}
     }
 
-    /* ---- filter bar (chips) ---- */
+    /* chips */
     .bar{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;overflow:auto;padding:8px 0;margin:12px 0 16px}
     .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;
       padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer}
@@ -47,7 +42,7 @@
     .chip small{color:#666}
     .chip:focus,.chip:focus-visible{outline:3px solid #0aa29755;outline-offset:2px}
 
-    /* ---- dialogs ---- */
+    /* dialog (เปลี่ยนแปลง) */
     dialog{border:none;border-radius:14px;max-width:520px;width:calc(100% - 24px);padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
     dialog::backdrop{background:rgba(0,0,0,.35)}
     .dlg-title{font-weight:700;margin:0 0 12px}
@@ -102,13 +97,11 @@
   <h1 id="title" class="main-title">ผลการค้นหา</h1>
   <p class="muted" id="subtitle"></p>
 
-  <!-- ข้อความ + ปุ่มเปลี่ยนแปลง -->
   <div class="change-row">
-    <div class="hint">หากต้องการเปลี่ยนแปลงข้อมูลคลิ๊กเลย</div>
+    <div class="hint">ต้องการเปลี่ยนแปลงข้อมูลกดที่นี่</div>
     <button id="btnChange" class="btn" type="button">เปลี่ยนแปลง</button>
   </div>
 
-  <!-- บาร์ฟิลเตอร์ -->
   <div class="bar" role="toolbar" aria-label="ตัวกรองการค้นหา">
     <button id="chipSort"   class="chip"><span>เรียงโดย</span><small id="chipSortV">แนะนำ</small></button>
     <button id="chipStars"  class="chip"><span>เรตติ้ง</span><small id="chipStarsV">ทั้งหมด</small></button>
@@ -160,7 +153,7 @@
   </form>
 </dialog>
 
-<!-- Dialogs (เรียง/เรตติ้ง/ราคา/รีวิว) — โค้ดเดิมคงไว้ -->
+<!-- Dialogs อื่น ๆ (คงเดิม) -->
 <dialog id="dlgSort">
   <h3 class="dlg-title">เรียงโดย</h3>
   <div class="radio-list">
@@ -253,13 +246,14 @@
   };
   const draft = JSON.parse(JSON.stringify(state));
 
-  // subtitle
+  // subtitle: 2 บรรทัด, ผู้เข้าพักเป็นบรรทัดล่างและ nowrap
   (function setSubtitle(){
     const ci = (state.checkin || '').replaceAll('-', '/');
     const co = (state.checkout || '').replaceAll('-', '/');
     const place = state.city || state.q || '—';
-    const guestTxt = `<span class="nowrap">ผู้เข้าพัก:</span> ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
-    $('#subtitle').innerHTML = `${place} | วันที่: ${ci} → ${co} | ${guestTxt}`;
+    const line1 = `<span class="nowrap">${place} | วันที่: ${ci} → ${co}</span>`;
+    const line2 = `<span class="nowrap">ผู้เข้าพัก: ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง</span>`;
+    $('#subtitle').innerHTML = `${line1}<br>${line2}`;
   })();
 
   function fmt(n, cur = state.currency){
@@ -440,7 +434,7 @@
     $('#grid').innerHTML = html;
   }
 
-  /* ====== ป๊อปอัปเปลี่ยนแปลง ====== */
+  /* ป๊อปอัปเปลี่ยนแปลง */
   const dlg = $('#dlgChange');
   const chgQ = $('#chgQ'), chgCi = $('#chgCi'), chgCo = $('#chgCo');
   const ONE = 86400000;
@@ -493,14 +487,16 @@
 
     const ci = state.checkin.replaceAll('-', '/');
     const co = state.checkout.replaceAll('-', '/');
-    $('#subtitle').innerHTML = `${state.city || state.q || '—'} | วันที่: ${ci} → ${co} | <span class="nowrap">ผู้เข้าพัก:</span> ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง`;
+    const line1 = `<span class="nowrap">${state.city || state.q || '—'} | วันที่: ${ci} → ${co}</span>`;
+    const line2 = `<span class="nowrap">ผู้เข้าพัก: ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง</span>`;
+    $('#subtitle').innerHTML = `${line1}<br>${line2}`;
 
     updateQueryOnly();
     dlg.close();
     load();
   });
 
-  /* ====== chips ====== */
+  /* chips */
   document.getElementById('chipSort').addEventListener('click', ()=>{ document.getElementById('dlgSort').showModal();
     [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort));
   });
@@ -565,3 +561,4 @@
 </script>
 </body>
 </html>
+```0
