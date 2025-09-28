@@ -22,12 +22,20 @@
     .btn-wide{ width:100%; }
     .field{ position:relative; } .field-label{ position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none; }
     .has-label .mock-input,.has-label .flatpickr-input{ height:56px; padding-top:18px; }
+
+    /* ===== Autocomplete panel ===== */
     .suggest-wrap{ position:relative; }
-    .suggest-panel{ position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,.08); max-height:260px; overflow:auto; z-index:999; display:none; }
+    /* วางแบบ fixed เพื่อกันโดน container ตัดขอบ และดัน z-index ให้สูง */
+    .suggest-panel{ position:fixed; left:0; top:0; width:0;
+      background:#fff; border:1px solid #ddd; border-radius:10px;
+      box-shadow:0 8px 20px rgba(0,0,0,.08);
+      max-height:260px; overflow:auto; z-index:99999; display:none; }
     .suggest-item{ display:flex; justify-content:space-between; align-items:center; padding:10px 12px; cursor:pointer; }
     .suggest-item:hover{ background:#f6f6f6; }
     .s-label{ font-weight:600; } .s-sub{ color:#777; font-size:13px; }
     .suggest-group{ padding:8px 12px; font-weight:700; color:#6b7280; border-top:1px solid #f3f4f6; background:#fafafa; }
+    .suggest-empty{ padding:10px 12px; color:#6b7280; }
+
     .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:999; }
     .modal{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; width:min(92vw,420px); box-shadow:0 12px 24px rgba(0,0,0,.2); z-index:1000; display:none; }
     .modal-header,.modal-footer{ padding:14px 16px; } .modal-header{ border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
@@ -44,13 +52,8 @@
   <header class="site-header">
     <div class="inner">
       <a href="index.html" class="brand"><img src="logo.png" alt="" width="40" height="40"/><span class="brand-text">Click & Go</span></a>
-      <nav class="main-nav">
-        <a href="index.html" aria-current="page">หน้าแรก</a>
-        <a href="deals.html">โปรโมชั่น</a>
-        <div class="lang">
-          <button class="lang-btn">ภาษา ▾</button>
-          <div class="lang-menu"><a href="#" aria-current="true">ไทย</a><a href="/en/index.html">English</a></div>
-        </div>
+      <nav class="main-nav"><a href="index.html" aria-current="page">หน้าแรก</a><a href="deals.html">โปรโมชั่น</a>
+        <div class="lang"><button class="lang-btn">ภาษา ▾</button><div class="lang-menu"><a href="#" aria-current="true">ไทย</a><a href="/en/index.html">English</a></div></div>
       </nav>
     </div>
   </header>
@@ -60,36 +63,28 @@
 
     <section style="margin:24px 0">
       <h2 class="section-title">ค้นหาโรงแรม</h2>
-      <div class="mock-wrap">
-        <div class="mock-box">
-          <h3 class="mock-title">ค้นหาดีลที่ใช่สำหรับคุณ</h3>
-          <p class="mock-sub">พิมพ์ชื่อเมืองหรือโรงแรม เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา</p>
+      <div class="mock-wrap"><div class="mock-box">
+        <h3 class="mock-title">ค้นหาดีลที่ใช่สำหรับคุณ</h3>
+        <p class="mock-sub">พิมพ์ชื่อเมืองหรือโรงแรม เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา</p>
 
-          <form id="cgForm" class="mock-row" method="GET" action="search.html" autocomplete="off">
-            <div class="suggest-wrap full-row">
-              <input type="text" id="dest" name="q" class="mock-input" placeholder="ปลายทาง เช่น กรุงเทพฯ หรือชื่อโรงแรม" aria-label="ปลายทาง">
-              <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="คำแนะนำ"></div>
-            </div>
-            <div class="field has-label">
-              <span class="field-label">เช็คอิน</span>
-              <input type="text" id="ci" name="checkin" class="mock-input" readonly>
-            </div>
-            <div class="field has-label">
-              <span class="field-label">เช็คเอาท์</span>
-              <input type="text" id="co" name="checkout" class="mock-input" readonly>
-            </div>
-            <button type="button" id="guestBtn" class="guest-input full-row">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
-            <button type="submit" class="mock-btn btn-wide full-row">ค้นหา</button>
-
-            <input type="hidden" id="rooms"    name="rooms"    value="1">
-            <input type="hidden" id="adults"   name="adults"   value="2">
-            <input type="hidden" id="children" name="children" value="0">
-            <input type="hidden"               name="lang"     value="th-th">
-            <input type="hidden" id="cityId"   name="cityId"   value="">
-            <input type="hidden" id="hotelId"  name="hotelId"  value="">
-          </form>
-        </div>
-      </div>
+        <!-- ส่งแบบ GET ไป search.html เสมอ -->
+        <form id="cgForm" class="mock-row" method="GET" action="search.html" autocomplete="off">
+          <div class="suggest-wrap full-row">
+            <input type="text" id="dest" name="q" class="mock-input" placeholder="ปลายทาง เช่น กรุงเทพฯ หรือชื่อโรงแรม" aria-label="ปลายทาง">
+            <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="คำแนะนำ"></div>
+          </div>
+          <div class="field has-label"><span class="field-label">เช็คอิน</span><input type="text" id="ci" name="checkin" class="mock-input" readonly></div>
+          <div class="field has-label"><span class="field-label">เช็คเอาท์</span><input type="text" id="co" name="checkout" class="mock-input" readonly></div>
+          <button type="button" id="guestBtn" class="guest-input full-row">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
+          <button type="submit" class="mock-btn btn-wide full-row">ค้นหา</button>
+          <input type="hidden" id="rooms"   name="rooms"   value="1">
+          <input type="hidden" id="adults"  name="adults"  value="2">
+          <input type="hidden" id="children"name="children"value="0">
+          <input type="hidden"              name="lang"    value="th-th">
+          <input type="hidden" id="cityId"  name="cityId"  value="">
+          <input type="hidden" id="hotelId" name="hotelId" value="">
+        </form>
+      </div></div>
     </section>
 
     <!-- ไทย -->
@@ -155,7 +150,14 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 
   <script>
-  (function(){const btn=document.querySelector('.lang-btn'),menu=document.querySelector('.lang-menu');if(!btn||!menu)return;const closeM=()=>{menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};btn.addEventListener('click',e=>{e.stopPropagation();const o=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(o));});document.addEventListener('click',closeM);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});})();
+  // เมนูภาษา
+  (function(){
+    const btn=document.querySelector('.lang-btn'),menu=document.querySelector('.lang-menu');if(!btn||!menu)return;
+    const closeM=()=>{menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};
+    btn.addEventListener('click',e=>{e.stopPropagation();const o=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(o));});
+    document.addEventListener('click',closeM);
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
+  })();
   </script>
 
   <!-- Autocomplete -->
@@ -167,78 +169,96 @@
     const hotelId=document.getElementById('hotelId');
     if(!input||!panel) return;
 
-    let timer=null, seq=0; // ป้องกันผลตอบกลับซ้อน
-    const hide=()=>{panel.style.display='none';panel.innerHTML='';};
-    const show=()=>{panel.style.display='block';};
+    let timer=null, seq=0;
+
     const esc=s=>(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
-    async function doSuggest(){
+    // จัดตำแหน่ง panel ให้พอดีกับช่อง input (แบบ fixed)
+    function positionPanel(){
+      const r=input.getBoundingClientRect();
+      panel.style.left=(r.left+window.scrollX)+'px';
+      panel.style.top=(r.bottom+window.scrollY+4)+'px';
+      panel.style.width=r.width+'px';
+    }
+    const show=()=>{ positionPanel(); panel.style.display='block'; };
+    const hide=()=>{ panel.style.display='none'; panel.innerHTML=''; };
+
+    async function fetchSuggest(q){
+      const u=encodeURIComponent(q);
+      const cityReq = fetch(`/api/suggest?q=${u}&lang=th-th&limit=7`);
+      const hotelTh = fetch(`/api/hotel-search?q=${u}&lang=th&limit=7`);
+      const hotelEn = fetch(`/api/hotel-search?q=${u}&lang=en&limit=7`);
+      const [rc, rht, rhe] = await Promise.all([cityReq, hotelTh, hotelEn].map(p=>p.catch(()=>null)));
+      const cj = rc ? await rc.json().catch(()=>({})) : {};
+      const ht = rht? await rht.json().catch(()=>({})) : {};
+      const he = rhe? await rhe.json().catch(()=>({})) : {};
+
+      const cities = (cj && cj.ok && Array.isArray(cj.items))
+        ? cj.items.map(x=>({type:'city', id:x.city_id||x.id, label:x.label, subtitle:x.subtitle||''}))
+        : [];
+
+      const mapHotels=new Map();
+      const push=(src)=>{ if(src && src.ok && Array.isArray(src.items)) src.items.forEach(x=>{ if(!mapHotels.has(x.hotel_id)) mapHotels.set(x.hotel_id,{type:'hotel',id:x.hotel_id,label:x.label}); }); };
+      push(ht); push(he);
+      const hotels=[...mapHotels.values()];
+
+      return {cities, hotels};
+    }
+
+    function render({cities,hotels}){
+      if(!cities.length && !hotels.length){
+        panel.innerHTML='<div class="suggest-empty">ไม่พบคำแนะนำ</div>'; show(); return;
+      }
+      let html='';
+      if(cities.length){
+        html+='<div class="suggest-group">เมือง</div>';
+        html+=cities.map(it=>`<div class="suggest-item" data-type="city" data-id="${esc(it.id)}" data-label="${esc(it.label)}"><div class="s-label">${esc(it.label)}</div><div class="s-sub">${esc(it.subtitle||'')}</div></div>`).join('');
+      }
+      if(hotels.length){
+        html+='<div class="suggest-group">โรงแรม</div>';
+        html+=hotels.map(it=>`<div class="suggest-item" data-type="hotel" data-id="${esc(it.id)}" data-label="${esc(it.label)}"><div class="s-label">${esc(it.label)}</div><div class="s-sub"></div></div>`).join('');
+      }
+      panel.innerHTML=html; show();
+
+      // รองรับทั้งแตะ/คลิก
+      const pick=(el,ev)=>{ ev.preventDefault();
+        const t=el.getAttribute('data-type'); const id=el.getAttribute('data-id'); const lbl=el.getAttribute('data-label')||'';
+        input.value=lbl; if(t==='hotel'){ hotelId.value=id; cityId.value=''; } else { cityId.value=id; hotelId.value=''; }
+        hide(); input.blur();
+      };
+      panel.querySelectorAll('.suggest-item').forEach(el=>{
+        el.addEventListener('pointerdown', ev=>pick(el,ev), {passive:false});
+        el.addEventListener('touchstart', ev=>pick(el,ev), {passive:false});
+        el.addEventListener('mousedown', ev=>pick(el,ev));
+        el.addEventListener('click', ev=>pick(el,ev));
+      });
+    }
+
+    function request(){
       const q=input.value.trim();
       cityId.value=''; hotelId.value='';
       if(!q){ hide(); return; }
-
       if(timer) clearTimeout(timer);
       timer=setTimeout(async ()=>{
         const my=++seq;
         try{
-          const u=encodeURIComponent(q);
-
-          // เมืองจาก /api/suggest (ที่เวิร์คในระบบคุณ)
-          const cityReq = fetch(`/api/suggest?q=${u}&lang=th-th&limit=7`);
-
-          // โรงแรมจาก /api/hotel-search ทั้งไทยและอังกฤษ แล้วรวมผล
-          const hotelThReq = fetch(`/api/hotel-search?q=${u}&lang=th&limit=7`);
-          const hotelEnReq = fetch(`/api/hotel-search?q=${u}&lang=en&limit=7`);
-
-          const [rCity, rHotelTh, rHotelEn] = await Promise.all([cityReq, hotelThReq, hotelEnReq]);
-
-          if(my!==seq) return; // มีการพิมพ์ใหม่ระหว่างรอ
-
-          const cj = await rCity.json().catch(()=>({}));
-          const ht = await rHotelTh.json().catch(()=>({}));
-          const he = await rHotelEn.json().catch(()=>({}));
-
-          const cities = (cj && cj.ok && Array.isArray(cj.items))
-            ? cj.items.map(x=>({type:'city', id:x.city_id||x.id, label:x.label, subtitle:x.subtitle||''}))
-            : [];
-
-          const hotelSet = new Map();
-          const pushHotels = (src)=>{ if(src && src.ok && Array.isArray(src.items)){ src.items.forEach(x=>{ if(!hotelSet.has(x.hotel_id)) hotelSet.set(x.hotel_id, {type:'hotel', id:x.hotel_id, label:x.label});});}};
-          pushHotels(ht); pushHotels(he);
-          const hotels = Array.from(hotelSet.values());
-
-          if(!cities.length && !hotels.length){ hide(); return; }
-
-          let html='';
-          if(cities.length){
-            html+=`<div class="suggest-group">เมือง</div>`;
-            html+=cities.map(it=>`<div class="suggest-item" data-type="city" data-id="${esc(it.id)}" data-label="${esc(it.label)}"><div class="s-label">${esc(it.label)}</div><div class="s-sub">${esc(it.subtitle||'')}</div></div>`).join('');
-          }
-          if(hotels.length){
-            html+=`<div class="suggest-group">โรงแรม</div>`;
-            html+=hotels.map(it=>`<div class="suggest-item" data-type="hotel" data-id="${esc(it.id)}" data-label="${esc(it.label)}"><div class="s-label">${esc(it.label)}</div><div class="s-sub"></div></div>`).join('');
-          }
-
-          panel.innerHTML=html; show();
-
-          panel.querySelectorAll('.suggest-item').forEach(el=>{
-            const pick=(ev)=>{ev.preventDefault();const t=el.getAttribute('data-type');const id=el.getAttribute('data-id');const lbl=el.getAttribute('data-label')||'';input.value=lbl;if(t==='hotel'){hotelId.value=id;cityId.value='';}else{cityId.value=id;hotelId.value='';}hide();input.blur();};
-            el.addEventListener('pointerdown', pick, {passive:false});
-            el.addEventListener('click', pick);
-          });
+          positionPanel(); // เผื่อคีย์บอร์ดดัน layout
+          const data=await fetchSuggest(q);
+          if(my!==seq) return; // มีการพิมพ์ต่อ
+          render(data);
         }catch{ hide(); }
-      }, 200);
+      }, 180);
     }
 
-    // รองรับ IME/ไทยบนมือถือ
-    input.addEventListener('input', doSuggest);
-    input.addEventListener('keyup', doSuggest);
-    input.addEventListener('compositionend', doSuggest);
-    input.addEventListener('focus', doSuggest);
+    input.addEventListener('input', request);
+    input.addEventListener('keyup', request);
+    input.addEventListener('compositionend', request);
+    input.addEventListener('focus', ()=>{ request(); });
 
-    document.addEventListener('pointerdown', e=>{
-      if(e.target!==input && !panel.contains(e.target)) hide();
-    });
+    window.addEventListener('scroll', ()=>{ if(panel.style.display==='block') positionPanel(); }, {passive:true});
+    window.addEventListener('resize', ()=>{ if(panel.style.display==='block') positionPanel(); });
+
+    document.addEventListener('pointerdown', e=>{ if(e.target!==input && !panel.contains(e.target)) hide(); });
   })();
   </script>
 
@@ -246,13 +266,13 @@
   <script>
   (function(){
     const ONE=86400000, ci=document.getElementById('ci'), co=document.getElementById('co');
-    const fmtLocal=(d)=>{const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;};
-    const today=new Date(), tom=new Date(Date.now()+ONE);
+    const fmtLocal=(d)=>{const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());};
+    const today=new Date(),tom=new Date(Date.now()+ONE);
     let inP=null,outP=null;
 
     if(window.flatpickr){
       inP=flatpickr("#ci",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",
-        onChange(d){ if(d[0]){ const n=new Date(d[0].getTime()+ONE); outP.set('minDate',n); if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0]) outP.setDate(n,true);} }
+        onChange(d){if(d[0]){const n=new Date(d[0].getTime()+ONE);outP.set('minDate',n);if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0])outP.setDate(n,true);}}
       });
       outP=flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:tom});
       inP.setDate(today,true); outP.setDate(tom,true);
@@ -261,7 +281,7 @@
       ci.type='date'; co.type='date';
       ci.value=fmtLocal(today); ci.min=fmtLocal(today);
       co.value=fmtLocal(tom);   co.min=fmtLocal(tom);
-      ci.addEventListener('change',()=>{const a=new Date(ci.value||fmtLocal(today)),n=new Date(a.getTime()+ONE); if(!co.value||new Date(co.value)<=a){co.value=fmtLocal(n);co.min=fmtLocal(n);} });
+      ci.addEventListener('change',()=>{const a=new Date(ci.value||fmtLocal(today)),n=new Date(a.getTime()+ONE);if(!co.value||new Date(co.value)<=a){co.value=fmtLocal(n);co.min=fmtLocal(n);}});
     }
 
     let rooms=1,adults=2,children=0;
@@ -274,17 +294,14 @@
           hC=document.getElementById('children'),
           modal=document.getElementById('guestModal'),
           backdrop=document.getElementById('guestBackdrop');
-
-    const open=()=>{roomsC.textContent=rooms;adultsC.textContent=adults;childrenC.textContent=children;modal.style.display='block';backdrop.style.display='block';};
-    const close=()=>{modal.style.display='none';backdrop.style.display='none';};
-    const upd=()=>{btn.textContent=`${rooms} ห้อง, ${adults} ผู้ใหญ่, ${children} เด็ก`;};
+    function open(){roomsC.textContent=rooms;adultsC.textContent=adults;childrenC.textContent=children;modal.style.display='block';backdrop.style.display='block';}
+    function close(){modal.style.display='none';backdrop.style.display='none';}
+    function upd(){btn.textContent=`${rooms} ห้อง, ${adults} ผู้ใหญ่, ${children} เด็ก`; }
     upd();
-
     btn.addEventListener('click',open);
     document.getElementById('btnCloseX').addEventListener('click',close);
     document.getElementById('btnCancel').addEventListener('click',close);
     backdrop.addEventListener('click',close);
-
     document.querySelectorAll('.btn-ctrl').forEach(b=>{
       b.addEventListener('click',()=>{
         const t=b.getAttribute('data-type'),op=b.getAttribute('data-op');
@@ -299,14 +316,14 @@
         if(t==='children'){children=v;childrenC.textContent=v}
       });
     });
-
     document.getElementById('btnSaveGuests').addEventListener('click',()=>{hR.value=rooms;hA.value=adults;hC.value=children;upd();close();});
 
-    document.getElementById('cgForm').addEventListener('submit',()=>{
-      const q=document.getElementById('dest'); if(!q.value) q.value='กรุงเทพ';
+    document.getElementById('cgForm').addEventListener('submit',e=>{
+      const q=document.getElementById('dest');
+      if(!q.value) q.value='กรุงเทพ';
     });
 
-    const fmtLocalStr=fmtLocal;
+    function fmtLocalStr(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
     document.querySelectorAll('.city-card[data-q]').forEach(a=>{
       a.addEventListener('click',ev=>{
         ev.preventDefault();
@@ -315,10 +332,10 @@
 
         const inP=window.flatpickr && document.querySelector('#ci')._flatpickr;
         const outP=window.flatpickr && document.querySelector('#co')._flatpickr;
-        let ci=inP&&inP.selectedDates[0]?inP.formatDate(inP.selectedDates[0],'Y-m-d'):fmtLocalStr(new Date());
-        let co=outP&&outP.selectedDates[0]?outP.formatDate(outP.selectedDates[0],'Y-m-d'):fmtLocalStr(new Date(Date.now()+86400000));
+        let ci = inP && inP.selectedDates[0] ? inP.formatDate(inP.selectedDates[0],'Y-m-d') : fmtLocalStr(new Date());
+        let co = outP && outP.selectedDates[0] ? outP.formatDate(outP.selectedDates[0],'Y-m-d') : fmtLocalStr(new Date(Date.now()+86400000));
 
-        const ciD=new Date(ci+'T00:00:00'),coD=new Date(co+'T00:00:00');
+        const ciD=new Date(ci+'T00:00:00'), coD=new Date(co+'T00:00:00');
         if(coD<=ciD) co=fmtLocalStr(new Date(ciD.getTime()+86400000));
 
         const rooms=document.getElementById('rooms').value||1;
