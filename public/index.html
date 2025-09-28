@@ -121,9 +121,9 @@
     <section>
       <h2 class="section-title">ทำไมต้อง Click & Go</h2>
       <div class="features">
-        <div class="feature><h3>ค้นหาข้อเสนอที่ดีที่สุด</h3><p>เชื่อมต่อผู้ให้บริการทั่วโลก ค้นหาราคาแบบเรียลไทม์</p></div>
-        <div class="feature><h3>ขั้นตอนการจองไม่ยุ่งยาก</h3><p>กดลิงก์ตรงไปยังหน้าโรงแรมของพันธมิตรได้ทันที</p></div>
-        <div class="feature><h3>รองรับทุกอุปกรณ์</h3><p>ใช้งานง่าย ไม่ว่าจะบนมือถือ แท็บเล็ต หรือคอมพิวเตอร์</p></div>
+        <div class="feature"><h3>ค้นหาข้อเสนอที่ดีที่สุด</h3><p>เชื่อมต่อผู้ให้บริการทั่วโลก ค้นหาราคาแบบเรียลไทม์</p></div>
+        <div class="feature"><h3>ขั้นตอนการจองไม่ยุ่งยาก</h3><p>กดลิงก์ตรงไปยังหน้าโรงแรมของพันธมิตรได้ทันที</p></div>
+        <div class="feature"><h3>รองรับทุกอุปกรณ์</h3><p>ใช้งานง่าย ไม่ว่าจะบนมือถือ แท็บเล็ต หรือคอมพิวเตอร์</p></div>
       </div>
     </section>
   </main>
@@ -167,33 +167,45 @@
     const hotelId=document.getElementById('hotelId');
     if(!input||!panel) return;
 
-    let timer=null, seq=0;
+    let timer=null, seq=0; // ป้องกันผลตอบกลับซ้อน
     const hide=()=>{panel.style.display='none';panel.innerHTML='';};
     const show=()=>{panel.style.display='block';};
     const esc=s=>(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
-    input.addEventListener('input', ()=>{
-      cityId.value=''; hotelId.value='';
+    async function doSuggest(){
       const q=input.value.trim();
-      if(timer) clearTimeout(timer);
+      cityId.value=''; hotelId.value='';
       if(!q){ hide(); return; }
 
+      if(timer) clearTimeout(timer);
       timer=setTimeout(async ()=>{
         const my=++seq;
         try{
           const u=encodeURIComponent(q);
-          // เมือง (endpoint ที่ใช้ได้): /api/suggest
-          const cityReq  = fetch(`/api/suggest?q=${u}&lang=th-th&limit=7`);
-          // โรงแรม (ตามของคุณ): /api/hotel-search
-          const hotelReq = fetch(`/api/hotel-search?q=${u}&lang=en&limit=7`);
-          const [rCity, rHotel] = await Promise.all([cityReq, hotelReq]);
-          if(my!==seq) return;
 
-          const cj=await rCity.json().catch(()=>({}));
-          const hj=await rHotel.json().catch(()=>({}));
+          // เมืองจาก /api/suggest (ที่เวิร์คในระบบคุณ)
+          const cityReq = fetch(`/api/suggest?q=${u}&lang=th-th&limit=7`);
 
-          const cities = (cj && cj.ok && Array.isArray(cj.items)) ? cj.items.map(x=>({type:'city',id:x.city_id||x.id,label:x.label,subtitle:x.subtitle||''})) : [];
-          const hotels = (hj && hj.ok && Array.isArray(hj.items)) ? hj.items.map(x=>({type:'hotel',id:x.hotel_id,label:x.label})) : [];
+          // โรงแรมจาก /api/hotel-search ทั้งไทยและอังกฤษ แล้วรวมผล
+          const hotelThReq = fetch(`/api/hotel-search?q=${u}&lang=th&limit=7`);
+          const hotelEnReq = fetch(`/api/hotel-search?q=${u}&lang=en&limit=7`);
+
+          const [rCity, rHotelTh, rHotelEn] = await Promise.all([cityReq, hotelThReq, hotelEnReq]);
+
+          if(my!==seq) return; // มีการพิมพ์ใหม่ระหว่างรอ
+
+          const cj = await rCity.json().catch(()=>({}));
+          const ht = await rHotelTh.json().catch(()=>({}));
+          const he = await rHotelEn.json().catch(()=>({}));
+
+          const cities = (cj && cj.ok && Array.isArray(cj.items))
+            ? cj.items.map(x=>({type:'city', id:x.city_id||x.id, label:x.label, subtitle:x.subtitle||''}))
+            : [];
+
+          const hotelSet = new Map();
+          const pushHotels = (src)=>{ if(src && src.ok && Array.isArray(src.items)){ src.items.forEach(x=>{ if(!hotelSet.has(x.hotel_id)) hotelSet.set(x.hotel_id, {type:'hotel', id:x.hotel_id, label:x.label});});}};
+          pushHotels(ht); pushHotels(he);
+          const hotels = Array.from(hotelSet.values());
 
           if(!cities.length && !hotels.length){ hide(); return; }
 
@@ -206,6 +218,7 @@
             html+=`<div class="suggest-group">โรงแรม</div>`;
             html+=hotels.map(it=>`<div class="suggest-item" data-type="hotel" data-id="${esc(it.id)}" data-label="${esc(it.label)}"><div class="s-label">${esc(it.label)}</div><div class="s-sub"></div></div>`).join('');
           }
+
           panel.innerHTML=html; show();
 
           panel.querySelectorAll('.suggest-item').forEach(el=>{
@@ -213,9 +226,15 @@
             el.addEventListener('pointerdown', pick, {passive:false});
             el.addEventListener('click', pick);
           });
-        }catch(e){ hide(); }
-      }, 220);
-    });
+        }catch{ hide(); }
+      }, 200);
+    }
+
+    // รองรับ IME/ไทยบนมือถือ
+    input.addEventListener('input', doSuggest);
+    input.addEventListener('keyup', doSuggest);
+    input.addEventListener('compositionend', doSuggest);
+    input.addEventListener('focus', doSuggest);
 
     document.addEventListener('pointerdown', e=>{
       if(e.target!==input && !panel.contains(e.target)) hide();
