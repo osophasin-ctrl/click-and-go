@@ -1,5 +1,5 @@
 // /api/search.js — Vercel Serverless (CommonJS)
-// รับ query → แปลงเป็น payload lt_v1 → (fallback) resolve q จาก /api/suggest → เรียก Agoda
+// รับ query → แปลงเป็น payload lt_v1 → (ลองหา hid จาก /api/hotel-search ก่อน) → (fallback) /api/suggest → เรียก Agoda
 
 const AGODA_URL = "http://affiliateapi7643.agoda.com/affiliateservice/lt_v1";
 
@@ -133,6 +133,25 @@ module.exports = async function (req, res) {
 
     if (!checkin || !checkout) {
       return res.status(200).json({ ok: false, reason: "missing_dates", results: [] });
+    }
+
+    // -------- FAST HOTEL RESOLVE: ลองแมปชื่อโรงแรม -> hid จาก index ก่อน --------
+    // ถ้าผู้ใช้พิมพ์ชื่อโรงแรมมาจริง ๆ จะได้ยิง Agoda โดยใช้ hid ทันที
+    if (!hid && q) {
+      try {
+        const base = hostOrigin(req);
+        const langForIndex = (lang || "").toLowerCase().includes("th") ? "th" : "en";
+        const hsUrl = `${base}/api/hotel-search?q=${encodeURIComponent(q)}&lang=${langForIndex}&limit=10`;
+        const hsRes = await fetch(hsUrl, { cache: "no-store" });
+        const hs = await hsRes.json().catch(() => null);
+        if (hs && hs.ok && Array.isArray(hs.items) && hs.items.length) {
+          // ใช้ผลลัพธ์แรกพอ (ถ้าต้องการให้ผู้ใช้เลือกเอง ค่อยส่งทั้งรายการไปที่ฟรอนต์)
+          const first = hs.items[0];
+          if (first && first.hotel_id) {
+            hid = String(first.hotel_id);
+          }
+        }
+      } catch (_) {}
     }
 
     // -------- BACKEND FALLBACK: resolve q -> cityId/hid ด้วย /api/suggest --------
