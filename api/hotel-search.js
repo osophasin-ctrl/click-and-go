@@ -1,63 +1,91 @@
-// /api/hotel-search.js — คืน hotel_id จากชื่อโรงแรม (อ่านชาร์ดจาก /public/hotel-index)
-const zlib = require("zlib");
-const crypto = require("crypto");
+// /api/hotel-search.js
+// ค้นหาโรงแรมจากดัชนีภายในโปรเจ็กต์ (ไม่ยิง Agoda ตรงๆ)
+// รองรับ lang=th|en และ limit
 
-const SHARDS = 64; // ต้องตรงกับตอน build
+const fs = require('fs');
+const path = require('path');
 
-function guessProto(req) {
-  return (req.headers["x-forwarded-proto"] || "https").split(",")[0].trim();
-}
-function hostOrigin(req) {
-  const proto = guessProto(req);
-  const host = req.headers.host;
-  return `${proto}://${host}`;
-}
+const CACHE = { th: null, en: null };
+const MAX_LIMIT = 20;
 
-// normalize ชื่อ
-const punct = /[.,(){}\[\]'\"’“”\-_/]+/g;
-const space = /\s+/g;
-function normEn(s){ return String(s||"").trim().replace(punct," ").replace(space," ").toLowerCase(); }
-function normTh(s){ return String(s||"").trim().replace(punct," ").replace(space," "); }
-
-// ให้ชาร์ดเดียวกับตอน build (md5 % 64 → 00..3f)
-function shardCode(qn){
-  const n = parseInt(crypto.createHash("md5").update(qn).digest("hex").slice(0,8), 16) % SHARDS;
-  return n.toString(16).padStart(2,"0");
+function qstr(req, key, def = '') {
+  const v = (req.query && req.query[key]) || def;
+  return (v == null ? '' : String(v)).trim();
 }
 
-module.exports = async function (req, res) {
+function qint(req, key, def = 0) {
+  const n = parseInt(qstr(req, key, String(def)), 10);
+  return Number.isFinite(n) ? n : def;
+}
+
+function normalize(s) {
+  return (s || '')
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, ''); // strip accents (กันเคสภาษาอื่น)
+}
+
+function loadIndex(lang) {
+  if (CACHE[lang]) return CACHE[lang];
+
+  const p = path.join(process.cwd(), 'public', 'hotel-index', `${lang}.json`);
+  const raw = fs.readFileSync(p, 'utf8');
+  const json = JSON.parse(raw);
+
+  // คาดว่าโครงสร้างเป็น { items: [{ hotel_id, label }, ...] } หรือ array ตรง ๆ
+  const items = Array.isArray(json) ? json : (json.items || []);
+
+  // สร้างฟิลด์ค้นหาไว้ล่วงหน้า เพื่อให้ค้นหาเร็ว
+  const prepared = items.map(it => ({
+    type: 'hotel',
+    hotel_id: String(it.hotel_id || it.id || it.hid || ''),
+    label: String(it.label || it.name || ''),
+    _norm: normalize(it.label || it.name || '')
+  })).filter(x => x.hotel_id && x.label);
+
+  CACHE[lang] = prepared;
+  return prepared;
+}
+
+export default function handler(req, res) {
   try {
-    const q = (req.query.q || "").toString();
-    const lang = (req.query.lang || "en").toString().toLowerCase() === "th" ? "th" : "en";
-    const limit = Math.min(parseInt(req.query.limit || "20", 10), 50);
-    if (!q) return res.status(400).json({ ok:false, items:[], reason:"missing_q" });
+    const lang = (qstr(req, 'lang', 'th') || 'th').toLowerCase() === 'en' ? 'en' : 'th';
+    const q = qstr(req, 'q');
+    const limit = Math.min(Math.max(qint(req, 'limit', 10), 1), MAX_LIMIT);
 
-    const qn = lang === "en" ? normEn(q) : normTh(q);
-    const code = shardCode(qn);
+    if (!q || q.length < 1) {
+      return res.status(200).json({ ok: true, items: [] });
+    }
 
-    const base = hostOrigin(req); // เช่น https://www.clickandgo.asia
-    const url = `${base}/hotel-index/${lang}/shard/${code}.jsonl.gz`;
+    const idx = loadIndex(lang);
+    const nq = normalize(q);
 
-    const r = await fetch(url);
-    if (!r.ok) return res.status(200).json({ ok:true, items:[] });
-
-    // แตก gzip แล้วไล่อ่านทีละบรรทัด
-    const buf = Buffer.from(await r.arrayBuffer());
-    const text = zlib.gunzipSync(buf).toString("utf-8");
-
-    const out = [];
-    const words = qn.split(" ").filter(Boolean);
-    for (const line of text.split("\n")) {
-      if (!line) continue;
-      const rec = JSON.parse(line); // {hotel_id, name, name_norm}
-      const hay = rec.name_norm || "";
-      if (words.every(w => hay.includes(w))) {
-        out.push({ hotel_id: String(rec.hotel_id), label: rec.name, type: "hotel" });
-        if (out.length >= limit) break;
+    // กลยุทธ์ค้นหา: เริ่มจาก prefix ก่อน ไม่พอค่อยรวม contains
+    const starts = [];
+    const contains = [];
+    for (const it of idx) {
+      if (it._norm.startsWith(nq)) {
+        starts.push(it);
+        if (starts.length >= limit) break;
       }
     }
-    return res.status(200).json({ ok:true, items: out });
-  } catch (e) {
-    return res.status(200).json({ ok:false, items:[], reason: "exception", message: String(e) });
+    if (starts.length < limit) {
+      for (const it of idx) {
+        if (!it._norm.startsWith(nq) && it._norm.includes(nq)) {
+          contains.push(it);
+          if (starts.length + contains.length >= limit) break;
+        }
+      }
+    }
+
+    const result = [...starts, ...contains]
+      .slice(0, limit)
+      .map(({ hotel_id, label }) => ({ type: 'hotel', hotel_id, label }));
+
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300');
+    return res.status(200).json({ ok: true, items: result });
+  } catch (err) {
+    console.error('hotel-search error:', err);
+    return res.status(200).json({ ok: false, reason: 'internal_error' });
   }
-};
+}
