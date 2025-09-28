@@ -18,23 +18,24 @@
     .full-row{ grid-column:1 / -1; }
     .mock-input, .guest-input, .mock-btn{ height:44px; border:1px solid #d7d7d7; border-radius:8px; padding:0 12px; background:#fff; font-size:15px; }
     .mock-input{ width:100%; } .guest-input{ text-align:left; cursor:pointer; }
-    .mock-btn{ background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; } .mock-btn:active{ transform:translateY(1px); }
+    .mock-btn{ background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; }
     .btn-wide{ width:100%; }
     .field{ position:relative; } .field-label{ position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none; }
     .has-label .mock-input,.has-label .flatpickr-input{ height:56px; padding-top:18px; }
 
-    /* ===== Autocomplete panel ===== */
+    /* ===== Autocomplete panel (fixed + z-index สูง) ===== */
     .suggest-wrap{ position:relative; }
-    /* วางแบบ fixed เพื่อกันโดน container ตัดขอบ และดัน z-index ให้สูง */
-    .suggest-panel{ position:fixed; left:0; top:0; width:0;
+    .suggest-panel{
+      position:fixed; left:0; top:0; width:0;
       background:#fff; border:1px solid #ddd; border-radius:10px;
       box-shadow:0 8px 20px rgba(0,0,0,.08);
-      max-height:260px; overflow:auto; z-index:99999; display:none; }
+      max-height:260px; overflow:auto; z-index:99999; display:none;
+    }
     .suggest-item{ display:flex; justify-content:space-between; align-items:center; padding:10px 12px; cursor:pointer; }
     .suggest-item:hover{ background:#f6f6f6; }
     .s-label{ font-weight:600; } .s-sub{ color:#777; font-size:13px; }
     .suggest-group{ padding:8px 12px; font-weight:700; color:#6b7280; border-top:1px solid #f3f4f6; background:#fafafa; }
-    .suggest-empty{ padding:10px 12px; color:#6b7280; }
+    .suggest-empty,.suggest-loading,.suggest-error{ padding:10px 12px; color:#6b7280; }
 
     .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:999; }
     .modal{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; width:min(92vw,420px); box-shadow:0 12px 24px rgba(0,0,0,.2); z-index:1000; display:none; }
@@ -67,7 +68,6 @@
         <h3 class="mock-title">ค้นหาดีลที่ใช่สำหรับคุณ</h3>
         <p class="mock-sub">พิมพ์ชื่อเมืองหรือโรงแรม เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา</p>
 
-        <!-- ส่งแบบ GET ไป search.html เสมอ -->
         <form id="cgForm" class="mock-row" method="GET" action="search.html" autocomplete="off">
           <div class="suggest-wrap full-row">
             <input type="text" id="dest" name="q" class="mock-input" placeholder="ปลายทาง เช่น กรุงเทพฯ หรือชื่อโรงแรม" aria-label="ปลายทาง">
@@ -87,7 +87,7 @@
       </div></div>
     </section>
 
-    <!-- ไทย -->
+    <!-- ยอดนิยมในไทย -->
     <section>
       <h2 class="section-title">ปลายทางยอดนิยมในไทย</h2>
       <div class="city-grid">
@@ -172,8 +172,6 @@
     let timer=null, seq=0;
 
     const esc=s=>(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-
-    // จัดตำแหน่ง panel ให้พอดีกับช่อง input (แบบ fixed)
     function positionPanel(){
       const r=input.getBoundingClientRect();
       panel.style.left=(r.left+window.scrollX)+'px';
@@ -183,12 +181,24 @@
     const show=()=>{ positionPanel(); panel.style.display='block'; };
     const hide=()=>{ panel.style.display='none'; panel.innerHTML=''; };
 
+    function renderLoading(){
+      panel.innerHTML='<div class="suggest-loading">กำลังค้นหา…</div>'; show();
+    }
+    function renderError(){
+      panel.innerHTML='<div class="suggest-error">เชื่อมต่อไม่ได้ โปรดลองใหม่</div>'; show();
+    }
+    function renderEmpty(){
+      panel.innerHTML='<div class="suggest-empty">ไม่พบคำแนะนำ</div>'; show();
+    }
+
     async function fetchSuggest(q){
       const u=encodeURIComponent(q);
       const cityReq = fetch(`/api/suggest?q=${u}&lang=th-th&limit=7`);
       const hotelTh = fetch(`/api/hotel-search?q=${u}&lang=th&limit=7`);
       const hotelEn = fetch(`/api/hotel-search?q=${u}&lang=en&limit=7`);
       const [rc, rht, rhe] = await Promise.all([cityReq, hotelTh, hotelEn].map(p=>p.catch(()=>null)));
+      if(!rc && !rht && !rhe) throw new Error('network');
+
       const cj = rc ? await rc.json().catch(()=>({})) : {};
       const ht = rht? await rht.json().catch(()=>({})) : {};
       const he = rhe? await rhe.json().catch(()=>({})) : {};
@@ -201,14 +211,11 @@
       const push=(src)=>{ if(src && src.ok && Array.isArray(src.items)) src.items.forEach(x=>{ if(!mapHotels.has(x.hotel_id)) mapHotels.set(x.hotel_id,{type:'hotel',id:x.hotel_id,label:x.label}); }); };
       push(ht); push(he);
       const hotels=[...mapHotels.values()];
-
       return {cities, hotels};
     }
 
     function render({cities,hotels}){
-      if(!cities.length && !hotels.length){
-        panel.innerHTML='<div class="suggest-empty">ไม่พบคำแนะนำ</div>'; show(); return;
-      }
+      if(!cities.length && !hotels.length){ renderEmpty(); return; }
       let html='';
       if(cities.length){
         html+='<div class="suggest-group">เมือง</div>';
@@ -220,7 +227,6 @@
       }
       panel.innerHTML=html; show();
 
-      // รองรับทั้งแตะ/คลิก
       const pick=(el,ev)=>{ ev.preventDefault();
         const t=el.getAttribute('data-type'); const id=el.getAttribute('data-id'); const lbl=el.getAttribute('data-label')||'';
         input.value=lbl; if(t==='hotel'){ hotelId.value=id; cityId.value=''; } else { cityId.value=id; hotelId.value=''; }
@@ -239,21 +245,22 @@
       cityId.value=''; hotelId.value='';
       if(!q){ hide(); return; }
       if(timer) clearTimeout(timer);
+      renderLoading();
       timer=setTimeout(async ()=>{
         const my=++seq;
         try{
-          positionPanel(); // เผื่อคีย์บอร์ดดัน layout
+          positionPanel();
           const data=await fetchSuggest(q);
-          if(my!==seq) return; // มีการพิมพ์ต่อ
+          if(my!==seq) return;
           render(data);
-        }catch{ hide(); }
+        }catch{ renderError(); }
       }, 180);
     }
 
     input.addEventListener('input', request);
     input.addEventListener('keyup', request);
     input.addEventListener('compositionend', request);
-    input.addEventListener('focus', ()=>{ request(); });
+    input.addEventListener('focus', ()=>{ if(input.value.trim()){request();} });
 
     window.addEventListener('scroll', ()=>{ if(panel.style.display==='block') positionPanel(); }, {passive:true});
     window.addEventListener('resize', ()=>{ if(panel.style.display==='block') positionPanel(); });
@@ -262,7 +269,7 @@
   })();
   </script>
 
-  <!-- วันที่ + ผู้เข้าพัก + ลิงก์การ์ดเมือง -->
+  <!-- วันที่ + ผู้เข้าพัก + คลิกการ์ดเมือง -->
   <script>
   (function(){
     const ONE=86400000, ci=document.getElementById('ci'), co=document.getElementById('co');
