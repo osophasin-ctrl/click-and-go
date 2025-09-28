@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "shards_per_lang": 64,
+  "record": {
+    "hotel_id": "int",
+    "name": "str",
+    "name_norm": "str"
+  },
+  "langs": [
+    "en",
+    "th"
+  ]
+}
