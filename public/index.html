@@ -16,13 +16,10 @@
     .mock-sub{ margin:0 0 12px; color:#666; }
 
     /* ===== layout ของแถบค้นหา ===== */
+    /* คงให้เป็น 2 คอลัมน์เสมอ (แม้บนมือถือ) */
     .search-bar{ display:grid; gap:10px; grid-template-columns:2fr 1fr; }
     .search-bar .full{ grid-column:1 / -1; }
     .search-bar .two{ display:grid; gap:10px; grid-template-columns:1fr 1fr; }
-    @media (max-width:640px){
-      .search-bar{ grid-template-columns:1fr; }
-      .search-bar .two{ grid-template-columns:1fr; }
-    }
 
     .mock-input, .guest-input, .mock-btn{ height:44px; border:1px solid #d7d7d7; border-radius:8px; padding:0 12px; background:#fff; font-size:15px; }
     .mock-input{ width:100%; } .guest-input{ text-align:left; cursor:pointer; }
@@ -77,23 +74,23 @@
         <p class="mock-sub">พิมพ์ชื่อเมือง เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา หรือกด “ค้นชื่อโรงแรม” เพื่อไปหน้าค้นหาโรงแรมโดยเฉพาะ</p>
 
         <form id="cgForm" class="search-bar" method="GET" action="search.html" autocomplete="off">
-          <!-- แถว 1: เมือง + ปุ่มไปหน้าโรงแรม -->
+          <!-- แถว 1: เมือง + ปุ่มไปหน้าโรงแรม (บรรทัดเดียวกันเสมอ) -->
           <div class="suggest-wrap">
             <input type="text" id="dest" name="q" class="mock-input" placeholder="พิมพ์ชื่อเมือง..." aria-label="ปลายทาง">
             <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="คำแนะนำ"></div>
           </div>
           <a href="hotel-search.html" class="mock-btn btn-outline" style="display:flex;align-items:center;justify-content:center;text-decoration:none">ค้นชื่อโรงแรม</a>
 
-          <!-- แถว 2: เช็คอิน/เช็คเอาท์ (อยู่บรรทัดเดียวกัน) -->
+          <!-- แถว 2: เช็คอิน/เช็คเอาท์ (บรรทัดเดียวกันเสมอ) -->
           <div class="two full">
             <div class="field has-label"><span class="field-label">เช็คอิน</span><input type="text" id="ci" name="checkin" class="mock-input" readonly></div>
             <div class="field has-label"><span class="field-label">เช็คเอาท์</span><input type="text" id="co" name="checkout" class="mock-input" readonly></div>
           </div>
 
-          <!-- แถว 3: ผู้เข้าพัก (เต็มบรรทัด) -->
+          <!-- แถว 3: ผู้เข้าพัก -->
           <button type="button" id="guestBtn" class="guest-input full">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
 
-          <!-- แถว 4: ปุ่มค้นหา (เต็มบรรทัด) -->
+          <!-- แถว 4: ปุ่มค้นหา -->
           <button type="submit" class="mock-btn btn-wide full">ค้นหา</button>
 
           <!-- Hidden -->
@@ -181,7 +178,7 @@
   })();
   </script>
 
-  <!-- ===== Autocomplete เมือง (กล่องซ้าย) ===== -->
+  <!-- Autocomplete เมือง -->
   <script>
   (function(){
     const input   = document.getElementById('dest');
@@ -191,7 +188,6 @@
     if(!input||!panel) return;
 
     let timer=null, aborter=null;
-
     const esc = s => (s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
     const show=()=>panel.style.display='block';
     const hide=()=>{ panel.style.display='none'; panel.innerHTML=''; };
@@ -254,13 +250,12 @@
           co=document.getElementById('co');
     const fmtLocal=(d)=>{const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());};
     const today=new Date(),tom=new Date(Date.now()+ONE);
-    let inP=null,outP=null;
 
     if(window.flatpickr){
-      inP=flatpickr("#ci",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",
+      const inP=flatpickr("#ci",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",
         onChange(d){if(d[0]){const n=new Date(d[0].getTime()+ONE);outP.set('minDate',n);if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0])outP.setDate(n,true);}}
       });
-      outP=flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:tom});
+      var outP=flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:tom});
       inP.setDate(today,true); outP.setDate(tom,true);
     }else{
       ci.removeAttribute('readonly'); co.removeAttribute('readonly');
@@ -272,15 +267,12 @@
 
     let rooms=1,adults=2,children=0;
     const btn=document.getElementById('guestBtn'),
-          roomsC=document.getElementById('roomsCount'),
-          adultsC=document.getElementById('adultsCount'),
-          childrenC=document.getElementById('childrenCount'),
           hR=document.getElementById('rooms'),
           hA=document.getElementById('adults'),
           hC=document.getElementById('children'),
           modal=document.getElementById('guestModal'),
           backdrop=document.getElementById('guestBackdrop');
-    function open(){roomsC.textContent=rooms;adultsC.textContent=adults;childrenC.textContent=children;modal.style.display='block';backdrop.style.display='block';}
+    function open(){document.getElementById('roomsCount').textContent=rooms;document.getElementById('adultsCount').textContent=adults;document.getElementById('childrenCount').textContent=children;modal.style.display='block';backdrop.style.display='block';}
     function close(){modal.style.display='none';backdrop.style.display='none';}
     function upd(){btn.textContent=`${rooms} ห้อง, ${adults} ผู้ใหญ่, ${children} เด็ก`; }
     upd();
@@ -297,14 +289,13 @@
         if(t==='children'){v=children;min=0}
         if(op==='plus'&&v<max)v++;
         if(op==='minus'&&v>min)v--;
-        if(t==='rooms'){rooms=v;roomsC.textContent=v}
-        if(t==='adults'){adults=v;adultsC.textContent=v}
-        if(t==='children'){children=v;childrenC.textContent=v}
+        if(t==='rooms'){rooms=v;document.getElementById('roomsCount').textContent=v}
+        if(t==='adults'){adults=v;document.getElementById('adultsCount').textContent=v}
+        if(t==='children'){children=v;document.getElementById('childrenCount').textContent=v}
       });
     });
     document.getElementById('btnSaveGuests').addEventListener('click',()=>{hR.value=rooms;hA.value=adults;hC.value=children;upd();close();});
 
-    // ส่งฟอร์ม: normalize กรุงเทพฯ/กรุงเทพมหานคร -> กรุงเทพ
     document.getElementById('cgForm').addEventListener('submit',e=>{
       const q=document.getElementById('dest');
       let v=(q.value||'').trim();
@@ -313,7 +304,6 @@
       q.value=v;
     });
 
-    // คลิกการ์ดเมือง -> ไป search.html พร้อมค่าปัจจุบัน
     function fmtLocalStr(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
     document.querySelectorAll('.city-card[data-q]').forEach(a=>{
       a.addEventListener('click',ev=>{
