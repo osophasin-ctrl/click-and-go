@@ -23,19 +23,13 @@
     .field{ position:relative; } .field-label{ position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none; }
     .has-label .mock-input,.has-label .flatpickr-input{ height:56px; padding-top:18px; }
 
-    /* Autocomplete panel */
     .suggest-wrap{ position:relative; }
-    .suggest-panel{
-      position:fixed; left:0; top:0; width:0;
-      background:#fff; border:1px solid #ddd; border-radius:10px;
-      box-shadow:0 8px 20px rgba(0,0,0,.08);
-      max-height:260px; overflow:auto; z-index:99999; display:none;
-    }
+    .suggest-panel{ position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,.08); max-height:260px; overflow:auto; z-index:999; display:none; }
     .suggest-item{ display:flex; justify-content:space-between; align-items:center; padding:10px 12px; cursor:pointer; }
     .suggest-item:hover{ background:#f6f6f6; }
     .s-label{ font-weight:600; } .s-sub{ color:#777; font-size:13px; }
     .suggest-group{ padding:8px 12px; font-weight:700; color:#6b7280; border-top:1px solid #f3f4f6; background:#fafafa; }
-    .suggest-empty,.suggest-loading{ padding:10px 12px; color:#6b7280; }
+    .suggest-panel .suggest-item:first-child{ border-top:none; }
 
     .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:999; }
     .modal{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; width:min(92vw,420px); box-shadow:0 12px 24px rgba(0,0,0,.2); z-index:1000; display:none; }
@@ -150,106 +144,114 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 
   <script>
-  // เมนูภาษา
+  /* เมนูภาษา */
   (function(){
-    const btn=document.querySelector('.lang-btn'),menu=document.querySelector('.lang-menu');if(!btn||!menu)return;
-    const closeM=()=>{menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};
+    const btn=document.querySelector('.lang-btn'),menu=document.querySelector('.lang-menu');
+    if(!btn||!menu) return;
+    function closeM(){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}
     btn.addEventListener('click',e=>{e.stopPropagation();const o=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(o));});
     document.addEventListener('click',closeM);
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape') closeM();});
   })();
-  </script>
 
-  <!-- Autocomplete (เมือง – /api/suggest พร้อม fallback lang) -->
-  <script>
+  /* ===== Autocomplete (เมือง + โรงแรม) ===== */
   (function(){
-    const input=document.getElementById('dest');
-    const panel=document.getElementById('suggestPanel');
-    const cityId=document.getElementById('cityId');
-    const hotelId=document.getElementById('hotelId');
-    if(!input||!panel) return;
+    const input = document.getElementById('dest');
+    const panel = document.getElementById('suggestPanel');
+    const cityId = document.getElementById('cityId');
+    const hotelId = document.getElementById('hotelId');
+    if (!input || !panel) return;
 
-    let timer=null, seq=0;
+    let timer=null, inflight=null;
 
-    const esc=s=>(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    function positionPanel(){
-      const r=input.getBoundingClientRect();
-      panel.style.left=(r.left+window.scrollX)+'px';
-      panel.style.top=(r.bottom+window.scrollY+4)+'px';
-      panel.style.width=r.width+'px';
-    }
-    const show=()=>{ positionPanel(); panel.style.display='block'; };
-    const hide=()=>{ panel.style.display='none'; panel.innerHTML=''; };
+    const show = () => (panel.style.display='block');
+    const hide = () => { panel.style.display='none'; panel.innerHTML=''; };
+    const esc = s => (s||'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));
 
-    function renderEmpty(){ panel.innerHTML='<div class="suggest-empty">ไม่พบคำแนะนำ</div>'; show(); }
-    function renderLoading(){ panel.innerHTML='<div class="suggest-loading">กำลังค้นหา…</div>'; show(); }
-
-    async function fetchCities(q){
-      const tryOnce = async (param) => {
-        const r = await fetch('/api/suggest?' + new URLSearchParams(param));
-        const j = await r.json().catch(()=>({}));
-        const items = (j && j.ok && Array.isArray(j.items)) ? j.items : [];
-        return items.map(x=>({id:x.city_id||x.id,label:x.label,subtitle:x.subtitle||''}));
-      };
-      const u = encodeURIComponent(q); // ไม่ได้ใช้ แต่กันใจ
-      // 1) th-th
-      let items = await tryOnce({ q, lang: 'th-th', limit: '8' });
-      if (items.length) return items;
-      // 2) th
-      items = await tryOnce({ q, lang: 'th', limit: '8' });
-      if (items.length) return items;
-      // 3) ไม่ใส่ lang
-      return await tryOnce({ q, limit: '8' });
+    // helper: fetch with timeout + error handling
+    async function fetchJSON(url, {signal, timeout=6000}={}){
+      const ctrl = new AbortController();
+      const t = setTimeout(()=>ctrl.abort('timeout'), timeout);
+      try{
+        const res = await fetch(url, {signal: signal ?? ctrl.signal});
+        if(!res.ok){ throw new Error('HTTP '+res.status); }
+        return await res.json();
+      } finally {
+        clearTimeout(t);
+      }
     }
 
-    function render(cities){
-      if(!cities.length){ renderEmpty(); return; }
-      let html = '<div class="suggest-group">เมือง</div>';
-      html += cities.map(it=>`<div class="suggest-item" data-id="${esc(it.id)}" data-label="${esc(it.label)}"><div class="s-label">${esc(it.label)}</div><div class="s-sub">${esc(it.subtitle||'')}</div></div>`).join('');
-      panel.innerHTML=html; show();
-
-      const pick=(el,ev)=>{ ev.preventDefault();
-        input.value=el.getAttribute('data-label')||''; cityId.value=el.getAttribute('data-id')||''; hotelId.value=''; hide(); input.blur();
-      };
-      panel.querySelectorAll('.suggest-item').forEach(el=>{
-        el.addEventListener('pointerdown', ev=>pick(el,ev), {passive:false});
-        el.addEventListener('touchstart',  ev=>pick(el,ev), {passive:false});
-        el.addEventListener('mousedown',  ev=>pick(el,ev));
-        el.addEventListener('click',      ev=>pick(el,ev));
-      });
-    }
-
-    function request(){
-      const q=input.value.trim();
+    input.addEventListener('input', ()=>{
       cityId.value=''; hotelId.value='';
-      if(!q){ hide(); return; }
+      const q = (input.value||'').trim();
       if(timer) clearTimeout(timer);
-      renderLoading();
-      timer=setTimeout(async ()=>{
-        const my=++seq;
+      if(!q){ hide(); return; }
+
+      timer = setTimeout(async ()=>{
         try{
-          positionPanel();
-          const data=await fetchCities(q);
-          if(my!==seq) return;
-          render(data);
-        }catch{ renderEmpty(); }
-      }, 160);
-    }
+          // ยกเลิก request เก่า
+          inflight?.abort?.();
+          inflight = new AbortController();
 
-    input.addEventListener('input', request);
-    input.addEventListener('keyup', request);
-    input.addEventListener('compositionend', request);
-    input.addEventListener('focus', ()=>{ if(input.value.trim()){request();} });
+          const U = encodeURIComponent(q);
+          const urlCity  = `${location.origin}/api/suggest?q=${U}&lang=th-th&limit=7`;
+          const urlHotel = `${location.origin}/api/hotel-search?q=${U}&lang=th&limit=7`;
 
-    window.addEventListener('scroll', ()=>{ if(panel.style.display==='block') positionPanel(); }, {passive:true});
-    window.addEventListener('resize', ()=>{ if(panel.style.display==='block') positionPanel(); });
+          const [cj,hj] = await Promise.allSettled([
+            fetchJSON(urlCity,  {signal: inflight.signal}),
+            fetchJSON(urlHotel, {signal: inflight.signal})
+          ]);
 
-    document.addEventListener('pointerdown', e=>{ if(e.target!==input && !panel.contains(e.target)) hide(); });
+          const cities = (cj.status==='fulfilled' && cj.value && cj.value.ok && Array.isArray(cj.value.items))
+            ? cj.value.items.map(x=>({type:'city', id:x.city_id||x.id, label:x.label, subtitle:x.subtitle||''}))
+            : [];
+
+          const hotels = (hj.status==='fulfilled' && hj.value && hj.value.ok && Array.isArray(hj.value.items))
+            ? hj.value.items.map(x=>({type:'hotel', id:x.hotel_id, label:x.label, subtitle:''}))
+            : [];
+
+          if (!cities.length && !hotels.length){
+            panel.innerHTML = `<div class="suggest-item" tabindex="-1"><div class="s-label">ไม่พบคำแนะนำ</div><div class="s-sub">ลองพิมพ์ชื่อเมือง/โรงแรมให้ยาวขึ้น</div></div>`;
+            show(); return;
+          }
+
+          let html='';
+          if(cities.length){
+            html += `<div class="suggest-group">เมือง</div>`;
+            html += cities.map(it=>`<div class="suggest-item" data-type="city" data-id="${esc(it.id)}" data-label="${esc(it.label)}"><div class="s-label">${esc(it.label)}</div><div class="s-sub">${esc(it.subtitle||'')}</div></div>`).join('');
+          }
+          if(hotels.length){
+            html += `<div class="suggest-group">โรงแรม</div>`;
+            html += hotels.map(it=>`<div class="suggest-item" data-type="hotel" data-id="${esc(it.id)}" data-label="${esc(it.label)}"><div class="s-label">${esc(it.label)}</div><div class="s-sub"></div></div>`).join('');
+          }
+          panel.innerHTML = html; show();
+
+          panel.querySelectorAll('.suggest-item').forEach(el=>{
+            el.addEventListener('mousedown',ev=>{
+              ev.preventDefault();
+              const type=el.getAttribute('data-type'), id=el.getAttribute('data-id'), label=el.getAttribute('data-label')||'';
+              input.value=label;
+              if(type==='hotel'){ hotelId.value=id; cityId.value=''; }
+              else { cityId.value=id; hotelId.value=''; }
+              hide();
+            });
+          });
+        }catch(err){
+          console.warn('[autocomplete] error', err);
+          panel.innerHTML = `<div class="suggest-item" tabindex="-1"><div class="s-label">เชื่อมต่อไม่ได้</div><div class="s-sub">โปรดลองใหม่ หรือตรวจ API /api/suggest</div></div>`;
+          show();
+        }
+      }, 220);
+    });
+
+    document.addEventListener('click', e=>{
+      if(!panel.contains(e.target) && e.target!==input) hide();
+    });
   })();
   </script>
 
-  <!-- วันที่ + ผู้เข้าพัก + คลิกการ์ดเมือง -->
   <script>
+  /* วันที่ + ผู้เข้าพัก + เมืองการ์ด */
   (function(){
     const ONE=86400000, ci=document.getElementById('ci'), co=document.getElementById('co');
     const fmtLocal=(d)=>{const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());};
@@ -304,7 +306,7 @@
     });
     document.getElementById('btnSaveGuests').addEventListener('click',()=>{hR.value=rooms;hA.value=adults;hC.value=children;upd();close();});
 
-    // ป้องกันเคส q ว่าง และ normalize ชื่อกรุงเทพ
+    // กัน q ว่าง + normalize "กรุงเทพมหานคร" -> "กรุงเทพ"
     document.getElementById('cgForm').addEventListener('submit',e=>{
       const q=document.getElementById('dest');
       let v=(q.value||'').trim();
@@ -313,7 +315,7 @@
       q.value=v;
     });
 
-    // คลิกการ์ดเมือง -> ไป search.html ทันที
+    // คลิกการ์ดเมือง -> ไป search.html พร้อมค่าปัจจุบัน
     function fmtLocalStr(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
     document.querySelectorAll('.city-card[data-q]').forEach(a=>{
       a.addEventListener('click',ev=>{
