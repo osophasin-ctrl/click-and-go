@@ -31,10 +31,9 @@
       box-shadow:0 8px 20px rgba(0,0,0,.08); max-height:260px; overflow:auto;
       z-index: 9999; display:none;
     }
-    .suggest-group{ padding:8px 12px; font-weight:700; color:#6b7280; background:#fafafa; border-top:1px solid #f3f4f6; position:sticky; top:0 }
+    .suggest-group{ padding:8px 12px; font-weight:700; color:#6b7280; background:#fafafa; border-top:1px solid #f3f4f6; }
     .suggest-item{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 12px; cursor:pointer; }
     .suggest-item:hover{ background:#f6f6f6; }
-    .suggest-item[aria-disabled="true"]{ cursor:default; color:#666; }
     .s-label{ font-weight:600; } .s-sub{ color:#777; font-size:13px; }
 
     /* Modal */
@@ -70,10 +69,18 @@
         <p class="mock-sub">พิมพ์ชื่อเมืองหรือโรงแรม เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา</p>
 
         <form id="cgForm" class="mock-row" method="GET" action="search.html" autocomplete="off">
-          <div class="suggest-wrap full-row">
-            <input type="text" id="dest" name="q" class="mock-input" placeholder="ปลายทาง เช่น กรุงเทพฯ หรือชื่อโรงแรม" aria-label="ปลายทาง">
-            <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="คำแนะนำ"></div>
+          <!-- โหมดค้นหา + กล่อง suggest (ใหม่) -->
+          <div class="full-row">
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <button type="button" class="btn-outline" id="modeCity"  aria-pressed="true">เมือง</button>
+              <button type="button" class="btn-outline" id="modeHotel" aria-pressed="false">โรงแรม</button>
+            </div>
+            <div class="suggest-wrap">
+              <input type="text" id="dest" name="q" class="mock-input" placeholder="พิมพ์ชื่อเมือง..." aria-label="ปลายทาง">
+              <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="คำแนะนำ"></div>
+            </div>
           </div>
+
           <div class="field has-label"><span class="field-label">เช็คอิน</span><input type="text" id="ci" name="checkin" class="mock-input" readonly></div>
           <div class="field has-label"><span class="field-label">เช็คเอาท์</span><input type="text" id="co" name="checkout" class="mock-input" readonly></div>
           <button type="button" id="guestBtn" class="guest-input full-row">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
@@ -82,7 +89,6 @@
           <input type="hidden" id="adults"  name="adults"  value="2">
           <input type="hidden" id="children"name="children"value="0">
           <input type="hidden"              name="lang"    value="th-th">
-          <!-- hidden เมือง/โรงแรม -->
           <input type="hidden" id="cityId"  name="cityId"  value="">
           <input type="hidden" id="hotelId" name="hotelId" value="">
         </form>
@@ -163,108 +169,106 @@
   })();
   </script>
 
+  <!-- ===== Autocomplete (โหมด เมือง/โรงแรม) ใหม่ ===== -->
   <script>
-  /* ===== Autocomplete (เมือง + โรงแรม) ===== */
   (function(){
-    const input  = document.getElementById('dest');
-    const panel  = document.getElementById('suggestPanel');
-    const cityId = document.getElementById('cityId');
-    const hotelId= document.getElementById('hotelId');
-    if(!input||!panel) return;
+    const input   = document.getElementById('dest');
+    const panel   = document.getElementById('suggestPanel');
+    const cityId  = document.getElementById('cityId');
+    const hotelId = document.getElementById('hotelId');
+    const btnCity = document.getElementById('modeCity');
+    const btnHotel= document.getElementById('modeHotel');
+    if(!input||!panel||!btnCity||!btnHotel) return;
 
-    let timer=null, aborterSuggest=null, aborterHotel=null;
-    const esc=s=>(s||'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+    let mode = 'city'; // 'city' | 'hotel'
+    let timer=null, aborter=null;
+
+    function setMode(m){
+      mode = m;
+      const isCity = mode==='city';
+      btnCity.setAttribute('aria-pressed', String(isCity));
+      btnHotel.setAttribute('aria-pressed', String(!isCity));
+      btnCity.classList.toggle('btn-primary', isCity);
+      btnHotel.classList.toggle('btn-primary', !isCity);
+      input.placeholder = isCity ? 'พิมพ์ชื่อเมือง...' : 'พิมพ์ชื่อโรงแรม...';
+      cityId.value=''; hotelId.value='';
+      if ((input.value||'').trim()) doSuggest();
+    }
+    btnCity.addEventListener('click', ()=>setMode('city'));
+    btnHotel.addEventListener('click', ()=>setMode('hotel'));
+
+    const esc = s => (s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
     const show=()=>panel.style.display='block';
     const hide=()=>{ panel.style.display='none'; panel.innerHTML=''; };
 
-    function groupTitle(t){ return `<div class="suggest-group">${t}</div>`; }
     function rowCity(it){
-      const id=it.city_id ?? it.value ?? it.id;
-      const label=it.city_name || it.label || '';
-      return `<div class="suggest-item" data-kind="city" data-id="${esc(id)}" data-label="${esc(label)}">
-        <div class="s-label">${esc(label)}</div><div class="s-sub">${esc(it.subtitle||'')}</div></div>`;
+      return `<div class="suggest-item" data-type="City" data-id="${esc(it.city_id)}" data-label="${esc(it.label)}">
+        <div><div class="s-label">${esc(it.label)}</div><div class="s-sub">เมือง</div></div>
+        <div class="s-sub">เมือง</div>
+      </div>`;
     }
     function rowHotel(it){
-      const id=String(it.hotel_id||it.id||'');
-      const label=String(it.label||it.name||'');
-      return `<div class="suggest-item" data-kind="hotel" data-id="${esc(id)}" data-label="${esc(label)}">
-        <div class="s-label">${esc(label)}</div><div class="s-sub">โรงแรม</div></div>`;
+      return `<div class="suggest-item" data-type="Hotel" data-id="${esc(it.hotel_id)}" data-label="${esc(it.label)}">
+        <div><div class="s-label">${esc(it.label)}</div><div class="s-sub">โรงแรม</div></div>
+        <div class="s-sub">โรงแรม</div>
+      </div>`;
     }
-    function bindClicks(){
-      panel.querySelectorAll('.suggest-item[data-kind]').forEach(el=>{
+    function bind(){
+      panel.querySelectorAll('.suggest-item').forEach(el=>{
         el.addEventListener('mousedown',ev=>{
           ev.preventDefault();
-          const kind=el.getAttribute('data-kind');
+          const type=el.getAttribute('data-type');
           const id  =el.getAttribute('data-id');
           const lbl =el.getAttribute('data-label')||'';
           input.value=lbl;
-          if(kind==='hotel'){ hotelId.value=id; cityId.value=''; }
-          else { cityId.value=id; hotelId.value=''; }
+          if(type==='City'){ cityId.value=id; hotelId.value=''; }
+          else { hotelId.value=id; cityId.value=''; }
           hide();
         });
       });
     }
-
-    function setLoading(){
-      panel.innerHTML = `<div class="suggest-item" aria-disabled="true">
-        <div class="s-label">กำลังค้นหา</div><div class="s-sub">โปรดรอสักครู่…</div></div>`;
-      show();
-    }
-
-    async function fetchJSON(url, signal){
+    async function j(url, signal){
       const r = await fetch(url, { signal, cache:'no-store' });
       if(!r.ok) throw new Error('HTTP '+r.status);
       return r.json();
     }
-
-    input.addEventListener('input', ()=>{
-      cityId.value=''; hotelId.value='';
+    async function doSuggest(){
       const q=(input.value||'').trim();
+      cityId.value=''; hotelId.value='';
       if(timer) clearTimeout(timer);
       if(!q){ hide(); return; }
 
+      // แสดง "กำลังค้นหา..." ระหว่างรอผล
+      panel.innerHTML = `<div class="suggest-group">กำลังค้นหา...</div>`;
+      show();
+
       timer=setTimeout(async ()=>{
-        // แสดงสถานะกำลังค้นหา
-        setLoading();
-
-        aborterSuggest?.abort(); aborterHotel?.abort();
-        aborterSuggest = new AbortController();
-        aborterHotel   = new AbortController();
-        const enc=encodeURIComponent(q);
-
-        let html='';
-
-        // 1) เมืองจาก /api/suggest (แสดงก่อน)
+        aborter?.abort(); aborter=new AbortController();
+        const u=encodeURIComponent(q);
         try{
-          const s = await fetchJSON(`/api/suggest?q=${enc}&lang=th-th&limit=15&type=city`, aborterSuggest.signal);
-          const cities = (s && s.ok && Array.isArray(s.items)) ? s.items : [];
-          if(cities.length){
-            html += groupTitle('เมือง') + cities.map(rowCity).join('');
-            panel.innerHTML = html; show(); bindClicks();
+          let items = [];
+          if (mode==='city'){
+            const data = await j(`/api/city-suggest?q=${u}&lang=th-th&limit=30`, aborter.signal);
+            items = (data && data.ok && Array.isArray(data.items)) ? data.items : [];
+            panel.innerHTML = items.length
+              ? (`<div class="suggest-group">เมือง</div>` + items.map(rowCity).join(''))
+              : `<div class="suggest-item"><div class="s-label">ไม่พบคำแนะนำ</div><div class="s-sub">ลองพิมพ์ให้ยาวขึ้น</div></div>`;
+          }else{
+            const data = await j(`/api/hotel-search?q=${u}&lang=th&limit=30`, aborter.signal);
+            items = (data && data.ok && Array.isArray(data.items)) ? data.items : [];
+            panel.innerHTML = items.length
+              ? (`<div class="suggest-group">โรงแรม</div>` + items.map(rowHotel).join(''))
+              : `<div class="suggest-item"><div class="s-label">ไม่พบคำแนะนำ</div><div class="s-sub">ลองพิมพ์ให้ยาวขึ้น</div></div>`;
           }
-        }catch(_){ /* เงียบ */ }
-
-        // 2) โรงแรมจาก /api/hotel-search (เติมภายหลัง)
-        try{
-          const h = await fetchJSON(`/api/hotel-search?q=${enc}&lang=th&limit=10`, aborterHotel.signal);
-          const hotels = (h && h.ok && Array.isArray(h.items)) ? h.items : [];
-          if(hotels.length){
-            html += groupTitle('โรงแรม') + hotels.map(rowHotel).join('');
-            panel.innerHTML = html; show(); bindClicks();
-          }else if(!html){
-            panel.innerHTML=`<div class="suggest-item" aria-disabled="true"><div class="s-label">ไม่พบคำแนะนำ</div><div class="s-sub">ลองพิมพ์ให้ยาวขึ้น</div></div>`;
-            show();
-          }
-        }catch(_){
-          if(!html){
-            panel.innerHTML=`<div class="suggest-item" aria-disabled="true"><div class="s-label">ไม่พบคำแนะนำ</div><div class="s-sub">ลองพิมพ์ให้ยาวขึ้น</div></div>`;
-            show();
-          }
-        }
-      }, 220);
-    });
-
+          show(); bind();
+        }catch(_){ hide(); }
+      }, 200);
+    }
+    input.addEventListener('input', doSuggest);
     document.addEventListener('click',e=>{ if(!panel.contains(e.target) && e.target!==input) hide(); });
+
+    // เริ่มต้นเป็นโหมด "เมือง"
+    setMode('city');
   })();
   </script>
 
