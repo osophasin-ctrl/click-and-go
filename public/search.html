@@ -19,6 +19,7 @@
     .muted{color:var(--muted)}
     .nowrap{white-space:nowrap}
 
+    /* ข้อความ + ปุ่มเปลี่ยนแปลง */
     .change-row{
       display:flex; align-items:center; gap:10px; flex-wrap:nowrap;
       margin:4px 0 12px;
@@ -33,6 +34,7 @@
       .change-row .hint{font-size:13.5px}
     }
 
+    /* chips */
     .bar{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;overflow:auto;padding:8px 0;margin:12px 0 16px}
     .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;
       padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer}
@@ -40,6 +42,7 @@
     .chip small{color:#666}
     .chip:focus,.chip:focus-visible{outline:3px solid #0aa29755;outline-offset:2px}
 
+    /* dialog (เปลี่ยนแปลง) */
     dialog{border:none;border-radius:14px;max-width:520px;width:calc(100% - 24px);padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
     dialog::backdrop{background:rgba(0,0,0,.35)}
     .dlg-title{font-weight:700;margin:0 0 12px}
@@ -56,6 +59,7 @@
     .dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
     .btn.secondary{background:#e5e7eb;color:#111}
 
+    /* cards */
     .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
     @media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:640px){.cards{grid-template-columns:1fr}}
@@ -149,6 +153,7 @@
   </form>
 </dialog>
 
+<!-- Dialogs อื่น ๆ (คงเดิม) -->
 <dialog id="dlgSort">
   <h3 class="dlg-title">เรียงโดย</h3>
   <div class="radio-list">
@@ -222,7 +227,7 @@
   const state = {
     q: params.get('q') || '',
     cityId: params.get('cityId') || params.get('cityid') || '',
-    // ✅ รับทั้ง hid และ hotelId (จากหน้า index)
+    // ✅ รองรับทั้ง hid และ hotelId
     hid: params.get('hid') || params.get('hotelId') || '',
     city: params.get('city') || '',
     country: params.get('country') || '',
@@ -242,6 +247,7 @@
   };
   const draft = JSON.parse(JSON.stringify(state));
 
+  // subtitle: 2 บรรทัด, ผู้เข้าพักเป็นบรรทัดล่างและ nowrap
   (function setSubtitle(){
     const ci = (state.checkin || '').replaceAll('-', '/');
     const co = (state.checkout || '').replaceAll('-', '/');
@@ -277,6 +283,7 @@
     Object.entries({
       q: state.q || '',
       cityId: state.cityId || '',
+      // ✅ ส่ง hid กลับลง URL ถ้ามี (รองรับทั้งสองชื่อขาเข้า)
       hid: state.hid || '',
       city: state.city || '',
       country: state.country || '',
@@ -328,27 +335,11 @@
 
   function partnerUrl(){
     const langPath = state.lang || 'th-th';
-    if (state.hid) {
+    if (state.hid || state.cityId) {
       const base = `https://www.agoda.com/${langPath}/partners/partnersearch.aspx`;
       const sp = new URLSearchParams({
         cid: '1949420',
-        hid: String(state.hid),
-        checkin: state.checkin || '',
-        checkout: state.checkout || '',
-        rooms: String(state.rooms || 1),
-        adults: String(state.adults || 2),
-        children: String(state.children || 0),
-        currency: state.currency || 'THB',
-        utm_source: 'clickandgo', utm_medium: 'affiliate',
-        noapp:'1', pcs:'1'
-      });
-      return `${base}?${sp.toString()}`;
-    }
-    if (state.cityId) {
-      const base = `https://www.agoda.com/${langPath}/partners/partnersearch.aspx`;
-      const sp = new URLSearchParams({
-        cid: '1949420',
-        city: String(state.cityId),
+        ...(state.hid ? { hid: String(state.hid) } : { city: String(state.cityId) }),
         checkin: state.checkin || '',
         checkout: state.checkout || '',
         rooms: String(state.rooms || 1),
@@ -379,7 +370,7 @@
 
     const api = new URL('/api/search', location.origin);
     const p = api.searchParams;
-    if (state.hid) p.set('hid', state.hid);            // ✅ ส่ง hid ถ้ามี
+    if (state.hid) p.set('hid', state.hid);            // ✅ แน่ใจว่าส่ง hid เข้า API
     else if (state.cityId) p.set('cityId', state.cityId);
     else if (state.q) p.set('q', state.q);
     ['checkin','checkout','rooms','adults','children','lang','currency','page','sort',
@@ -445,6 +436,7 @@
     $('#grid').innerHTML = html;
   }
 
+  /* ป๊อปอัปเปลี่ยนแปลง */
   const dlg = $('#dlgChange');
   const chgQ = $('#chgQ'), chgCi = $('#chgCi'), chgCo = $('#chgCo');
   const ONE = 86400000;
@@ -488,7 +480,7 @@
   $('#changeForm').addEventListener('submit', (e)=>{
     e.preventDefault();
     state.q = normalizeQ(chgQ.value || '');
-    state.cityId = ''; state.hid = ''; // reset id ให้ตีความใหม่จาก q
+    state.cityId = ''; state.hid = '';
     state.checkin = chgCi.value;
     state.checkout = chgCo.value;
     state.rooms = +$('#cRooms').textContent;
@@ -506,6 +498,7 @@
     load();
   });
 
+  /* chips */
   document.getElementById('chipSort').addEventListener('click', ()=>{ document.getElementById('dlgSort').showModal();
     [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort));
   });
