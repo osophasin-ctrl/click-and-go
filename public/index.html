@@ -14,14 +14,11 @@
     .mock-box{ width:100%; background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.08); padding:16px; display:flex; flex-direction:column; justify-content:center; }
     .mock-title{ margin:0 0 6px; font-weight:800; font-size:22px; }
     .mock-sub{ margin:0 0 12px; color:#666; }
-
-    /* ฟอร์มค้นหา */
-    .search-bar{ display:grid; gap:10px; align-items:center; grid-template-columns:1fr; }
-    .search-bar .two{ display:grid; gap:10px; grid-template-columns:1fr; }
-    .mock-input, .guest-input, .mock-btn, .mock-btn-ghost{ height:44px; border:1px solid #d7d7d7; border-radius:8px; padding:0 12px; background:#fff; font-size:15px; }
+    .mock-row{ display:grid; gap:10px; align-items:center; grid-template-columns:1fr 1fr; }
+    .full-row{ grid-column:1 / -1; }
+    .mock-input, .guest-input, .mock-btn{ height:44px; border:1px solid #d7d7d7; border-radius:8px; padding:0 12px; background:#fff; font-size:15px; }
     .mock-input{ width:100%; } .guest-input{ text-align:left; cursor:pointer; }
     .mock-btn{ background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; } .mock-btn:active{ transform:translateY(1px); }
-    .mock-btn-ghost{ background:#f5f7f7; border-color:#d7e6e5; cursor:pointer; font-weight:700; }
     .btn-wide{ width:100%; }
     .field{ position:relative; } .field-label{ position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none; }
     .has-label .mock-input,.has-label .flatpickr-input{ height:56px; padding-top:18px; }
@@ -39,7 +36,7 @@
     .suggest-item:hover{ background:#f6f6f6; }
     .s-label{ font-weight:600; } .s-sub{ color:#777; font-size:13px; }
 
-    /* Modal ผู้เข้าพัก (คงเดิม) */
+    /* Modal */
     .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:999; }
     .modal{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; width:min(92vw,420px); box-shadow:0 12px 24px rgba(0,0,0,.2); z-index:1000; display:none; }
     .modal-header,.modal-footer{ padding:14px 16px; } .modal-header{ border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
@@ -49,15 +46,7 @@
     .counter{ display:flex; align-items:center; gap:10px; } .btn-ctrl{ width:36px; height:36px; border-radius:50%; border:1px solid #ccc; background:#fff; font-size:18px; cursor:pointer; }
     .count{ min-width:20px; text-align:center; font-weight:700; }
     .btn-outline{ border:1px solid #bbb; background:#fff; color:#333; border-radius:8px; padding:8px 14px; } .btn-primary{ border:0; background:#0ea5a0; color:#fff; border-radius:8px; padding:8px 14px; }
-
-    /* ====== บังคับ layout สองคอลัมน์เสมอ (ที่ผู้ใช้ต้องการ) ====== */
-    .search-bar.force-2col{ grid-template-columns: 2fr 1fr !important; } /* เมือง + ปุ่มโรงแรม */
-    .search-bar.force-2col .two{ grid-template-columns: 1fr 1fr !important; } /* เช็คอิน + เช็คเอาท์ */
-    @media (max-width:640px){ /* แน่ใจว่า mobile ก็อยู่บรรทัดเดียว */
-      .search-bar{ grid-template-columns:1fr; }
-      .search-bar.force-2col{ grid-template-columns: 2fr 1fr !important; }
-      .search-bar.force-2col .two{ grid-template-columns: 1fr 1fr !important; }
-    }
+    @media (max-width:640px){ .mock-row{ grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -77,38 +66,34 @@
       <h2 class="section-title">ค้นหาโรงแรม</h2>
       <div class="mock-wrap"><div class="mock-box">
         <h3 class="mock-title">ค้นหาดีลที่ใช่สำหรับคุณ</h3>
-        <p class="mock-sub">พิมพ์ชื่อเมือง เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา หรือกด “ค้นชื่อโรงแรม” เพื่อไปหน้าค้นหาโรงแรมโดยเฉพาะ</p>
+        <p class="mock-sub">พิมพ์ชื่อเมือง เลือกวันที่ ระบุผู้เข้าพัก หรือไปที่โหมดค้นชื่อโรงแรม</p>
 
-        <!-- เพิ่ม class force-2col เพื่อล็อก layout ตามต้องการ -->
-        <form id="cgForm" class="search-bar force-2col" method="GET" action="search.html" autocomplete="off">
-          <!-- คอลัมน์ซ้าย: เมือง (autocomplete) -->
+        <!-- ส่งแบบ GET ไป search.html เสมอ -->
+        <form id="cgForm" class="mock-row" method="GET" action="search.html" autocomplete="off">
+          <!-- แถวแรก: เมือง + ปุ่มค้นชื่อโรงแรม (อยู่บรรทัดเดียวกัน) -->
           <div class="suggest-wrap">
-            <input type="text" id="cityInput" name="q" class="mock-input" placeholder="พิมพ์ชื่อเมือง..." aria-label="ปลายทาง (เมือง)">
-            <div id="citySuggest" class="suggest-panel" role="listbox" aria-label="คำแนะนำเมือง"></div>
-            <input type="hidden" id="cityId"  name="cityId"  value="">
-            <input type="hidden" id="hotelId" name="hotelId" value="">
+            <input type="text" id="dest" name="q" class="mock-input" placeholder="พิมพ์ชื่อเมือง เช่น กรุงเทพฯ" aria-label="ปลายทาง">
+            <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="คำแนะนำ"></div>
           </div>
+          <button type="button" id="btnHotelMode" class="mock-btn">ค้นชื่อโรงแรม</button>
 
-          <!-- คอลัมน์ขวา: ปุ่มไปหน้าค้นหาด้วยชื่อโรงแรม -->
-          <button id="btnHotelPage" type="button" class="mock-btn-ghost">ค้นชื่อโรงแรม</button>
+          <!-- แถวสอง: เช็คอิน + เช็คเอาท์ (อยู่บรรทัดเดียวกัน) -->
+          <div class="field has-label"><span class="field-label">เช็คอิน</span><input type="text" id="ci" name="checkin" class="mock-input" readonly></div>
+          <div class="field has-label"><span class="field-label">เช็คเอาท์</span><input type="text" id="co" name="checkout" class="mock-input" readonly></div>
 
-          <!-- แถววันที่ (2 คอลัมน์) -->
-          <div class="two">
-            <div class="field has-label"><span class="field-label">เช็คอิน</span><input type="text" id="ci" name="checkin" class="mock-input" readonly></div>
-            <div class="field has-label"><span class="field-label">เช็คเอาท์</span><input type="text" id="co" name="checkout" class="mock-input" readonly></div>
-          </div>
+          <!-- แถวสาม: ผู้เข้าพัก (เต็มแถว) -->
+          <button type="button" id="guestBtn" class="guest-input full-row">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
 
-          <!-- ผู้เข้าพัก -->
-          <button type="button" id="guestBtn" class="guest-input">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
+          <!-- แถวสี่: ปุ่มค้นหา (เต็มแถว) -->
+          <button type="submit" class="mock-btn btn-wide full-row">ค้นหา</button>
 
-          <!-- ปุ่มค้นหา -->
-          <button type="submit" class="mock-btn btn-wide">ค้นหา</button>
-
-          <!-- hidden -->
           <input type="hidden" id="rooms"   name="rooms"   value="1">
           <input type="hidden" id="adults"  name="adults"  value="2">
           <input type="hidden" id="children"name="children"value="0">
           <input type="hidden"              name="lang"    value="th-th">
+          <!-- hidden สำหรับจำแนก เมือง/โรงแรม (หน้า index ใช้เฉพาะเมือง) -->
+          <input type="hidden" id="cityId"  name="cityId"  value="">
+          <input type="hidden" id="hotelId" name="hotelId" value="">
         </form>
       </div></div>
     </section>
@@ -176,7 +161,7 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 
   <script>
-  // เมนูภาษา (คงเดิม)
+  // เมนูภาษา
   (function(){
     const btn=document.querySelector('.lang-btn'),menu=document.querySelector('.lang-menu');
     if(!btn||!menu) return;
@@ -190,30 +175,34 @@
   <!-- Autocomplete เมือง -->
   <script>
   (function(){
-    const input   = document.getElementById('cityInput');
-    const panel   = document.getElementById('citySuggest');
-    const cityId  = document.getElementById('cityId');
-    const hotelId = document.getElementById('hotelId');
+    const input  = document.getElementById('dest');
+    const panel  = document.getElementById('suggestPanel');
+    const cityId = document.getElementById('cityId');
+    const hotelId= document.getElementById('hotelId'); // ไม่ใช้ในหน้านี้ แต่คงไว้ไม่ให้พัง form เดิม
     if(!input||!panel) return;
 
     let timer=null, aborter=null;
+    const esc=s=>(s||'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
     const show=()=>panel.style.display='block';
     const hide=()=>{ panel.style.display='none'; panel.innerHTML=''; };
-    const esc = s => (s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
-    function rowCity(it){
-      return `<div class="suggest-item" data-id="${esc(it.city_id)}" data-label="${esc(it.label)}">
-        <div><div class="s-label">${esc(it.label)}</div><div class="s-sub">เมือง</div></div>
+    function row(it){
+      const id  = it.city_id ?? it.value ?? it.id;
+      const lbl = it.city_name || it.label;
+      return `<div class="suggest-item" data-type="City" data-id="${esc(id)}" data-label="${esc(lbl)}">
+        <div class="s-label">${esc(lbl)}</div>
+        <div class="s-sub">${esc(it.subtitle||'')}</div>
       </div>`;
     }
     function bind(){
       panel.querySelectorAll('.suggest-item').forEach(el=>{
         el.addEventListener('mousedown',ev=>{
           ev.preventDefault();
-          const id  =el.getAttribute('data-id');
-          const lbl =el.getAttribute('data-label')||'';
+          const id  = el.getAttribute('data-id');
+          const lbl = el.getAttribute('data-label')||'';
           input.value=lbl;
-          cityId.value=id; hotelId.value='';
+          cityId.value=id;
+          hotelId.value=''; // ชัดเจนว่าใช้โหมดเมือง
           hide();
         });
       });
@@ -223,28 +212,31 @@
       if(!r.ok) throw new Error('HTTP '+r.status);
       return r.json();
     }
-    function doSuggest(){
-      const q=(input.value||'').trim();
+
+    input.addEventListener('input', ()=>{
       cityId.value=''; hotelId.value='';
+      const q=(input.value||'').trim();
       if(timer) clearTimeout(timer);
       if(!q){ hide(); return; }
 
-      panel.innerHTML = `<div class="suggest-group">กำลังค้นหา...</div>`; show();
+      // โชว์กำลังค้นหา
+      panel.innerHTML = `<div class="suggest-group">กำลังค้นหา...</div>`;
+      show();
 
       timer=setTimeout(async ()=>{
         aborter?.abort(); aborter=new AbortController();
         const u=encodeURIComponent(q);
         try{
-          const data = await j(`/api/city-suggest?q=${u}&lang=th-th&limit=30`, aborter.signal);
+          const data = await j(`/api/suggest?q=${u}&lang=th-th&limit=30`, aborter.signal);
           const items = (data && data.ok && Array.isArray(data.items)) ? data.items : [];
           panel.innerHTML = items.length
-            ? (`<div class="suggest-group">เมือง</div>` + items.map(rowCity).join(''))
+            ? (`<div class="suggest-group">เมือง</div>` + items.map(row).join(''))
             : `<div class="suggest-item"><div class="s-label">ไม่พบคำแนะนำ</div><div class="s-sub">ลองพิมพ์ให้ยาวขึ้น</div></div>`;
           show(); bind();
         }catch(_){ hide(); }
       }, 200);
-    }
-    input.addEventListener('input', doSuggest);
+    });
+
     document.addEventListener('click',e=>{ if(!panel.contains(e.target) && e.target!==input) hide(); });
   })();
   </script>
@@ -257,8 +249,8 @@
           co=document.getElementById('co');
     const fmtLocal=(d)=>{const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());};
     const today=new Date(),tom=new Date(Date.now()+ONE);
-
     let inP=null,outP=null;
+
     if(window.flatpickr){
       inP=flatpickr("#ci",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",
         onChange(d){if(d[0]){const n=new Date(d[0].getTime()+ONE);outP.set('minDate',n);if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0])outP.setDate(n,true);}}
@@ -273,7 +265,6 @@
       ci.addEventListener('change',()=>{const a=new Date(ci.value||fmtLocal(today)),n=new Date(a.getTime()+ONE);if(!co.value||new Date(co.value)<=a){co.value=fmtLocal(n);co.min=fmtLocal(n);}});
     }
 
-    // ผู้เข้าพัก
     let rooms=1,adults=2,children=0;
     const btn=document.getElementById('guestBtn'),
           roomsC=document.getElementById('roomsCount'),
@@ -310,27 +301,29 @@
 
     // ส่งฟอร์ม: normalize กรุงเทพฯ/กรุงเทพมหานคร -> กรุงเทพ
     document.getElementById('cgForm').addEventListener('submit',e=>{
-      const q=document.getElementById('cityInput');
+      const q=document.getElementById('dest');
       let v=(q.value||'').trim();
       if(!v) v='กรุงเทพ';
       v=v.replace(/กรุงเทพมหานคร/g,'กรุงเทพ').replace(/กรุงเทพฯ/g,'กรุงเทพ');
       q.value=v;
     });
 
-    // ปุ่มไปหน้า hotel-search.html (ส่งพารามิเตอร์ปัจจุบันไปให้ด้วย)
-    document.getElementById('btnHotelPage').addEventListener('click', ()=>{
+    // ปุ่ม "ค้นชื่อโรงแรม" → ไปหน้า search-hotel.html พร้อมพารามิเตอร์วัน/ผู้เข้าพัก
+    document.getElementById('btnHotelMode').addEventListener('click', ()=>{
+      function fmtLocalStr(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
       const inP=window.flatpickr && document.querySelector('#ci')._flatpickr;
       const outP=window.flatpickr && document.querySelector('#co')._flatpickr;
-      const fmt = (picker, fallback)=> picker && picker.selectedDates[0] ? picker.formatDate(picker.selectedDates[0],'Y-m-d') : fallback;
-      const ci = fmt(inP,  new Date().toISOString().slice(0,10));
-      const co = fmt(outP,  new Date(Date.now()+86400000).toISOString().slice(0,10));
+      let ci = inP && inP.selectedDates[0] ? inP.formatDate(inP.selectedDates[0],'Y-m-d') : fmtLocalStr(new Date());
+      let co = outP && outP.selectedDates[0] ? outP.formatDate(outP.selectedDates[0],'Y-m-d') : fmtLocalStr(new Date(Date.now()+86400000));
+      const ciD=new Date(ci+'T00:00:00'), coD=new Date(co+'T00:00:00');
+      if(coD<=ciD) co=fmtLocalStr(new Date(ciD.getTime()+86400000));
 
-      const rooms = document.getElementById('rooms').value||1;
-      const adults = document.getElementById('adults').value||2;
-      const children = document.getElementById('children').value||0;
+      const rooms=document.getElementById('rooms').value||1;
+      const adults=document.getElementById('adults').value||2;
+      const children=document.getElementById('children').value||0;
 
       const sp=new URLSearchParams({checkin:ci,checkout:co,rooms,adults,children,lang:'th-th'});
-      location.href='hotel-search.html?'+sp.toString();
+      location.href='search-hotel.html?'+sp.toString();
     });
 
     // คลิกการ์ดเมือง -> ไป search.html พร้อมค่าปัจจุบัน
