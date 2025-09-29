@@ -1,284 +1,365 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Click & Go — ค้นหาโรงแรม</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว</title>
+  <meta name="description" content="Click & Go ช่วยค้นหาและเปรียบเทียบราคาโรงแรมจากหลาย OTA พร้อมลิงก์ไปจองทันที ครอบคลุมปลายทางยอดนิยมทั้งในไทยและต่างประเทศ" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
   <style>
-    :root{
-      --teal:#0d9488;       /* ปุ่มเขียวเดิม */
-      --teal-dark:#0b7d73;
-      --border:#e5e7eb;
-      --text:#111827;
-      --muted:#6b7280;
-      --bg:#ffffff;
-      --shadow:0 10px 24px rgba(0,0,0,.08);
-      --radius:16px;
-      --radius-sm:12px;
+    .mock-wrap{ max-width:1030px; width:100%; margin:0 auto; }
+    .mock-box{ width:100%; background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.08); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+    .mock-title{ margin:0 0 6px; font-weight:800; font-size:22px; }
+    .mock-sub{ margin:0 0 12px; color:#666; }
+    .mock-row{ display:grid; gap:10px; align-items:center; grid-template-columns:1fr 1fr; }
+    .full-row{ grid-column:1 / -1; }
+    .mock-input, .guest-input, .mock-btn{ height:44px; border:1px solid #d7d7d7; border-radius:8px; padding:0 12px; background:#fff; font-size:15px; }
+    .mock-input{ width:100%; } .guest-input{ text-align:left; cursor:pointer; }
+    .mock-btn{ background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; } .mock-btn:active{ transform:translateY(1px); }
+    .btn-wide{ width:100%; }
+    .field{ position:relative; } .field-label{ position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none; }
+    .has-label .mock-input,.has-label .flatpickr-input{ height:56px; padding-top:18px; }
+
+    /* Suggestion */
+    .suggest-wrap{ position:relative; }
+    .suggest-panel{
+      position:absolute; left:0; right:0; top:calc(100% + 4px);
+      background:#fff; border:1px solid #ddd; border-radius:10px;
+      box-shadow:0 8px 20px rgba(0,0,0,.08); max-height:260px; overflow:auto;
+      z-index: 9999; display:none;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans Thai", "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      color:var(--text);
-      background:#f8fafc;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
-    .container{max-width:960px;margin:0 auto;padding:20px}
-    .card{
-      background:var(--bg);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:16px;
-    }
-    h2{margin:0 0 6px;font-size:22px;font-weight:800}
-    p.lead{margin:0 0 16px;color:var(--muted)}
-    .grid{display:grid;gap:12px}
-    @media(min-width:640px){.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr 1fr}}
-    .input{
-      height:48px;width:100%;
-      border:1px solid var(--border);
-      border-radius:var(--radius-sm);
-      padding:0 12px;
-      font-size:16px; outline: none;
-      background:#fff;
-    }
-    label{display:block;margin:6px 0 6px;color:var(--muted);font-size:14px}
-    .btn{
-      height:48px;width:100%;
-      background:var(--teal);color:#fff;
-      border:none;border-radius:var(--radius-sm);
-      font-weight:800;font-size:16px;cursor:pointer;
-    }
-    .btn:active{transform:translateY(1px)}
-    .btn:hover{background:var(--teal-dark)}
-    .ac{
-      position:relative
-    }
-    .ac-list{
-      position:absolute;left:0;right:0;top:52px;
-      background:#fff;border:1px solid var(--border);
-      border-radius:14px;box-shadow:var(--shadow);
-      max-height:280px;overflow:auto;z-index:50
-    }
-    .ac-head{padding:8px 12px;border-bottom:1px solid var(--border);font-weight:800}
-    .ac-item{
-      display:flex;justify-content:space-between;align-items:center;
-      width:100%;text-align:left;padding:10px 12px;border:0;background:transparent;cursor:pointer
-    }
-    .ac-item:hover{background:#f9fafb}
-    .muted{color:var(--muted);font-size:14px}
-    .hidden{display:none}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--border);border-radius:999px}
-    .row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-    @media(max-width:639px){.row{grid-template-columns:1fr 1fr 1fr}}
+    .suggest-group{ padding:8px 12px; font-weight:700; color:#6b7280; background:#fafafa; border-top:1px solid #f3f4f6; position:sticky; top:0 }
+    .suggest-item{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 12px; cursor:pointer; }
+    .suggest-item:hover{ background:#f6f6f6; }
+    .suggest-item[aria-disabled="true"]{ cursor:default; color:#666; }
+    .s-label{ font-weight:600; } .s-sub{ color:#777; font-size:13px; }
+
+    /* Modal */
+    .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:999; }
+    .modal{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; width:min(92vw,420px); box-shadow:0 12px 24px rgba(0,0,0,.2); z-index:1000; display:none; }
+    .modal-header,.modal-footer{ padding:14px 16px; } .modal-header{ border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
+    .modal-title{ font-weight:700; font-size:18px; } .modal-body{ padding:10px 16px 0 16px; }
+    .row-ctrl{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; } .row-ctrl + .row-ctrl{ border-top:1px dashed #eee; }
+    .label-wrap{ display:flex; flex-direction:column; gap:2px; } .label-wrap small{ color:#666; }
+    .counter{ display:flex; align-items:center; gap:10px; } .btn-ctrl{ width:36px; height:36px; border-radius:50%; border:1px solid #ccc; background:#fff; font-size:18px; cursor:pointer; }
+    .count{ min-width:20px; text-align:center; font-weight:700; }
+    .btn-outline{ border:1px solid #bbb; background:#fff; color:#333; border-radius:8px; padding:8px 14px; } .btn-primary{ border:0; background:#0ea5a0; color:#fff; border-radius:8px; padding:8px 14px; }
+    @media (max-width:640px){ .mock-row{ grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
-  <div class="container">
-    <section class="card">
-      <h2>ค้นหาดีลที่ใช่สำหรับคุณ</h2>
-      <p class="lead">พิมพ์ชื่อ<strong>เมือง</strong> หรือ <strong>โรงแรม</strong> เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา</p>
+  <header class="site-header">
+    <div class="inner">
+      <a href="index.html" class="brand"><img src="logo.png" alt="" width="40" height="40"/><span class="brand-text">Click & Go</span></a>
+      <nav class="main-nav"><a href="index.html" aria-current="page">หน้าแรก</a><a href="deals.html">โปรโมชั่น</a>
+        <div class="lang"><button class="lang-btn">ภาษา ▾</button><div class="lang-menu"><a href="#" aria-current="true">ไทย</a><a href="/en/index.html">English</a></div></div>
+      </nav>
+    </div>
+  </header>
 
-      <!-- 2 กล่อง: เมือง | โรงแรม -->
-      <div class="grid grid-2">
-        <!-- เมือง -->
-        <div class="ac" id="cityBox">
-          <input id="cityInput" class="input" placeholder="พิมพ์ชื่อเมือง" autocomplete="off" />
-          <div id="cityList" class="ac-list hidden" role="listbox" aria-label="เมือง">
-            <div class="ac-head">เมือง</div>
-            <div id="cityContent"></div>
+  <main class="container">
+    <section class="hero"><img class="hero-img" src="hero-bg.jpg" alt="Click & Go Thailand"></section>
+
+    <section style="margin:24px 0">
+      <h2 class="section-title">ค้นหาโรงแรม</h2>
+      <div class="mock-wrap"><div class="mock-box">
+        <h3 class="mock-title">ค้นหาดีลที่ใช่สำหรับคุณ</h3>
+        <p class="mock-sub">พิมพ์ชื่อเมืองหรือโรงแรม เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา</p>
+
+        <form id="cgForm" class="mock-row" method="GET" action="search.html" autocomplete="off">
+          <div class="suggest-wrap full-row">
+            <input type="text" id="dest" name="q" class="mock-input" placeholder="ปลายทาง เช่น กรุงเทพฯ หรือชื่อโรงแรม" aria-label="ปลายทาง">
+            <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="คำแนะนำ"></div>
           </div>
-        </div>
+          <div class="field has-label"><span class="field-label">เช็คอิน</span><input type="text" id="ci" name="checkin" class="mock-input" readonly></div>
+          <div class="field has-label"><span class="field-label">เช็คเอาท์</span><input type="text" id="co" name="checkout" class="mock-input" readonly></div>
+          <button type="button" id="guestBtn" class="guest-input full-row">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
+          <button type="submit" class="mock-btn btn-wide full-row">ค้นหา</button>
+          <input type="hidden" id="rooms"   name="rooms"   value="1">
+          <input type="hidden" id="adults"  name="adults"  value="2">
+          <input type="hidden" id="children"name="children"value="0">
+          <input type="hidden"              name="lang"    value="th-th">
+          <!-- hidden เมือง/โรงแรม -->
+          <input type="hidden" id="cityId"  name="cityId"  value="">
+          <input type="hidden" id="hotelId" name="hotelId" value="">
+        </form>
+      </div></div>
+    </section>
 
-        <!-- โรงแรม -->
-        <div class="ac" id="hotelBox">
-          <input id="hotelInput" class="input" placeholder="พิมพ์ชื่อโรงแรม" autocomplete="off" />
-          <div id="hotelList" class="ac-list hidden" role="listbox" aria-label="โรงแรม">
-            <div class="ac-head">โรงแรม</div>
-            <div id="hotelContent"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- วันที่ / ผู้เข้าพัก -->
-      <div class="grid grid-3" style="margin-top:12px">
-        <div>
-          <label for="checkIn">เช็คอิน</label>
-          <input type="date" id="checkIn" class="input" />
-        </div>
-        <div>
-          <label for="checkOut">เช็คเอาท์</label>
-          <input type="date" id="checkOut" class="input" />
-        </div>
-        <div>
-          <label>ผู้เข้าพัก</label>
-          <div class="row">
-            <input type="number" min="1" id="rooms" class="input" placeholder="ห้อง" title="จำนวนห้อง" />
-            <input type="number" min="1" id="adults" class="input" placeholder="ผู้ใหญ่" title="ผู้ใหญ่" />
-            <input type="number" min="0" id="children" class="input" placeholder="เด็ก" title="เด็ก" />
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top:14px">
-        <button class="btn" id="searchBtn">ค้นหา</button>
+    <!-- ไทย -->
+    <section>
+      <h2 class="section-title">ปลายทางยอดนิยมในไทย</h2>
+      <div class="city-grid">
+        <a class="city-card" href="#" data-q="กรุงเทพฯ"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="เชียงใหม่"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="พัทยา"><figure><img src="pattaya-tile.webp" alt="พัทยา"><figcaption>พัทยา</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="ภูเก็ต"><figure><img src="phuket-tile.webp" alt="ภูเก็ต"><figcaption>ภูเก็ต</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="กระบี่"><figure><img src="krabi-tile.webp" alt="กระบี่"><figcaption>กระบี่</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="หัวหิน"><figure><img src="huahin-tile.webp" alt="หัวหิน"><figcaption>หัวหิน</figcaption></figure></a>
       </div>
     </section>
+
+    <!-- ต่างประเทศ -->
+    <section>
+      <h2 class="section-title">เมืองยอดฮิตในต่างประเทศ</h2>
+      <div class="city-grid">
+        <a class="city-card" href="#" data-q="โตเกียว"><figure><img src="tokyo-tile.webp" alt="โตเกียว"><figcaption>โตเกียว</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="โซล"><figure><img src="seoul-tile.webp" alt="โซล"><figcaption>โซล</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="สิงคโปร์"><figure><img src="singapore-tile.webp" alt="สิงคโปร์"><figcaption>สิงคโปร์</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="ฮ่องกง"><figure><img src="hongkong-tile.webp" alt="ฮ่องกง"><figcaption>ฮ่องกง</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="ลอนดอน"><figure><img src="london-tile.webp" alt="ลอนดอน"><figcaption>ลอนดอน</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="ปารีส"><figure><img src="paris-tile.webp" alt="ปารีส"><figcaption>ปารีส</figcaption></figure></a>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">ทำไมต้อง Click & Go</h2>
+      <div class="features">
+        <div class="feature"><h3>ค้นหาข้อเสนอที่ดีที่สุด</h3><p>เชื่อมต่อผู้ให้บริการทั่วโลก ค้นหาราคาแบบเรียลไทม์</p></div>
+        <div class="feature"><h3>ขั้นตอนการจองไม่ยุ่งยาก</h3><p>กดลิงก์ตรงไปยังหน้าโรงแรมของพันธมิตรได้ทันที</p></div>
+        <div class="feature"><h3>รองรับทุกอุปกรณ์</h3><p>ใช้งานง่าย ไม่ว่าจะบนมือถือ แท็บเล็ต หรือคอมพิวเตอร์</p></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Guest Modal -->
+  <div id="guestBackdrop" class="modal-backdrop" aria-hidden="true"></div>
+  <div id="guestModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="guestTitle">
+    <div class="modal-header"><div id="guestTitle" class="modal-title">ผู้เข้าพัก</div><button type="button" class="btn-outline" id="btnCloseX">×</button></div>
+    <div class="modal-body">
+      <div class="row-ctrl"><div class="label-wrap"><strong>ห้อง</strong><small>จำนวนห้องพัก</small></div>
+        <div class="counter"><button class="btn-ctrl" data-type="rooms" data-op="minus">−</button><span class="count" id="roomsCount">1</span><button class="btn-ctrl" data-type="rooms" data-op="plus">+</button></div></div>
+      <div class="row-ctrl"><div class="label-wrap"><strong>ผู้ใหญ่</strong><small>อายุ 18 ปีขึ้นไป</small></div>
+        <div class="counter"><button class="btn-ctrl" data-type="adults" data-op="minus">−</button><span class="count" id="adultsCount">2</span><button class="btn-ctrl" data-type="adults" data-op="plus">+</button></div></div>
+      <div class="row-ctrl"><div class="label-wrap"><strong>เด็ก</strong><small>อายุ 0–17 ปี</small></div>
+        <div class="counter"><button class="btn-ctrl" data-type="children" data-op="minus">−</button><span class="count" id="childrenCount">0</span><button class="btn-ctrl" data-type="children" data-op="plus">+</button></div></div>
+    </div>
+    <div class="modal-footer"><button class="btn-outline" id="btnCancel">ยกเลิก</button><button class="btn-primary" id="btnSaveGuests">บันทึก</button></div>
   </div>
 
+  <footer class="site-footer"><div class="container" style="text-align:center">
+    <div class="footer-links">
+      <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> ·
+      <a href="affiliate.html">Affiliate Disclosure</a> · <a href="about.html">About us</a> ·
+      <a href="contact.html">Contact</a> · <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+    </div></div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+
   <script>
-    // ---------- helpers ----------
-    const $ = (sel) => document.querySelector(sel);
-    const todayISO = new Date().toISOString().slice(0,10);
-    const tomorrowISO = new Date(Date.now()+86400000).toISOString().slice(0,10);
-    $("#checkIn").value = todayISO;
-    $("#checkOut").value = tomorrowISO;
-    $("#rooms").value = 1;
-    $("#adults").value = 2;
-    $("#children").value = 0;
+  // เมนูภาษา
+  (function(){
+    const btn=document.querySelector('.lang-btn'),menu=document.querySelector('.lang-menu');
+    if(!btn||!menu) return;
+    function closeM(){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}
+    btn.addEventListener('click',e=>{e.stopPropagation();const o=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(o));});
+    document.addEventListener('click',closeM);
+    document.addEventListener('keydown',e=>{if(e.key==='Escape') closeM();});
+  })();
+  </script>
 
-    const debounce = (fn, ms=300) => {
-      let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), ms); }
-    };
+  <script>
+  /* ===== Autocomplete (เมือง + โรงแรม) ===== */
+  (function(){
+    const input  = document.getElementById('dest');
+    const panel  = document.getElementById('suggestPanel');
+    const cityId = document.getElementById('cityId');
+    const hotelId= document.getElementById('hotelId');
+    if(!input||!panel) return;
 
-    async function fetchJSON(url){
-      const r = await fetch(url);
-      if(!r.ok) throw new Error("HTTP "+r.status);
+    let timer=null, aborterSuggest=null, aborterHotel=null;
+    const esc=s=>(s||'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+    const show=()=>panel.style.display='block';
+    const hide=()=>{ panel.style.display='none'; panel.innerHTML=''; };
+
+    function groupTitle(t){ return `<div class="suggest-group">${t}</div>`; }
+    function rowCity(it){
+      const id=it.city_id ?? it.value ?? it.id;
+      const label=it.city_name || it.label || '';
+      return `<div class="suggest-item" data-kind="city" data-id="${esc(id)}" data-label="${esc(label)}">
+        <div class="s-label">${esc(label)}</div><div class="s-sub">${esc(it.subtitle||'')}</div></div>`;
+    }
+    function rowHotel(it){
+      const id=String(it.hotel_id||it.id||'');
+      const label=String(it.label||it.name||'');
+      return `<div class="suggest-item" data-kind="hotel" data-id="${esc(id)}" data-label="${esc(label)}">
+        <div class="s-label">${esc(label)}</div><div class="s-sub">โรงแรม</div></div>`;
+    }
+    function bindClicks(){
+      panel.querySelectorAll('.suggest-item[data-kind]').forEach(el=>{
+        el.addEventListener('mousedown',ev=>{
+          ev.preventDefault();
+          const kind=el.getAttribute('data-kind');
+          const id  =el.getAttribute('data-id');
+          const lbl =el.getAttribute('data-label')||'';
+          input.value=lbl;
+          if(kind==='hotel'){ hotelId.value=id; cityId.value=''; }
+          else { cityId.value=id; hotelId.value=''; }
+          hide();
+        });
+      });
+    }
+
+    function setLoading(){
+      panel.innerHTML = `<div class="suggest-item" aria-disabled="true">
+        <div class="s-label">กำลังค้นหา</div><div class="s-sub">โปรดรอสักครู่…</div></div>`;
+      show();
+    }
+
+    async function fetchJSON(url, signal){
+      const r = await fetch(url, { signal, cache:'no-store' });
+      if(!r.ok) throw new Error('HTTP '+r.status);
       return r.json();
     }
 
-    function showLoading(target){
-      target.innerHTML = '<div class="muted" style="padding:12px">กำลังค้นหา…</div>';
-    }
-    function showEmpty(target){
-      target.innerHTML = '<div class="muted" style="padding:12px">ไม่พบคำแนะนำ</div>';
-    }
+    input.addEventListener('input', ()=>{
+      cityId.value=''; hotelId.value='';
+      const q=(input.value||'').trim();
+      if(timer) clearTimeout(timer);
+      if(!q){ hide(); return; }
 
-    // ---------- state ----------
-    let selectedCity = null;   // {id,name}
-    let selectedHotel = null;  // {id,name,cityId}
+      timer=setTimeout(async ()=>{
+        // แสดงสถานะกำลังค้นหา
+        setLoading();
 
-    // ---------- city autocomplete ----------
-    const cityInput = $("#cityInput");
-    const cityList = $("#cityList");
-    const cityContent = $("#cityContent");
-    function openCityList(){ cityList.classList.remove("hidden"); }
-    function closeCityList(){ cityList.classList.add("hidden"); }
+        aborterSuggest?.abort(); aborterHotel?.abort();
+        aborterSuggest = new AbortController();
+        aborterHotel   = new AbortController();
+        const enc=encodeURIComponent(q);
 
-    const runCitySuggest = async (q)=>{
-      if(!q || q.trim().length<2){ cityContent.innerHTML=''; showEmpty(cityContent); openCityList(); return; }
-      openCityList(); showLoading(cityContent);
-      try{
-        const data = await fetchJSON(`/api/city-suggest?q=${encodeURIComponent(q)}&lang=th&limit=20`);
-        const items = (data.items||[]).map(it=>({ id: it.id || it.cityId, name: it.name || it.cityName }));
-        if(items.length===0){ showEmpty(cityContent); return; }
-        cityContent.innerHTML = items.map(it =>
-          `<button type="button" class="ac-item" data-id="${it.id}" data-name="${it.name}">
-             <span class="truncate">${it.name}</span><span class="muted">เมือง</span>
-           </button>`
-        ).join("");
-      }catch(e){
-        showEmpty(cityContent);
-      }
-    };
-    const citySuggest = debounce(runCitySuggest, 300);
+        let html='';
 
-    cityInput.addEventListener("input", e=>{
-      selectedCity = null;
-      citySuggest(e.target.value);
-    });
-    cityInput.addEventListener("focus", ()=>{ if(cityContent.innerHTML) openCityList(); });
+        // 1) เมืองจาก /api/suggest (แสดงก่อน)
+        try{
+          const s = await fetchJSON(`/api/suggest?q=${enc}&lang=th-th&limit=15&type=city`, aborterSuggest.signal);
+          const cities = (s && s.ok && Array.isArray(s.items)) ? s.items : [];
+          if(cities.length){
+            html += groupTitle('เมือง') + cities.map(rowCity).join('');
+            panel.innerHTML = html; show(); bindClicks();
+          }
+        }catch(_){ /* เงียบ */ }
 
-    cityContent.addEventListener("click", e=>{
-      const btn = e.target.closest("button.ac-item");
-      if(!btn) return;
-      selectedCity = { id: btn.dataset.id, name: btn.dataset.name };
-      cityInput.value = selectedCity.name;
-      closeCityList();
+        // 2) โรงแรมจาก /api/hotel-search (เติมภายหลัง)
+        try{
+          const h = await fetchJSON(`/api/hotel-search?q=${enc}&lang=th&limit=10`, aborterHotel.signal);
+          const hotels = (h && h.ok && Array.isArray(h.items)) ? h.items : [];
+          if(hotels.length){
+            html += groupTitle('โรงแรม') + hotels.map(rowHotel).join('');
+            panel.innerHTML = html; show(); bindClicks();
+          }else if(!html){
+            panel.innerHTML=`<div class="suggest-item" aria-disabled="true"><div class="s-label">ไม่พบคำแนะนำ</div><div class="s-sub">ลองพิมพ์ให้ยาวขึ้น</div></div>`;
+            show();
+          }
+        }catch(_){
+          if(!html){
+            panel.innerHTML=`<div class="suggest-item" aria-disabled="true"><div class="s-label">ไม่พบคำแนะนำ</div><div class="s-sub">ลองพิมพ์ให้ยาวขึ้น</div></div>`;
+            show();
+          }
+        }
+      }, 220);
     });
 
-    // ---------- hotel autocomplete ----------
-    const hotelInput = $("#hotelInput");
-    const hotelList = $("#hotelList");
-    const hotelContent = $("#hotelContent");
-    function openHotelList(){ hotelList.classList.remove("hidden"); }
-    function closeHotelList(){ hotelList.classList.add("hidden"); }
+    document.addEventListener('click',e=>{ if(!panel.contains(e.target) && e.target!==input) hide(); });
+  })();
+  </script>
 
-    const runHotelSuggest = async (q)=>{
-      if(!q || q.trim().length<2){ hotelContent.innerHTML=''; showEmpty(hotelContent); openHotelList(); return; }
-      openHotelList(); showLoading(hotelContent);
-      try{
-        const data = await fetchJSON(`/api/hotel-suggest?q=${encodeURIComponent(q)}&lang=th&limit=20`);
-        const items = (data.items||[]).map(it=>({
-          id: it.id || it.hotelId,
-          name: it.name || it.hotelName,
-          cityId: it.cityId || it.agodaCityId || (it.city&&it.city.id) || ""
-        }));
-        if(items.length===0){ showEmpty(hotelContent); return; }
-        hotelContent.innerHTML = items.map(it =>
-          `<button type="button" class="ac-item"
-                   data-id="${it.id}" data-name="${it.name}" data-city="${it.cityId}">
-             <span class="truncate">${it.name}</span><span class="muted">โรงแรม</span>
-           </button>`
-        ).join("");
-      }catch(e){
-        showEmpty(hotelContent);
-      }
-    };
-    const hotelSuggest = debounce(runHotelSuggest, 300);
+  <script>
+  // วันที่ + ผู้เข้าพัก + การส่งฟอร์ม + การ์ดเมือง
+  (function(){
+    const ONE=86400000,
+          ci=document.getElementById('ci'),
+          co=document.getElementById('co');
+    const fmtLocal=(d)=>{const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());};
+    const today=new Date(),tom=new Date(Date.now()+ONE);
+    let inP=null,outP=null;
 
-    hotelInput.addEventListener("input", e=>{
-      selectedHotel = null;
-      hotelSuggest(e.target.value);
-    });
-    hotelInput.addEventListener("focus", ()=>{ if(hotelContent.innerHTML) openHotelList(); });
-
-    hotelContent.addEventListener("click", e=>{
-      const btn = e.target.closest("button.ac-item");
-      if(!btn) return;
-      selectedHotel = { id: btn.dataset.id, name: btn.dataset.name, cityId: btn.dataset.city || "" };
-      hotelInput.value = selectedHotel.name;
-      closeHotelList();
-    });
-
-    // ปิดลิสต์เมื่อคลิกรอบนอก
-    document.addEventListener("click", (e)=>{
-      if(!$("#cityBox").contains(e.target)) closeCityList();
-      if(!$("#hotelBox").contains(e.target)) closeHotelList();
-    });
-
-    // ---------- search ----------
-    $("#searchBtn").addEventListener("click", ()=>{
-      const params = new URLSearchParams({
-        checkIn: $("#checkIn").value,
-        checkOut: $("#checkOut").value,
-        rooms: String($("#rooms").value || 1),
-        adults: String($("#adults").value || 2),
-        children: String($("#children").value || 0),
+    if(window.flatpickr){
+      inP=flatpickr("#ci",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",
+        onChange(d){if(d[0]){const n=new Date(d[0].getTime()+ONE);outP.set('minDate',n);if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0])outP.setDate(n,true);}}
       });
+      outP=flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:tom});
+      inP.setDate(today,true); outP.setDate(tom,true);
+    }else{
+      ci.removeAttribute('readonly'); co.removeAttribute('readonly');
+      ci.type='date'; co.type='date';
+      ci.value=fmtLocal(today); ci.min=fmtLocal(today);
+      co.value=fmtLocal(tom);   co.min=fmtLocal(tom);
+      ci.addEventListener('change',()=>{const a=new Date(ci.value||fmtLocal(today)),n=new Date(a.getTime()+ONE);if(!co.value||new Date(co.value)<=a){co.value=fmtLocal(n);co.min=fmtLocal(n);}});
+    }
 
-      if(selectedHotel){ // ให้โรงแรมสำคัญกว่า
-        params.set("mode","hotel");
-        params.set("hotelId", selectedHotel.id || "");
-        params.set("hotelName", selectedHotel.name || "");
-        if(selectedHotel.cityId) params.set("cityId", selectedHotel.cityId);
-        window.location.href = `/search?${params.toString()}`;
-        return;
-      }
-
-      if(selectedCity || cityInput.value.trim()){
-        params.set("mode","city");
-        if(selectedCity && selectedCity.id) params.set("cityId", selectedCity.id);
-        params.set("cityName", (selectedCity ? selectedCity.name : cityInput.value).trim());
-        window.location.href = `/search?${params.toString()}`;
-        return;
-      }
-
-      alert("โปรดพิมพ์และเลือกเมืองหรือโรงแรมก่อนค้นหา");
+    let rooms=1,adults=2,children=0;
+    const btn=document.getElementById('guestBtn'),
+          roomsC=document.getElementById('roomsCount'),
+          adultsC=document.getElementById('adultsCount'),
+          childrenC=document.getElementById('childrenCount'),
+          hR=document.getElementById('rooms'),
+          hA=document.getElementById('adults'),
+          hC=document.getElementById('children'),
+          modal=document.getElementById('guestModal'),
+          backdrop=document.getElementById('guestBackdrop');
+    function open(){roomsC.textContent=rooms;adultsC.textContent=adults;childrenC.textContent=children;modal.style.display='block';backdrop.style.display='block';}
+    function close(){modal.style.display='none';backdrop.style.display='none';}
+    function upd(){btn.textContent=`${rooms} ห้อง, ${adults} ผู้ใหญ่, ${children} เด็ก`; }
+    upd();
+    btn.addEventListener('click',open);
+    document.getElementById('btnCloseX').addEventListener('click',close);
+    document.getElementById('btnCancel').addEventListener('click',close);
+    backdrop.addEventListener('click',close);
+    document.querySelectorAll('.btn-ctrl').forEach(b=>{
+      b.addEventListener('click',()=>{
+        const t=b.getAttribute('data-type'),op=b.getAttribute('data-op');
+        let v=0,min=0,max=10;
+        if(t==='rooms'){v=rooms;min=1}
+        if(t==='adults'){v=adults;min=1}
+        if(t==='children'){v=children;min=0}
+        if(op==='plus'&&v<max)v++;
+        if(op==='minus'&&v>min)v--;
+        if(t==='rooms'){rooms=v;roomsC.textContent=v}
+        if(t==='adults'){adults=v;adultsC.textContent=v}
+        if(t==='children'){children=v;childrenC.textContent=v}
+      });
     });
+    document.getElementById('btnSaveGuests').addEventListener('click',()=>{hR.value=rooms;hA.value=adults;hC.value=children;upd();close();});
+
+    // ส่งฟอร์ม: normalize กรุงเทพฯ/กรุงเทพมหานคร -> กรุงเทพ
+    document.getElementById('cgForm').addEventListener('submit',e=>{
+      const q=document.getElementById('dest');
+      let v=(q.value||'').trim();
+      if(!v) v='กรุงเทพ';
+      v=v.replace(/กรุงเทพมหานคร/g,'กรุงเทพ').replace(/กรุงเทพฯ/g,'กรุงเทพ');
+      q.value=v;
+    });
+
+    // คลิกการ์ดเมือง -> ไป search.html พร้อมค่าปัจจุบัน
+    function fmtLocalStr(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+    document.querySelectorAll('.city-card[data-q]').forEach(a=>{
+      a.addEventListener('click',ev=>{
+        ev.preventDefault();
+        let q=a.getAttribute('data-q')||'';
+        q=q.replace(/กรุงเทพมหานคร/g,'กรุงเทพ').replace(/กรุงเทพฯ/g,'กรุงเทพ');
+
+        const inP=window.flatpickr && document.querySelector('#ci')._flatpickr;
+        const outP=window.flatpickr && document.querySelector('#co')._flatpickr;
+        let ci = inP && inP.selectedDates[0] ? inP.formatDate(inP.selectedDates[0],'Y-m-d') : fmtLocalStr(new Date());
+        let co = outP && outP.selectedDates[0] ? outP.formatDate(outP.selectedDates[0],'Y-m-d') : fmtLocalStr(new Date(Date.now()+86400000));
+
+        const ciD=new Date(ci+'T00:00:00'), coD=new Date(co+'T00:00:00');
+        if(coD<=ciD) co=fmtLocalStr(new Date(ciD.getTime()+86400000));
+
+        const rooms=document.getElementById('rooms').value||1;
+        const adults=document.getElementById('adults').value||2;
+        const children=document.getElementById('children').value||0;
+
+        const sp=new URLSearchParams({q,checkin:ci,checkout:co,rooms,adults,children,lang:'th-th'});
+        location.href='search.html?'+sp.toString();
+      });
+    });
+  })();
   </script>
 </body>
 </html>
