@@ -160,7 +160,7 @@
   })();
   </script>
 
-  <!-- Autocomplete (เฉพาะเมือง – จาก /api/suggest) -->
+  <!-- Autocomplete (เมือง – /api/suggest พร้อม fallback lang) -->
   <script>
   (function(){
     const input=document.getElementById('dest');
@@ -185,11 +185,21 @@
     function renderLoading(){ panel.innerHTML='<div class="suggest-loading">กำลังค้นหา…</div>'; show(); }
 
     async function fetchCities(q){
-      const u=encodeURIComponent(q);
-      const r=await fetch(`/api/suggest?q=${u}&lang=th-th&limit=8`);
-      const j=await r.json().catch(()=>({}));
-      const items=(j&&j.ok&&Array.isArray(j.items))?j.items:[];
-      return items.map(x=>({id:x.city_id||x.id,label:x.label,subtitle:x.subtitle||''}));
+      const tryOnce = async (param) => {
+        const r = await fetch('/api/suggest?' + new URLSearchParams(param));
+        const j = await r.json().catch(()=>({}));
+        const items = (j && j.ok && Array.isArray(j.items)) ? j.items : [];
+        return items.map(x=>({id:x.city_id||x.id,label:x.label,subtitle:x.subtitle||''}));
+      };
+      const u = encodeURIComponent(q); // ไม่ได้ใช้ แต่กันใจ
+      // 1) th-th
+      let items = await tryOnce({ q, lang: 'th-th', limit: '8' });
+      if (items.length) return items;
+      // 2) th
+      items = await tryOnce({ q, lang: 'th', limit: '8' });
+      if (items.length) return items;
+      // 3) ไม่ใส่ lang
+      return await tryOnce({ q, limit: '8' });
     }
 
     function render(cities){
