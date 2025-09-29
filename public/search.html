@@ -184,7 +184,7 @@
 
 <dialog id="dlgPrice">
   <h3 class="dlg-title">ช่วงราคา</h3>
-  <div class="range-wrap">
+  <div class="range-wrap>
     <div class="range-labels">
       <div>฿<span id="pvMin">0</span></div>
       <div>฿<span id="pvMax">200,000</span></div>
@@ -247,6 +247,10 @@
   };
   const draft = JSON.parse(JSON.stringify(state));
 
+  // 🔧 Normalize คำค้นหา (กรุงเทพฯ/กรุงเทพมหานคร → กรุงเทพ)
+  function normalizeQ(q){ return String(q||'').replace(/กรุงเทพมหานคร|กรุงเทพฯ/g,'กรุงเทพ').trim(); }
+  state.q = normalizeQ(state.q);
+
   // subtitle: 2 บรรทัด, ผู้เข้าพักเป็นบรรทัดล่างและ nowrap
   (function setSubtitle(){
     const ci = (state.checkin || '').replaceAll('-', '/');
@@ -267,7 +271,6 @@
     }catch(_){ return use0 ? String(Math.round(val)) : String(val); }
   }
   function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-  function normalizeQ(q){ return String(q||'').replace(/กรุงเทพฯ/g,'กรุงเทพ').trim(); }
 
   function updateChips(){
     $('#chipSortV').textContent = draft.sort==='price_asc'?'ราคาต่ำ → สูง':draft.sort==='price_desc'?'ราคาสูง → ต่ำ':'แนะนำ';
@@ -283,7 +286,6 @@
     Object.entries({
       q: state.q || '',
       cityId: state.cityId || '',
-      // ✅ ส่ง hid กลับลง URL ถ้ามี (รองรับทั้งสองชื่อขาเข้า)
       hid: state.hid || '',
       city: state.city || '',
       country: state.country || '',
@@ -307,10 +309,26 @@
     history.replaceState({}, '', u);
   }
 
+  // ✅ ปรับฟังก์ชัน resolve ให้ “โฟกัสเมือง” ก่อน ด้วย /api/city-suggest
   async function resolveDestinationIfNeeded(){
     if ((state.cityId || state.hid) || !state.q) return;
+
+    const q = normalizeQ(state.q);
+    // 1) ลองแมปเป็น "เมือง" ก่อน
     try{
-      const url = `/api/suggest?q=${encodeURIComponent(state.q)}&lang=${encodeURIComponent(state.lang)}&type=mixed`;
+      const u = `/api/city-suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(state.lang)}&limit=1`;
+      const r = await fetch(u, { cache:'no-store' });
+      const d = await r.json();
+      if (d && d.ok && Array.isArray(d.items) && d.items[0] && d.items[0].city_id){
+        state.cityId = String(d.items[0].city_id);
+        state.city   = d.items[0].label || state.city;
+        return;
+      }
+    }catch(_){}
+
+    // 2) เผื่อกรณีเป็นชื่อโรงแรมจริง ๆ ให้ fallback ไป suggest แบบเดิม
+    try{
+      const url = `/api/suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(state.lang)}&type=mixed`;
       const res = await fetch(url, {cache:'no-store'});
       const data = await res.json();
       if (data && data.ok && Array.isArray(data.items) && data.items.length){
@@ -370,8 +388,8 @@
 
     const api = new URL('/api/search', location.origin);
     const p = api.searchParams;
-    if (state.hid) p.set('hid', state.hid);            // ✅ แน่ใจว่าส่ง hid เข้า API
-    else if (state.cityId) p.set('cityId', state.cityId);
+    if (state.hid) p.set('hid', state.hid);            // ✅ ส่ง hid เข้า API
+    else if (state.cityId) p.set('cityId', state.cityId); // ✅ จะเข้ากรณีนี้หลัง resolve เมืองสำเร็จ → ได้ 30 การ์ด
     else if (state.q) p.set('q', state.q);
     ['checkin','checkout','rooms','adults','children','lang','currency','page','sort',
      'starsMin','scoreMin','priceMin','priceMax'
