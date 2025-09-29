@@ -29,7 +29,6 @@
     .suggest-item:hover{ background:#f6f6f6; }
     .s-label{ font-weight:600; } .s-sub{ color:#777; font-size:13px; }
     .suggest-group{ padding:8px 12px; font-weight:700; color:#6b7280; border-top:1px solid #f3f4f6; background:#fafafa; }
-    .suggest-panel .suggest-item:first-child{ border-top:none; }
 
     .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:999; }
     .modal{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; width:min(92vw,420px); box-shadow:0 12px 24px rgba(0,0,0,.2); z-index:1000; display:none; }
@@ -62,6 +61,7 @@
         <h3 class="mock-title">ค้นหาดีลที่ใช่สำหรับคุณ</h3>
         <p class="mock-sub">พิมพ์ชื่อเมืองหรือโรงแรม เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา</p>
 
+        <!-- ส่งแบบ GET ไป search.html เสมอ -->
         <form id="cgForm" class="mock-row" method="GET" action="search.html" autocomplete="off">
           <div class="suggest-wrap full-row">
             <input type="text" id="dest" name="q" class="mock-input" placeholder="ปลายทาง เช่น กรุงเทพฯ หรือชื่อโรงแรม" aria-label="ปลายทาง">
@@ -75,6 +75,7 @@
           <input type="hidden" id="adults"  name="adults"  value="2">
           <input type="hidden" id="children"name="children"value="0">
           <input type="hidden"              name="lang"    value="th-th">
+          <!-- hidden สำหรับจำแนก เมือง/โรงแรม -->
           <input type="hidden" id="cityId"  name="cityId"  value="">
           <input type="hidden" id="hotelId" name="hotelId" value="">
         </form>
@@ -144,7 +145,7 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 
   <script>
-  /* เมนูภาษา */
+  // เมนูภาษา
   (function(){
     const btn=document.querySelector('.lang-btn'),menu=document.querySelector('.lang-menu');
     if(!btn||!menu) return;
@@ -153,107 +154,102 @@
     document.addEventListener('click',closeM);
     document.addEventListener('keydown',e=>{if(e.key==='Escape') closeM();});
   })();
+  </script>
 
-  /* ===== Autocomplete (เมือง + โรงแรม) ===== */
+  <script>
+  /* ===== Autocomplete (เมือง + โรงแรม) — Fallback เมื่อ /api/hotel-search พัง ===== */
   (function(){
-    const input = document.getElementById('dest');
-    const panel = document.getElementById('suggestPanel');
+    const input  = document.getElementById('dest');
+    const panel  = document.getElementById('suggestPanel');
     const cityId = document.getElementById('cityId');
-    const hotelId = document.getElementById('hotelId');
-    if (!input || !panel) return;
+    const hotelId= document.getElementById('hotelId');
+    if(!input||!panel) return;
 
-    let timer=null, inflight=null;
+    let timer=null, aborter=null;
+    const esc=s=>(s||'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));
+    const show=()=>panel.style.display='block';
+    const hide=()=>{ panel.style.display='none'; panel.innerHTML=''; };
 
-    const show = () => (panel.style.display='block');
-    const hide = () => { panel.style.display='none'; panel.innerHTML=''; };
-    const esc = s => (s||'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));
-
-    // helper: fetch with timeout + error handling
-    async function fetchJSON(url, {signal, timeout=6000}={}){
-      const ctrl = new AbortController();
-      const t = setTimeout(()=>ctrl.abort('timeout'), timeout);
-      try{
-        const res = await fetch(url, {signal: signal ?? ctrl.signal});
-        if(!res.ok){ throw new Error('HTTP '+res.status); }
-        return await res.json();
-      } finally {
-        clearTimeout(t);
-      }
+    function itemHTML(it){
+      return `<div class="suggest-item" data-type="${it.type}" data-id="${esc(it.id)}" data-label="${esc(it.label)}">
+        <div class="s-label">${esc(it.label)}</div>
+        <div class="s-sub">${esc(it.subtitle||'')}</div>
+      </div>`;
+    }
+    function bindClick(){
+      panel.querySelectorAll('.suggest-item').forEach(el=>{
+        el.addEventListener('mousedown',ev=>{
+          ev.preventDefault();
+          const type=el.getAttribute('data-type'), id=el.getAttribute('data-id'), label=el.getAttribute('data-label')||'';
+          input.value=label;
+          if(type==='hotel'){ hotelId.value=id; cityId.value=''; }
+          else { cityId.value=id; hotelId.value=''; }
+          hide();
+        });
+      });
+    }
+    async function fetchJSON(url, signal){
+      const res = await fetch(url, { signal });
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      return res.json();
     }
 
+    // ล้างค่าประจำเมื่อพิมพ์
     input.addEventListener('input', ()=>{
       cityId.value=''; hotelId.value='';
-      const q = (input.value||'').trim();
+      const q=(input.value||'').trim();
       if(timer) clearTimeout(timer);
       if(!q){ hide(); return; }
 
-      timer = setTimeout(async ()=>{
+      timer=setTimeout(async ()=>{
+        aborter?.abort(); aborter=new AbortController();
+        const u=encodeURIComponent(q);
+
+        let cities=[], hotels=[], html='';
+
+        // ดึง "เมือง" ก่อนเสมอ
         try{
-          // ยกเลิก request เก่า
-          inflight?.abort?.();
-          inflight = new AbortController();
-
-          const U = encodeURIComponent(q);
-          const urlCity  = `${location.origin}/api/suggest?q=${U}&lang=th-th&limit=7`;
-          const urlHotel = `${location.origin}/api/hotel-search?q=${U}&lang=th&limit=7`;
-
-          const [cj,hj] = await Promise.allSettled([
-            fetchJSON(urlCity,  {signal: inflight.signal}),
-            fetchJSON(urlHotel, {signal: inflight.signal})
-          ]);
-
-          const cities = (cj.status==='fulfilled' && cj.value && cj.value.ok && Array.isArray(cj.value.items))
-            ? cj.value.items.map(x=>({type:'city', id:x.city_id||x.id, label:x.label, subtitle:x.subtitle||''}))
-            : [];
-
-          const hotels = (hj.status==='fulfilled' && hj.value && hj.value.ok && Array.isArray(hj.value.items))
-            ? hj.value.items.map(x=>({type:'hotel', id:x.hotel_id, label:x.label, subtitle:''}))
-            : [];
-
-          if (!cities.length && !hotels.length){
-            panel.innerHTML = `<div class="suggest-item" tabindex="-1"><div class="s-label">ไม่พบคำแนะนำ</div><div class="s-sub">ลองพิมพ์ชื่อเมือง/โรงแรมให้ยาวขึ้น</div></div>`;
-            show(); return;
+          const c = await fetchJSON(`/api/suggest?q=${u}&lang=th-th&limit=7`, aborter.signal);
+          if(c && c.ok && Array.isArray(c.items)){
+            cities = c.items.map(x=>({type:'city', id:x.city_id||x.id, label:x.label, subtitle:x.subtitle||''}));
           }
+        }catch(e){ /* เงียบไว้ */ }
 
-          let html='';
-          if(cities.length){
-            html += `<div class="suggest-group">เมือง</div>`;
-            html += cities.map(it=>`<div class="suggest-item" data-type="city" data-id="${esc(it.id)}" data-label="${esc(it.label)}"><div class="s-label">${esc(it.label)}</div><div class="s-sub">${esc(it.subtitle||'')}</div></div>`).join('');
+        if(cities.length){
+          html += `<div class="suggest-group">เมือง</div>` + cities.map(itemHTML).join('');
+          panel.innerHTML=html; show(); bindClick();
+        }
+
+        // ยิงหา "โรงแรม" เพิ่ม — ถ้าพัง ไม่กระทบเมือง
+        try{
+          const h = await fetchJSON(`/api/hotel-search?q=${u}&lang=th&limit=7`, aborter.signal);
+          if(h && h.ok && Array.isArray(h.items)){
+            hotels = h.items.map(x=>({type:'hotel', id:x.hotel_id, label:x.label, subtitle:''}));
           }
+        }catch(e){ /* เงียบไว้ */ }
+
+        if(cities.length || hotels.length){
           if(hotels.length){
-            html += `<div class="suggest-group">โรงแรม</div>`;
-            html += hotels.map(it=>`<div class="suggest-item" data-type="hotel" data-id="${esc(it.id)}" data-label="${esc(it.label)}"><div class="s-label">${esc(it.label)}</div><div class="s-sub"></div></div>`).join('');
+            html += `<div class="suggest-group">โรงแรม</div>` + hotels.map(itemHTML).join('');
           }
-          panel.innerHTML = html; show();
-
-          panel.querySelectorAll('.suggest-item').forEach(el=>{
-            el.addEventListener('mousedown',ev=>{
-              ev.preventDefault();
-              const type=el.getAttribute('data-type'), id=el.getAttribute('data-id'), label=el.getAttribute('data-label')||'';
-              input.value=label;
-              if(type==='hotel'){ hotelId.value=id; cityId.value=''; }
-              else { cityId.value=id; hotelId.value=''; }
-              hide();
-            });
-          });
-        }catch(err){
-          console.warn('[autocomplete] error', err);
-          panel.innerHTML = `<div class="suggest-item" tabindex="-1"><div class="s-label">เชื่อมต่อไม่ได้</div><div class="s-sub">โปรดลองใหม่ หรือตรวจ API /api/suggest</div></div>`;
+          panel.innerHTML=html; show(); bindClick();
+        }else{
+          panel.innerHTML=`<div class="suggest-item" tabindex="-1"><div class="s-label">ไม่พบคำแนะนำ</div><div class="s-sub">ลองพิมพ์ให้ยาวขึ้น เช่น “กรุงเ…”</div></div>`;
           show();
         }
       }, 220);
     });
 
-    document.addEventListener('click', e=>{
-      if(!panel.contains(e.target) && e.target!==input) hide();
-    });
+    document.addEventListener('click',e=>{ if(!panel.contains(e.target) && e.target!==input) hide(); });
   })();
   </script>
 
   <script>
-  /* วันที่ + ผู้เข้าพัก + เมืองการ์ด */
+  // วันที่ + ผู้เข้าพัก + การส่งฟอร์ม + การ์ดเมือง
   (function(){
-    const ONE=86400000, ci=document.getElementById('ci'), co=document.getElementById('co');
+    const ONE=86400000,
+          ci=document.getElementById('ci'),
+          co=document.getElementById('co');
     const fmtLocal=(d)=>{const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());};
     const today=new Date(),tom=new Date(Date.now()+ONE);
     let inP=null,outP=null;
@@ -306,7 +302,7 @@
     });
     document.getElementById('btnSaveGuests').addEventListener('click',()=>{hR.value=rooms;hA.value=adults;hC.value=children;upd();close();});
 
-    // กัน q ว่าง + normalize "กรุงเทพมหานคร" -> "กรุงเทพ"
+    // ส่งฟอร์ม: normalize "กรุงเทพฯ" -> "กรุงเทพ"
     document.getElementById('cgForm').addEventListener('submit',e=>{
       const q=document.getElementById('dest');
       let v=(q.value||'').trim();
