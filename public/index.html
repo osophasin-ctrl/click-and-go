@@ -15,18 +15,24 @@
     .mock-box{ width:100%; background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.08); padding:16px; display:flex; flex-direction:column; justify-content:center; }
     .mock-title{ margin:0 0 6px; font-weight:800; font-size:22px; }
     .mock-sub{ margin:0 0 12px; color:#666; }
-    /* บังคับ 2 คอลัมน์เสมอ */
-    .mock-row{ display:grid !important; gap:10px; align-items:center; grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important; }
+    /* แถวกริด: คอลัมน์ซ้ายยืดเต็ม, คอลัมน์ขวากว้างเท่าปุ่ม */
+    .mock-row{ display:grid; gap:10px; align-items:center; grid-template-columns:minmax(0,1fr) auto; }
     .full-row{ grid-column:1 / -1; }
     .mock-input, .guest-input, .mock-btn{ height:44px; border:1px solid #d7d7d7; border-radius:8px; padding:0 12px; background:#fff; font-size:15px; }
-    .mock-input{ width:100%; } .guest-input{ text-align:left; cursor:pointer; }
-    .mock-btn{ background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; white-space:nowrap; }
+    .mock-input{ width:100%; }
+    .guest-input{ text-align:left; cursor:pointer; }
+    .mock-btn{ background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; }
     .mock-btn:active{ transform:translateY(1px); }
     .btn-wide{ width:100%; }
-    .field{ position:relative; } .field-label{ position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none; }
+    /* ปุ่มค้นชื่อโรงแรมให้อยู่บรรทัดเดียวกับช่องเมือง */
+    .inline-btn{ width:auto !important; padding:0 14px; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; }
+
+    /* label ซ้อนใน input วันที่ */
+    .field{ position:relative; }
+    .field-label{ position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none; }
     .has-label .mock-input,.has-label .flatpickr-input{ height:56px; padding-top:18px; }
 
-    /* Suggestion เมือง */
+    /* Suggestion */
     .suggest-wrap{ position:relative; }
     .suggest-panel{
       position:absolute; left:0; right:0; top:calc(100% + 4px);
@@ -39,7 +45,7 @@
     .suggest-item:hover{ background:#f6f6f6; }
     .s-label{ font-weight:600; } .s-sub{ color:#777; font-size:13px; }
 
-    /* Modal ผู้เข้าพัก */
+    /* โมดัลผู้เข้าพัก */
     .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:999; }
     .modal{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; width:min(92vw,420px); box-shadow:0 12px 24px rgba(0,0,0,.2); z-index:1000; display:none; }
     .modal-header,.modal-footer{ padding:14px 16px; } .modal-header{ border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
@@ -85,14 +91,14 @@
           <p class="mock-sub">พิมพ์ชื่อเมือง เลือกวันที่ ระบุผู้เข้าพัก หรือไปที่โหมดค้นชื่อโรงแรม</p>
 
           <form id="cgForm" class="mock-row" method="GET" action="search.html" autocomplete="off">
-            <!-- แถว 1: เมือง + ปุ่มไปหน้า hotel search -->
+            <!-- ช่องเมือง + ปุ่มค้นชื่อโรงแรม (บรรทัดเดียว) -->
             <div class="suggest-wrap">
               <input type="text" id="cityInput" class="mock-input" placeholder="พิมพ์ชื่อเมือง..." aria-label="พิมพ์ชื่อเมือง">
               <div id="citySuggest" class="suggest-panel" role="listbox" aria-label="คำแนะนำเมือง"></div>
             </div>
-            <button type="button" id="btnHotelMode" class="mock-btn" aria-label="ไปค้นหาจากชื่อโรงแรม">ค้นชื่อโรงแรม</button>
+            <button type="button" id="btnHotelMode" class="mock-btn inline-btn" aria-label="ไปหน้าโหมดค้นหาโรงแรมโดยชื่อ">ค้นชื่อโรงแรม</button>
 
-            <!-- แถว 2: เช็คอิน + เช็คเอาท์ -->
+            <!-- วันที่ (บรรทัดเดียว) -->
             <div class="field has-label">
               <span class="field-label">เช็คอิน</span>
               <input type="text" id="ci" name="checkin" class="mock-input" readonly>
@@ -102,17 +108,16 @@
               <input type="text" id="co" name="checkout" class="mock-input" readonly>
             </div>
 
-            <!-- แถว 3: ผู้เข้าพัก -->
+            <!-- ผู้เข้าพัก + ปุ่มค้นหา -->
             <button type="button" id="guestBtn" class="guest-input full-row">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
-            <!-- แถว 4: ปุ่มค้นหา -->
             <button type="submit" class="mock-btn btn-wide full-row">ค้นหา</button>
 
             <!-- hidden ส่งค่า -->
-            <input type="hidden" id="rooms"   name="rooms"   value="1">
-            <input type="hidden" id="adults"  name="adults"  value="2">
-            <input type="hidden" id="children"name="children"value="0">
+            <input type="hidden" id="rooms"    name="rooms"    value="1">
+            <input type="hidden" id="adults"   name="adults"   value="2">
+            <input type="hidden" id="children" name="children" value="0">
             <input type="hidden" name="lang" value="th-th">
-            <input type="hidden" id="cityId"  name="cityId"  value="">
+            <input type="hidden" id="cityId"   name="cityId"   value="">
             <input type="hidden" id="cityLabel" value="">
           </form>
         </div>
@@ -233,12 +238,11 @@
     const show = el => el.style.display='block';
     const hide = el => { el.style.display='none'; el.innerHTML=''; };
 
-    // --- เมือง ---
     let cTimer=null, cAbort=null;
     function rowCity(it){
       return `<div class="suggest-item" data-id="${esc(it.city_id)}" data-label="${esc(it.label)}">
         <div><div class="s-label">${esc(it.label)}</div><div class="s-sub">เมือง</div></div>
-        <div class="s-sub">เลือก</div>
+        <div class="s-sub">เมือง</div>
       </div>`;
     }
     function bindCity(){
@@ -277,7 +281,7 @@
   })();
   </script>
 
-  <!-- วันที่ + ผู้เข้าพัก + ส่งฟอร์ม + การ์ดเมือง + ปุ่มไปหน้า hotel search -->
+  <!-- วันที่ + ผู้เข้าพัก + ส่งฟอร์ม + การ์ดเมือง -->
   <script>
   (function(){
     const ONE=86400000,
@@ -336,10 +340,12 @@
     });
     document.getElementById('btnSaveGuests').addEventListener('click',()=>{hR.value=rooms;hA.value=adults;hC.value=children;upd();close();});
 
-    // ส่งฟอร์ม (โหมดเมือง)
+    // ส่งฟอร์ม (เฉพาะโหมดเมือง)
     document.getElementById('cgForm').addEventListener('submit',e=>{
       e.preventDefault();
+
       const cityLabel  = document.getElementById('cityLabel').value || document.getElementById('cityInput').value || '';
+      // normalize กรุงเทพ
       let qCity = (cityLabel||'').replace(/กรุงเทพมหานคร/g,'กรุงเทพ').replace(/กรุงเทพฯ/g,'กรุงเทพ');
       if(!qCity) qCity = 'กรุงเทพ';
 
@@ -378,21 +384,10 @@
       });
     });
 
-    // ปุ่มไปหน้า hotel search
-    document.getElementById('btnHotelMode').addEventListener('click', ()=>{
-      const q = (document.getElementById('cityLabel').value || document.getElementById('cityInput').value || '').trim();
-      const checkin  = document.getElementById('ci').value;
-      const checkout = document.getElementById('co').value;
-      const rooms    = document.getElementById('rooms').value || '1';
-      const adults   = document.getElementById('adults').value || '2';
-      const children = document.getElementById('children').value || '0';
-      const cityId   = document.getElementById('cityId').value || '';
-
-      const sp = new URLSearchParams({ q, checkin, checkout, rooms, adults, children, lang:'th-th' });
-      if(cityId) sp.set('cityId', cityId);
-      location.href = '/search-hotel.html?' + sp.toString();
+    // ปุ่มไปหน้าโหมดค้นชื่อโรงแรม
+    document.getElementById('btnHotelMode').addEventListener('click',()=>{
+      window.location.href='hotel-search.html';
     });
-
   })();
   </script>
 </body>
