@@ -15,16 +15,18 @@
     .mock-box{ width:100%; background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.08); padding:16px; display:flex; flex-direction:column; justify-content:center; }
     .mock-title{ margin:0 0 6px; font-weight:800; font-size:22px; }
     .mock-sub{ margin:0 0 12px; color:#666; }
-    .mock-row{ display:grid; gap:10px; align-items:center; grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+    /* บังคับ 2 คอลัมน์เสมอ */
+    .mock-row{ display:grid !important; gap:10px; align-items:center; grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important; }
     .full-row{ grid-column:1 / -1; }
     .mock-input, .guest-input, .mock-btn{ height:44px; border:1px solid #d7d7d7; border-radius:8px; padding:0 12px; background:#fff; font-size:15px; }
     .mock-input{ width:100%; } .guest-input{ text-align:left; cursor:pointer; }
-    .mock-btn{ background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; } .mock-btn:active{ transform:translateY(1px); }
+    .mock-btn{ background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; white-space:nowrap; }
+    .mock-btn:active{ transform:translateY(1px); }
     .btn-wide{ width:100%; }
     .field{ position:relative; } .field-label{ position:absolute; left:12px; top:6px; font-size:12px; color:#6b7280; pointer-events:none; }
     .has-label .mock-input,.has-label .flatpickr-input{ height:56px; padding-top:18px; }
 
-    /* Suggestion */
+    /* Suggestion เมือง */
     .suggest-wrap{ position:relative; }
     .suggest-panel{
       position:absolute; left:0; right:0; top:calc(100% + 4px);
@@ -80,19 +82,17 @@
       <div class="mock-wrap">
         <div class="mock-box">
           <h3 class="mock-title">ค้นหาดีลที่ใช่สำหรับคุณ</h3>
-          <p class="mock-sub">พิมพ์ชื่อเมืองหรือโรงแรม เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา</p>
+          <p class="mock-sub">พิมพ์ชื่อเมือง เลือกวันที่ ระบุผู้เข้าพัก หรือไปที่โหมดค้นชื่อโรงแรม</p>
 
           <form id="cgForm" class="mock-row" method="GET" action="search.html" autocomplete="off">
-            <!-- กล่องเมือง + โรงแรม (บรรทัดเดียว) -->
+            <!-- แถว 1: เมือง + ปุ่มไปหน้า hotel search -->
             <div class="suggest-wrap">
               <input type="text" id="cityInput" class="mock-input" placeholder="พิมพ์ชื่อเมือง..." aria-label="พิมพ์ชื่อเมือง">
               <div id="citySuggest" class="suggest-panel" role="listbox" aria-label="คำแนะนำเมือง"></div>
             </div>
-            <div class="suggest-wrap">
-              <input type="text" id="hotelInput" class="mock-input" placeholder="พิมพ์ชื่อโรงแรม..." aria-label="พิมพ์ชื่อโรงแรม">
-              <div id="hotelSuggest" class="suggest-panel" role="listbox" aria-label="คำแนะนำโรงแรม"></div>
-            </div>
+            <button type="button" id="btnHotelMode" class="mock-btn" aria-label="ไปค้นหาจากชื่อโรงแรม">ค้นชื่อโรงแรม</button>
 
+            <!-- แถว 2: เช็คอิน + เช็คเอาท์ -->
             <div class="field has-label">
               <span class="field-label">เช็คอิน</span>
               <input type="text" id="ci" name="checkin" class="mock-input" readonly>
@@ -102,7 +102,9 @@
               <input type="text" id="co" name="checkout" class="mock-input" readonly>
             </div>
 
+            <!-- แถว 3: ผู้เข้าพัก -->
             <button type="button" id="guestBtn" class="guest-input full-row">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
+            <!-- แถว 4: ปุ่มค้นหา -->
             <button type="submit" class="mock-btn btn-wide full-row">ค้นหา</button>
 
             <!-- hidden ส่งค่า -->
@@ -111,7 +113,6 @@
             <input type="hidden" id="children"name="children"value="0">
             <input type="hidden" name="lang" value="th-th">
             <input type="hidden" id="cityId"  name="cityId"  value="">
-            <input type="hidden" id="hotelId" name="hotelId" value="">
             <input type="hidden" id="cityLabel" value="">
           </form>
         </div>
@@ -220,15 +221,12 @@
     })();
   </script>
 
-  <!-- ===== Autocomplete เมือง/โรงแรม ===== -->
+  <!-- ===== Autocomplete เมือง ===== -->
   <script>
   (function(){
     const cityInput   = document.getElementById('cityInput');
     const cityPanel   = document.getElementById('citySuggest');
-    const hotelInput  = document.getElementById('hotelInput');
-    const hotelPanel  = document.getElementById('hotelSuggest');
     const cityId      = document.getElementById('cityId');
-    const hotelId     = document.getElementById('hotelId');
     const cityLabel   = document.getElementById('cityLabel');
 
     const esc = s => (s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
@@ -240,7 +238,7 @@
     function rowCity(it){
       return `<div class="suggest-item" data-id="${esc(it.city_id)}" data-label="${esc(it.label)}">
         <div><div class="s-label">${esc(it.label)}</div><div class="s-sub">เมือง</div></div>
-        <div class="s-sub">เมือง</div>
+        <div class="s-sub">เลือก</div>
       </div>`;
     }
     function bindCity(){
@@ -252,7 +250,6 @@
           cityInput.value = lbl;
           cityId.value    = id;
           cityLabel.value = lbl;
-          hotelId.value   = '';
           hide(cityPanel);
         });
       });
@@ -277,51 +274,10 @@
     }
     cityInput.addEventListener('input', suggestCity);
     document.addEventListener('click',e=>{ if(!cityPanel.contains(e.target) && e.target!==cityInput) hide(cityPanel); });
-
-    // --- โรงแรม ---
-    let hTimer=null, hAbort=null;
-    function rowHotel(it){
-      return `<div class="suggest-item" data-id="${esc(it.hotel_id)}" data-label="${esc(it.label)}">
-        <div><div class="s-label">${esc(it.label)}</div><div class="s-sub">โรงแรม</div></div>
-        <div class="s-sub">โรงแรม</div>
-      </div>`;
-    }
-    function bindHotel(){
-      hotelPanel.querySelectorAll('.suggest-item').forEach(el=>{
-        el.addEventListener('mousedown',ev=>{
-          ev.preventDefault();
-          const id  = el.getAttribute('data-id');
-          const lbl = el.getAttribute('data-label')||'';
-          hotelInput.value = lbl;
-          hotelId.value    = id;
-          cityId.value     = ''; // mutual exclusive
-          hide(hotelPanel);
-        });
-      });
-    }
-    function suggestHotel(){
-      const q=(hotelInput.value||'').trim();
-      hotelId.value='';
-      if(hTimer) clearTimeout(hTimer);
-      if(!q){ hide(hotelPanel); return; }
-      hotelPanel.innerHTML = `<div class="suggest-group">กำลังค้นหา...</div>`; show(hotelPanel);
-      hTimer=setTimeout(async ()=>{
-        hAbort?.abort(); hAbort=new AbortController();
-        try{
-          const data=await j(`/api/hotel-search?q=${encodeURIComponent(q)}&lang=th&limit=30`, hAbort.signal);
-          const items=(data&&data.ok&&Array.isArray(data.items))?data.items:[];
-          hotelPanel.innerHTML = items.length ? (`<div class="suggest-group">โรงแรม</div>`+items.map(rowHotel).join(''))
-                                              : `<div class="suggest-item"><div class="s-label">ไม่พบคำแนะนำ</div><div class="s-sub">ลองพิมพ์ให้ยาวขึ้น</div></div>`;
-          show(hotelPanel); bindHotel();
-        }catch(_){ hide(hotelPanel); }
-      },200);
-    }
-    hotelInput.addEventListener('input', suggestHotel);
-    document.addEventListener('click',e=>{ if(!hotelPanel.contains(e.target) && e.target!==hotelInput) hide(hotelPanel); });
   })();
   </script>
 
-  <!-- วันที่ + ผู้เข้าพัก + ส่งฟอร์ม + การ์ดเมือง -->
+  <!-- วันที่ + ผู้เข้าพัก + ส่งฟอร์ม + การ์ดเมือง + ปุ่มไปหน้า hotel search -->
   <script>
   (function(){
     const ONE=86400000,
@@ -380,16 +336,10 @@
     });
     document.getElementById('btnSaveGuests').addEventListener('click',()=>{hR.value=rooms;hA.value=adults;hC.value=children;upd();close();});
 
-    // ส่งฟอร์ม
+    // ส่งฟอร์ม (โหมดเมือง)
     document.getElementById('cgForm').addEventListener('submit',e=>{
       e.preventDefault();
-
-      const cityIdEl   = document.getElementById('cityId');
-      const hotelIdEl  = document.getElementById('hotelId');
       const cityLabel  = document.getElementById('cityLabel').value || document.getElementById('cityInput').value || '';
-      const hotelId    = (hotelIdEl.value||'').trim();
-
-      // normalize ชื่อกรุงเทพ
       let qCity = (cityLabel||'').replace(/กรุงเทพมหานคร/g,'กรุงเทพ').replace(/กรุงเทพฯ/g,'กรุงเทพ');
       if(!qCity) qCity = 'กรุงเทพ';
 
@@ -399,18 +349,7 @@
       const adults   = document.getElementById('adults').value || '2';
       const children = document.getElementById('children').value || '0';
 
-      const params = { checkin, checkout, rooms, adults, children, lang:'th-th' };
-
-      if (hotelId) {
-        // โหมดโรงแรม -> ส่ง hotelId (เหมือนเดิม)
-        params.hotelId = hotelId;
-        params.q = document.getElementById('hotelInput').value || '';
-      } else {
-        // โหมดเมือง -> ส่งเฉพาะ q (ให้ search.html resolve เอง) เพื่อให้แสดงการ์ด 30 ใบแน่นอน
-        params.q = qCity;
-      }
-
-      const sp = new URLSearchParams(params);
+      const sp = new URLSearchParams({ q:qCity, checkin, checkout, rooms, adults, children, lang:'th-th' });
       location.href = 'search.html?' + sp.toString();
     });
 
@@ -438,6 +377,22 @@
         location.href='search.html?'+sp.toString();
       });
     });
+
+    // ปุ่มไปหน้า hotel search
+    document.getElementById('btnHotelMode').addEventListener('click', ()=>{
+      const q = (document.getElementById('cityLabel').value || document.getElementById('cityInput').value || '').trim();
+      const checkin  = document.getElementById('ci').value;
+      const checkout = document.getElementById('co').value;
+      const rooms    = document.getElementById('rooms').value || '1';
+      const adults   = document.getElementById('adults').value || '2';
+      const children = document.getElementById('children').value || '0';
+      const cityId   = document.getElementById('cityId').value || '';
+
+      const sp = new URLSearchParams({ q, checkin, checkout, rooms, adults, children, lang:'th-th' });
+      if(cityId) sp.set('cityId', cityId);
+      location.href = '/search-hotel.html?' + sp.toString();
+    });
+
   })();
   </script>
 </body>
