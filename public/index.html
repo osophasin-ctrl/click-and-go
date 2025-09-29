@@ -1,253 +1,283 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Click&Go — ค้นหาโรงแรม</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Click & Go — ค้นหาโรงแรม</title>
   <style>
-    :root { --pri:#09a394; --muted:#8a8a8a; }
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;margin:0;color:#222;background:#fff}
-    .wrap{max-width:960px;margin:0 auto;padding:16px}
-    .card{background:#fff;border:1px solid #e9ecef;border-radius:14px;padding:16px;margin:16px 0;box-shadow:0 1px 1px rgba(0,0,0,.02)}
-    .title{font-size:22px;font-weight:800;margin:0 0 8px}
-    .muted{color:#6b7280}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-    .input{width:100%;height:44px;border:1px solid #d1d5db;border-radius:10px;padding:10px 12px;font-size:16px}
-    .btn{height:46px;border:0;border-radius:12px;padding:0 18px;background:var(--pri);color:#fff;font-weight:700;font-size:16px;cursor:pointer}
-    .btn:disabled{opacity:.6;cursor:not-allowed}
-    .pill{display:inline-flex;align-items:center;height:32px;border-radius:999px;padding:0 12px;background:#eef8f7;color:#075e55;font-weight:700}
-    .ac-wrap{position:relative}
-    .ac{position:absolute;left:0;right:0;top:48px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;z-index:50;max-height:300px;overflow-y:auto;box-shadow:0 8px 20px rgba(0,0,0,.06)}
-    .ac-group{padding:10px 12px;border-bottom:1px solid #f3f4f6;font-weight:800;color:#111}
-    .ac-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;font-size:15px;cursor:pointer}
+    :root{
+      --teal:#0d9488;       /* ปุ่มเขียวเดิม */
+      --teal-dark:#0b7d73;
+      --border:#e5e7eb;
+      --text:#111827;
+      --muted:#6b7280;
+      --bg:#ffffff;
+      --shadow:0 10px 24px rgba(0,0,0,.08);
+      --radius:16px;
+      --radius-sm:12px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans Thai", "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--text);
+      background:#f8fafc;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    .container{max-width:960px;margin:0 auto;padding:20px}
+    .card{
+      background:var(--bg);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    h2{margin:0 0 6px;font-size:22px;font-weight:800}
+    p.lead{margin:0 0 16px;color:var(--muted)}
+    .grid{display:grid;gap:12px}
+    @media(min-width:640px){.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr 1fr}}
+    .input{
+      height:48px;width:100%;
+      border:1px solid var(--border);
+      border-radius:var(--radius-sm);
+      padding:0 12px;
+      font-size:16px; outline: none;
+      background:#fff;
+    }
+    label{display:block;margin:6px 0 6px;color:var(--muted);font-size:14px}
+    .btn{
+      height:48px;width:100%;
+      background:var(--teal);color:#fff;
+      border:none;border-radius:var(--radius-sm);
+      font-weight:800;font-size:16px;cursor:pointer;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn:hover{background:var(--teal-dark)}
+    .ac{
+      position:relative
+    }
+    .ac-list{
+      position:absolute;left:0;right:0;top:52px;
+      background:#fff;border:1px solid var(--border);
+      border-radius:14px;box-shadow:var(--shadow);
+      max-height:280px;overflow:auto;z-index:50
+    }
+    .ac-head{padding:8px 12px;border-bottom:1px solid var(--border);font-weight:800}
+    .ac-item{
+      display:flex;justify-content:space-between;align-items:center;
+      width:100%;text-align:left;padding:10px 12px;border:0;background:transparent;cursor:pointer
+    }
     .ac-item:hover{background:#f9fafb}
-    .tag{color:#6b7280;font-size:12px;margin-left:12px}
-    .hint{font-size:13px;color:#6b7280;margin-top:6px}
+    .muted{color:var(--muted);font-size:14px}
+    .hidden{display:none}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--border);border-radius:999px}
+    .row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+    @media(max-width:639px){.row{grid-template-columns:1fr 1fr 1fr}}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1 class="title">ค้นหาโรงแรม</h1>
-    <p class="muted">แยกกล่องชัดเจน: เลือกค้นหาตาม <b>เมือง</b> หรือค้นหาเฉพาะ <b>โรงแรม</b></p>
+  <div class="container">
+    <section class="card">
+      <h2>ค้นหาดีลที่ใช่สำหรับคุณ</h2>
+      <p class="lead">พิมพ์ชื่อ<strong>เมือง</strong> หรือ <strong>โรงแรม</strong> เลือกวันที่ ระบุผู้เข้าพัก แล้วกดค้นหา</p>
 
-    <!-- ค้นหาตามเมือง -->
-    <div class="card">
-      <div class="title">ค้นหาตามเมือง</div>
-      <div class="ac-wrap">
-        <input id="city-input" class="input" placeholder="พิมพ์ชื่อเมือง เช่น กรุงเทพ เชียงใหม่ ฯลฯ" autocomplete="off" />
-        <div id="city-ac" class="ac" hidden></div>
-      </div>
-      <div class="row-3" style="margin-top:12px">
-        <div><label class="muted">เช็คอิน</label><input id="city-checkin" type="date" class="input"/></div>
-        <div><label class="muted">เช็คเอาท์</label><input id="city-checkout" type="date" class="input"/></div>
-        <div><label class="muted">ผู้เข้าพัก</label><input id="city-occupancy" class="input" value="2" /></div>
-      </div>
-      <div style="margin-top:12px"><button id="city-search" class="btn">ค้นหา (เมือง)</button></div>
-      <div id="city-hint" class="hint"></div>
-    </div>
+      <!-- 2 กล่อง: เมือง | โรงแรม -->
+      <div class="grid grid-2">
+        <!-- เมือง -->
+        <div class="ac" id="cityBox">
+          <input id="cityInput" class="input" placeholder="พิมพ์ชื่อเมือง" autocomplete="off" />
+          <div id="cityList" class="ac-list hidden" role="listbox" aria-label="เมือง">
+            <div class="ac-head">เมือง</div>
+            <div id="cityContent"></div>
+          </div>
+        </div>
 
-    <!-- ค้นหาตามโรงแรม -->
-    <div class="card">
-      <div class="title">ค้นหาตามโรงแรม</div>
-      <div class="ac-wrap">
-        <input id="hotel-input" class="input" placeholder="พิมพ์ชื่อโรงแรม เช่น Centara, Hilton, ... " autocomplete="off" />
-        <div id="hotel-ac" class="ac" hidden></div>
+        <!-- โรงแรม -->
+        <div class="ac" id="hotelBox">
+          <input id="hotelInput" class="input" placeholder="พิมพ์ชื่อโรงแรม" autocomplete="off" />
+          <div id="hotelList" class="ac-list hidden" role="listbox" aria-label="โรงแรม">
+            <div class="ac-head">โรงแรม</div>
+            <div id="hotelContent"></div>
+          </div>
+        </div>
       </div>
-      <div class="row-3" style="margin-top:12px">
-        <div><label class="muted">เช็คอิน</label><input id="hotel-checkin" type="date" class="input"/></div>
-        <div><label class="muted">เช็คเอาท์</label><input id="hotel-checkout" type="date" class="input"/></div>
-        <div><label class="muted">ผู้เข้าพัก</label><input id="hotel-occupancy" class="input" value="2" /></div>
+
+      <!-- วันที่ / ผู้เข้าพัก -->
+      <div class="grid grid-3" style="margin-top:12px">
+        <div>
+          <label for="checkIn">เช็คอิน</label>
+          <input type="date" id="checkIn" class="input" />
+        </div>
+        <div>
+          <label for="checkOut">เช็คเอาท์</label>
+          <input type="date" id="checkOut" class="input" />
+        </div>
+        <div>
+          <label>ผู้เข้าพัก</label>
+          <div class="row">
+            <input type="number" min="1" id="rooms" class="input" placeholder="ห้อง" title="จำนวนห้อง" />
+            <input type="number" min="1" id="adults" class="input" placeholder="ผู้ใหญ่" title="ผู้ใหญ่" />
+            <input type="number" min="0" id="children" class="input" placeholder="เด็ก" title="เด็ก" />
+          </div>
+        </div>
       </div>
-      <div style="margin-top:12px"><button id="hotel-search" class="btn">ค้นหา (โรงแรม)</button></div>
-      <div id="hotel-hint" class="hint"></div>
-    </div>
+
+      <div style="margin-top:14px">
+        <button class="btn" id="searchBtn">ค้นหา</button>
+      </div>
+    </section>
   </div>
 
   <script>
-    // -------- utils --------
-    const fmtDate = (d) => d.toISOString().slice(0,10);
-    const today = new Date();
-    const tomorrow = new Date(Date.now() + 86400000);
+    // ---------- helpers ----------
+    const $ = (sel) => document.querySelector(sel);
+    const todayISO = new Date().toISOString().slice(0,10);
+    const tomorrowISO = new Date(Date.now()+86400000).toISOString().slice(0,10);
+    $("#checkIn").value = todayISO;
+    $("#checkOut").value = tomorrowISO;
+    $("#rooms").value = 1;
+    $("#adults").value = 2;
+    $("#children").value = 0;
 
-    // set default dates
-    document.getElementById('city-checkin').value = fmtDate(today);
-    document.getElementById('city-checkout').value = fmtDate(tomorrow);
-    document.getElementById('hotel-checkin').value = fmtDate(today);
-    document.getElementById('hotel-checkout').value = fmtDate(tomorrow);
-
-    const debounce = (fn, ms=250) => {
-      let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }
+    const debounce = (fn, ms=300) => {
+      let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), ms); }
     };
-    const norm = s => (s||'').normalize('NFKC').trim().toLowerCase();
 
-    function renderAcList({container, header, items, itemRender, emptyText}) {
-      container.innerHTML = '';
-      const head = document.createElement('div');
-      head.className = 'ac-group';
-      head.textContent = header;
-      container.appendChild(head);
-
-      if (!items || items.length === 0) {
-        const it = document.createElement('div');
-        it.className = 'ac-item';
-        it.textContent = emptyText || 'ไม่พบคำแนะนำ';
-        container.appendChild(it);
-        return;
-      }
-      items.forEach((x) => {
-        const row = document.createElement('div');
-        row.className = 'ac-item';
-        row.innerHTML = itemRender(x);
-        row.addEventListener('click', () => x._onSelect && x._onSelect(x));
-        container.appendChild(row);
-      });
-    }
-
-    async function fetchJSON(url) {
+    async function fetchJSON(url){
       const r = await fetch(url);
-      if (!r.ok) throw new Error('HTTP '+r.status);
+      if(!r.ok) throw new Error("HTTP "+r.status);
       return r.json();
     }
 
-    // --------- CITY AUTOCOMPLETE ----------
-    const cityState = { id:null, name:null };
-    const cityInput = document.getElementById('city-input');
-    const cityAc = document.getElementById('city-ac');
-    const cityHint = document.getElementById('city-hint');
+    function showLoading(target){
+      target.innerHTML = '<div class="muted" style="padding:12px">กำลังค้นหา…</div>';
+    }
+    function showEmpty(target){
+      target.innerHTML = '<div class="muted" style="padding:12px">ไม่พบคำแนะนำ</div>';
+    }
 
-    const citySuggest = debounce(async () => {
-      const q = cityInput.value.trim();
-      if (q.length < 2) {
-        cityAc.hidden = true;
-        cityState.id = null; cityState.name = null;
-        return;
-      }
-      cityAc.hidden = false;
-      renderAcList({
-        container: cityAc,
-        header: 'เมือง',
-        items: [],
-        emptyText: 'กำลังค้นหา…'
-      });
+    // ---------- state ----------
+    let selectedCity = null;   // {id,name}
+    let selectedHotel = null;  // {id,name,cityId}
 
-      try {
-        const res = await fetchJSON(`/api/city-suggest?q=${encodeURIComponent(q)}&lang=th&limit=20`);
-        const items = (res?.items||[]).map((it)=>({
-          ...it,
-          _onSelect: (x)=>{
-            cityState.id = x.id || x.cityId;
-            cityState.name = x.name || x.cityName;
-            cityInput.value = x.name || x.cityName || '';
-            cityAc.hidden = true;
-          }
-        }));
-        renderAcList({
-          container: cityAc,
-          header: 'เมือง',
-          items,
-          itemRender: (x)=>`
-            <div>${x.name || x.cityName || ''}</div>
-            <div class="tag">เมือง</div>
-          `,
-          emptyText: 'ไม่พบคำแนะนำ'
-        });
-      } catch(e) {
-        renderAcList({container: cityAc, header:'เมือง', items:[], emptyText:'ไม่พบคำแนะนำ'});
-      }
-    }, 300);
+    // ---------- city autocomplete ----------
+    const cityInput = $("#cityInput");
+    const cityList = $("#cityList");
+    const cityContent = $("#cityContent");
+    function openCityList(){ cityList.classList.remove("hidden"); }
+    function closeCityList(){ cityList.classList.add("hidden"); }
 
-    cityInput.addEventListener('input', citySuggest);
-    document.addEventListener('click', (e)=>{
-      if (!cityAc.contains(e.target) && e.target!==cityInput) cityAc.hidden = true;
-      if (!hotelAc.contains(e.target) && e.target!==hotelInput) hotelAc.hidden = true;
-    });
-
-    document.getElementById('city-search').addEventListener('click', ()=>{
-      const cityId = cityState.id;
-      const cityName = cityState.name || cityInput.value.trim();
-      if (!cityId && !cityName) {
-        cityHint.textContent = 'โปรดพิมพ์และเลือกเมืองจากรายการแนะนำ';
-        return;
-      }
-      const checkIn = document.getElementById('city-checkin').value;
-      const checkOut = document.getElementById('city-checkout').value;
-      const adults = (document.getElementById('city-occupancy').value||'2').trim();
-
-      const usp = new URLSearchParams({
-        mode:'city',
-        cityId: cityId || '',
-        cityName,
-        checkIn, checkOut,
-        adults, rooms:'1', children:'0'
-      });
-
-      // โหมดเมือง: เคลียร์คีย์โรงแรม
-      ['hotelId','hotelName'].forEach(k=>usp.delete(k));
-
-      location.href = `/search?${usp.toString()}`;
-    });
-
-    // --------- HOTEL AUTOCOMPLETE ----------
-    const hotelState = { id:null, name:null, cityId:null };
-    const hotelInput = document.getElementById('hotel-input');
-    const hotelAc = document.getElementById('hotel-ac');
-    const hotelHint = document.getElementById('hotel-hint');
-
-    const hotelSuggest = debounce(async ()=>{
-      const q = hotelInput.value.trim();
-      if (q.length < 2) { hotelAc.hidden=true; hotelState.id=null; hotelState.name=null; hotelState.cityId=null; return; }
-      hotelAc.hidden=false;
-      renderAcList({container:hotelAc, header:'โรงแรม', items:[], emptyText:'กำลังค้นหา…'});
-
+    const runCitySuggest = async (q)=>{
+      if(!q || q.trim().length<2){ cityContent.innerHTML=''; showEmpty(cityContent); openCityList(); return; }
+      openCityList(); showLoading(cityContent);
       try{
-        const res = await fetchJSON(`/api/hotel-suggest?q=${encodeURIComponent(q)}&lang=th&limit=20`);
-        const items = (res?.items||[]).map((it)=>({
-          ...it,
-          _onSelect:(x)=>{
-            hotelState.id = x.id || x.hotelId;
-            hotelState.name = x.name || x.hotelName;
-            hotelState.cityId = x.cityId || x.agodaCityId || x.city?.id || null;
-            hotelInput.value = x.name || x.hotelName || '';
-            hotelAc.hidden = true;
-          }
-        }));
-        renderAcList({
-          container: hotelAc,
-          header: 'โรงแรม',
-          items,
-          itemRender:(x)=>`
-            <div>${x.name || x.hotelName || ''}</div>
-            <div class="tag">โรงแรม</div>
-          `,
-          emptyText:'ไม่พบคำแนะนำ'
-        });
+        const data = await fetchJSON(`/api/city-suggest?q=${encodeURIComponent(q)}&lang=th&limit=20`);
+        const items = (data.items||[]).map(it=>({ id: it.id || it.cityId, name: it.name || it.cityName }));
+        if(items.length===0){ showEmpty(cityContent); return; }
+        cityContent.innerHTML = items.map(it =>
+          `<button type="button" class="ac-item" data-id="${it.id}" data-name="${it.name}">
+             <span class="truncate">${it.name}</span><span class="muted">เมือง</span>
+           </button>`
+        ).join("");
       }catch(e){
-        renderAcList({container:hotelAc, header:'โรงแรม', items:[], emptyText:'ไม่พบคำแนะนำ'});
+        showEmpty(cityContent);
       }
-    },300);
+    };
+    const citySuggest = debounce(runCitySuggest, 300);
 
-    hotelInput.addEventListener('input', hotelSuggest);
+    cityInput.addEventListener("input", e=>{
+      selectedCity = null;
+      citySuggest(e.target.value);
+    });
+    cityInput.addEventListener("focus", ()=>{ if(cityContent.innerHTML) openCityList(); });
 
-    document.getElementById('hotel-search').addEventListener('click', ()=>{
-      if (!hotelState.id && !hotelState.name){
-        hotelHint.textContent = 'โปรดพิมพ์และเลือกโรงแรมจากรายการแนะนำ';
-        return;
+    cityContent.addEventListener("click", e=>{
+      const btn = e.target.closest("button.ac-item");
+      if(!btn) return;
+      selectedCity = { id: btn.dataset.id, name: btn.dataset.name };
+      cityInput.value = selectedCity.name;
+      closeCityList();
+    });
+
+    // ---------- hotel autocomplete ----------
+    const hotelInput = $("#hotelInput");
+    const hotelList = $("#hotelList");
+    const hotelContent = $("#hotelContent");
+    function openHotelList(){ hotelList.classList.remove("hidden"); }
+    function closeHotelList(){ hotelList.classList.add("hidden"); }
+
+    const runHotelSuggest = async (q)=>{
+      if(!q || q.trim().length<2){ hotelContent.innerHTML=''; showEmpty(hotelContent); openHotelList(); return; }
+      openHotelList(); showLoading(hotelContent);
+      try{
+        const data = await fetchJSON(`/api/hotel-suggest?q=${encodeURIComponent(q)}&lang=th&limit=20`);
+        const items = (data.items||[]).map(it=>({
+          id: it.id || it.hotelId,
+          name: it.name || it.hotelName,
+          cityId: it.cityId || it.agodaCityId || (it.city&&it.city.id) || ""
+        }));
+        if(items.length===0){ showEmpty(hotelContent); return; }
+        hotelContent.innerHTML = items.map(it =>
+          `<button type="button" class="ac-item"
+                   data-id="${it.id}" data-name="${it.name}" data-city="${it.cityId}">
+             <span class="truncate">${it.name}</span><span class="muted">โรงแรม</span>
+           </button>`
+        ).join("");
+      }catch(e){
+        showEmpty(hotelContent);
       }
-      const checkIn = document.getElementById('hotel-checkin').value;
-      const checkOut = document.getElementById('hotel-checkout').value;
-      const adults = (document.getElementById('hotel-occupancy').value||'2').trim();
+    };
+    const hotelSuggest = debounce(runHotelSuggest, 300);
 
-      const usp = new URLSearchParams({
-        mode:'hotel',
-        cityId: hotelState.cityId || '',
-        hotelId: hotelState.id || '',
-        hotelName: hotelState.name || '',
-        checkIn, checkOut,
-        adults, rooms:'1', children:'0'
+    hotelInput.addEventListener("input", e=>{
+      selectedHotel = null;
+      hotelSuggest(e.target.value);
+    });
+    hotelInput.addEventListener("focus", ()=>{ if(hotelContent.innerHTML) openHotelList(); });
+
+    hotelContent.addEventListener("click", e=>{
+      const btn = e.target.closest("button.ac-item");
+      if(!btn) return;
+      selectedHotel = { id: btn.dataset.id, name: btn.dataset.name, cityId: btn.dataset.city || "" };
+      hotelInput.value = selectedHotel.name;
+      closeHotelList();
+    });
+
+    // ปิดลิสต์เมื่อคลิกรอบนอก
+    document.addEventListener("click", (e)=>{
+      if(!$("#cityBox").contains(e.target)) closeCityList();
+      if(!$("#hotelBox").contains(e.target)) closeHotelList();
+    });
+
+    // ---------- search ----------
+    $("#searchBtn").addEventListener("click", ()=>{
+      const params = new URLSearchParams({
+        checkIn: $("#checkIn").value,
+        checkOut: $("#checkOut").value,
+        rooms: String($("#rooms").value || 1),
+        adults: String($("#adults").value || 2),
+        children: String($("#children").value || 0),
       });
 
-      location.href = `/search?${usp.toString()}`;
+      if(selectedHotel){ // ให้โรงแรมสำคัญกว่า
+        params.set("mode","hotel");
+        params.set("hotelId", selectedHotel.id || "");
+        params.set("hotelName", selectedHotel.name || "");
+        if(selectedHotel.cityId) params.set("cityId", selectedHotel.cityId);
+        window.location.href = `/search?${params.toString()}`;
+        return;
+      }
+
+      if(selectedCity || cityInput.value.trim()){
+        params.set("mode","city");
+        if(selectedCity && selectedCity.id) params.set("cityId", selectedCity.id);
+        params.set("cityName", (selectedCity ? selectedCity.name : cityInput.value).trim());
+        window.location.href = `/search?${params.toString()}`;
+        return;
+      }
+
+      alert("โปรดพิมพ์และเลือกเมืองหรือโรงแรมก่อนค้นหา");
     });
   </script>
 </body>
