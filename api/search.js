@@ -1,16 +1,20 @@
 // /api/search.js — Vercel Serverless (CommonJS)
-// รับ query → แปลงเป็น payload lt_v1 → (ลองหา hid จาก /api/hotel-search ก่อน) → (fallback) /api/suggest → เรียก Agoda
+// แปลง query → payload lt_v1 → พยายาม resolve hid/cityId จาก index/suggest → เรียก Agoda
 
-const AGODA_URL = "http://affiliateapi7643.agoda.com/affiliateservice/lt_v1";
+const AGODA_URL = "https://affiliateapi7643.agoda.com/affiliateservice/lt_v1";
 
 const SITE_ID = process.env.AGODA_SITE_ID || "1949420";
 const API_KEY = process.env.AGODA_API_KEY || "b80d95c1-7e21-4935-b319-28feff6a60f1";
 
-const SORT_MAP = { rec: "Recommended", price_asc: "PriceAsc", price_desc: "PriceDesc" };
+const SORT_MAP = {
+  rec: "Recommended",
+  price_asc: "PriceAsc",
+  price_desc: "PriceDesc"
+};
 
 // ---------- helpers ----------
 function qstr(req, key, def = "") {
-  const v = (req.query && req.query[key]) || def;
+  const v = (req.query && (req.query[key] ?? req.query[key?.toLowerCase?.()] ?? req.query[key?.toUpperCase?.()])) ?? def;
   return (v == null ? "" : String(v)).trim();
 }
 function qint(req, key, def = 0) {
@@ -34,8 +38,7 @@ function toAges(str) {
 }
 function withUtm(url) {
   if (!url) return "#";
-  const hasQ = url.includes("?");
-  const sep = hasQ ? "&" : "?";
+  const sep = url.includes("?") ? "&" : "?";
   return `${url}${sep}utm_source=clickandgo&utm_medium=affiliate`;
 }
 function guessProto(req) {
@@ -46,16 +49,17 @@ function hostOrigin(req) {
   const host = req.headers.host;
   return `${proto}://${host}`;
 }
-
-// ---------- query normalization / suggest picking ----------
 function normalizeQuery(q) {
   if (!q) return q;
-  return String(q).replace(/กรุงเทพฯ/g, "กรุงเทพ").trim();
+  return String(q)
+    .replace(/กรุงเทพมหานคร/g, "กรุงเทพ")
+    .replace(/กรุงเทพฯ/g, "กรุงเทพ")
+    .trim();
 }
 function pickFromSuggest(items) {
   if (!Array.isArray(items) || !items.length) return { cityId: "", hid: "", label: "" };
 
-  // เลือกโรงแรมก่อน
+  // ให้สิทธิ์โรงแรมก่อน
   for (const it of items) {
     const t = String(it.type || "").toLowerCase();
     const hotelId = it.hotel_id || it.id;
@@ -64,7 +68,7 @@ function pickFromSuggest(items) {
       if (hid) return { cityId: "", hid, label: it.label || it.hotel_name || "" };
     }
   }
-  // ไม่มีก็เลือกเมือง
+  // จากนั้นค่อยเลือกเมือง
   for (const it of items) {
     const t = String(it.type || "").toLowerCase();
     const id = it.city_id ?? it.value ?? it.id;
@@ -73,50 +77,53 @@ function pickFromSuggest(items) {
       if (cityId) return { cityId, hid: "", label: it.label || it.city_name || "" };
     }
   }
-  // fallback: รายการแรกเป็นเมือง
+  // fallback: รายการแรก
   const it = items[0];
   const cityId = String((it && (it.city_id ?? it.value ?? it.id)) || "");
   return { cityId, hid: "", label: (it && (it.label || it.city_name)) || "" };
 }
 
-// ---------- Agoda partner deeplink ----------
-function buildAgodaUrl({ cityId, hid, currency, checkin, checkout, adults, children, rooms = 1 }) {
-  const base = `https://www.agoda.com/partners/partnersearch.aspx?cid=${SITE_ID}`;
+function buildAgodaUrl({ cityId, hid, currency, checkin, checkout, adults, children, rooms = 1, langPath = "th-th" }) {
+  const baseCity = `https://www.agoda.com/${langPath}/partners/partnersearch.aspx?cid=${SITE_ID}`;
+  const baseSearch = `https://www.agoda.com/${langPath}/search`;
   const common =
-    `&currency=${encodeURIComponent(currency)}`
-    + `&checkin=${encodeURIComponent(checkin)}`
-    + `&checkout=${encodeURIComponent(checkout)}`
-    + `&NumberofAdults=${adults}`
-    + `&NumberofChildren=${children}`
-    + `&Rooms=${rooms}`;
-  if (hid) return `${base}&hid=${encodeURIComponent(hid)}${common}`;
-  if (cityId) return `${base}&city=${encodeURIComponent(cityId)}${common}`;
-  return "";
+    `currency=${encodeURIComponent(currency)}&checkin=${encodeURIComponent(checkin)}&checkout=${encodeURIComponent(checkout)}` +
+    `&adults=${adults}&children=${children}&rooms=${rooms}&noapp=1&pcs=1&utm_source=clickandgo&utm_medium=affiliate`;
+
+  if (hid) return `${baseCity}&hid=${encodeURIComponent(hid)}&${common}`;
+  if (cityId) return `${baseCity}&city=${encodeURIComponent(cityId)}&${common}`;
+
+  // ถ้าไม่มี id ใช้หน้า search ตรง
+  return `${baseSearch}?cid=${SITE_ID}&${common}`;
 }
 
 // ---------- main ----------
 module.exports = async function (req, res) {
   try {
     // -------- read query --------
-    const qRaw     = qstr(req, "q", "");
-    const q        = normalizeQuery(qRaw);
-    let cityId     = qstr(req, "cityId", qstr(req, "cityid", ""));
-    let hid        = qstr(req, "hid", "");
-    const checkin  = qstr(req, "checkin", "");
+    const qRaw = qstr(req, "q", "");
+    const q = normalizeQuery(qRaw);
+
+    // รับชื่อพารามิเตอร์หลายรูปแบบ
+    let cityId = qstr(req, "cityId", qstr(req, "cityid", ""));
+    let hid = qstr(req, "hid", qstr(req, "hotelId", qstr(req, "hotelid", "")));
+
+    const checkin = qstr(req, "checkin", "");
     const checkout = qstr(req, "checkout", "");
-    const adults   = Math.max(1, qint(req, "adults", 2));
+    const adults = Math.max(1, qint(req, "adults", 2));
     const children = Math.max(0, qint(req, "children", 0));
-    const rooms    = Math.max(1, qint(req, "rooms", 1)); // ใช้สำหรับ deeplink เท่านั้น
+    const rooms = Math.max(1, qint(req, "rooms", 1)); // ใช้สำหรับ deeplink เท่านั้น
     const currency = qstr(req, "currency", "THB");
-    const lang     = qstr(req, "lang", "th-th");
+    const lang = qstr(req, "lang", "th-th").toLowerCase();
+    const langPath = lang || "th-th";
     const limitRaw = Math.max(1, qint(req, "limit", 30));
-    const limit    = Math.min(30, limitRaw); // lt_v1 รองรับสูงสุด 30
-    const sortBy   = SORT_MAP[qstr(req, "sort", "rec")] || "Recommended";
+    const limit = Math.min(30, limitRaw);
+    const sortBy = SORT_MAP[qstr(req, "sort", "rec")] || "Recommended";
 
     // ฟิลเตอร์
-    const priceMin = Math.max(1, qint(req, "priceMin", 1));
-    const priceMax = Math.max(priceMin, qint(req, "priceMax", 1000000));
-    const starsMin = Math.max(0, qint(req, "starsMin", 0));
+    const priceMin = Math.max(0, qint(req, "priceMin", 0));
+    const priceMax = Math.max(priceMin || 0, qint(req, "priceMax", 1000000));
+    const starsMin = Math.max(0, Math.min(5, qint(req, "starsMin", 0)));
     const scoreMin = Math.max(0, Math.min(10, qnum(req, "scoreMin", 0)));
     const discountOnly = qbool(req, "discountOnly", false);
 
@@ -137,24 +144,22 @@ module.exports = async function (req, res) {
     if (!hid && q) {
       try {
         const base = hostOrigin(req);
-        const langForIndex = (lang || "").toLowerCase().includes("th") ? "th" : "en";
+        const langForIndex = (lang || "").includes("th") ? "th" : "en";
         const hsUrl = `${base}/api/hotel-search?q=${encodeURIComponent(q)}&lang=${langForIndex}&limit=10`;
         const hsRes = await fetch(hsUrl, { cache: "no-store" });
         const hs = await hsRes.json().catch(() => null);
         if (hs && hs.ok && Array.isArray(hs.items) && hs.items.length) {
           const first = hs.items[0];
-          if (first && first.hotel_id) {
-            hid = String(first.hotel_id);
-          }
+          if (first && first.hotel_id) hid = String(first.hotel_id);
         }
       } catch (_) {}
     }
 
-    // -------- BACKEND FALLBACK: /api/suggest --------
+    // -------- BACKEND FALLBACK: /api/suggest (เลือกโรงแรมก่อน เมืองรอง) --------
     if (!cityId && !hid && q) {
       try {
         const base = hostOrigin(req);
-        const url = `${base}/api/suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(lang)}&type=mixed`;
+        const url = `${base}/api/suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(lang)}&type=mixed&limit=10`;
         const sRes = await fetch(url, { cache: "no-store" });
         const sJson = await sRes.json().catch(() => null);
         if (sJson && sJson.ok && Array.isArray(sJson.items) && sJson.items.length) {
@@ -190,8 +195,8 @@ module.exports = async function (req, res) {
 
       if (hid) {
         const n = parseInt(hid, 10);
-        if (useArrayForHotelIds) criteria.hotelIds = [n];   // ✅ สคีมาปัจจุบันต้องการ array
-        else criteria.hotelId = n;                          // fallback ถ้าฝั่ง Agoda เปลี่ยนกลับ
+        if (useArrayForHotelIds) criteria.hotelIds = [n];
+        else criteria.hotelId = n;
       } else {
         criteria.cityId = parseInt(cityId, 10);
       }
@@ -203,7 +208,6 @@ module.exports = async function (req, res) {
     let resp = await fetch(AGODA_URL, {
       method: "POST",
       headers: {
-        "Accept-Encoding": "gzip,deflate",
         "Content-Type": "application/json",
         "Authorization": `${SITE_ID}:${API_KEY}`
       },
@@ -214,19 +218,15 @@ module.exports = async function (req, res) {
     let data = null;
     try { data = JSON.parse(text); } catch (_) {}
 
-    // ถ้า 400 และข้อความ error ชี้ว่าคีย์ไม่ตรง ให้ลองสลับรูปแบบอีกที
+    // ถ้า 400 และบอกว่าอยากได้ integer → ลอง hotelId เดี่ยว
     if (!resp.ok && resp.status === 400 && hid) {
       const t = (text || "").toLowerCase();
-      const mentionArray = t.includes("array expected") || t.includes("hotelid") || t.includes("hotelids");
-      const mentionInteger = t.includes("integer expected") || t.includes("integer found");
-      // ถ้าบอกให้ใช้ array → เราก็ใช้แล้ว ข้าม
-      // ถ้าบอกให้ใช้ integer → ลองอีกครั้งด้วย hotelId (เดี่ยว)
+      const mentionInteger = t.includes("integer expected") || t.includes("hotelid");
       if (mentionInteger) {
         payload = buildPayload({ useArrayForHotelIds: false });
         resp = await fetch(AGODA_URL, {
           method: "POST",
           headers: {
-            "Accept-Encoding": "gzip,deflate",
             "Content-Type": "application/json",
             "Authorization": `${SITE_ID}:${API_KEY}`
           },
@@ -275,10 +275,10 @@ module.exports = async function (req, res) {
 
     // —— deeplink ปุ่ม “ค้นหาเพิ่มเติมจากพันธมิตรของเรา”
     const agodaUrl = buildAgodaUrl({
-      cityId, hid, currency, checkin, checkout, adults, children, rooms
+      cityId, hid, currency, checkin, checkout, adults, children, rooms, langPath
     });
 
-    // debug (ปิดใน production)
+    // debug (เปิดเฉพาะที่ไม่ใช่ production และขอด้วย ?debug=1)
     const isProd = process.env.NODE_ENV === "production";
     const wantDebug = qstr(req, "debug", "") === "1";
     if (wantDebug && !isProd) {
