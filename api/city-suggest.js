@@ -1,19 +1,26 @@
-// /api/city-suggest.js — Vercel Serverless (CommonJS)
-// อ่านรายการเมืองจาก data/cities_slim.json แล้วทำ autocomplete แบบเร็ว
-// รองรับ lang=th-th|en-us, limit, q
+// /api/city-suggest.js — Vercel/Node serverless
+// อ่านรายการเมืองจาก data/cities_slim.json แล้วทำ autocomplete
+// รองรับ lang=th-th|en-us (จะถูกย่อเป็น th|en) และ limit, q
 
 const fs = require('fs');
 const path = require('path');
 
 const MAX_LIMIT = 30;
+const CACHE = { cities: null, mtime: 0 };
 
+// ---------- helpers ----------
 function qstr(req, key, def = '') {
-  const v = (req.query && req.query[key]) || def;
+  const v = (req.query && req.query[key]) ?? def;
   return (v == null ? '' : String(v)).trim();
 }
 function qint(req, key, def = 0) {
   const n = parseInt(qstr(req, key, String(def)), 10);
   return Number.isFinite(n) ? n : def;
+}
+function toLang(s = '') {
+  const v = String(s).toLowerCase();
+  if (v.startsWith('en')) return 'en';
+  return 'th';
 }
 function normalize(s) {
   return (s || '')
@@ -21,71 +28,101 @@ function normalize(s) {
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, ''); // strip accents
 }
+
+// หาไฟล์ cities_slim.json แบบหลาย candidate เผื่อสภาพแวดล้อม build ต่างกัน
+function resolveCitiesPath() {
+  const candidates = [
+    path.join(process.cwd(), 'data', 'cities_slim.json'),
+    path.join(__dirname, '..', 'data', 'cities_slim.json'),
+    path.join(process.cwd(), 'public', 'data', 'cities_slim.json'),
+  ];
+  for (const p of candidates) {
+    try {
+      if (fs.existsSync(p)) return p;
+    } catch (_) {}
+  }
+  return null;
+}
+
 function loadCities() {
-  // NOTE: อ่านจากโฟลเดอร์ data (ไม่ต้อง public)
-  const p = path.join(process.cwd(), 'data', 'cities_slim.json');
+  const now = Date.now();
+  if (CACHE.cities && now - CACHE.mtime < 5 * 60 * 1000) {
+    return CACHE.cities;
+  }
+  const p = resolveCitiesPath();
+  if (!p) throw new Error('cities_slim.json not found');
+
   const raw = fs.readFileSync(p, 'utf8');
-  const json = JSON.parse(raw);
-  // โครง: [{ id, th, en, countryId }]
-  return Array.isArray(json) ? json : [];
-}
-
-let CACHE = null;
-function ensureCache() {
-  if (CACHE) return CACHE;
-  const src = loadCities();
+  const arr = JSON.parse(raw); // โครงสร้าง: [{ id, th, en, countryId }, ...]
   // เตรียมฟิลด์ค้นหา
-  CACHE = src.map((c) => ({
-    id: String(c.id),
-    th: String(c.th || ''),
-    en: String(c.en || ''),
-    _th: normalize(c.th || ''),
-    _en: normalize(c.en || ''),
-  }));
-  return CACHE;
+  const prepared = arr
+    .map((it) => ({
+      id: String(it.id),
+      th: String(it.th || ''),
+      en: String(it.en || ''),
+      _nth: normalize(it.th || ''),
+      _nen: normalize(it.en || ''),
+    }))
+    .filter((x) => x.id && (x.th || x.en));
+
+  CACHE.cities = prepared;
+  CACHE.mtime = now;
+  return prepared;
 }
 
-module.exports = function handler(req, res) {
+// ---------- handler ----------
+module.exports = async function handler(req, res) {
   try {
-    const lang = (qstr(req, 'lang', 'th-th') || 'th-th').toLowerCase().includes('en') ? 'en' : 'th';
-    const q = qstr(req, 'q');
-    const limit = Math.min(Math.max(qint(req, 'limit', 20), 1), MAX_LIMIT);
+    const lang = toLang(qstr(req, 'lang', 'th-th')); // th | en
+    const q = qstr(req, 'q', '');
+    const limit = Math.min(Math.max(qint(req, 'limit', 10), 1), MAX_LIMIT);
 
-    if (!q) return res.status(200).json({ ok: true, items: [] });
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300');
 
-    const idx = ensureCache();
+    if (!q) {
+      return res.status(200).json({ ok: true, items: [] });
+    }
+
+    const cities = loadCities();
     const nq = normalize(q);
 
     const starts = [];
     const contains = [];
-    for (const it of idx) {
-      const key = lang === 'en' ? it._en : it._th;
-      if (key.startsWith(nq)) {
+
+    // เลือกฟิลด์ค้นหาตามภาษา
+    const normKey = lang === 'en' ? '_nen' : '_nth';
+
+    // prefix match ก่อน
+    for (const it of cities) {
+      if ((it[normKey] || '').startsWith(nq)) {
         starts.push(it);
         if (starts.length >= limit) break;
       }
     }
+    // ไม่พอค่อยตามด้วย contains
     if (starts.length < limit) {
-      for (const it of idx) {
-        const key = lang === 'en' ? it._en : it._th;
-        if (!key.startsWith(nq) && key.includes(nq)) {
+      for (const it of cities) {
+        if (!(it[normKey] || '').startsWith(nq) && (it[normKey] || '').includes(nq)) {
           contains.push(it);
           if (starts.length + contains.length >= limit) break;
         }
       }
     }
 
-    const items = [...starts, ...contains].slice(0, limit).map((c) => ({
-      type: 'City',
-      city_id: c.id,
-      label: lang === 'en' ? c.en : c.th,
-      subtitle: lang === 'en' ? 'City' : 'เมือง',
-    }));
+    const pickLabel = (it) => (lang === 'en' ? it.en || it.th : it.th || it.en);
 
-    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300');
+    const items = [...starts, ...contains]
+      .slice(0, limit)
+      .map((it) => ({
+        type: 'City',
+        city_id: it.id,
+        label: pickLabel(it),
+      }));
+
     return res.status(200).json({ ok: true, items });
   } catch (err) {
     console.error('city-suggest error:', err);
+    // ส่งกลับ ok:false เพื่อให้ฝั่งหน้าเว็บแสดง “ไม่พบคำแนะนำ”
     return res.status(200).json({ ok: false, reason: 'internal_error' });
   }
 };
