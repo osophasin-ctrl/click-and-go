@@ -5,12 +5,14 @@
 // Header ต้องมี: Authorization: "<siteId>:<apiKey>", Accept-Encoding: "gzip,deflate"
 // เรายังคงโหมด q สำหรับ autocomplete จากดัชนีภายในไว้เหมือนเดิม
 
+const fetch = require('node-fetch'); // <-- สำคัญ: บาง runtime ไม่มี global.fetch
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 
 const MAX_LIMIT_Q = 20;
 const MAX_LIMIT_CITY = 30;
+// ใช้ https ถ้า endpoint รองรับ; ถ้าองค์กรของคุณต้องใช้ http ให้เปลี่ยนกลับ
 const ENDPOINT = 'http://affiliateapi7643.agoda.com/affiliateservice/lt_v1';
 
 const AGODA_SITE_ID = process.env.AGODA_SITE_ID; // ตัวเลข siteId ของคุณ
@@ -35,7 +37,6 @@ const isNonEmpty = (v) => v !== null && v !== undefined && String(v).trim() !== 
 
 // ---------- map Agoda result -> frontend card ----------
 function mapLongTailResultItem(it) {
-  // ตาม Response Schema ของ Long Tail V2
   const hotelId = String(it.hotelId ?? it.id ?? '');
   const name = it.hotelName || it.name || '';
   const image = it.imageURL || it.thumbnail || '';
@@ -45,16 +46,7 @@ function mapLongTailResultItem(it) {
   const stars = it.starRating ?? it.stars ?? 0;
   const reviewScore = it.reviewScore ?? it.score ?? null;
 
-  return {
-    name,
-    image,
-    url,
-    price,
-    currency,
-    stars,
-    reviewScore,
-    hotelId,
-  };
+  return { name, image, url, price, currency, stars, reviewScore, hotelId };
 }
 
 // ---------- call Agoda Long Tail V2 ----------
@@ -62,32 +54,37 @@ async function callAgodaLongTail(criteria) {
   if (!AGODA_SITE_ID || !AGODA_API_KEY) {
     return { ok: false, reason: 'MISSING_AGODA_ENV', items: [] };
   }
-
-  // ตรงสเปก: body ต้องเป็น { criteria: {...} }
-  // (หลาย partner ต้องส่ง siteId/apiKey ใน header ให้ "ตรงกัน" กับที่ลงทะเบียน)
   const payload = { criteria };
 
-  const r = await fetch(ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Accept': 'application/json',
-      'Accept-Encoding': 'gzip,deflate',
-      'Authorization': `${AGODA_SITE_ID}:${AGODA_API_KEY}`,
-    },
-    body: JSON.stringify(payload),
-  });
+  // เพิ่ม timeout กันค้าง
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), 15000);
 
-  const text = await r.text();
-  let json = null;
-  try { json = JSON.parse(text); } catch {}
+  let r, text, json;
+  try {
+    r = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Accept': 'application/json',
+        'Accept-Encoding': 'gzip,deflate',
+        'Authorization': `${AGODA_SITE_ID}:${AGODA_API_KEY}`,
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+    text = await r.text();
+    try { json = JSON.parse(text); } catch {}
+  } catch (e) {
+    clearTimeout(t);
+    return { ok: false, reason: 'AGODA_FETCH_FAILED', items: [] };
+  }
+  clearTimeout(t);
 
   if (!r.ok) {
     const snippet = (text || '').slice(0, 400);
     return { ok: false, reason: `AGODA_HTTP_${r.status} ${snippet}`, items: [] };
   }
-
-  // สเปกระบุ result-key เป็น "results" (กรณี error จะเป็น {error:{id,message}})
   if (json?.error) {
     return { ok: false, reason: `AGODA_ERROR_${json.error.id} ${json.error.message || ''}`.trim(), items: [] };
   }
@@ -163,7 +160,7 @@ module.exports = async function handler(req, res) {
     const langParam = (qstr(req, 'lang', 'th-th') || 'th-th').toLowerCase();
     const langAgoda = langParam.startsWith('en') ? 'en-us' : 'th-th';
 
-    // ===== โหมด City Search (ตามสเปก V2) =====
+    // ===== โหมด City Search =====
     const cityId = qstr(req, 'cityId') || qstr(req, 'cityid');
     if (cityId) {
       const checkIn  = qstr(req, 'checkin');
@@ -173,7 +170,6 @@ module.exports = async function handler(req, res) {
       const rooms    = qint(req, 'rooms', 1);
       const limit    = Math.min(Math.max(qint(req, 'limit', MAX_LIMIT_CITY), 1), 30);
 
-      // mapping ตัวกรองเพิ่มเติมถ้าฝั่งหน้าเว็บส่งมา
       const minimumStarRating   = qstr(req, 'starsMin') ? Number(qstr(req, 'starsMin')) : 0;
       const minimumReviewScore  = qstr(req, 'scoreMin') ? Number(qstr(req, 'scoreMin')) : 0;
       const priceMin            = qstr(req, 'priceMin') ? Number(qstr(req, 'priceMin')) : 0;
@@ -186,14 +182,14 @@ module.exports = async function handler(req, res) {
         additional: {
           language: langAgoda,
           currency: 'THB',
-          maxResult: limit,                 // (1–30)
+          maxResult: limit, // 1–30
           sortBy: 'Recommended',
           discountOnly: false,
           minimumStarRating,
           minimumReviewScore,
           dailyRate: { minimum: priceMin, maximum: priceMax },
           occupancy: { numberOfAdult: adults, numberOfChildren: children },
-          // หมายเหตุ: rooms ไม่อยู่ในสเปก Long Tail V2 → ไม่ส่ง
+          // rooms ไม่อยู่ในสเปก Long Tail V2
         }
       };
 
@@ -203,7 +199,7 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ ok: true, items: out.items });
     }
 
-    // ===== โหมด Hotel List Search (ตามสเปก V2) =====
+    // ===== โหมด Hotel List Search =====
     const hotelIdParam = qstr(req, 'hotelId') || qstr(req, 'hid') || '';
     if (hotelIdParam) {
       const checkIn  = qstr(req, 'checkin');
@@ -235,7 +231,7 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ ok: true, items: out.items });
     }
 
-    // ===== โหมด q — autocomplete (ของเดิม) =====
+    // ===== โหมด q — autocomplete =====
     const q = qstr(req, 'q');
     const limitQ = Math.min(Math.max(qint(req, 'limit', 10), 1), MAX_LIMIT_Q);
 
