@@ -14,8 +14,11 @@
     .mock-box{ width:100%; background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.08); padding:16px; display:flex; flex-direction:column; justify-content:center; }
     .mock-title{ margin:0 0 6px; font-weight:800; font-size:22px; }
     .mock-sub{ margin:0 0 12px; color:#666; }
+
+    /* ✅ บังคับ 2 คอลัมน์ทุกหน้าจอ */
     .mock-row{ display:grid; gap:10px; align-items:center; grid-template-columns:1fr 1fr; }
     .full-row{ grid-column:1 / -1; }
+
     .mock-input, .guest-input, .mock-btn{ height:44px; border:1px solid #d7d7d7; border-radius:8px; padding:0 12px; background:#fff; font-size:15px; }
     .mock-input{ width:100%; } .guest-input{ text-align:left; cursor:pointer; }
     .mock-btn{ background:#0ea5a0; color:#fff; border:0; cursor:pointer; font-weight:700; } .mock-btn:active{ transform:translateY(1px); }
@@ -46,7 +49,6 @@
     .counter{ display:flex; align-items:center; gap:10px; } .btn-ctrl{ width:36px; height:36px; border-radius:50%; border:1px solid #ccc; background:#fff; font-size:18px; cursor:pointer; }
     .count{ min-width:20px; text-align:center; font-weight:700; }
     .btn-outline{ border:1px solid #bbb; background:#fff; color:#333; border-radius:8px; padding:8px 14px; } .btn-primary{ border:0; background:#0ea5a0; color:#fff; border-radius:8px; padding:8px 14px; }
-    @media (max-width:640px){ .mock-row{ grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -70,14 +72,14 @@
 
         <!-- ส่งแบบ GET ไป search.html เสมอ -->
         <form id="cgForm" class="mock-row" method="GET" action="search.html" autocomplete="off">
-          <!-- แถวแรก: เมือง + ปุ่มค้นชื่อโรงแรม (อยู่บรรทัดเดียวกัน) -->
+          <!-- แถวแรก: เมือง + ปุ่มค้นชื่อโรงแรม (บรรทัดเดียวกัน) -->
           <div class="suggest-wrap">
             <input type="text" id="dest" name="q" class="mock-input" placeholder="พิมพ์ชื่อเมือง เช่น กรุงเทพฯ" aria-label="ปลายทาง">
             <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="คำแนะนำ"></div>
           </div>
           <button type="button" id="btnHotelMode" class="mock-btn">ค้นชื่อโรงแรม</button>
 
-          <!-- แถวสอง: เช็คอิน + เช็คเอาท์ (อยู่บรรทัดเดียวกัน) -->
+          <!-- แถวสอง: เช็คอิน + เช็คเอาท์ (บรรทัดเดียวกัน) -->
           <div class="field has-label"><span class="field-label">เช็คอิน</span><input type="text" id="ci" name="checkin" class="mock-input" readonly></div>
           <div class="field has-label"><span class="field-label">เช็คเอาท์</span><input type="text" id="co" name="checkout" class="mock-input" readonly></div>
 
@@ -91,14 +93,12 @@
           <input type="hidden" id="adults"  name="adults"  value="2">
           <input type="hidden" id="children"name="children"value="0">
           <input type="hidden"              name="lang"    value="th-th">
-          <!-- hidden สำหรับจำแนก เมือง/โรงแรม (หน้า index ใช้เฉพาะเมือง) -->
           <input type="hidden" id="cityId"  name="cityId"  value="">
           <input type="hidden" id="hotelId" name="hotelId" value="">
         </form>
       </div></div>
     </section>
 
-    <!-- ไทย -->
     <section>
       <h2 class="section-title">ปลายทางยอดนิยมในไทย</h2>
       <div class="city-grid">
@@ -111,7 +111,6 @@
       </div>
     </section>
 
-    <!-- ต่างประเทศ -->
     <section>
       <h2 class="section-title">เมืองยอดฮิตในต่างประเทศ</h2>
       <div class="city-grid">
@@ -161,7 +160,6 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 
   <script>
-  // เมนูภาษา
   (function(){
     const btn=document.querySelector('.lang-btn'),menu=document.querySelector('.lang-menu');
     if(!btn||!menu) return;
@@ -178,7 +176,7 @@
     const input  = document.getElementById('dest');
     const panel  = document.getElementById('suggestPanel');
     const cityId = document.getElementById('cityId');
-    const hotelId= document.getElementById('hotelId'); // ไม่ใช้ในหน้านี้ แต่คงไว้ไม่ให้พัง form เดิม
+    const hotelId= document.getElementById('hotelId');
     if(!input||!panel) return;
 
     let timer=null, aborter=null;
@@ -202,7 +200,7 @@
           const lbl = el.getAttribute('data-label')||'';
           input.value=lbl;
           cityId.value=id;
-          hotelId.value=''; // ชัดเจนว่าใช้โหมดเมือง
+          hotelId.value='';
           hide();
         });
       });
@@ -218,11 +216,8 @@
       const q=(input.value||'').trim();
       if(timer) clearTimeout(timer);
       if(!q){ hide(); return; }
-
-      // โชว์กำลังค้นหา
       panel.innerHTML = `<div class="suggest-group">กำลังค้นหา...</div>`;
       show();
-
       timer=setTimeout(async ()=>{
         aborter?.abort(); aborter=new AbortController();
         const u=encodeURIComponent(q);
@@ -242,11 +237,8 @@
   </script>
 
   <script>
-  // วันที่ + ผู้เข้าพัก + การส่งฟอร์ม + การ์ดเมือง
   (function(){
-    const ONE=86400000,
-          ci=document.getElementById('ci'),
-          co=document.getElementById('co');
+    const ONE=86400000, ci=document.getElementById('ci'), co=document.getElementById('co');
     const fmtLocal=(d)=>{const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());};
     const today=new Date(),tom=new Date(Date.now()+ONE);
     let inP=null,outP=null;
@@ -308,7 +300,7 @@
       q.value=v;
     });
 
-    // ปุ่ม "ค้นชื่อโรงแรม" → ไปหน้า search-hotel.html พร้อมพารามิเตอร์วัน/ผู้เข้าพัก
+    // ปุ่ม "ค้นชื่อโรงแรม" → ไป search-hotel.html พร้อมพารามิเตอร์วัน/ผู้เข้าพัก
     document.getElementById('btnHotelMode').addEventListener('click', ()=>{
       function fmtLocalStr(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
       const inP=window.flatpickr && document.querySelector('#ci')._flatpickr;
@@ -326,7 +318,7 @@
       location.href='search-hotel.html?'+sp.toString();
     });
 
-    // คลิกการ์ดเมือง -> ไป search.html พร้อมค่าปัจจุบัน
+    // การ์ดเมือง → ไป search.html พร้อมค่าปัจจุบัน
     function fmtLocalStr(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
     document.querySelectorAll('.city-card[data-q]').forEach(a=>{
       a.addEventListener('click',ev=>{
