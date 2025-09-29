@@ -97,7 +97,7 @@
   </form>
 </dialog>
 
-<!-- Dialogs เดิมคงไว้ (Sort/Stars/Price/Score) -->
+<!-- Dialogs: Sort/Stars/Price/Score -->
 <dialog id="dlgSort"><h3 class="dlg-title">เรียงโดย</h3>
   <div class="radio-list">
     <label class="radio-item"><input type="radio" name="sort" value="rec"> แนะนำ</label>
@@ -207,7 +207,7 @@
     history.replaceState({},'',u);
   }
 
-  // ---------- resolve เมืองก่อน (สำคัญ) ----------
+  // ---------- resolve เมือง/โรงแรม จาก q ----------
   async function resolveDestinationIfNeeded(){
     if ((state.cityId || state.hid) || !state.q) return;
     const q = normalizeQ(state.q);
@@ -223,7 +223,7 @@
       }
     }catch(_){}
 
-    // 2) fallback: suggest แบบผสม (กรณีเป็นชื่อโรงแรม)
+    // 2) fallback: suggest แบบผสม (อาจเป็นชื่อโรงแรม)
     try{
       const r = await fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(state.lang)}&type=mixed`, {cache:'no-store'});
       const d = await r.json();
@@ -268,39 +268,40 @@
     renderSkeleton();
     if (!state.cityId && !state.hid && state.q) await resolveDestinationIfNeeded();
 
-    // try #1: /api/search (เดิม)
-    const base = new URL('/api/search', location.origin);
-    const p = base.searchParams;
-    if (state.hid) p.set('hid', state.hid); else if (state.cityId) p.set('cityId', state.cityId); else if (state.q) p.set('q', state.q);
-    ['checkin','checkout','rooms','adults','children','lang','currency','page','sort','starsMin','scoreMin','priceMin','priceMax'].forEach(k => p.set(k, state[k]));
-    let data = await fetchJson(base.toString());
-
-    // try #2: ถ้าว่างและมี cityId → /api/hotel-search?cityId=...&limit=30
-    if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.cityId){
-      const u = new URL('/api/hotel-search', location.origin);
-      const q = u.searchParams;
-      q.set('cityId', state.cityId);
-      q.set('limit','30');
-      q.set('checkin', state.checkin||'');
-      q.set('checkout', state.checkout||'');
-      q.set('rooms', String(state.rooms||1));
-      q.set('adults', String(state.adults||2));
-      q.set('children', String(state.children||0));
-      q.set('lang', state.lang);
-      q.set('currency', state.currency);
-      data = await fetchJson(u.toString());
+    // เรียก /api/hotel-search โดยตรง
+    let u = new URL('/api/hotel-search', location.origin);
+    const p = u.searchParams;
+    if (state.hid) p.set('hotelId', state.hid);
+    else if (state.cityId) p.set('cityId', state.cityId);
+    else if (state.q) { // fallback: ให้ลอง city-suggest แล้ว cityId
+      // ถ้าจบมาถึงนี่แปลว่า resolve ไม่ได้
     }
+    p.set('limit','30');
+    p.set('checkin', state.checkin||'');
+    p.set('checkout', state.checkout||'');
+    p.set('rooms', String(state.rooms||1));
+    p.set('adults', String(state.adults||2));
+    p.set('children', String(state.children||0));
+    p.set('lang', state.lang);
+
+    // ส่งตัวกรองให้ API (ให้ Long Tail ช่วยกรองตั้งแต่ server)
+    p.set('starsMin', String(state.starsMin||0));
+    p.set('scoreMin', String(state.scoreMin||0));
+    p.set('priceMin', String(state.priceMin||0));
+    p.set('priceMax', String(state.priceMax||200000));
+
+    let data = await fetchJson(u.toString());
 
     if (!data || data.ok===false){
       $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`;
       refreshPartnerCta(); return;
     }
 
-    // รองรับโครงสร้างผลลัพธ์หลายแบบ
+    // โครงสร้างที่รองรับ
     let items = data.results || data.items || data.hotels || [];
     if (!Array.isArray(items)) items = [];
 
-    // sort ตามที่เลือก
+    // sort ฝั่ง client
     if (state.sort === 'price_asc') items.sort((a,b)=>(readPrice(a)||1e15)-(readPrice(b)||1e15));
     if (state.sort === 'price_desc') items.sort((a,b)=>(readPrice(b)||0)-(readPrice(a)||0));
 
@@ -320,15 +321,15 @@
       </article>`).join('');
   }
 
-  // ----- helpers to read various field names from different APIs -----
+  // ----- helpers to read fields from various shapes -----
   const readName = h => h.name || h.hotelName || h.title || h.label || '—';
-  const readImg  = h => h.thumbnail || h.image || h.img || h.photo || '';
+  const readImg  = h => h.image || h.thumbnail || h.img || h.photo || '';
   const readUrl  = h => h.url || h.link || h.deeplink || '#';
-  const readStars= h => h.rating ?? h.stars ?? h.star ?? 0;
+  const readStars= h => h.stars ?? h.star ?? h.rating ?? 0;
   const readScore= h => h.reviewScore ?? h.score ?? h.review_score ?? null;
-  const readCurr = h => h.currency || h.cur || 'THB';
+  const readCurr = h => h.currency || h.cur || state.currency;
   function readPrice(h){
-    const v = h.price ?? h.minPrice ?? h.min_price ?? h.fromPrice ?? null;
+    const v = h.price ?? h.dailyRate ?? h.minPrice ?? h.min_price ?? h.fromPrice ?? null;
     return (v!=null && !isNaN(+v)) ? +v : null;
   }
 
@@ -348,7 +349,7 @@
       const stars= readStars(h);
       const score= readScore(h);
       const price= readPrice(h);
-      const cur  = esc(readCurr(h) || state.currency);
+      const cur  = esc(readCurr(h));
       return `
         <article class="card">
           <img src="${img}" alt="${name}">
