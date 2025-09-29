@@ -17,21 +17,27 @@
     .mock-sub{margin:0 0 12px;color:#666}
     .mock-row{display:grid;gap:10px;align-items:center;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
     .full-row{grid-column:1/-1}
-    .mock-input,.mock-btn,.guest-input{height:44px;border:1px solid #d7d7d7;border-radius:8px;padding:0 12px;background:#fff;font-size:15px}
-    .guest-input{text-align:left;cursor:pointer}
-    .mock-btn{background:#0ea5a0;color:#fff;border:0;cursor:pointer;font-weight:700}
-    .mock-btn.secondary{background:#ffffff;border:1px solid #0ea5a0;color:#0ea5a0}
-    .field{position:relative}
+    .field{position:relative;width:100%}
     .field-label{position:absolute;left:12px;top:6px;font-size:12px;color:#6b7280;pointer-events:none}
     .has-label .mock-input,.has-label .flatpickr-input{height:56px;padding-top:18px}
 
-    /* Suggestion */
-    .suggest-wrap{position:relative}
+    /* อินพุต/ปุ่ม ให้กว้างเท่ากันทุกตัว */
+    .mock-input,.mock-btn,.guest-input{height:44px;border:1px solid #d7d7d7;border-radius:8px;padding:0 12px;background:#fff;font-size:15px;box-sizing:border-box;width:100%}
+    .guest-input{text-align:left;cursor:pointer}
+    .mock-btn{background:#0ea5a0;color:#fff;border:0;cursor:pointer;font-weight:700}
+    .mock-btn:active{transform:translateY(1px)}
+
+    /* กล่อง “พิมพ์ชื่อเมือง” ให้เต็มบรรทัดและความกว้าง 100% */
+    .suggest-wrap{position:relative;width:100%}
+    .suggest-wrap input{width:100%}
     .suggest-panel{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.08);max-height:260px;overflow:auto;z-index:9999;display:none}
     .suggest-group{padding:8px 12px;font-weight:700;color:#6b7280;background:#fafafa;border-top:1px solid #f3f4f6}
     .suggest-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;cursor:pointer}
     .suggest-item:hover{background:#f6f6f6}
     .s-label{font-weight:600}.s-sub{color:#777;font-size:13px}
+
+    /* ให้ alt input ของ flatpickr (ที่ถูกสร้างเพิ่ม) กว้าง/ขอบเท่าอินพุตอื่น */
+    .flatpickr-input.mock-input{width:100% !important;border:1px solid #d7d7d7;border-radius:8px;height:56px;box-sizing:border-box}
 
     /* ===== โมดัลผู้เข้าพัก ===== */
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:999}
@@ -87,7 +93,7 @@
           <form id="cgForm" class="mock-row" method="GET" action="search.html" autocomplete="off">
             <!-- 1) เมือง -->
             <div class="suggest-wrap full-row">
-              <input type="text" id="cityInput" class="mock-input" placeholder="พิมพ์ชื่อเมือง..." aria-label="พิมพ์ชื่อเมือง">
+              <input type="text" id="cityInput" class="mock-input" placeholder="พิมพ์ชื่อเมือง เช่น กรุงเทพฯ" aria-label="พิมพ์ชื่อเมือง">
               <div id="citySuggest" class="suggest-panel" role="listbox" aria-label="คำแนะนำเมือง"></div>
             </div>
 
@@ -101,14 +107,14 @@
               <input type="text" id="co" name="checkout" class="mock-input" readonly>
             </div>
 
-            <!-- 3) ผู้เข้าพัก (ใหม่ อยู่ถัดจากวันที่) -->
+            <!-- 3) ผู้เข้าพัก -->
             <button type="button" id="guestBtn" class="guest-input full-row">1 ห้อง, 2 ผู้ใหญ่, 0 เด็ก</button>
 
             <!-- 4) ปุ่มค้นหา -->
-            <button type="submit" class="mock-btn full-row" style="width:100%">ค้นหา</button>
+            <button type="submit" class="mock-btn full-row">ค้นหา</button>
 
-            <!-- 5) ปุ่มล่างสุด: หรือค้นหาจากชื่อโรงแรม -->
-            <button type="button" id="btnHotelMode" class="mock-btn secondary full-row" style="width:100%">หรือค้นหาจากชื่อโรงแรม</button>
+            <!-- 5) ปุ่มล่างสุด (สีเขียวเหมือนปุ่มค้นหา) -->
+            <button type="button" id="btnHotelMode" class="mock-btn full-row">หรือค้นหาจากชื่อโรงแรม</button>
 
             <!-- hidden -->
             <input type="hidden" id="rooms" name="rooms" value="1">
@@ -224,7 +230,7 @@
     })();
   </script>
 
-  <!-- ===== Autocomplete เมือง ===== -->
+  <!-- Autocomplete เมือง -->
   <script>
     (function(){
       const cityInput=document.getElementById('cityInput');
@@ -275,7 +281,7 @@
     })();
   </script>
 
-  <!-- ===== วันที่ + ผู้เข้าพัก + ส่งฟอร์ม + การ์ดเมือง ===== -->
+  <!-- วันที่ + ผู้เข้าพัก + ส่งฟอร์ม + การ์ดเมือง -->
   <script>
     (function(){
       const ONE=86400000, ci=document.getElementById('ci'), co=document.getElementById('co');
@@ -297,7 +303,7 @@
         ci.addEventListener('change',()=>{const a=new Date(ci.value||fmtLocal(today)),n=new Date(a.getTime()+ONE);if(!co.value||new Date(co.value)<=a){co.value=fmtLocal(n);co.min=fmtLocal(n);}});
       }
 
-      // ===== ผู้เข้าพัก (Modal) =====
+      /* ผู้เข้าพัก */
       let rooms=1,adults=2,children=0;
       const guestBtn=document.getElementById('guestBtn'),
             roomsC=document.getElementById('roomsCount'),
@@ -337,10 +343,10 @@
         updateGuestBtn(); closeGuest();
       });
 
-      // ปุ่มไปหน้า hotel-search
+      /* ปุ่มไปหน้า hotel-search */
       document.getElementById('btnHotelMode').addEventListener('click',()=>{ location.href='hotel-search.html'; });
 
-      // ส่งฟอร์ม (โหมดเมือง -> ส่ง q)
+      /* ส่งฟอร์ม (โหมดเมือง -> ส่ง q) */
       document.getElementById('cgForm').addEventListener('submit',e=>{
         e.preventDefault();
         const cityLabel = document.getElementById('cityLabel').value || document.getElementById('cityInput').value || '';
@@ -355,7 +361,7 @@
         location.href = 'search.html?' + sp.toString();
       });
 
-      // การ์ดเมือง -> ไป search.html พร้อม q
+      /* การ์ดเมือง -> ไป search.html พร้อม q */
       function fmtLocalStr(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
       document.querySelectorAll('.city-card[data-q]').forEach(a=>{
         a.addEventListener('click',ev=>{
