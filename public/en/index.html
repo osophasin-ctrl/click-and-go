@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Click & Go – Compare hotel prices. Book in one click.</title>
+  <meta name="description" content="Click & Go helps you find and compare hotel prices across multiple OTAs with direct booking links. Popular destinations in Thailand and worldwide." />
+
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="stylesheet" href="../style.css" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
+
+  <style>
+    /* ===== Search box ===== */
+    .mock-wrap{max-width:1030px;width:100%;margin:0 auto}
+    .mock-box{width:100%;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:16px;display:flex;flex-direction:column}
+    .mock-title{margin:0 0 6px;font-weight:800;font-size:22px}
+    .mock-sub{margin:0 0 12px;color:#666}
+    .mock-row{display:grid;gap:10px;align-items:center;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+    .full-row{grid-column:1/-1}
+    .field{position:relative;width:100%}
+    .field-label{position:absolute;left:12px;top:6px;font-size:12px;color:#6b7280;pointer-events:none}
+    .has-label .mock-input,.has-label .flatpickr-input{height:56px;padding-top:18px}
+
+    /* inputs/buttons */
+    .mock-input,.mock-btn,.guest-input{height:44px;border:1px solid #d7d7d7;border-radius:8px;padding:0 12px;background:#fff;font-size:15px;box-sizing:border-box;width:100%}
+    .guest-input{text-align:left;cursor:pointer}
+    .mock-btn{background:#0ea5a0;color:#fff;border:0;cursor:pointer;font-weight:700}
+    .mock-btn:active{transform:translateY(1px)}
+
+    /* city suggest */
+    .suggest-wrap{position:relative;width:100%}
+    .suggest-wrap input{width:100%}
+    .suggest-panel{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.08);max-height:260px;overflow:auto;z-index:9999;display:none}
+    .suggest-group{padding:8px 12px;font-weight:700;color:#6b7280;background:#fafafa;border-top:1px solid #f3f4f6}
+    .suggest-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;cursor:pointer}
+    .suggest-item:hover{background:#f6f6f6}
+    .s-label{font-weight:600}.s-sub{color:#777;font-size:13px}
+
+    /* make flatpickr alt input look like others */
+    .flatpickr-input.mock-input{width:100% !important;border:1px solid #d7d7d7;border-radius:8px;height:56px;box-sizing:border-box}
+
+    /* ===== guest modal ===== */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:999}
+    .modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border-radius:12px;width:min(92vw,420px);box-shadow:0 12px 24px rgba(0,0,0,.2);z-index:1000;display:none}
+    .modal-header,.modal-footer{padding:14px 16px}
+    .modal-header{border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+    .modal-title{font-weight:700;font-size:18px}
+    .modal-body{padding:10px 16px 0 16px}
+    .row-ctrl{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+    .row-ctrl + .row-ctrl{border-top:1px dashed #eee}
+    .label-wrap{display:flex;flex-direction:column;gap:2px}
+    .label-wrap small{color:#666}
+    .counter{display:flex;align-items:center;gap:10px}
+    .btn-ctrl{width:36px;height:36px;border-radius:50%;border:1px solid #ccc;background:#fff;font-size:18px;cursor:pointer}
+    .count{min-width:20px;text-align:center;font-weight:700}
+    .btn-outline{border:1px solid #bbb;background:#fff;color:#333;border-radius:8px;padding:8px 14px}
+    .btn-primary{border:0;background:#0ea5a0;color:#fff;border-radius:8px;padding:8px 14px}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="inner">
+      <a href="index.html" class="brand">
+        <img src="../logo.png" alt="Click & Go" width="40" height="40"/>
+        <span class="brand-text">Click & Go</span>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="../deals.html">Deals</a>
+        <div class="lang">
+          <button class="lang-btn">Language ▾</button>
+          <div class="lang-menu">
+            <a href="../index.html">ไทย</a>
+            <a href="#" aria-current="true">English</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero -->
+    <section class="hero">
+      <img class="hero-img" src="../hero-bg.jpg" alt="Click & Go">
+    </section>
+
+    <!-- Search Box -->
+    <section style="margin:24px 0">
+      <h2 class="section-title">Find hotels</h2>
+      <div class="mock-wrap">
+        <div class="mock-box">
+          <h3 class="mock-title">Get the best deal for you</h3>
+          <p class="mock-sub">Type a city, choose dates, set guests, then search — or switch to searching by hotel name.</p>
+
+          <!-- action: temporary to Thai search page so it works now -->
+          <form id="cgForm" class="mock-row" method="GET" action="../search.html" autocomplete="off">
+            <!-- 1) City -->
+            <div class="suggest-wrap full-row">
+              <input type="text" id="cityInput" class="mock-input" placeholder="Type a city, e.g., Bangkok" aria-label="City">
+              <div id="citySuggest" class="suggest-panel" role="listbox" aria-label="City suggestions"></div>
+            </div>
+
+            <!-- 2) Dates -->
+            <div class="field has-label">
+              <span class="field-label">Check-in</span>
+              <input type="text" id="ci" name="checkin" class="mock-input" readonly>
+            </div>
+            <div class="field has-label">
+              <span class="field-label">Check-out</span>
+              <input type="text" id="co" name="checkout" class="mock-input" readonly>
+            </div>
+
+            <!-- 3) Guests -->
+            <button type="button" id="guestBtn" class="guest-input full-row">1 room, 2 adults, 0 children</button>
+
+            <!-- 4) Search button -->
+            <button type="submit" class="mock-btn full-row">Search</button>
+
+            <!-- 5) Switch to hotel-name mode -->
+            <button type="button" id="btnHotelMode" class="mock-btn full-row">Or search by hotel name</button>
+
+            <!-- hidden -->
+            <input type="hidden" id="rooms" name="rooms" value="1">
+            <input type="hidden" id="adults" name="adults" value="2">
+            <input type="hidden" id="children" name="children" value="0">
+            <input type="hidden" name="lang" value="en">
+            <input type="hidden" id="cityId" name="cityId" value="">
+            <input type="hidden" id="cityLabel" value="">
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular in Thailand -->
+    <section>
+      <h2 class="section-title">Top destinations in Thailand</h2>
+      <div class="city-grid">
+        <a class="city-card" href="#" data-q="Bangkok"><figure><img src="../bangkok-tile.webp" alt="Bangkok"><figcaption>Bangkok</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Chiang Mai"><figure><img src="../chiangmai-tile.webp" alt="Chiang Mai"><figcaption>Chiang Mai</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Pattaya"><figure><img src="../pattaya-tile.webp" alt="Pattaya"><figcaption>Pattaya</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Phuket"><figure><img src="../phuket-tile.webp" alt="Phuket"><figcaption>Phuket</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Krabi"><figure><img src="../krabi-tile.webp" alt="Krabi"><figcaption>Krabi</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Hua Hin"><figure><img src="../huahin-tile.webp" alt="Hua Hin"><figcaption>Hua Hin</figcaption></figure></a>
+      </div>
+    </section>
+
+    <!-- International -->
+    <section>
+      <h2 class="section-title">Popular cities worldwide</h2>
+      <div class="city-grid">
+        <a class="city-card" href="#" data-q="Tokyo"><figure><img src="../tokyo-tile.webp" alt="Tokyo"><figcaption>Tokyo</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Seoul"><figure><img src="../seoul-tile.webp" alt="Seoul"><figcaption>Seoul</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Singapore"><figure><img src="../singapore-tile.webp" alt="Singapore"><figcaption>Singapore</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Hong Kong"><figure><img src="../hongkong-tile.webp" alt="Hong Kong"><figcaption>Hong Kong</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="London"><figure><img src="../london-tile.webp" alt="London"><figcaption>London</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Paris"><figure><img src="../paris-tile.webp" alt="Paris"><figcaption>Paris</figcaption></figure></a>
+      </div>
+    </section>
+
+    <!-- Why us -->
+    <section>
+      <h2 class="section-title">Why Click & Go</h2>
+      <div class="features">
+        <div class="feature"><h3>Find the best offer</h3><p>Connected to providers worldwide to fetch live prices.</p></div>
+        <div class="feature"><h3>Book with fewer steps</h3><p>Jump straight to partner hotel pages with one click.</p></div>
+        <div class="feature"><h3>Works on all devices</h3><p>Smooth experience on mobile, tablet, and desktop.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Guest Modal -->
+  <div id="guestBackdrop" class="modal-backdrop" aria-hidden="true"></div>
+  <div id="guestModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="guestTitle">
+    <div class="modal-header">
+      <div id="guestTitle" class="modal-title">Guests</div>
+      <button type="button" class="btn-outline" id="btnCloseX">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="row-ctrl">
+        <div class="label-wrap"><strong>Rooms</strong><small>Number of rooms</small></div>
+        <div class="counter">
+          <button class="btn-ctrl" data-type="rooms" data-op="minus">−</button>
+          <span class="count" id="roomsCount">1</span>
+          <button class="btn-ctrl" data-type="rooms" data-op="plus">+</button>
+        </div>
+      </div>
+      <div class="row-ctrl">
+        <div class="label-wrap"><strong>Adults</strong><small>18+ years</small></div>
+        <div class="counter">
+          <button class="btn-ctrl" data-type="adults" data-op="minus">−</button>
+          <span class="count" id="adultsCount">2</span>
+          <button class="btn-ctrl" data-type="adults" data-op="plus">+</button>
+        </div>
+      </div>
+      <div class="row-ctrl">
+        <div class="label-wrap"><strong>Children</strong><small>0–17 years</small></div>
+        <div class="counter">
+          <button class="btn-ctrl" data-type="children" data-op="minus">−</button>
+          <span class="count" id="childrenCount">0</span>
+          <button class="btn-ctrl" data-type="children" data-op="plus">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" id="btnCancel">Cancel</button>
+      <button class="btn-primary" id="btnSaveGuests">Save</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="../privacy.html">Privacy</a> · <a href="../terms.html">Terms</a> ·
+        <a href="../affiliate.html">Affiliate Disclosure</a> · <a href="../about.html">About us</a> ·
+        <a href="../contact.html">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <!-- Language menu -->
+  <script>
+    (function(){
+      const btn=document.querySelector('.lang-btn'),menu=document.querySelector('.lang-menu');
+      if(!btn||!menu) return;
+      const closeM=()=>{menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};
+      btn.addEventListener('click',e=>{e.stopPropagation();const o=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(o));});
+      document.addEventListener('click',closeM);
+      document.addEventListener('keydown',e=>{if(e.key==='Escape') closeM();});
+    })();
+  </script>
+
+  <!-- City autocomplete (with fallback) -->
+  <script>
+    (function(){
+      const cityInput=document.getElementById('cityInput');
+      const cityPanel=document.getElementById('citySuggest');
+      const cityIdEl =document.getElementById('cityId');
+      const cityLblEl=document.getElementById('cityLabel');
+
+      const esc=s=>(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+      const show=el=>el.style.display='block';
+      const hide=el=>{el.style.display='none';el.innerHTML='';};
+
+      let timer=null;
+
+      function rowCity(it){
+        return `<div class="suggest-item" data-id="${esc(it.city_id)}" data-label="${esc(it.label)}">
+          <div><div class="s-label">${esc(it.label)}</div><div class="s-sub">City</div></div>
+          <div class="s-sub">City</div>
+        </div>`;
+      }
+
+      function bindCity(){
+        cityPanel.querySelectorAll('.suggest-item').forEach(el=>{
+          el.addEventListener('mousedown',ev=>{
+            ev.preventDefault();
+            const id=el.getAttribute('data-id'), lbl=el.getAttribute('data-label')||'';
+            cityInput.value=lbl; cityIdEl.value=id; cityLblEl.value=lbl;
+            hide(cityPanel);
+          });
+        });
+      }
+
+      async function jTry(url){
+        try{
+          const r=await fetch(url,{cache:'no-store'});
+          if(!r.ok) throw new Error('HTTP '+r.status);
+          return await r.json();
+        }catch(e){ return null; }
+      }
+
+      async function fetchCitySuggest(q){
+        // 1) primary
+        const u1 = `/api/city-suggest?q=${encodeURIComponent(q)}&lang=en&limit=30`;
+        let data = await jTry(u1);
+        if(data && data.ok) return data;
+
+        // 2) fallback (if the API route name differs)
+        const u2 = `/api/city-search?q=${encodeURIComponent(q)}&lang=en&limit=30`;
+        data = await jTry(u2);
+        return data || {ok:false,items:[]};
+      }
+
+      function suggestCity(){
+        const q=(cityInput.value||'').trim(); cityIdEl.value=''; cityLblEl.value='';
+        if(timer) clearTimeout(timer);
+        if(!q){ hide(cityPanel); return; }
+        cityPanel.innerHTML=`<div class="suggest-group">Searching…</div>`; show(cityPanel);
+        timer=setTimeout(async ()=>{
+          try{
+            const data=await fetchCitySuggest(q);
+            const items=(data&&data.ok&&Array.isArray(data.items))?data.items:[];
+            cityPanel.innerHTML = items.length ? (`<div class="suggest-group">Cities</div>`+items.map(rowCity).join(''))
+                                               : `<div class="suggest-item"><div class="s-label">No suggestions</div><div class="s-sub">Try typing more letters</div></div>`;
+            show(cityPanel); bindCity();
+          }catch(_){ hide(cityPanel); }
+        },200);
+      }
+
+      cityInput.addEventListener('input',suggestCity);
+      document.addEventListener('click',e=>{ if(!cityPanel.contains(e.target) && e.target!==cityInput) hide(cityPanel); });
+    })();
+  </script>
+
+  <!-- Dates + guests + submit + city cards -->
+  <script>
+    (function(){
+      const ONE=86400000, ci=document.getElementById('ci'), co=document.getElementById('co');
+      const fmtLocal=(d)=>{const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());};
+      const today=new Date(),tom=new Date(Date.now()+ONE);
+      let inP=null,outP=null;
+
+      if(window.flatpickr){
+        inP=flatpickr("#ci",{dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",
+          onChange(d){if(d[0]){const n=new Date(d[0].getTime()+ONE);outP.set('minDate',n);if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0])outP.setDate(n,true);}}
+        });
+        outP=flatpickr("#co",{dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:tom});
+        inP.setDate(today,true); outP.setDate(tom,true);
+      }else{
+        ci.removeAttribute('readonly'); co.removeAttribute('readonly');
+        ci.type='date'; co.type='date';
+        ci.value=fmtLocal(today); ci.min=fmtLocal(today);
+        co.value=fmtLocal(tom);   co.min=fmtLocal(tom);
+        ci.addEventListener('change',()=>{const a=new Date(ci.value||fmtLocal(today)),n=new Date(a.getTime()+ONE);if(!co.value||new Date(co.value)<=a){co.value=fmtLocal(n);co.min=fmtLocal(n);}});
+      }
+
+      /* Guests */
+      let rooms=1,adults=2,children=0;
+      const guestBtn=document.getElementById('guestBtn'),
+            roomsC=document.getElementById('roomsCount'),
+            adultsC=document.getElementById('adultsCount'),
+            childrenC=document.getElementById('childrenCount'),
+            hR=document.getElementById('rooms'),
+            hA=document.getElementById('adults'),
+            hC=document.getElementById('children'),
+            modal=document.getElementById('guestModal'),
+            backdrop=document.getElementById('guestBackdrop');
+
+      function openGuest(){ roomsC.textContent=rooms; adultsC.textContent=adults; childrenC.textContent=children; modal.style.display='block'; backdrop.style.display='block'; }
+      function closeGuest(){ modal.style.display='none'; backdrop.style.display='none'; }
+      function updateGuestBtn(){ guestBtn.textContent=`${rooms} room${rooms>1?'s':''}, ${adults} adult${adults>1?'s':''}, ${children} child${children!==1?'ren':''}`; }
+      updateGuestBtn();
+
+      guestBtn.addEventListener('click', openGuest);
+      document.getElementById('btnCloseX').addEventListener('click', closeGuest);
+      document.getElementById('btnCancel').addEventListener('click', closeGuest);
+      backdrop.addEventListener('click', closeGuest);
+
+      document.querySelectorAll('.btn-ctrl').forEach(b=>{
+        b.addEventListener('click',()=>{
+          const t=b.getAttribute('data-type'), op=b.getAttribute('data-op');
+          let val = t==='rooms'?rooms : t==='adults'?adults : children;
+          const min = t==='children'?0:1, max=10;
+          if(op==='plus' && val<max) val++;
+          if(op==='minus'&& val>min) val--;
+          if(t==='rooms'){ rooms=val; roomsC.textContent=val; }
+          if(t==='adults'){ adults=val; adultsC.textContent=val; }
+          if(t==='children'){ children=val; childrenC.textContent=val; }
+        });
+      });
+
+      document.getElementById('btnSaveGuests').addEventListener('click',()=>{
+        hR.value=String(rooms); hA.value=String(adults); hC.value=String(children);
+        updateGuestBtn(); closeGuest();
+      });
+
+      /* Switch to hotel-name mode */
+      document.getElementById('btnHotelMode').addEventListener('click',()=>{ location.href='../hotel-search.html'; });
+
+      /* Submit (city mode -> send q) */
+      document.getElementById('cgForm').addEventListener('submit',e=>{
+        e.preventDefault();
+        const cityLabel = document.getElementById('cityLabel').value || document.getElementById('cityInput').value || '';
+        let qCity = cityLabel || 'Bangkok';
+        const checkin  = document.getElementById('ci').value;
+        const checkout = document.getElementById('co').value;
+        const roomsV   = document.getElementById('rooms').value || '1';
+        const adultsV  = document.getElementById('adults').value || '2';
+        const childrenV= document.getElementById('children').value || '0';
+        const sp = new URLSearchParams({ q:qCity, checkin, checkout, rooms:roomsV, adults:adultsV, children:childrenV, lang:'en' });
+        // temp: go to Thai search page until /en/search.html is ready
+        location.href = '../search.html?' + sp.toString();
+      });
+
+      /* City cards -> to search with q */
+      function fmtLocalStr(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+      document.querySelectorAll('.city-card[data-q]').forEach(a=>{
+        a.addEventListener('click',ev=>{
+          ev.preventDefault();
+          let q=a.getAttribute('data-q')||'Bangkok';
+
+          const inP=window.flatpickr && document.querySelector('#ci')._flatpickr;
+          const outP=window.flatpickr && document.querySelector('#co')._flatpickr;
+          let ci = inP && inP.selectedDates[0] ? inP.formatDate(inP.selectedDates[0],'Y-m-d') : fmtLocalStr(new Date());
+          let co = outP && outP.selectedDates[0] ? outP.formatDate(outP.selectedDates[0],'Y-m-d') : fmtLocalStr(new Date(Date.now()+86400000));
+
+          const ciD=new Date(ci+'T00:00:00'), coD=new Date(co+'T00:00:00');
+          if(coD<=ciD) co=fmtLocalStr(new Date(ciD.getTime()+86400000));
+
+          const roomsV=document.getElementById('rooms').value||1;
+          const adultsV=document.getElementById('adults').value||2;
+          const childrenV=document.getElementById('children').value||0;
+
+          const sp=new URLSearchParams({q,checkin:ci,checkout:co,rooms:roomsV,adults:adultsV,children:childrenV,lang:'en'});
+          location.href='../search.html?'+sp.toString();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
