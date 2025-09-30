@@ -75,7 +75,7 @@
   </div>
 </main>
 
-<!-- Dialog: Change search -->
+<!-- Dialogs -->
 <dialog id="dlgChange">
   <h3 class="dlg-title">Change search</h3>
   <form id="changeForm" method="dialog">
@@ -97,7 +97,6 @@
   </form>
 </dialog>
 
-<!-- Filter dialogs -->
 <dialog id="dlgSort"><h3 class="dlg-title">Sort by</h3>
   <div class="radio-list">
     <label class="radio-item"><input type="radio" name="sort" value="rec"> Recommended</label>
@@ -143,6 +142,14 @@
   const $ = s => document.querySelector(s);
   const params = new URLSearchParams(location.search);
 
+  // --- NEW: normalize language once and reuse everywhere ---
+  const normalizeLang = (l) => {
+    const v = String(l||'').toLowerCase();
+    if (v.startsWith('th')) return 'th-th';
+    if (v.startsWith('en')) return 'en-us';
+    return v || 'en-us';
+  };
+
   const state = {
     q: (params.get('q') || ''),
     cityId: params.get('cityId') || params.get('cityid') || '',
@@ -154,7 +161,7 @@
     rooms: +(params.get('rooms') || 1),
     adults: +(params.get('adults') || 2),
     children: +(params.get('children') || 0),
-    lang: (params.get('lang') || 'en').toLowerCase(),
+    lang: normalizeLang(params.get('lang') || 'en-us'),
     currency: 'THB',
     sort: params.get('sort') || 'rec',
     starsMin: +(params.get('starsMin') || 0),
@@ -165,7 +172,7 @@
   };
   const draft = JSON.parse(JSON.stringify(state));
 
-  // normalize Bangkok variants (TH -> EN)
+  // normalize Bangkok spellings
   function normalizeQ(q){
     return String(q||'')
       .replace(/กรุงเทพมหานคร|กรุงเทพฯ|กรุงเทพ/g,'Bangkok')
@@ -241,8 +248,10 @@
   function calcLos(ci, co){
     try{ const a=new Date(ci+'T12:00:00Z'), b=new Date(co+'T12:00:00Z'); return Math.max(1, Math.round((b-a)/86400000)); }catch(_){ return 1; }
   }
+
+  // Ensure Agoda gets correct language path (en-us/th-th)
   function partnerUrl(){
-    const langPath = state.lang || 'en';
+    const langPath = state.lang || 'en-us';
     if (state.hid || state.cityId){
       const base=`https://www.agoda.com/${langPath}/partners/partnersearch.aspx`;
       const sp=new URLSearchParams({
@@ -277,7 +286,7 @@
     ['checkin','checkout','rooms','adults','children','lang','currency','page','sort','starsMin','scoreMin','priceMin','priceMax'].forEach(k => p.set(k, state[k]));
     let data = await fetchJson(base.toString());
 
-    // try #2a: hotelId path
+    // try #2a: hotelId
     if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.hid){
       const u = new URL('/api/hotel-search', location.origin);
       const q = u.searchParams;
@@ -286,10 +295,12 @@
       q.set('checkout', state.checkout||'');
       q.set('adults', String(state.adults||2));
       q.set('children', String(state.children||0));
+      // force language for fallback too
+      q.set('lang', state.lang);
       data = await fetchJson(u.toString());
     }
 
-    // try #2b: cityId path (limit 30)
+    // try #2b: cityId (limit 30)
     if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.cityId){
       const u = new URL('/api/hotel-search', location.origin);
       const q = u.searchParams;
@@ -300,7 +311,7 @@
       q.set('rooms', String(state.rooms||1));
       q.set('adults', String(state.adults||2));
       q.set('children', String(state.children||0));
-      q.set('lang', state.lang);
+      q.set('lang', state.lang);           // << ensure EN
       q.set('currency', state.currency);
       data = await fetchJson(u.toString());
     }
@@ -375,7 +386,7 @@
     }).join('');
   }
 
-  /* Change dialog */
+  // Change dialog logic
   const dlg = $('#dlgChange'); const chgQ = $('#chgQ'), chgCi = $('#chgCi'), chgCo = $('#chgCo');
   const ONE = 86400000; const iso = d => new Date(d).toISOString().slice(0,10);
 
@@ -417,7 +428,7 @@
     updateQueryOnly(); dlg.close(); load();
   });
 
-  // chips handlers
+  // chip handlers
   document.getElementById('chipSort').addEventListener('click',()=>{ document.getElementById('dlgSort').showModal(); [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort)); });
   document.getElementById('chipStars').addEventListener('click',()=>{ document.getElementById('dlgStars').showModal(); [...document.querySelectorAll('input[name=stars]')].forEach(r=>r.checked=(+r.value===+draft.starsMin)); });
   document.getElementById('chipPrice').addEventListener('click',()=>{ document.getElementById('dlgPrice').showModal(); setPriceWidgets(draft.priceMin,draft.priceMax); });
