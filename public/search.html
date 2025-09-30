@@ -75,7 +75,68 @@
   </div>
 </main>
 
-<!-- Dialogs (คงเดิม)… -->
+<!-- Dialog: เปลี่ยนแปลงการค้นหา -->
+<dialog id="dlgChange">
+  <h3 class="dlg-title">เปลี่ยนแปลงการค้นหา</h3>
+  <form id="changeForm" method="dialog">
+    <div class="dlg-grid">
+      <div class="field full"><label for="chgQ">ปลายทาง / โรงแรม</label><input id="chgQ" class="inp" type="text" placeholder="เช่น กรุงเทพ, เชียงใหม่"></div>
+      <div class="field"><label for="chgCi">เช็คอิน</label><input id="chgCi" class="inp" type="date"></div>
+      <div class="field"><label for="chgCo">เช็คเอาท์</label><input id="chgCo" class="inp" type="date"></div>
+      <div class="field full">
+        <label>ผู้เข้าพัก</label>
+        <div class="guest-box"><div>ห้อง <span id="gRooms" class="ctxt">1</span> · ผู้ใหญ่ <span id="gAdults" class="ctxt">2</span> · เด็ก <span id="gChildren" class="ctxt">0</span></div></div>
+        <div style="display:flex;gap:14px;justify-content:space-between;margin-top:8px">
+          <div class="counter"><span>ห้อง</span><button class="cbtn" data-t="rooms" data-op="-">−</button><span class="ctxt" id="cRooms">1</span><button class="cbtn" data-t="rooms" data-op="+">+</button></div>
+          <div class="counter"><span>ผู้ใหญ่</span><button class="cbtn" data-t="adults" data-op="-">−</button><span class="ctxt" id="cAdults">2</span><button class="cbtn" data-t="adults" data-op="+">+</button></div>
+          <div class="counter"><span>เด็ก</span><button class="cbtn" data-t="children" data-op="-">−</button><span class="ctxt" id="cChildren">0</span><button class="cbtn" data-t="children" data-op="+">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="dlg-actions"><button type="button" class="btn secondary" id="chgCancel">ยกเลิก</button><button type="submit" class="btn">ค้นหา</button></div>
+  </form>
+</dialog>
+
+<!-- Dialogs เดิมคงไว้ (Sort/Stars/Price/Score) -->
+<dialog id="dlgSort"><h3 class="dlg-title">เรียงโดย</h3>
+  <div class="radio-list">
+    <label class="radio-item"><input type="radio" name="sort" value="rec"> แนะนำ</label>
+    <label class="radio-item"><input type="radio" name="sort" value="price_asc"> ราคาต่ำ → สูง</label>
+    <label class="radio-item"><input type="radio" name="sort" value="price_desc"> ราคาสูง → ต่ำ</label>
+  </div>
+  <div class="dlg-actions"><button class="btn secondary" onclick="document.getElementById('dlgSort').close()">ยกเลิก</button><button class="btn" id="btnSortOk">ตกลง</button></div>
+</dialog>
+
+<dialog id="dlgStars"><h3 class="dlg-title">เรตติ้งโรงแรม</h3>
+  <div class="radio-list">
+    <label class="radio-item"><input type="radio" name="stars" value="0"> ทั้งหมด</label>
+    <label class="radio-item"><input type="radio" name="stars" value="2"> 2 ดาวขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="stars" value="3"> 3 ดาวขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="stars" value="4"> 4 ดาวขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="stars" value="5"> 5 ดาวขึ้นไป</label>
+  </div>
+  <div class="dlg-actions"><button class="btn secondary" onclick="document.getElementById('dlgStars').close()">ยกเลิก</button><button class="btn" id="btnStarsOk">ตกลง</button></div>
+</dialog>
+
+<dialog id="dlgPrice"><h3 class="dlg-title">ช่วงราคา</h3>
+  <div class="range-wrap">
+    <div class="range-labels"><div>฿<span id="pvMin">0</span></div><div>฿<span id="pvMax">200,000</span></div></div>
+    <div class="ranges"><input id="rMin" type="range" min="0" max="200000" step="100" value="0"><input id="rMax" type="range" min="0" max="200000" step="100" value="200000"></div>
+    <div class="ranges"><input id="nMin" type="number" min="0" max="200000" step="100" value="0"><input id="nMax" type="number" min="0" max="200000" step="100" value="200000"></div>
+  </div>
+  <div class="dlg-actions"><button class="btn ghost" id="btnPriceReset">ลบ</button><button class="btn" id="btnPriceOk">ตกลง</button></div>
+</dialog>
+
+<dialog id="dlgScore"><h3 class="dlg-title">คะแนนรีวิว</h3>
+  <div class="radio-list">
+    <label class="radio-item"><input type="radio" name="score" value="0"> ทั้งหมด</label>
+    <label class="radio-item"><input type="radio" name="score" value="6"> 6 คะแนนขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="score" value="7"> 7 คะแนนขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="score" value="8"> 8 คะแนนขึ้นไป</label>
+    <label class="radio-item"><input type="radio" name="score" value="9"> 9 คะแนนขึ้นไป</label>
+  </div>
+  <div class="dlg-actions"><button class="btn secondary" onclick="document.getElementById('dlgScore').close()">ยกเลิก</button><button class="btn" id="btnScoreOk">ตกลง</button></div>
+</dialog>
 
 <script>
 (function(){
@@ -200,22 +261,32 @@
     renderSkeleton();
     if (!state.cityId && !state.hid && state.q) await resolveDestinationIfNeeded();
 
-    // --- #1: /api/search (ขอ 30 รายการ) ---
+    // try #1: /api/search (เดิม)
     const base = new URL('/api/search', location.origin);
     const p = base.searchParams;
     if (state.hid) p.set('hid', state.hid); else if (state.cityId) p.set('cityId', state.cityId); else if (state.q) p.set('q', state.q);
     ['checkin','checkout','rooms','adults','children','lang','currency','page','sort','starsMin','scoreMin','priceMin','priceMax'].forEach(k => p.set(k, state[k]));
-    p.set('limit','30'); // ← เพิ่มบรรทัดนี้
     let data = await fetchJson(base.toString());
 
-    // --- #2: fallback → /api/hotel-search (ขอ 30 รายการแบบครอบจักรวาล) ---
+    // try #2a: ถ้ามี hotelId แต่ผลว่าง → เรียก /api/hotel-search แบบ hotelId
+    if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.hid){
+      const u = new URL('/api/hotel-search', location.origin);
+      const q = u.searchParams;
+      q.set('hotelId', state.hid);
+      q.set('checkin', state.checkin||'');
+      q.set('checkout', state.checkout||'');
+      q.set('adults', String(state.adults||2));
+      q.set('children', String(state.children||0));
+      // rooms ไม่ใช้ใน Long Tail V2 แต่คงส่งไปได้ไม่เป็นไร
+      data = await fetchJson(u.toString());
+    }
+
+    // try #2b: ถ้าผลว่างและมี cityId → /api/hotel-search?cityId=...&limit=30
     if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.cityId){
       const u = new URL('/api/hotel-search', location.origin);
       const q = u.searchParams;
       q.set('cityId', state.cityId);
-      q.set('limit','30');       // ← เดิมมีอยู่แล้ว
-      q.set('pageSize','30');    // ← เผื่อฝั่งเซิร์ฟเวอร์ใช้ชื่อ param นี้
-      q.set('page_size','30');   // ← หรือชื่อนี้
+      q.set('limit','30');
       q.set('checkin', state.checkin||'');
       q.set('checkout', state.checkout||'');
       q.set('rooms', String(state.rooms||1));
@@ -231,9 +302,11 @@
       refreshPartnerCta(); return;
     }
 
+    // รองรับโครงสร้างผลลัพธ์หลายแบบ
     let items = data.results || data.items || data.hotels || [];
     if (!Array.isArray(items)) items = [];
 
+    // sort ตามที่เลือก
     if (state.sort === 'price_asc') items.sort((a,b)=>(readPrice(a)||1e15)-(readPrice(b)||1e15));
     if (state.sort === 'price_desc') items.sort((a,b)=>(readPrice(b)||0)-(readPrice(a)||0));
 
@@ -296,7 +369,71 @@
     }).join('');
   }
 
-  // … ส่วน dialog/filters (คงเดิมทั้งหมด) …
+  /* ป๊อปอัปเปลี่ยนแปลง */
+  const dlg = $('#dlgChange'); const chgQ = $('#chgQ'), chgCi = $('#chgCi'), chgCo = $('#chgCo');
+  const ONE = 86400000; const iso = d => new Date(d).toISOString().slice(0,10);
+
+  function fillDialogWithState(){
+    chgQ.value = state.city || state.q || '';
+    const tCi = state.checkin ? new Date(state.checkin) : new Date();
+    const tCo = state.checkout ? new Date(state.checkout) : new Date(Date.now()+ONE);
+    chgCi.value = iso(tCi); chgCo.value = iso(tCo);
+    chgCi.min = iso(new Date()); chgCo.min = iso(new Date(tCi.getTime()+ONE));
+    $('#gRooms').textContent = state.rooms; $('#cRooms').textContent = state.rooms;
+    $('#gAdults').textContent = state.adults; $('#cAdults').textContent = state.adults;
+    $('#gChildren').textContent = state.children; $('#cChildren').textContent = state.children;
+  }
+  $('#btnChange').addEventListener('click', ()=>{ fillDialogWithState(); dlg.showModal(); });
+  $('#chgCancel').addEventListener('click', ()=> dlg.close());
+  chgCi.addEventListener('change', ()=>{
+    const a = new Date(chgCi.value || iso(new Date()));
+    const n = new Date(a.getTime()+ONE);
+    if (!chgCo.value || new Date(chgCo.value) <= a) chgCo.value = iso(n);
+    chgCo.min = iso(n);
+  });
+  document.querySelectorAll('#dlgChange .cbtn').forEach(b=>{
+    b.addEventListener('click',(e)=>{
+      e.preventDefault();
+      const t=b.getAttribute('data-t'),op=b.getAttribute('data-op');
+      const lim={rooms:[1,10],adults:[1,10],children:[0,10]}[t];
+      const id='#c'+t.charAt(0).toUpperCase()+t.slice(1);
+      let v=+document.querySelector(id).textContent; v=op==='+'?Math.min(lim[1],v+1):Math.max(lim[0],v-1);
+      document.querySelector(id).textContent=v; document.querySelector('#g'+t.charAt(0).toUpperCase()+t.slice(1)).textContent=v;
+    });
+  });
+  $('#changeForm').addEventListener('submit',(e)=>{
+    e.preventDefault();
+    state.q = normalizeQ(chgQ.value||''); state.cityId=''; state.hid='';
+    state.checkin = chgCi.value; state.checkout = chgCo.value;
+    state.rooms=+$('#cRooms').textContent; state.adults=+$('#cAdults').textContent; state.children=+$('#cChildren').textContent;
+    const ci=state.checkin.replaceAll('-','/'), co=state.checkout.replaceAll('-','/');
+    $('#subtitle').innerHTML = `<span class="nowrap">${state.city || state.q || '—'} | วันที่: ${ci} → ${co}</span><br><span class="nowrap">ผู้เข้าพัก: ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง</span>`;
+    updateQueryOnly(); dlg.close(); load();
+  });
+
+  // chips handlers
+  document.getElementById('chipSort').addEventListener('click',()=>{ document.getElementById('dlgSort').showModal(); [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort)); });
+  document.getElementById('chipStars').addEventListener('click',()=>{ document.getElementById('dlgStars').showModal(); [...document.querySelectorAll('input[name=stars]')].forEach(r=>r.checked=(+r.value===+draft.starsMin)); });
+  document.getElementById('chipPrice').addEventListener('click',()=>{ document.getElementById('dlgPrice').showModal(); setPriceWidgets(draft.priceMin,draft.priceMax); });
+  document.getElementById('chipScore').addEventListener('click',()=>{ document.getElementById('dlgScore').showModal(); [...document.querySelectorAll('input[name=score]')].forEach(r=>r.checked=(+r.value===+draft.scoreMin)); });
+
+  document.getElementById('btnSortOk').addEventListener('click',()=>{ draft.sort=document.querySelector('input[name=sort]:checked')?.value||'rec'; updateChips(); document.getElementById('dlgSort').close(); });
+  document.getElementById('btnStarsOk').addEventListener('click',()=>{ draft.starsMin=+(document.querySelector('input[name=stars]:checked')?.value||0); updateChips(); document.getElementById('dlgStars').close(); });
+  document.getElementById('btnScoreOk').addEventListener('click',()=>{ draft.scoreMin=+(document.querySelector('input[name=score]:checked')?.value||0); updateChips(); document.getElementById('dlgScore').close(); });
+
+  function setPriceWidgets(min,max){
+    const clamp=n=>Math.min(200000,Math.max(0,Math.round(n)));
+    const m=clamp(Math.min(min,max)), x=clamp(Math.max(min,max));
+    rMin.value=m; rMax.value=x; nMin.value=m; nMax.value=x; pvMin.textContent=fmt(m); pvMax.textContent=fmt(x);
+  }
+  function readPriceWidgets(){ const m=Math.min(+rMin.value,+rMax.value), x=Math.max(+rMin.value,+rMax.value); return {m,x}; }
+  const rMin=document.getElementById('rMin'), rMax=document.getElementById('rMax'), nMin=document.getElementById('nMin'), nMax=document.getElementById('nMax'), pvMin=document.getElementById('pvMin'), pvMax=document.getElementById('pvMax');
+  ['rMin','rMax'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{ const {m,x}=readPriceWidgets(); setPriceWidgets(m,x); }));
+  ['nMin','nMax'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{ setPriceWidgets(+nMin.value,+nMax.value); }));
+  document.getElementById('btnPriceReset').addEventListener('click',()=>setPriceWidgets(0,200000));
+  document.getElementById('btnPriceOk').addEventListener('click',()=>{ const {m,x}=readPriceWidgets(); draft.priceMin=m; draft.priceMax=x; updateChips(); document.getElementById('dlgPrice').close(); });
+
+  document.getElementById('chipApply').addEventListener('click',()=>{ Object.assign(state, JSON.parse(JSON.stringify(draft))); updateQueryOnly(); load(); });
 
   load();
 })();
