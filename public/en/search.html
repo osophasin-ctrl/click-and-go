@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Search Results | Click & Go</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    :root{--brand:#0aa297;--card-border:#0aa29733;--gold:#d4a017;--muted:#666;}
+    .container{max-width:1100px;margin:0 auto;padding:16px}
+    .main-title{font-size:36px;line-height:1.2;margin:8px 0 4px}
+    @media(max-width:640px){.main-title{font-size:30px}}
+    .muted{color:var(--muted)} .nowrap{white-space:nowrap}
+    .change-row{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;margin:4px 0 12px}
+    .change-row .hint{color:#d32f2f;font-weight:500}
+    .change-row .btn{background:var(--brand);color:#fff;border:0;border-radius:999px;padding:10px 16px;font-weight:700;cursor:pointer;flex:0 0 auto}
+    .bar{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;overflow:auto;padding:8px 0;margin:12px 0 16px}
+    .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer}
+    .chip span{color:#111}.chip small{color:#666}
+    dialog{border:none;border-radius:14px;max-width:520px;width:calc(100% - 24px);padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+    dialog::backdrop{background:rgba(0,0,0,.35)}
+    .dlg-title{font-weight:700;margin:0 0 12px}
+    .dlg-grid{display:grid;gap:10px;grid-template-columns:1fr 1fr}.dlg-grid .full{grid-column:1 / -1}
+    .field{display:flex;flex-direction:column;gap:6px}.field label{font-weight:600}
+    .inp,.btn{height:42px;border:1px solid #d7d7d7;border-radius:8px;padding:0 10px;background:#fff;font-size:14px}
+    .btn{background:var(--brand);color:#fff;border:0;cursor:pointer;font-weight:700}
+    .guest-box{display:flex;align-items:center;justify-content:space-between;border:1px solid #d7d7d7;border-radius:8px;padding:0 10px;height:42px;background:#fff}
+    .counter{display:flex;align-items:center;gap:8px}.cbtn{width:32px;height:32px;border-radius:50%;border:1px solid #bbb;background:#fff;font-size:18px;cursor:pointer}
+    .ctxt{min-width:20px;text-align:center;font-weight:700}
+    .dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.btn.secondary{background:#e5e7eb;color:#111}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:640px){.cards{grid-template-columns:1fr}}
+    .card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);border:2px solid var(--card-border)}
+    .card img{width:100%;height:210px;object-fit:cover;display:block;background:#f4f4f4}
+    .card-body{padding:14px;display:flex;flex-direction:column;min-height:180px}
+    .price{font-weight:700;margin-top:8px}.h-actions{margin-top:auto;display:flex;justify-content:flex-end}
+    .stars{display:inline-flex;gap:2px;vertical-align:middle}.star{width:16px;height:16px;display:inline-block}.star svg{width:100%;height:100%;fill:var(--gold)}
+    .score{color:#c62828}
+    .skeleton{background:linear-gradient(90deg,#f2f2f2 25%,#e9e9e9 37%,#f2f2f2 63%);animation:s 1.4s ease infinite}
+    @keyframes s{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}
+    .sk-img{height:210px}.sk-line{height:14px;margin-top:8px;border-radius:6px}
+    .cta-wrap{display:flex;justify-content:center;margin:28px 0}.cta{padding:12px 22px;border-radius:999px;font-weight:600}
+  </style>
+</head>
+<body>
+<header class="site-header" role="banner">
+  <div class="inner">
+    <a href="/en/index.html" class="brand"><img src="/logo.png" width="40" height="40" alt="Click & Go"><span class="brand-text">Click & Go</span></a>
+    <nav class="main-nav"><a href="/en/index.html">Home</a><a href="/en/deals.html">Deals</a></nav>
+  </div>
+</header>
+
+<main class="container">
+  <h1 id="title" class="main-title">Search results</h1>
+  <p class="muted" id="subtitle"></p>
+
+  <div class="change-row">
+    <div class="hint">Want to change your search?</div>
+    <button id="btnChange" class="btn" type="button">Change</button>
+  </div>
+
+  <div class="bar" role="toolbar" aria-label="Search filters">
+    <button id="chipSort" class="chip"><span>Sort by</span><small id="chipSortV">Recommended</small></button>
+    <button id="chipStars" class="chip"><span>Rating</span><small id="chipStarsV">All</small></button>
+    <button id="chipPrice" class="chip"><span>Price</span><small id="chipPriceV">฿0 – ฿200,000</small></button>
+    <button id="chipScore" class="chip"><span>Reviews</span><small id="chipScoreV">All</small></button>
+    <button id="chipApply" class="chip" style="background:var(--brand);color:#fff;border-color:var(--brand)">Apply</button>
+  </div>
+
+  <section id="grid" class="cards" aria-live="polite"></section>
+
+  <div class="cta-wrap">
+    <a id="partnerMore" class="btn cta" href="#" target="_blank" rel="nofollow noopener">See more deals on our partner</a>
+  </div>
+</main>
+
+<!-- Dialog: Change search -->
+<dialog id="dlgChange">
+  <h3 class="dlg-title">Change search</h3>
+  <form id="changeForm" method="dialog">
+    <div class="dlg-grid">
+      <div class="field full"><label for="chgQ">Destination / Hotel</label><input id="chgQ" class="inp" type="text" placeholder="e.g. Bangkok, Chiang Mai"></div>
+      <div class="field"><label for="chgCi">Check-in</label><input id="chgCi" class="inp" type="date"></div>
+      <div class="field"><label for="chgCo">Check-out</label><input id="chgCo" class="inp" type="date"></div>
+      <div class="field full">
+        <label>Guests</label>
+        <div class="guest-box"><div>Rooms <span id="gRooms" class="ctxt">1</span> · Adults <span id="gAdults" class="ctxt">2</span> · Children <span id="gChildren" class="ctxt">0</span></div></div>
+        <div style="display:flex;gap:14px;justify-content:space-between;margin-top:8px">
+          <div class="counter"><span>Rooms</span><button class="cbtn" data-t="rooms" data-op="-">−</button><span class="ctxt" id="cRooms">1</span><button class="cbtn" data-t="rooms" data-op="+">+</button></div>
+          <div class="counter"><span>Adults</span><button class="cbtn" data-t="adults" data-op="-">−</button><span class="ctxt" id="cAdults">2</span><button class="cbtn" data-t="adults" data-op="+">+</button></div>
+          <div class="counter"><span>Children</span><button class="cbtn" data-t="children" data-op="-">−</button><span class="ctxt" id="cChildren">0</span><button class="cbtn" data-t="children" data-op="+">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="dlg-actions"><button type="button" class="btn secondary" id="chgCancel">Cancel</button><button type="submit" class="btn">Search</button></div>
+  </form>
+</dialog>
+
+<!-- Filter dialogs -->
+<dialog id="dlgSort"><h3 class="dlg-title">Sort by</h3>
+  <div class="radio-list">
+    <label class="radio-item"><input type="radio" name="sort" value="rec"> Recommended</label>
+    <label class="radio-item"><input type="radio" name="sort" value="price_asc"> Price: Low → High</label>
+    <label class="radio-item"><input type="radio" name="sort" value="price_desc"> Price: High → Low</label>
+  </div>
+  <div class="dlg-actions"><button class="btn secondary" onclick="document.getElementById('dlgSort').close()">Cancel</button><button class="btn" id="btnSortOk">OK</button></div>
+</dialog>
+
+<dialog id="dlgStars"><h3 class="dlg-title">Hotel rating</h3>
+  <div class="radio-list">
+    <label class="radio-item"><input type="radio" name="stars" value="0"> All</label>
+    <label class="radio-item"><input type="radio" name="stars" value="2"> 2+ stars</label>
+    <label class="radio-item"><input type="radio" name="stars" value="3"> 3+ stars</label>
+    <label class="radio-item"><input type="radio" name="stars" value="4"> 4+ stars</label>
+    <label class="radio-item"><input type="radio" name="stars" value="5"> 5 stars</label>
+  </div>
+  <div class="dlg-actions"><button class="btn secondary" onclick="document.getElementById('dlgStars').close()">Cancel</button><button class="btn" id="btnStarsOk">OK</button></div>
+</dialog>
+
+<dialog id="dlgPrice"><h3 class="dlg-title">Price range</h3>
+  <div class="range-wrap">
+    <div class="range-labels"><div>฿<span id="pvMin">0</span></div><div>฿<span id="pvMax">200,000</span></div></div>
+    <div class="ranges"><input id="rMin" type="range" min="0" max="200000" step="100" value="0"><input id="rMax" type="range" min="0" max="200000" step="100" value="200000"></div>
+    <div class="ranges"><input id="nMin" type="number" min="0" max="200000" step="100" value="0"><input id="nMax" type="number" min="0" max="200000" step="100" value="200000"></div>
+  </div>
+  <div class="dlg-actions"><button class="btn ghost" id="btnPriceReset">Reset</button><button class="btn" id="btnPriceOk">OK</button></div>
+</dialog>
+
+<dialog id="dlgScore"><h3 class="dlg-title">Review score</h3>
+  <div class="radio-list">
+    <label class="radio-item"><input type="radio" name="score" value="0"> All</label>
+    <label class="radio-item"><input type="radio" name="score" value="6"> 6+</label>
+    <label class="radio-item"><input type="radio" name="score" value="7"> 7+</label>
+    <label class="radio-item"><input type="radio" name="score" value="8"> 8+</label>
+    <label class="radio-item"><input type="radio" name="score" value="9"> 9+</label>
+  </div>
+  <div class="dlg-actions"><button class="btn secondary" onclick="document.getElementById('dlgScore').close()">Cancel</button><button class="btn" id="btnScoreOk">OK</button></div>
+</dialog>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const params = new URLSearchParams(location.search);
+
+  const state = {
+    q: (params.get('q') || ''),
+    cityId: params.get('cityId') || params.get('cityid') || '',
+    hid: params.get('hid') || params.get('hotelId') || '',
+    city: params.get('city') || '',
+    country: params.get('country') || '',
+    checkin: params.get('checkin'),
+    checkout: params.get('checkout'),
+    rooms: +(params.get('rooms') || 1),
+    adults: +(params.get('adults') || 2),
+    children: +(params.get('children') || 0),
+    lang: (params.get('lang') || 'en').toLowerCase(),
+    currency: 'THB',
+    sort: params.get('sort') || 'rec',
+    starsMin: +(params.get('starsMin') || 0),
+    scoreMin: +(params.get('scoreMin') || 0),
+    priceMin: +(params.get('priceMin') || 0),
+    priceMax: +(params.get('priceMax') || 200000),
+    page: +(params.get('page') || 1)
+  };
+  const draft = JSON.parse(JSON.stringify(state));
+
+  // normalize Bangkok variants (TH -> EN)
+  function normalizeQ(q){
+    return String(q||'')
+      .replace(/กรุงเทพมหานคร|กรุงเทพฯ|กรุงเทพ/g,'Bangkok')
+      .trim();
+  }
+  state.q = normalizeQ(state.q);
+
+  (function setSubtitle(){
+    const ci = (state.checkin || '').replaceAll('-', '/');
+    const co = (state.checkout || '').replaceAll('-', '/');
+    const place = state.city || state.q || '—';
+    $('#subtitle').innerHTML =
+      `<span class="nowrap">${place} | Dates: ${ci} → ${co}</span><br>` +
+      `<span class="nowrap">Guests: ${state.adults} adults, ${state.children} children, ${state.rooms} room(s)</span>`;
+  })();
+
+  function fmt(n, cur = state.currency){
+    if (n == null) return '-';
+    const zero = new Set(['THB','JPY','IDR','KRW','VND']).has(String(cur).toUpperCase());
+    const val = zero ? Math.round(n) : n;
+    try{ return new Intl.NumberFormat('en-US',{maximumFractionDigits:zero?0:2}).format(val); }catch(_){ return String(val); }
+  }
+  const esc = s => String(s).replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+
+  function updateChips(){
+    $('#chipSortV').textContent =
+      draft.sort==='price_asc'?'Price: Low → High':
+      draft.sort==='price_desc'?'Price: High → Low':'Recommended';
+    $('#chipStarsV').textContent = draft.starsMin?`${draft.starsMin}+ stars`:'All';
+    const pm = Math.min(draft.priceMin, draft.priceMax), px = Math.max(draft.priceMin, draft.priceMax);
+    $('#chipPriceV').textContent = `฿${fmt(pm)} – ฿${fmt(px)}`;
+    $('#chipScoreV').textContent = draft.scoreMin?`${draft.scoreMin}+`:'All';
+  }
+  updateChips();
+
+  function updateQueryOnly(){
+    const u = new URL(location.href);
+    Object.entries({
+      q: state.q || '', cityId: state.cityId || '', hid: state.hid || '',
+      city: state.city || '', country: state.country || '',
+      checkin: state.checkin, checkout: state.checkout,
+      rooms: state.rooms, adults: state.adults, children: state.children,
+      lang: state.lang, currency: state.currency, page: state.page, sort: state.sort,
+      starsMin: state.starsMin, scoreMin: state.scoreMin, priceMin: state.priceMin, priceMax: state.priceMax
+    }).forEach(([k,v])=>{ if(v===''||v==null) u.searchParams.delete(k); else u.searchParams.set(k,v); });
+    history.replaceState({},'',u);
+  }
+
+  async function resolveDestinationIfNeeded(){
+    if ((state.cityId || state.hid) || !state.q) return;
+    const q = normalizeQ(state.q);
+    try{
+      const r = await fetch(`/api/city-suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(state.lang)}&limit=1`, {cache:'no-store'});
+      const d = await r.json();
+      if (d && d.ok && Array.isArray(d.items) && d.items[0]?.city_id){
+        state.cityId = String(d.items[0].city_id);
+        state.city   = d.items[0].label || state.city;
+        return;
+      }
+    }catch(_){}
+    try{
+      const r = await fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(state.lang)}&type=mixed`, {cache:'no-store'});
+      const d = await r.json();
+      if (d && d.ok && Array.isArray(d.items) && d.items.length){
+        const city = d.items.find(it => String(it.type||'').toLowerCase().includes('city'));
+        const hotel= d.items.find(it => String(it.type||'').toLowerCase().includes('hotel'));
+        if (city){ state.cityId = String(city.city_id ?? city.value ?? city.id ?? ''); state.city = city.label || state.city; }
+        else if (hotel){ state.hid = String(hotel.id||hotel.hotel_id||''); }
+      }
+    }catch(_){}
+  }
+
+  function calcLos(ci, co){
+    try{ const a=new Date(ci+'T12:00:00Z'), b=new Date(co+'T12:00:00Z'); return Math.max(1, Math.round((b-a)/86400000)); }catch(_){ return 1; }
+  }
+  function partnerUrl(){
+    const langPath = state.lang || 'en';
+    if (state.hid || state.cityId){
+      const base=`https://www.agoda.com/${langPath}/partners/partnersearch.aspx`;
+      const sp=new URLSearchParams({
+        cid:'1949420', ...(state.hid?{hid:String(state.hid)}:{city:String(state.cityId)}),
+        checkin:state.checkin||'', checkout:state.checkout||'',
+        rooms:String(state.rooms||1), adults:String(state.adults||2), children:String(state.children||0),
+        currency:state.currency||'THB', utm_source:'clickandgo', utm_medium:'affiliate', noapp:'1', pcs:'1'
+      }); return `${base}?${sp.toString()}`;
+    }
+    const base=`https://www.agoda.com/${langPath}/search`;
+    const sp=new URLSearchParams({
+      cid:'1949420', currency:state.currency||'THB', checkin:state.checkin||'', checkout:state.checkout||'',
+      adults:String(state.adults||2), children:String(state.children||0), rooms:String(state.rooms||1),
+      los:String(calcLos(state.checkin,state.checkout)), utm_source:'clickandgo', utm_medium:'affiliate', noapp:'1', pcs:'1'
+    });
+    if (state.q) sp.set('q', state.q); return `${base}?${sp.toString()}`;
+  }
+  const refreshPartnerCta=()=>$('#partnerMore').setAttribute('href', partnerUrl());
+
+  async function fetchJson(url){
+    try{ const r=await fetch(url,{cache:'no-store'}); return await r.json(); }catch(_){ return {ok:false}; }
+  }
+
+  async function load(){
+    renderSkeleton();
+    if (!state.cityId && !state.hid && state.q) await resolveDestinationIfNeeded();
+
+    // try #1: /api/search
+    const base = new URL('/api/search', location.origin);
+    const p = base.searchParams;
+    if (state.hid) p.set('hid', state.hid); else if (state.cityId) p.set('cityId', state.cityId); else if (state.q) p.set('q', state.q);
+    ['checkin','checkout','rooms','adults','children','lang','currency','page','sort','starsMin','scoreMin','priceMin','priceMax'].forEach(k => p.set(k, state[k]));
+    let data = await fetchJson(base.toString());
+
+    // try #2a: hotelId path
+    if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.hid){
+      const u = new URL('/api/hotel-search', location.origin);
+      const q = u.searchParams;
+      q.set('hotelId', state.hid);
+      q.set('checkin', state.checkin||'');
+      q.set('checkout', state.checkout||'');
+      q.set('adults', String(state.adults||2));
+      q.set('children', String(state.children||0));
+      data = await fetchJson(u.toString());
+    }
+
+    // try #2b: cityId path (limit 30)
+    if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.cityId){
+      const u = new URL('/api/hotel-search', location.origin);
+      const q = u.searchParams;
+      q.set('cityId', state.cityId);
+      q.set('limit','30');
+      q.set('checkin', state.checkin||'');
+      q.set('checkout', state.checkout||'');
+      q.set('rooms', String(state.rooms||1));
+      q.set('adults', String(state.adults||2));
+      q.set('children', String(state.children||0));
+      q.set('lang', state.lang);
+      q.set('currency', state.currency);
+      data = await fetchJson(u.toString());
+    }
+
+    if (!data || data.ok===false){
+      $('#grid').innerHTML = `<p class="muted">No matching results found.</p>`;
+      refreshPartnerCta(); return;
+    }
+
+    let items = data.results || data.items || data.hotels || [];
+    if (!Array.isArray(items)) items = [];
+
+    if (state.sort === 'price_asc') items.sort((a,b)=>(readPrice(a)||1e15)-(readPrice(b)||1e15));
+    if (state.sort === 'price_desc') items.sort((a,b)=>(readPrice(b)||0)-(readPrice(a)||0));
+
+    render(items);
+    refreshPartnerCta();
+  }
+
+  function renderSkeleton(){
+    $('#grid').innerHTML = Array.from({length:9}).map(()=>`
+      <article class="card" aria-busy="true">
+        <div class="sk-img skeleton"></div>
+        <div class="card-body">
+          <div class="sk-line skeleton" style="width:70%"></div>
+          <div class="sk-line skeleton" style="width:40%"></div>
+          <div class="sk-line skeleton" style="width:50%"></div>
+        </div>
+      </article>`).join('');
+  }
+
+  const readName = h => h.name || h.hotelName || h.title || h.label || '—';
+  const readImg  = h => h.thumbnail || h.image || h.img || h.photo || '';
+  const readUrl  = h => h.url || h.link || h.deeplink || '#';
+  const readStars= h => h.rating ?? h.stars ?? h.star ?? 0;
+  const readScore= h => h.reviewScore ?? h.score ?? h.review_score ?? null;
+  const readCurr = h => h.currency || h.cur || 'THB';
+  function readPrice(h){
+    const v = h.price ?? h.minPrice ?? h.min_price ?? h.fromPrice ?? null;
+    return (v!=null && !isNaN(+v)) ? +v : null;
+  }
+
+  function starIcons(n){
+    const c = Math.max(0, Math.min(5, Math.round(n||0)));
+    return `<span class="stars" aria-label="${c} stars">` +
+      Array.from({length:c}).map(()=>`<span class="star" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>`).join('') +
+    `</span>`;
+  }
+
+  function render(list){
+    if (!list.length){ $('#grid').innerHTML = `<p class="muted">No matching results found.</p>`; return; }
+    $('#grid').innerHTML = list.map(h => {
+      const name = esc(readName(h));
+      const img  = esc(readImg(h));
+      const url  = esc(readUrl(h));
+      const stars= readStars(h);
+      const score= readScore(h);
+      const price= readPrice(h);
+      const cur  = esc(readCurr(h) || state.currency);
+      return `
+        <article class="card">
+          <img src="${img}" alt="${name}">
+          <div class="card-body">
+            <h3 style="font-size:18px;margin:0 0 6px">${name}</h3>
+            <div class="muted" style="font-size:13px">
+              ${starIcons(stars)}${score!=null ? `&nbsp;·&nbsp;<span class="score">Review score ${score}</span>` : ''}
+            </div>
+            <div class="price">${price!=null ? fmt(price, cur) : '-'} ${cur}</div>
+            <div class="h-actions"><a class="btn" href="${url}" target="_blank" rel="nofollow noopener">View offer</a></div>
+          </div>
+        </article>`;
+    }).join('');
+  }
+
+  /* Change dialog */
+  const dlg = $('#dlgChange'); const chgQ = $('#chgQ'), chgCi = $('#chgCi'), chgCo = $('#chgCo');
+  const ONE = 86400000; const iso = d => new Date(d).toISOString().slice(0,10);
+
+  function fillDialogWithState(){
+    chgQ.value = state.city || state.q || '';
+    const tCi = state.checkin ? new Date(state.checkin) : new Date();
+    const tCo = state.checkout ? new Date(state.checkout) : new Date(Date.now()+ONE);
+    chgCi.value = iso(tCi); chgCo.value = iso(tCo);
+    chgCi.min = iso(new Date()); chgCo.min = iso(new Date(tCi.getTime()+ONE));
+    $('#gRooms').textContent = state.rooms; $('#cRooms').textContent = state.rooms;
+    $('#gAdults').textContent = state.adults; $('#cAdults').textContent = state.adults;
+    $('#gChildren').textContent = state.children; $('#cChildren').textContent = state.children;
+  }
+  $('#btnChange').addEventListener('click', ()=>{ fillDialogWithState(); dlg.showModal(); });
+  $('#chgCancel').addEventListener('click', ()=> dlg.close());
+  chgCi.addEventListener('change', ()=>{
+    const a = new Date(chgCi.value || iso(new Date()));
+    const n = new Date(a.getTime()+ONE);
+    if (!chgCo.value || new Date(chgCo.value) <= a) chgCo.value = iso(n);
+    chgCo.min = iso(n);
+  });
+  document.querySelectorAll('#dlgChange .cbtn').forEach(b=>{
+    b.addEventListener('click',(e)=>{
+      e.preventDefault();
+      const t=b.getAttribute('data-t'),op=b.getAttribute('data-op');
+      const lim={rooms:[1,10],adults:[1,10],children:[0,10]}[t];
+      const id='#c'+t.charAt(0).toUpperCase()+t.slice(1);
+      let v=+document.querySelector(id).textContent; v=op==='+'?Math.min(lim[1],v+1):Math.max(lim[0],v-1);
+      document.querySelector(id).textContent=v; document.querySelector('#g'+t.charAt(0).toUpperCase()+t.slice(1)).textContent=v;
+    });
+  });
+  $('#changeForm').addEventListener('submit',(e)=>{
+    e.preventDefault();
+    state.q = normalizeQ(chgQ.value||''); state.cityId=''; state.hid='';
+    state.checkin = chgCi.value; state.checkout = chgCo.value;
+    state.rooms=+$('#cRooms').textContent; state.adults=+$('#cAdults').textContent; state.children=+$('#cChildren').textContent;
+    const ci=state.checkin.replaceAll('-','/'), co=state.checkout.replaceAll('-','/');
+    $('#subtitle').innerHTML = `<span class="nowrap">${state.city || state.q || '—'} | Dates: ${ci} → ${co}</span><br><span class="nowrap">Guests: ${state.adults} adults, ${state.children} children, ${state.rooms} room(s)</span>`;
+    updateQueryOnly(); dlg.close(); load();
+  });
+
+  // chips handlers
+  document.getElementById('chipSort').addEventListener('click',()=>{ document.getElementById('dlgSort').showModal(); [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort)); });
+  document.getElementById('chipStars').addEventListener('click',()=>{ document.getElementById('dlgStars').showModal(); [...document.querySelectorAll('input[name=stars]')].forEach(r=>r.checked=(+r.value===+draft.starsMin)); });
+  document.getElementById('chipPrice').addEventListener('click',()=>{ document.getElementById('dlgPrice').showModal(); setPriceWidgets(draft.priceMin,draft.priceMax); });
+  document.getElementById('chipScore').addEventListener('click',()=>{ document.getElementById('dlgScore').showModal(); [...document.querySelectorAll('input[name=score]')].forEach(r=>r.checked=(+r.value===+draft.scoreMin)); });
+
+  document.getElementById('btnSortOk').addEventListener('click',()=>{ draft.sort=document.querySelector('input[name=sort]:checked')?.value||'rec'; updateChips(); document.getElementById('dlgSort').close(); });
+  document.getElementById('btnStarsOk').addEventListener('click',()=>{ draft.starsMin=+(document.querySelector('input[name=stars]:checked')?.value||0); updateChips(); document.getElementById('dlgStars').close(); });
+  document.getElementById('btnScoreOk').addEventListener('click',()=>{ draft.scoreMin=+(document.querySelector('input[name=score]:checked')?.value||0); updateChips(); document.getElementById('dlgScore').close(); });
+
+  function setPriceWidgets(min,max){
+    const clamp=n=>Math.min(200000,Math.max(0,Math.round(n)));
+    const m=clamp(Math.min(min,max)), x=clamp(Math.max(min,max));
+    rMin.value=m; rMax.value=x; nMin.value=m; nMax.value=x; pvMin.textContent=fmt(m); pvMax.textContent=fmt(x);
+  }
+  function readPriceWidgets(){ const m=Math.min(+rMin.value,+rMax.value), x=Math.max(+rMin.value,+rMax.value); return {m,x}; }
+  const rMin=document.getElementById('rMin'), rMax=document.getElementById('rMax'), nMin=document.getElementById('nMin'), nMax=document.getElementById('nMax'), pvMin=document.getElementById('pvMin'), pvMax=document.getElementById('pvMax');
+  ['rMin','rMax'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{ const {m,x}=readPriceWidgets(); setPriceWidgets(m,x); }));
+  ['nMin','nMax'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{ setPriceWidgets(+nMin.value,+nMax.value); }));
+  document.getElementById('btnPriceReset').addEventListener('click',()=>setPriceWidgets(0,200000));
+  document.getElementById('btnPriceOk').addEventListener('click',()=>{ const {m,x}=readPriceWidgets(); draft.priceMin=m; draft.priceMax=x; updateChips(); document.getElementById('dlgPrice').close(); });
+
+  document.getElementById('chipApply').addEventListener('click',()=>{ Object.assign(state, JSON.parse(JSON.stringify(draft))); updateQueryOnly(); load(); });
+
+  load();
+})();
+</script>
+</body>
+</html>
