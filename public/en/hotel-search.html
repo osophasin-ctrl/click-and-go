@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Search by hotel name | Click & Go</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
+  <style>
+    :root{ --brand:#0ea5a0; --muted:#666; }
+    .container{max-width:1030px;margin:0 auto;padding:16px}
+    .mock-box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:16px}
+    .mock-title{margin:0 0 6px;font-weight:800;font-size:22px}
+    .mock-sub{margin:0 0 12px;color:var(--muted)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center}
+    .row.full{grid-template-columns:1fr}
+    @media (max-width:640px){ .row{grid-template-columns:1fr} }
+    .input, .btn, .guest-input{height:44px;border:1px solid #d7d7d7;border-radius:8px;padding:0 12px;background:#fff;font-size:15px}
+    .btn{background:var(--brand);color:#fff;border:0;cursor:pointer;font-weight:700}
+    .btn:active{transform:translateY(1px)}
+    .btn-wide{width:100%}
+    .guest-input{cursor:pointer;text-align:left}
+    .field{position:relative}
+    .label{position:absolute;left:12px;top:6px;font-size:12px;color:#6b7280;pointer-events:none}
+    .with-label .input,.with-label .flatpickr-input{height:56px;padding-top:18px}
+
+    /* suggest */
+    .suggest-wrap{position:relative}
+    .suggest{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.08);max-height:260px;overflow:auto;display:none;z-index:9999}
+    .s-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;cursor:pointer}
+    .s-item:hover{background:#f6f6f6}
+    .s-label{font-weight:600}
+    .s-sub{color:#777;font-size:13px}
+
+    /* guest modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:999}
+    .modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border-radius:12px;width:min(92vw,420px);box-shadow:0 12px 24px rgba(0,0,0,.2);display:none;z-index:1000}
+    .modal-header,.modal-footer{padding:14px 16px}
+    .modal-header{border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+    .modal-title{font-weight:700;font-size:18px}
+    .modal-body{padding:10px 16px 0 16px}
+    .row-ctrl{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+    .row-ctrl+.row-ctrl{border-top:1px dashed #eee}
+    .label-wrap{display:flex;flex-direction:column;gap:2px}
+    .label-wrap small{color:#666}
+    .counter{display:flex;align-items:center;gap:10px}
+    .btn-ctrl{width:36px;height:36px;border-radius:50%;border:1px solid #ccc;background:#fff;font-size:18px;cursor:pointer}
+    .count{min-width:20px;text-align:center;font-weight:700}
+    .btn-outline{border:1px solid #bbb;background:#fff;color:#333;border-radius:8px;padding:8px 14px}
+    .btn-primary{border:0;background:var(--brand);color:#fff;border-radius:8px;padding:8px 14px}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <a href="/en/index.html" class="brand"><img src="/logo.png" width="40" height="40" alt="Click & Go logo"><span class="brand-text">Click & Go</span></a>
+      <nav class="main-nav">
+        <a href="/en/index.html">Home</a>
+        <a href="/deals.html">Deals</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 class="section-title">Search by hotel name</h2>
+    <div class="mock-box">
+      <h3 class="mock-title">Type the hotel you’re looking for</h3>
+      <p class="mock-sub">Pick your dates and guests, then search. We’ll take you straight to results for that hotel.</p>
+
+      <form id="hotelForm" class="row" action="/en/search.html" method="GET" autocomplete="off">
+        <!-- hotel input -->
+        <div class="suggest-wrap row full">
+          <input id="hotelInput" class="input" type="text" placeholder="Type hotel name, e.g., Centara, Hilton, ...">
+          <div id="hotelSuggest" class="suggest" role="listbox" aria-label="Hotel suggestions"></div>
+        </div>
+
+        <!-- dates + guests -->
+        <div class="field with-label">
+          <span class="label">Check-in</span>
+          <input id="ci" name="checkin" class="input" type="text" readonly>
+        </div>
+        <div class="field with-label">
+          <span class="label">Check-out</span>
+          <input id="co" name="checkout" class="input" type="text" readonly>
+        </div>
+
+        <button id="guestBtn" type="button" class="guest-input">1 room, 2 adults, 0 children</button>
+        <button type="submit" class="btn btn-wide">Search</button>
+
+        <!-- parameters sent to /en/search.html -->
+        <input type="hidden" id="hid"      name="hid" value="">
+        <input type="hidden" id="rooms"    name="rooms" value="1">
+        <input type="hidden" id="adults"   name="adults" value="2">
+        <input type="hidden" id="children" name="children" value="0">
+        <input type="hidden"               name="lang" value="en">
+      </form>
+
+      <div style="margin-top:12px">
+        <a href="/en/index.html" style="color:#0ea5a0">← Back to home</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Guest Modal -->
+  <div id="guestBackdrop" class="modal-backdrop"></div>
+  <div id="guestModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="guestTitle">
+    <div class="modal-header">
+      <div id="guestTitle" class="modal-title">Guests</div>
+      <button type="button" class="btn-outline" id="btnCloseX">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="row-ctrl"><div class="label-wrap"><strong>Rooms</strong><small>Number of rooms</small></div>
+        <div class="counter"><button class="btn-ctrl" data-type="rooms" data-op="minus">−</button><span class="count" id="roomsCount">1</span><button class="btn-ctrl" data-type="rooms" data-op="plus">+</button></div></div>
+      <div class="row-ctrl"><div class="label-wrap"><strong>Adults</strong><small>18+ years</small></div>
+        <div class="counter"><button class="btn-ctrl" data-type="adults" data-op="minus">−</button><span class="count" id="adultsCount">2</span><button class="btn-ctrl" data-type="adults" data-op="plus">+</button></div></div>
+      <div class="row-ctrl"><div class="label-wrap"><strong>Children</strong><small>0–17 years</small></div>
+        <div class="counter"><button class="btn-ctrl" data-type="children" data-op="minus">−</button><span class="count" id="childrenCount">0</span><button class="btn-ctrl" data-type="children" data-op="plus">+</button></div></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" id="btnCancel">Cancel</button>
+      <button class="btn-primary" id="btnSaveGuests">Save</button>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> ·
+        <a href="/affiliate.html">Affiliate Disclosure</a> · <a href="/about.html">About us</a> ·
+        <a href="/contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+  // ===== helpers =====
+  const $ = (s)=>document.querySelector(s);
+  const esc = (s)=>String(s||'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[m]));
+
+  // ===== init dates (pick from query if any) =====
+  (function initDates(){
+    const p = new URLSearchParams(location.search);
+    const ONE = 86400000;
+    const today = new Date(), tomorrow = new Date(Date.now()+ONE);
+
+    const inP = flatpickr("#ci", {dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"input",minDate:"today",
+      onChange(d){ if(d[0]) { const n=new Date(d[0].getTime()+ONE); outP.set('minDate',n); if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0]) outP.setDate(n,true); } }
+    });
+    const outP = flatpickr("#co",{dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"input",minDate:tomorrow});
+
+    const qci = p.get('checkin'), qco = p.get('checkout');
+    if(qci) inP.setDate(qci,true); else inP.setDate(today,true);
+    if(qco) outP.setDate(qco,true); else outP.setDate(tomorrow,true);
+  })();
+
+  // ===== guests =====
+  (function guests(){
+    const p = new URLSearchParams(location.search);
+    let rooms=+(p.get('rooms')||1), adults=+(p.get('adults')||2), children=+(p.get('children')||0);
+    const btn=$('#guestBtn'), hR=$('#rooms'), hA=$('#adults'), hC=$('#children');
+    const modal=$('#guestModal'), back=$('#guestBackdrop');
+    const rC=$('#roomsCount'), aC=$('#adultsCount'), cC=$('#childrenCount');
+    function open(){rC.textContent=rooms;aC.textContent=adults;cC.textContent=children; modal.style.display='block';back.style.display='block';}
+    function close(){modal.style.display='none';back.style.display='none';}
+    function upd(){ btn.textContent=`${rooms} room${rooms>1?'s':''}, ${adults} adult${adults>1?'s':''}, ${children} child${children!==1?'ren':''}`; hR.value=rooms; hA.value=adults; hC.value=children; }
+    upd();
+    btn.addEventListener('click',open); $('#btnCloseX').addEventListener('click',close); $('#btnCancel').addEventListener('click',close); back.addEventListener('click',close);
+    document.querySelectorAll('.btn-ctrl').forEach(b=>{
+      b.addEventListener('click',()=>{
+        const t=b.getAttribute('data-type'),op=b.getAttribute('data-op');
+        let v = ({rooms,adults,children})[t]; const min = t==='children'?0:1, max=10;
+        if(op==='plus'&&v<max)v++; if(op==='minus'&&v>min)v--;
+        if(t==='rooms'){rooms=v;rC.textContent=v}
+        if(t==='adults'){adults=v;aC.textContent=v}
+        if(t==='children'){children=v;cC.textContent=v}
+      });
+    });
+    $('#btnSaveGuests').addEventListener('click',()=>{ upd(); close(); });
+  })();
+
+  // ===== hotel autocomplete =====
+  (function hotelAuto(){
+    const input = $('#hotelInput');
+    const panel = $('#hotelSuggest');
+    const hid = $('#hid');
+    if(!input||!panel) return;
+
+    function show(){ panel.style.display='block'; }
+    function hide(){ panel.style.display='none'; panel.innerHTML=''; }
+
+    function itemRow(it){
+      const name = it.label || it.name || '';
+      const city = it.city || it.city_name || '';
+      return `<div class="s-item" data-hid="${esc(it.hotel_id||it.id||'')}" data-label="${esc(name)}">
+        <div><div class="s-label">${esc(name)}</div><div class="s-sub">${esc(city)}</div></div>
+        <div class="s-sub">Hotel</div>
+      </div>`;
+    }
+    function bind(){
+      panel.querySelectorAll('.s-item').forEach(el=>{
+        el.addEventListener('mousedown', (ev)=>{
+          ev.preventDefault();
+          input.value = el.getAttribute('data-label') || '';
+          hid.value   = el.getAttribute('data-hid') || '';
+          hide();
+        });
+      });
+    }
+
+    let timer=null, aborter=null;
+    async function doSuggest(){
+      const q=(input.value||'').trim(); hid.value='';
+      if(timer) clearTimeout(timer);
+      if(!q){ hide(); return; }
+      panel.innerHTML = `<div class="s-item"><div class="s-sub">Searching…</div></div>`;
+      show();
+      timer=setTimeout(async ()=>{
+        aborter?.abort(); aborter=new AbortController();
+        try{
+          const url = `/api/hotel-search?q=${encodeURIComponent(q)}&lang=en&limit=30`;
+          const r = await fetch(url, {signal:aborter.signal, cache:'no-store'});
+          const data = await r.json();
+          const items = (data && data.ok && Array.isArray(data.items)) ? data.items : [];
+          panel.innerHTML = items.length ? items.map(itemRow).join('') :
+            `<div class="s-item"><div class="s-label">No hotels found</div><div class="s-sub">Try typing more letters</div></div>`;
+          bind(); show();
+        }catch(_){ hide(); }
+      }, 200);
+    }
+    input.addEventListener('input', doSuggest);
+    document.addEventListener('click', (e)=>{ if(!panel.contains(e.target) && e.target!==input) hide(); });
+
+    // If user typed but didn't select → auto resolve first hotel
+    async function ensureHotelIdIfNeed(q){
+      if(hid.value || !q) return true;
+      try{
+        const r=await fetch(`/api/hotel-search?q=${encodeURIComponent(q)}&lang=en&limit=1`, {cache:'no-store'});
+        const d=await r.json();
+        const it = d && d.ok && Array.isArray(d.items) && d.items[0];
+        if(it){ hid.value = it.hotel_id || it.id || ''; return !!hid.value; }
+      }catch(_){}
+      return false;
+    }
+
+    // submit -> /en/search.html?hid=...
+    document.getElementById('hotelForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const q = (input.value||'').trim();
+      const ok = await ensureHotelIdIfNeed(q);
+      if(!ok){ alert('Please select a hotel from suggestions.'); return; }
+      e.target.submit();
+    });
+  })();
+  </script>
+</body>
+</html>
