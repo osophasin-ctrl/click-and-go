@@ -1,83 +1,30 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Deals & Promos | Click & Go</title>
-  <meta name="description" content="Handpicked hotel deals and promos. Jump straight to partner pages with English results.">
-  <link rel="icon" href="../favicon.ico">
-  <link rel="stylesheet" href="../style.css">
-
-  <style>
-    /* =========================
-       Deals Page – Extra Styles
-       (scoped with .deals-page)
-       ========================= */
-    .deals-page .partner-box{
-      border:2px dashed #dedede;
-      border-radius:12px;
-      background:#fafafa;
-      padding:16px;
-      margin:16px 0 8px;
-    }
-    .deals-page .partner-title{
-      margin:4px 0 12px;
-      font-size: clamp(18px, 2.6vw, 22px);
-    }
-    .deals-page .btn-wide{
-      display:block;
-      width:100%;
-      padding:12px 16px;
-      margin:10px 0;
-      text-align:center;
-    }
-    /* Deal cards */
-    .deals-page .deal-grid{
-      display:grid; gap:18px;
-      grid-template-columns: repeat(3, 1fr);
-    }
-    @media (max-width: 980px){
-      .deals-page .deal-grid{ grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 620px){
-      .deals-page .deal-grid{ grid-template-columns: 1fr; }
-    }
-    .deals-page .deal-card{
-      border:1px solid #eee; border-radius:12px; background:#fff;
-      overflow:hidden; box-shadow:0 1px 10px rgba(0,0,0,.04);
-      display:flex; flex-direction:column;
-    }
-    .deals-page .deal-card .thumb{
-      width:100%; aspect-ratio:16/9; object-fit:cover; background:#f1f1f1; display:block;
-    }
-    .deals-page .deal-card .body{ padding:14px 14px 10px; }
-    .deals-page .deal-card h3{ margin:0 0 6px; font-size:18px; color:#222; }
-    .deals-page .deal-card p { margin:0 0 10px; color:#666; font-size:14px; }
-    .deals-page .deal-card .meta{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:0 14px 14px; margin-top:auto;
-    }
-    .deals-page .disclaimer{
-      font-size:12px; color:#888; margin-top:10px;
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hotel Deals – Hot offers | Click & Go</title>
+  <meta name="description" content="Browse hot hotel deals in popular cities. Jump straight to the offer page in one click." />
+  <link rel="canonical" href="https://clickandgo.asia/en/deals.html" />
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="stylesheet" href="../style.css" />
 </head>
-<body class="deals-page">
+<body>
   <!-- Header -->
-  <header class="site-header">
+  <header class="site-header" role="banner">
     <div class="inner">
-      <a href="./index.html" class="brand">
-        <img src="../logo.png" alt="Click & Go" width="40" height="40">
-        <span class="brand-text">Click & Go</span>
+      <a href="/en/index.html" class="brand" aria-label="Click & Go">
+        <img src="../logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
-      <nav class="main-nav">
-        <a href="./index.html">Home</a>
-        <a href="./deals.html" aria-current="page">Deals</a>
+      <nav class="main-nav" aria-label="Main menu">
+        <a href="/en/index.html">Home</a>
+        <a href="/en/deals.html" aria-current="page">Deals</a>
         <div class="lang">
-          <button class="lang-btn">Language ▾</button>
-          <div class="lang-menu">
-            <a href="../deals.html">ไทย</a>
-            <a href="#" aria-current="true">English</a>
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">Language ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="/deals.html">ไทย</a>
+            <a role="menuitem" href="#" aria-current="true">English</a>
           </div>
         </div>
       </nav>
@@ -85,119 +32,30 @@
   </header>
 
   <main class="container">
-    <h1 class="section-title">Hotel deals & promos</h1>
-
-    <!-- Partner info -->
-    <section class="partner-box">
-      <h3 class="partner-title">How deals work</h3>
-      <p style="margin:0 0 8px;">
-        We search live rates across partners and send you straight to the offer page.
-        Links below open in a new tab and show results in English.
-      </p>
-      <p class="disclaimer">
-        Some links are affiliate links — at no extra cost to you. Thanks for supporting us!
-      </p>
-    </section>
-
-    <!-- Curated deals -->
-    <section style="margin:18px 0 8px">
-      <h2 class="section-title">Popular this week</h2>
-      <div class="deal-grid">
-        <!-- Thailand -->
-        <article class="deal-card">
-          <img class="thumb" src="../bangkok-tile.webp" alt="Bangkok skyline">
-          <div class="body">
-            <h3>Bangkok hotel deals</h3>
-            <p>From boutique stays to riverside luxury. Pick dates and see the best prices.</p>
-          </div>
-          <div class="meta">
-            <a class="btn btn-wide"
-               data-city="1738832"
-               data-q="Bangkok"
-               href="#">Check deals</a>
-          </div>
-        </article>
-
-        <article class="deal-card">
-          <img class="thumb" src="../chiangmai-tile.webp" alt="Chiang Mai">
-          <div class="body">
-            <h3>Chiang Mai escapes</h3>
-            <p>Mountain air, old town cafes, and value stays year-round.</p>
-          </div>
-          <div class="meta">
-            <a class="btn btn-wide"
-               data-q="Chiang Mai"
-               href="#">Check deals</a>
-          </div>
-        </article>
-
-        <article class="deal-card">
-          <img class="thumb" src="../phuket-tile.webp" alt="Phuket beach">
-          <div class="body">
-            <h3>Phuket beach breaks</h3>
-            <p>Resorts and villas across Patong, Kata, Karon and more.</p>
-          </div>
-          <div class="meta">
-            <a class="btn btn-wide"
-               data-q="Phuket"
-               href="#">Check deals</a>
-          </div>
-        </article>
-
-        <!-- International -->
-        <article class="deal-card">
-          <img class="thumb" src="../tokyo-tile.webp" alt="Tokyo">
-          <div class="body">
-            <h3>Tokyo picks</h3>
-            <p>Shinjuku to Asakusa — compare prices fast and book in one click.</p>
-          </div>
-          <div class="meta">
-            <a class="btn btn-wide"
-               data-q="Tokyo"
-               href="#">Check deals</a>
-          </div>
-        </article>
-
-        <article class="deal-card">
-          <img class="thumb" src="../singapore-tile.webp" alt="Singapore">
-          <div class="body">
-            <h3>Singapore stays</h3>
-            <p>Clean, convenient, and close to MRT — find the right location.</p>
-          </div>
-          <div class="meta">
-            <a class="btn btn-wide"
-               data-q="Singapore"
-               href="#">Check deals</a>
-          </div>
-        </article>
-
-        <article class="deal-card">
-          <img class="thumb" src="../paris-tile.webp" alt="Paris">
-          <div class="body">
-            <h3>Paris getaways</h3>
-            <p>Left Bank charm to Eiffel views — compare offers in seconds.</p>
-          </div>
-          <div class="meta">
-            <a class="btn btn-wide"
-               data-q="Paris"
-               href="#">Check deals</a>
-          </div>
-        </article>
+    <!-- Start with Popular cities section (same layout as TH page) -->
+    <section style="margin:24px 0 8px">
+      <h1 class="section-title">Hot deals in popular cities</h1>
+      <div class="city-grid">
+        <!-- Use data-q for query; images are shared at project root -->
+        <a class="city-card" href="#" data-q="Bangkok">
+          <figure><img src="../bangkok-tile.webp" alt="Bangkok"><figcaption>Bangkok</figcaption></figure>
+        </a>
+        <a class="city-card" href="#" data-q="Chiang Mai">
+          <figure><img src="../chiangmai-tile.webp" alt="Chiang Mai"><figcaption>Chiang Mai</figcaption></figure>
+        </a>
+        <a class="city-card" href="#" data-q="Pattaya">
+          <figure><img src="../pattaya-tile.webp" alt="Pattaya"><figcaption>Pattaya</figcaption></figure>
+        </a>
+        <a class="city-card" href="#" data-q="Phuket">
+          <figure><img src="../phuket-tile.webp" alt="Phuket"><figcaption>Phuket</figcaption></figure>
+        </a>
+        <a class="city-card" href="#" data-q="Krabi">
+          <figure><img src="../krabi-tile.webp" alt="Krabi"><figcaption>Krabi</figcaption></figure>
+        </a>
+        <a class="city-card" href="#" data-q="Hua Hin">
+          <figure><img src="../huahin-tile.webp" alt="Hua Hin"><figcaption>Hua Hin</figcaption></figure>
+        </a>
       </div>
-    </section>
-
-    <!-- Direct partner buttons -->
-    <section class="partner-box" style="margin-top:22px">
-      <h3 class="partner-title">Search on our partner</h3>
-      <a id="btnAgodaCity" class="btn btn-wide" href="#" target="_blank" rel="nofollow noopener">
-        Open Agoda search (English)
-      </a>
-      <a id="btnAgodaHotel" class="btn btn-wide" href="#" target="_blank" rel="nofollow noopener">
-        Open Agoda hotel page (example)
-      </a>
-      <p class="disclaimer">
-        Tip: Dates default to tonight → tomorrow and 2 adults / 1 room. You can change them on the results page.
-      </p>
     </section>
   </main>
 
@@ -205,97 +63,63 @@
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="../privacy.html">Privacy</a> · <a href="../terms.html">Terms</a> ·
-        <a href="../affiliate.html">Affiliate Disclosure</a> · <a href="../about.html">About us</a> ·
+        <a href="../privacy.html">Privacy</a> ·
+        <a href="../terms.html">Terms</a> ·
+        <a href="../affiliate.html">Affiliate Disclosure</a> ·
+        <a href="../about.html">About us</a> ·
         <a href="../contact.html">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script>
-    // Language path helper: always 'en-us' on this page
-    const LANG = 'en-us';
-
-    // Build an internal /en/search.html URL with sensible defaults
-    function buildInternalSearch(params){
-      const sp = new URLSearchParams({
-        lang: LANG,
-        checkin: params.checkin,
-        checkout: params.checkout,
-        rooms: params.rooms || 1,
-        adults: params.adults || 2,
-        children: params.children || 0
+    // Language menu toggle
+    (function(){
+      var btn=document.querySelector('.lang-btn');
+      var menu=document.querySelector('.lang-menu');
+      if(!btn||!menu) return;
+      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        var opened=menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded',String(opened));
       });
-      if (params.cityId) sp.set('cityId', params.cityId);
-      if (params.q)      sp.set('q', params.q);
-      if (params.hid)    sp.set('hid', params.hid);
-      return './search.html?' + sp.toString();
-    }
-
-    // Build a direct Agoda URL in English
-    function buildAgodaUrl(opts){
-      const base = opts.hid || opts.city
-        ? `https://www.agoda.com/${LANG}/partners/partnersearch.aspx`
-        : `https://www.agoda.com/${LANG}/search`;
-      const sp = new URLSearchParams({
-        cid: '1949420',
-        utm_source: 'clickandgo',
-        utm_medium: 'affiliate',
-        noapp: '1',
-        pcs: '1',
-        currency: 'THB',
-        checkin: opts.checkin || '',
-        checkout: opts.checkout || '',
-        rooms: String(opts.rooms || 1),
-        adults: String(opts.adults || 2),
-        children: String(opts.children || 0),
-      });
-      if (opts.hid)  sp.set('hid', String(opts.hid));
-      if (opts.city) sp.set('city', String(opts.city));
-      if (opts.q)    sp.set('q', opts.q);
-      return `${base}?${sp.toString()}`;
-    }
-
-    // Today -> Tomorrow defaults
-    (function initDeals(){
-      const ONE = 86400000;
-      const fmt = d => {
-        const p = n => String(n).padStart(2,'0');
-        return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());
-      };
-      const today = new Date();
-      const tomorrow = new Date(Date.now() + ONE);
-
-      // Fill each "Check deals" button to our internal /en/search.html
-      document.querySelectorAll('.deal-card a.btn').forEach(a=>{
-        const cityId = a.getAttribute('data-city') || '';
-        const q = a.getAttribute('data-q') || '';
-        a.href = buildInternalSearch({
-          cityId, q,
-          checkin: fmt(today),
-          checkout: fmt(tomorrow),
-          rooms: 1, adults: 2, children: 0
-        });
-      });
-
-      // Example partner buttons
-      document.getElementById('btnAgodaCity').href =
-        buildAgodaUrl({ city: '1738832', checkin: fmt(today), checkout: fmt(tomorrow), rooms:1, adults:2, children:0 });
-
-      // Example hotelId (replace with a real HID when you have one)
-      document.getElementById('btnAgodaHotel').href =
-        buildAgodaUrl({ hid: '107191', checkin: fmt(today), checkout: fmt(tomorrow), rooms:1, adults:2, children:0 });
+      document.addEventListener('click',closeMenu);
+      document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeMenu(); });
     })();
 
-    // Language dropdown behaviour (same pattern as other pages)
+    // City cards -> /en/search.html with today->tomorrow, default guests, lang=en
     (function(){
-      const btn=document.querySelector('.lang-btn'),menu=document.querySelector('.lang-menu');
-      if(!btn||!menu) return;
-      const closeM=()=>{menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};
-      btn.addEventListener('click',e=>{e.stopPropagation();const o=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(o));});
-      document.addEventListener('click',closeM);
-      document.addEventListener('keydown',e=>{if(e.key==='Escape') closeM();});
+      function fmtLocal(d){
+        var p=function(n){return String(n).padStart(2,'0');};
+        return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());
+      }
+      var ONE=24*60*60*1000;
+
+      document.querySelectorAll('.city-card').forEach(function(a){
+        a.addEventListener('click',function(e){
+          e.preventDefault();
+          var q=a.getAttribute('data-q')||'Bangkok';
+          // safety: normalize any Thai "กรุงเทพฯ/กรุงเทพ" to English
+          q=q.replace(/กรุงเทพมหานคร|กรุงเทพฯ|กรุงเทพ/g,'Bangkok');
+
+          var today=new Date();
+          var tomorrow=new Date(Date.now()+ONE);
+
+          var qs=new URLSearchParams({
+            q:q,
+            checkin:fmtLocal(today),
+            checkout:fmtLocal(tomorrow),
+            rooms:1,
+            adults:2,
+            children:0,
+            lang:'en'
+          });
+          location.href='/en/search.html?'+qs.toString();
+        });
+      });
     })();
   </script>
 </body>
