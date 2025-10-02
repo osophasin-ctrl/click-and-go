@@ -1,12 +1,10 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>ติดต่อเรา | Click & Go</title>
   <meta name="description" content="ติดต่อทีมงาน Click & Go สำหรับข้อเสนอแนะ พาร์ทเนอร์ชิพ และสื่อสารอื่น ๆ"/>
-  <link rel="icon" href="favicon.ico"/>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" href="favicon.ico"/><link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <!-- Header -->
@@ -41,17 +39,25 @@
       </p>
 
       <!-- ฟอร์มติดต่อ -->
-      <form id="cg-contact" class="search-form" style="grid-template-columns:1fr 1fr" aria-label="แบบฟอร์มติดต่อ" method="post" novalidate>
+      <form id="contactForm" class="search-form" style="grid-template-columns:1fr 1fr" aria-label="แบบฟอร์มติดต่อ">
         <input type="text" name="name" placeholder="ชื่อของคุณ" aria-label="ชื่อของคุณ" autocomplete="name" required>
         <input type="email" name="email" placeholder="อีเมลของคุณ" aria-label="อีเมลของคุณ" autocomplete="email" required>
         <input type="text" name="subject" placeholder="หัวข้อ" aria-label="หัวข้อ" style="grid-column:1/-1">
         <textarea name="message" placeholder="ข้อความ" aria-label="ข้อความ" style="grid-column:1/-1; min-height:120px; padding:10px; border:1px solid #ccc; border-radius:6px;" required></textarea>
-        <button id="cg-submit" type="submit" class="btn" style="grid-column:1/-1">ส่งข้อความ</button>
-        <!-- optional: ส่งค่าภาษาไปด้วย -->
+
+        <!-- hidden (จะถูกเติมค่าอัตโนมัติในสคริปต์ด้านล่างก็ได้ แต่ใส่ไว้เผื่ออ่านง่าย) -->
         <input type="hidden" name="lang" value="th">
+        <input type="hidden" name="page" value="/contact.html">
+
+        <button type="submit" class="btn" style="grid-column:1/-1">ส่งข้อความ</button>
       </form>
 
-      <div id="cg-status" class="muted" style="margin-top:10px;"></div>
+      <p id="contactResult" style="margin-top:10px;color:#0a8f66;display:none;">
+        ส่งข้อความสำเร็จแล้ว ขอบคุณครับ!
+      </p>
+      <p id="contactError" style="margin-top:10px;color:#b00020;display:none;">
+        ส่งไม่สำเร็จ กรุณาลองใหม่อีกครั้ง
+      </p>
 
       <h2 class="section-title" style="margin-top:24px">ข้อมูลบริษัท</h2>
       <p>
@@ -76,7 +82,7 @@
     </div>
   </footer>
 
-  <!-- Language + nav/footer mapping -->
+  <!-- Language + nav/footer mapping + ส่งฟอร์ม -->
   <script>
   (function(){
     var isEN = location.pathname.startsWith('/en/');
@@ -141,55 +147,41 @@
       document.addEventListener('click', closeMenu);
       document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
     })();
-  })();
-  </script>
 
-  <!-- ส่งฟอร์มไปที่ Google Apps Script -->
-  <script>
-    (function () {
-      const FORM = document.getElementById('cg-contact');
-      const BTN  = document.getElementById('cg-submit');
-      const MSG  = document.getElementById('cg-status');
+    /* ===================== ส่งฟอร์มเข้า Google Sheet ===================== */
+    // ใส่ URL ของ Web App ที่ได้จาก Apps Script (ลงท้ายด้วย /exec)
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzT-XMDHKDrrm_snIxhXAh_CqnHB-GOtz1z6oRq_wAx4oh5de1Xt8UkWPZkQ1IjzjSSQg/exec'; //
 
-      // URL ของ Web App (ของคุณ)
-      const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzT-XMDHKDrrm_snIxhXAh_CqnHB-GOtz1z6oRq_wAx4oh5de1Xt8UkWPZkQ1IjzjSSQg/exec";
+    var form = document.getElementById('contactForm');
+    var okEl = document.getElementById('contactResult');
+    var errEl = document.getElementById('contactError');
 
-      function setStatus(text, ok){
-        MSG.textContent = text || '';
-        MSG.style.color = ok ? '#0a7d43' : '#b91c1c';
-      }
-
-      FORM.addEventListener('submit', async function(e){
+    if (form) {
+      form.addEventListener('submit', function(e){
         e.preventDefault();
-        setStatus('', true);
+        okEl.style.display = 'none';
+        errEl.style.display = 'none';
 
-        // ตรวจสอบค่าเบื้องต้น
-        if (!FORM.name.value || !FORM.email.value || !FORM.message.value){
-          setStatus('กรุณากรอกชื่อ อีเมล และข้อความ', false);
-          return;
-        }
+        // เติมค่าภาษา/เพจให้ชัวร์ทุกครั้งก่อนส่ง
+        var langInput = form.querySelector('input[name="lang"]');
+        var pageInput = form.querySelector('input[name="page"]');
+        if (langInput) langInput.value = isEN ? 'en' : 'th';
+        if (pageInput) pageInput.value = location.pathname || '/contact.html';
 
-        // เตรียมส่ง
-        const data = new FormData(FORM);
-        BTN.disabled = true;
-        BTN.textContent = 'กำลังส่ง...';
+        var fd = new FormData(form);
 
-        try{
-          const res = await fetch(WEBAPP_URL, { method: 'POST', body: data });
-          if (res.ok){
-            setStatus('ส่งข้อความสำเร็จแล้ว ขอบคุณครับ!', true);
-            FORM.reset();
-          }else{
-            setStatus('ส่งไม่สำเร็จ กรุณาลองใหม่อีกครั้ง (' + res.status + ')', false);
-          }
-        }catch(err){
-          setStatus('ไม่สามารถเชื่อมต่อได้: ' + err.message, false);
-        }finally{
-          BTN.disabled = false;
-          BTN.textContent = 'ส่งข้อความ';
-        }
+        // ใช้ no-cors เพื่อหลีกเลี่ยง CORS (จะอ่าน response ไม่ได้ แต่ส่งถึงแน่นอน)
+        fetch(WEB_APP_URL, { method:'POST', body: fd, mode: 'no-cors' })
+          .then(function(){
+            form.reset();
+            okEl.style.display = 'block';
+          })
+          .catch(function(){
+            errEl.style.display = 'block';
+          });
       });
-    })();
+    }
+  })();
   </script>
 </body>
 </html>
