@@ -4,12 +4,24 @@
   <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>ติดต่อเรา | Click & Go</title>
   <meta name="description" content="ติดต่อทีมงาน Click & Go สำหรับข้อเสนอแนะ พาร์ทเนอร์ชิพ และสื่อสารอื่น ๆ"/>
-  <link rel="icon" href="favicon.ico"/><link rel="stylesheet" href="style.css"/>
+  <link rel="icon" href="favicon.ico"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .container{max-width:960px;margin:0 auto;padding:16px}
+    .section-title{font-size:28px;margin:8px 0}
+    .card{border:1px solid #e6e6e6;border-radius:10px;padding:18px}
+    .btn{display:inline-block;background:#118a68;color:#fff;border:none;border-radius:8px;padding:12px 18px;text-decoration:none}
+    .btn:focus{outline:2px solid #0f6;outline-offset:2px}
+    .muted{color:#666}
+    .main-nav a{margin-right:12px}
+    .footer-links a{margin:0 6px}
+    .email-alt{display:block;margin-top:10px}
+  </style>
 </head>
 <body>
   <!-- Header -->
   <header class="site-header" role="banner">
-    <div class="inner">
+    <div class="inner container">
       <a href="index.html" class="brand" aria-label="Click & Go">
         <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy"/>
         <span class="brand-text" aria-hidden="true">Click & Go</span>
@@ -32,46 +44,27 @@
   <main class="container">
     <section style="margin-top:20px">
       <h1 class="section-title">ติดต่อ Click & Go</h1>
-      <p>
-        มีคำถามหรือข้อเสนอแนะ ยินดีรับฟังครับ กรุณากรอกแบบฟอร์มด้านล่าง
-        หรืออีเมลมาที่
-        <a href="mailto:support@clickandgo.asia">support@clickandgo.asia</a>
-      </p>
+      <div class="card">
+        <p class="muted">
+          ต้องการคุยกับทีมงาน? คลิกปุ่มด้านล่างเพื่อส่งอีเมลถึงเราได้ทันที
+        </p>
 
-      <!-- iframe ซ่อน ไว้รับผลลัพธ์จากการ POST -->
-      <iframe name="hidden_iframe" style="display:none;"></iframe>
+        <!-- ปุ่มส่งอีเมลโดยตรง -->
+        <a class="btn"
+           href="mailto:support@clickandgo.asia?subject=Contact%20from%20Click%20%26%20Go&body=%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%3A%20%0A%E0%B8%AD%E0%B8%B5%E0%B9%80%E0%B8%A1%E0%B8%A5%3A%20%0A%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%3A%20%0A%0A%E0%B8%AA%E0%B9%88%E0%B8%87%E0%B8%88%E0%B8%B2%E0%B8%81%3A%20/contact.html">
+          ส่งอีเมลถึงเรา
+        </a>
 
-      <!-- ฟอร์มติดต่อ (จะ POST ตรงไป Apps Script) -->
-      <form id="contactForm" class="search-form"
-            style="grid-template-columns:1fr 1fr"
-            aria-label="แบบฟอร์มติดต่อ"
-            action="https://script.google.com/macros/s/AKfycbzT-XMDHKDrrm_snIxhXAh_CqnHB-GOtz1z6oRq_wAx4oh5de1Xt8UkWPZkQ1IjzjSSQg/exec"
-            method="POST"
-            target="hidden_iframe">
-
-        <input type="text" name="name" placeholder="ชื่อของคุณ" aria-label="ชื่อของคุณ" autocomplete="name" required>
-        <input type="email" name="email" placeholder="อีเมลของคุณ" aria-label="อีเมลของคุณ" autocomplete="email" required>
-        <input type="text" name="subject" placeholder="หัวข้อ" aria-label="หัวข้อ" style="grid-column:1/-1">
-        <textarea name="message" placeholder="ข้อความ" aria-label="ข้อความ" style="grid-column:1/-1; min-height:120px; padding:10px; border:1px solid #ccc; border-radius:6px;" required></textarea>
-
-        <!-- hidden (ถูกเติมก่อน submit ทุกครั้ง) -->
-        <input type="hidden" name="lang" value="th">
-        <input type="hidden" name="page" value="/contact.html">
-
-        <button type="submit" class="btn" style="grid-column:1/-1">ส่งข้อความ</button>
-      </form>
-
-      <p id="contactResult" style="margin-top:10px;color:#0a8f66;display:none;">
-        ส่งข้อความสำเร็จแล้ว ขอบคุณครับ!
-      </p>
-      <p id="contactError" style="margin-top:10px;color:#b00020;display:none;">
-        ส่งไม่สำเร็จ กรุณาลองใหม่อีกครั้ง
-      </p>
+        <!-- อีเมลแบบข้อความธรรมดา เป็นทางเลือก -->
+        <small class="email-alt">
+          หรือเขียนมาที่: <a href="mailto:support@clickandgo.asia">support@clickandgo.asia</a>
+        </small>
+      </div>
 
       <h2 class="section-title" style="margin-top:24px">ข้อมูลบริษัท</h2>
       <p>
         Click & Go OTA (Thailand) Co., Ltd.<br/>
-        124 Sukhumvit 66/1 Bangna,
+        124 Sukhumvit 66/1 Bangna,<br/>
         Bangkok, Thailand 10260
       </p>
     </section>
@@ -91,13 +84,11 @@
     </div>
   </footer>
 
-  <!-- Language + nav/footer mapping + เติมค่า hidden ก่อนส่ง -->
+  <!-- Language + nav/footer mapping -->
   <script>
   (function(){
     var isEN = location.pathname.startsWith('/en/');
     var prefix = isEN ? '/en' : '';
-
-    // แมปลิงก์ภายในให้คงภาษาเดียวกับหน้าปัจจุบัน
     var map = {
       home:    prefix + '/index.html',
       deals:   prefix + '/deals.html',
@@ -107,43 +98,30 @@
       about:   prefix + '/about.html',
       contact: prefix + '/contact.html'
     };
-
     // ปรับลิงก์เมนูส่วนหัว
-    var nav = document.querySelector('.main-nav');
-    if (nav) {
-      nav.querySelectorAll('a').forEach(function(a){
-        var t = a.textContent.trim().toLowerCase();
-        if (t.includes('หน้าแรก') || t === 'home') a.href = map.home;
-        else if (t.includes('โปรโมชั่น') || t === 'deals') a.href = map.deals;
-      });
-    }
-
+    document.querySelectorAll('.main-nav a').forEach(function(a){
+      var t = a.textContent.trim().toLowerCase();
+      if (t.includes('หน้าแรก') || t === 'home') a.href = map.home;
+      else if (t.includes('โปรโมชั่น') || t === 'deals') a.href = map.deals;
+    });
     // ปรับลิงก์ในฟุตเตอร์ให้คงภาษา
-    var foot = document.querySelector('.footer-links');
-    if (foot) {
-      foot.querySelectorAll('a').forEach(function(a){
-        var t = a.textContent.trim().toLowerCase();
-        if (t.startsWith('privacy'))        a.href = map.privacy;
-        else if (t.startsWith('terms'))     a.href = map.terms;
-        else if (t.startsWith('affiliate')) a.href = map.aff;
-        else if (t.startsWith('about'))     a.href = map.about;
-        else if (t.startsWith('contact'))   a.href = map.contact;
-      });
-    }
-
-    // ตั้งลิงก์สลับภาษา (หน้านี้คือ contact)
-    (function(){
-      var btn  = document.querySelector('.lang-btn');
-      var menu = document.querySelector('.lang-menu');
-      if (!btn || !menu) return;
-
+    document.querySelectorAll('.footer-links a').forEach(function(a){
+      var t = a.textContent.trim().toLowerCase();
+      if (t.startsWith('privacy')) a.href = map.privacy;
+      else if (t.startsWith('terms')) a.href = map.terms;
+      else if (t.startsWith('affiliate')) a.href = map.aff;
+      else if (t.startsWith('about')) a.href = map.about;
+      else if (t.startsWith('contact')) a.href = map.contact;
+    });
+    // เมนูภาษา
+    var btn  = document.querySelector('.lang-btn');
+    var menu = document.querySelector('.lang-menu');
+    if (btn && menu) {
       var links = menu.querySelectorAll('a');
       if (links.length >= 2) {
-        var th = links[0], en = links[1];
-        th.href = '/contact.html';       // ไปไทย
-        en.href = '/en/contact.html';    // ไปอังกฤษ
+        links[0].href = '/contact.html';    // ไทย
+        links[1].href = '/en/contact.html'; // อังกฤษ
       }
-
       function closeMenu(){
         menu.classList.remove('open');
         btn.setAttribute('aria-expanded','false');
@@ -155,32 +133,6 @@
       });
       document.addEventListener('click', closeMenu);
       document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
-    })();
-
-    // เติมค่าภาษา/เพจให้ชัวร์ก่อน submit แล้วโชว์ข้อความสำเร็จ
-    var form  = document.getElementById('contactForm');
-    var okEl  = document.getElementById('contactResult');
-    var errEl = document.getElementById('contactError');
-
-    if (form) {
-      form.addEventListener('submit', function(){
-        try {
-          var langInput = form.querySelector('input[name="lang"]');
-          var pageInput = form.querySelector('input[name="page"]');
-          if (langInput) langInput.value = isEN ? 'en' : 'th';
-          if (pageInput) pageInput.value = location.pathname || '/contact.html';
-
-          // หลังส่งให้รีเซ็ตฟอร์มและโชว์ข้อความสำเร็จ (รอ 600ms เผื่อโพสต์เสร็จ)
-          setTimeout(function(){
-            form.reset();
-            okEl.style.display = 'block';
-            errEl.style.display = 'none';
-          }, 600);
-        } catch(e){
-          okEl.style.display = 'none';
-          errEl.style.display = 'block';
-        }
-      });
     }
   })();
   </script>
