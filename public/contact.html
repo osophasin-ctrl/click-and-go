@@ -150,7 +150,7 @@
 
     /* ===================== ส่งฟอร์มเข้า Google Sheet ===================== */
     // ใส่ URL ของ Web App ที่ได้จาก Apps Script (ลงท้ายด้วย /exec)
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzT-XMDHKDrrm_snIxhXAh_CqnHB-GOtz1z6oRq_wAx4oh5de1Xt8UkWPZkQ1IjzjSSQg/exec'; //
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzT-XMDHKDrrm_snIxhXAh_CqnHB-GOtz1z6oRq_wAx4oh5de1Xt8UkWPZkQ1IjzjSSQg/exec';
 
     var form = document.getElementById('contactForm');
     var okEl = document.getElementById('contactResult');
@@ -168,17 +168,25 @@
         if (langInput) langInput.value = isEN ? 'en' : 'th';
         if (pageInput) pageInput.value = location.pathname || '/contact.html';
 
+        // แปลงเป็น application/x-www-form-urlencoded
         var fd = new FormData(form);
+        var data = new URLSearchParams();
+        fd.forEach(function(value, key){ data.append(key, value); });
 
         // ใช้ no-cors เพื่อหลีกเลี่ยง CORS (จะอ่าน response ไม่ได้ แต่ส่งถึงแน่นอน)
-        fetch(WEB_APP_URL, { method:'POST', body: fd, mode: 'no-cors' })
-          .then(function(){
-            form.reset();
-            okEl.style.display = 'block';
-          })
-          .catch(function(){
-            errEl.style.display = 'block';
-          });
+        fetch(WEB_APP_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body: data.toString()
+        })
+        .then(function(){
+          form.reset();
+          okEl.style.display = 'block';
+        })
+        .catch(function(){
+          errEl.style.display = 'block';
+        });
       });
     }
   })();
