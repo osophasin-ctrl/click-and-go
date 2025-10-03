@@ -3,29 +3,18 @@
 <head>
   <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Contact | Click & Go</title>
-  <meta name="description" content="Contact Customer Service at Click & Go for feedback, partnerships, and general inquiries."/>
-  <link rel="icon" href="../favicon.ico"/>
-  <link rel="stylesheet" href="../style.css"/>
-  <style>
-    .container{max-width:960px;margin:0 auto;padding:16px}
-    .section-title{font-size:28px;margin:8px 0}
-    .card{border:1px solid #e6e6e6;border-radius:10px;padding:18px}
-    .btn{display:inline-block;background:#118a68;color:#fff;border:none;border-radius:8px;padding:12px 18px;text-decoration:none}
-    .btn:focus{outline:2px solid #0f6;outline-offset:2px}
-    .muted{color:#666}
-    .main-nav a{margin-right:12px}
-    .footer-links a{margin:0 6px}
-    .email-alt{display:block;margin-top:10px}
-  </style>
+  <meta name="description" content="Contact us at Click & Go via the email button or write to support@clickandgo.asia"/>
+  <link rel="icon" href="../favicon.ico"/><link rel="stylesheet" href="../style.css"/>
 </head>
 <body>
+  <!-- Header -->
   <header class="site-header" role="banner">
-    <div class="inner container">
+    <div class="inner">
       <a href="index.html" class="brand" aria-label="Click & Go">
         <img src="../logo.png" alt="Click & Go" width="40" height="40" loading="lazy"/>
         <span class="brand-text" aria-hidden="true">Click & Go</span>
       </a>
-      <nav class="main-nav" aria-label="Main menu">
+      <nav class="main-nav" aria-label="Main navigation">
         <a href="index.html">Home</a>
         <a href="deals.html">Deals</a>
         <div class="lang">
@@ -39,20 +28,19 @@
     </div>
   </header>
 
+  <!-- Main -->
   <main class="container">
     <section style="margin-top:20px">
       <h1 class="section-title">Contact Click & Go</h1>
-      <div class="card">
-        <p class="muted">Need Customer Service? Click the button below to email us instantly.</p>
 
-        <a class="btn"
-           href="mailto:support@clickandgo.asia?subject=Contact%20from%20Click%20%26%20Go&body=Name%3A%20%0AEmail%3A%20%0AMessage%3A%20%0A%0ASent%20from%3A%20/en/contact.html">
-          Email us
-        </a>
-
-        <small class="email-alt">
-          Or write to: <a href="mailto:support@clickandgo.asia">support@clickandgo.asia</a>
-        </small>
+      <div class="card" style="padding:16px;margin-top:8px">
+        <p class="muted">Contact us. Click the button below to email us instantly.</p>
+        <p style="margin:14px 0">
+          <a class="btn" href="mailto:support@clickandgo.asia" style="display:inline-block;padding:12px 18px;border-radius:8px;">
+            Email us
+          </a>
+        </p>
+        <p>Or write to: <a href="mailto:support@clickandgo.asia">support@clickandgo.asia</a></p>
       </div>
 
       <h2 class="section-title" style="margin-top:24px">Company</h2>
@@ -64,9 +52,10 @@
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
-      <div class="footer-links">
+      <div class="footer-links" style="white-space:nowrap">
         <a href="privacy.html">Privacy</a> ·
         <a href="terms.html">Terms</a> ·
         <a href="affiliate.html">Affiliate Disclosure</a> ·
@@ -77,10 +66,12 @@
     </div>
   </footer>
 
+  <!-- Language + internal link mapping -->
   <script>
   (function(){
     var isEN = location.pathname.startsWith('/en/');
     var prefix = isEN ? '/en' : '';
+
     var map = {
       home:    prefix + '/index.html',
       deals:   prefix + '/deals.html',
@@ -90,32 +81,44 @@
       about:   prefix + '/about.html',
       contact: prefix + '/contact.html'
     };
-    document.querySelectorAll('.main-nav a').forEach(function(a){
-      var t = a.textContent.trim().toLowerCase();
-      if (t === 'home' || t.includes('หน้าแรก')) a.href = map.home;
-      else if (t === 'deals' || t.includes('โปรโมชั่น')) a.href = map.deals;
-    });
-    document.querySelectorAll('.footer-links a').forEach(function(a){
-      var t = a.textContent.trim().toLowerCase();
-      if (t.startsWith('privacy')) a.href = map.privacy;
-      else if (t.startsWith('terms')) a.href = map.terms;
-      else if (t.startsWith('affiliate')) a.href = map.aff;
-      else if (t.startsWith('about')) a.href = map.about;
-      else if (t.startsWith('contact')) a.href = map.contact;
-    });
-    var btn  = document.querySelector('.lang-btn');
-    var menu = document.querySelector('.lang-menu');
-    if (btn && menu) {
+
+    // header links
+    var nav = document.querySelector('.main-nav');
+    if (nav) {
+      nav.querySelectorAll('a').forEach(function(a){
+        var t = a.textContent.trim().toLowerCase();
+        if (t === 'home') a.href = map.home;
+        else if (t === 'deals') a.href = map.deals;
+      });
+    }
+    // footer links
+    var foot = document.querySelector('.footer-links');
+    if (foot) {
+      foot.querySelectorAll('a').forEach(function(a){
+        var t = a.textContent.trim().toLowerCase();
+        if (t.startsWith('privacy'))        a.href = map.privacy;
+        else if (t.startsWith('terms'))     a.href = map.terms;
+        else if (t.startsWith('affiliate')) a.href = map.aff;
+        else if (t.startsWith('about'))     a.href = map.about;
+        else if (t.startsWith('contact'))   a.href = map.contact;
+      });
+    }
+    // language switch
+    (function(){
+      var btn  = document.querySelector('.lang-btn');
+      var menu = document.querySelector('.lang-menu');
+      if (!btn || !menu) return;
       var links = menu.querySelectorAll('a');
       if (links.length >= 2) {
-        links[0].href = '/contact.html';    // ไทย
-        links[1].href = '/en/contact.html'; // อังกฤษ
+        var th = links[0], en = links[1];
+        th.href = '/contact.html';
+        en.href = '/en/contact.html';
       }
       function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-      btn.addEventListener('click', function(e){ e.stopPropagation(); var opened = menu.classList.toggle('open'); btn.setAttribute('aria-expanded', String(opened)); });
+      btn.addEventListener('click', function(e){ e.stopPropagation(); var o=menu.classList.toggle('open'); btn.setAttribute('aria-expanded', String(o)); });
       document.addEventListener('click', closeMenu);
       document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
-    }
+    })();
   })();
   </script>
 </body>
