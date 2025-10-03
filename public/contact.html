@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>ติดต่อเรา | Click & Go</title>
-  <meta name="description" content="ติดต่อทีมงาน Click & Go สำหรับข้อเสนอแนะ พาร์ทเนอร์ชิพ และสื่อสารอื่น ๆ"/>
+  <meta name="description" content="ติดต่อฝ่ายบริการ Click & Go สำหรับข้อเสนอแนะ พาร์ทเนอร์ชิพ และสื่อสารอื่น ๆ"/>
   <link rel="icon" href="favicon.ico"/>
   <link rel="stylesheet" href="style.css"/>
   <style>
@@ -19,7 +19,6 @@
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="site-header" role="banner">
     <div class="inner container">
       <a href="index.html" class="brand" aria-label="Click & Go">
@@ -40,22 +39,17 @@
     </div>
   </header>
 
-  <!-- Main -->
   <main class="container">
     <section style="margin-top:20px">
       <h1 class="section-title">ติดต่อ Click & Go</h1>
       <div class="card">
-        <p class="muted">
-          ต้องการคุยกับทีมงาน? คลิกปุ่มด้านล่างเพื่อส่งอีเมลถึงเราได้ทันที
-        </p>
+        <p class="muted">ติดต่อฝ่ายบริการ? คลิกปุ่มด้านล่างเพื่อส่งอีเมลถึงเราได้ทันที</p>
 
-        <!-- ปุ่มส่งอีเมลโดยตรง -->
         <a class="btn"
            href="mailto:support@clickandgo.asia?subject=Contact%20from%20Click%20%26%20Go&body=%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%3A%20%0A%E0%B8%AD%E0%B8%B5%E0%B9%80%E0%B8%A1%E0%B8%A5%3A%20%0A%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%3A%20%0A%0A%E0%B8%AA%E0%B9%88%E0%B8%87%E0%B8%88%E0%B8%B2%E0%B8%81%3A%20/contact.html">
           ส่งอีเมลถึงเรา
         </a>
 
-        <!-- อีเมลแบบข้อความธรรมดา เป็นทางเลือก -->
         <small class="email-alt">
           หรือเขียนมาที่: <a href="mailto:support@clickandgo.asia">support@clickandgo.asia</a>
         </small>
@@ -70,7 +64,6 @@
     </section>
   </main>
 
-  <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
@@ -84,7 +77,6 @@
     </div>
   </footer>
 
-  <!-- Language + nav/footer mapping -->
   <script>
   (function(){
     var isEN = location.pathname.startsWith('/en/');
@@ -98,13 +90,11 @@
       about:   prefix + '/about.html',
       contact: prefix + '/contact.html'
     };
-    // ปรับลิงก์เมนูส่วนหัว
     document.querySelectorAll('.main-nav a').forEach(function(a){
       var t = a.textContent.trim().toLowerCase();
       if (t.includes('หน้าแรก') || t === 'home') a.href = map.home;
       else if (t.includes('โปรโมชั่น') || t === 'deals') a.href = map.deals;
     });
-    // ปรับลิงก์ในฟุตเตอร์ให้คงภาษา
     document.querySelectorAll('.footer-links a').forEach(function(a){
       var t = a.textContent.trim().toLowerCase();
       if (t.startsWith('privacy')) a.href = map.privacy;
@@ -113,7 +103,6 @@
       else if (t.startsWith('about')) a.href = map.about;
       else if (t.startsWith('contact')) a.href = map.contact;
     });
-    // เมนูภาษา
     var btn  = document.querySelector('.lang-btn');
     var menu = document.querySelector('.lang-menu');
     if (btn && menu) {
@@ -122,15 +111,8 @@
         links[0].href = '/contact.html';    // ไทย
         links[1].href = '/en/contact.html'; // อังกฤษ
       }
-      function closeMenu(){
-        menu.classList.remove('open');
-        btn.setAttribute('aria-expanded','false');
-      }
-      btn.addEventListener('click', function(e){
-        e.stopPropagation();
-        var opened = menu.classList.toggle('open');
-        btn.setAttribute('aria-expanded', String(opened));
-      });
+      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      btn.addEventListener('click', function(e){ e.stopPropagation(); var opened = menu.classList.toggle('open'); btn.setAttribute('aria-expanded', String(opened)); });
       document.addEventListener('click', closeMenu);
       document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
     }
