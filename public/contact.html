@@ -38,14 +38,23 @@
         <a href="mailto:support@clickandgo.asia">support@clickandgo.asia</a>
       </p>
 
-      <!-- ฟอร์มติดต่อ -->
-      <form id="contactForm" class="search-form" style="grid-template-columns:1fr 1fr" aria-label="แบบฟอร์มติดต่อ">
+      <!-- iframe ซ่อน ไว้รับผลลัพธ์จากการ POST -->
+      <iframe name="hidden_iframe" style="display:none;"></iframe>
+
+      <!-- ฟอร์มติดต่อ (จะ POST ตรงไป Apps Script) -->
+      <form id="contactForm" class="search-form"
+            style="grid-template-columns:1fr 1fr"
+            aria-label="แบบฟอร์มติดต่อ"
+            action="https://script.google.com/macros/s/AKfycbzT-XMDHKDrrm_snIxhXAh_CqnHB-GOtz1z6oRq_wAx4oh5de1Xt8UkWPZkQ1IjzjSSQg/exec"
+            method="POST"
+            target="hidden_iframe">
+
         <input type="text" name="name" placeholder="ชื่อของคุณ" aria-label="ชื่อของคุณ" autocomplete="name" required>
         <input type="email" name="email" placeholder="อีเมลของคุณ" aria-label="อีเมลของคุณ" autocomplete="email" required>
         <input type="text" name="subject" placeholder="หัวข้อ" aria-label="หัวข้อ" style="grid-column:1/-1">
         <textarea name="message" placeholder="ข้อความ" aria-label="ข้อความ" style="grid-column:1/-1; min-height:120px; padding:10px; border:1px solid #ccc; border-radius:6px;" required></textarea>
 
-        <!-- hidden (จะถูกเติมค่าอัตโนมัติในสคริปต์ด้านล่างก็ได้ แต่ใส่ไว้เผื่ออ่านง่าย) -->
+        <!-- hidden (ถูกเติมก่อน submit ทุกครั้ง) -->
         <input type="hidden" name="lang" value="th">
         <input type="hidden" name="page" value="/contact.html">
 
@@ -82,7 +91,7 @@
     </div>
   </footer>
 
-  <!-- Language + nav/footer mapping + ส่งฟอร์ม -->
+  <!-- Language + nav/footer mapping + เติมค่า hidden ก่อนส่ง -->
   <script>
   (function(){
     var isEN = location.pathname.startsWith('/en/');
@@ -148,45 +157,29 @@
       document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
     })();
 
-    /* ===================== ส่งฟอร์มเข้า Google Sheet ===================== */
-    // ใส่ URL ของ Web App ที่ได้จาก Apps Script (ลงท้ายด้วย /exec)
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzT-XMDHKDrrm_snIxhXAh_CqnHB-GOtz1z6oRq_wAx4oh5de1Xt8UkWPZkQ1IjzjSSQg/exec';
-
-    var form = document.getElementById('contactForm');
-    var okEl = document.getElementById('contactResult');
+    // เติมค่าภาษา/เพจให้ชัวร์ก่อน submit แล้วโชว์ข้อความสำเร็จ
+    var form  = document.getElementById('contactForm');
+    var okEl  = document.getElementById('contactResult');
     var errEl = document.getElementById('contactError');
 
     if (form) {
-      form.addEventListener('submit', function(e){
-        e.preventDefault();
-        okEl.style.display = 'none';
-        errEl.style.display = 'none';
+      form.addEventListener('submit', function(){
+        try {
+          var langInput = form.querySelector('input[name="lang"]');
+          var pageInput = form.querySelector('input[name="page"]');
+          if (langInput) langInput.value = isEN ? 'en' : 'th';
+          if (pageInput) pageInput.value = location.pathname || '/contact.html';
 
-        // เติมค่าภาษา/เพจให้ชัวร์ทุกครั้งก่อนส่ง
-        var langInput = form.querySelector('input[name="lang"]');
-        var pageInput = form.querySelector('input[name="page"]');
-        if (langInput) langInput.value = isEN ? 'en' : 'th';
-        if (pageInput) pageInput.value = location.pathname || '/contact.html';
-
-        // แปลงเป็น application/x-www-form-urlencoded
-        var fd = new FormData(form);
-        var data = new URLSearchParams();
-        fd.forEach(function(value, key){ data.append(key, value); });
-
-        // ใช้ no-cors เพื่อหลีกเลี่ยง CORS (จะอ่าน response ไม่ได้ แต่ส่งถึงแน่นอน)
-        fetch(WEB_APP_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-          body: data.toString()
-        })
-        .then(function(){
-          form.reset();
-          okEl.style.display = 'block';
-        })
-        .catch(function(){
+          // หลังส่งให้รีเซ็ตฟอร์มและโชว์ข้อความสำเร็จ (รอ 600ms เผื่อโพสต์เสร็จ)
+          setTimeout(function(){
+            form.reset();
+            okEl.style.display = 'block';
+            errEl.style.display = 'none';
+          }, 600);
+        } catch(e){
+          okEl.style.display = 'none';
           errEl.style.display = 'block';
-        });
+        }
       });
     }
   })();
