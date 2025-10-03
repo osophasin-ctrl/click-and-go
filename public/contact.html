@@ -1,50 +1,95 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ติดต่อ Click & Go</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ติดต่อเรา | Click & Go</title>
+  <meta name="description" content="ติดต่อทีมงาน Click & Go ทางอีเมลได้อย่างรวดเร็ว"/>
+  <link rel="icon" href="favicon.ico"/>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <header>
-    <a href="index.html"><img src="logo.png" alt="Click & Go Logo" class="logo"></a>
-    <nav>
-      <a href="index.html">หน้าแรก</a>
-      <a href="deals.html">โปรโมชั่น</a>
-      <div class="dropdown">
-        <button class="dropbtn">ภาษา</button>
-        <div class="dropdown-content">
-          <a href="contact.html">ไทย</a>
-          <a href="contact_en.html">English</a>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="inner">
+      <a href="index.html" class="brand" aria-label="Click & Go">
+        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy"/>
+        <span class="brand-text" aria-hidden="true">Click & Go</span>
+      </a>
+      <nav class="main-nav" aria-label="เมนูหลัก">
+        <a href="index.html">หน้าแรก</a>
+        <a href="deals.html">โปรโมชั่น</a>
+        <div class="lang">
+          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
+          <div class="lang-menu" role="menu">
+            <a role="menuitem" href="#" aria-current="true">ไทย</a>
+            <a role="menuitem" href="en/contact.html">English</a>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <h1>ติดต่อ Click & Go</h1>
-    <div class="contact-box">
-      <p>ติดต่อฝ่ายบริการ คลิกปุ่มด้านล่างเพื่อส่งอีเมลถึงเราได้ทันที</p>
-      <a href="mailto:support@clickandgo.asia" class="email-button">ส่งอีเมลถึงเรา</a>
-      <p>หรือเขียนมาที่: <a href="mailto:support@clickandgo.asia">support@clickandgo.asia</a></p>
-    </div>
+  <!-- Main -->
+  <main class="container">
+    <section style="margin-top:20px">
+      <h1 class="section-title">ติดต่อ Click & Go</h1>
 
-    <section>
-      <h2>ข้อมูลบริษัท</h2>
-      <p>Click & Go OTA (Thailand) Co., Ltd.<br>
-      124 Sukhumvit 66/1 Bangna,<br>
-      Bangkok, Thailand 10260</p>
+      <div class="card" style="padding:16px">
+        <p style="margin:0 0 12px">
+          ติดต่อฝ่ายบริการ คลิกปุ่มด้านล่างเพื่อส่งอีเมลถึงเราได้ทันที
+        </p>
+        <p style="margin:0 0 12px">
+          <a class="btn" href="mailto:support@clickandgo.asia">ส่งอีเมลถึงเรา</a>
+        </p>
+        <p style="margin:0">
+          หรือเขียนมาที่:
+          <a href="mailto:support@clickandgo.asia">support@clickandgo.asia</a>
+        </p>
+      </div>
+
+      <h2 class="section-title" style="margin-top:24px">ข้อมูลบริษัท</h2>
+      <p>
+        Click & Go OTA (Thailand) Co., Ltd.<br/>
+        124 Sukhumvit 66/1 Bangna,<br/>
+        Bangkok, Thailand 10260
+      </p>
     </section>
   </main>
 
-  <footer>
-    <a href="privacy.html">Privacy</a> ・
-    <a href="terms.html">Terms</a> ・
-    <a href="affiliate.html">Affiliate Disclosure</a> ・
-    <a href="about.html">About us</a> ・
-    <a href="contact.html">Contact</a> ・
-    <a href="https://facebook.com">Facebook</a>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="text-align:center">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="affiliate.html">Affiliate Disclosure</a> ·
+        <a href="about.html">About&nbsp;us</a> ·
+        <a href="contact.html" aria-current="page">Contact</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+      </div>
+    </div>
   </footer>
+
+  <!-- Language toggle (เปิด/ปิดเมนู) -->
+  <script>
+    (function(){
+      var btn = document.querySelector('.lang-btn');
+      var menu = document.querySelector('.lang-menu');
+      if (!btn || !menu) return;
+
+      function closeMenu(){
+        menu.classList.remove('open');
+        btn.setAttribute('aria-expanded','false');
+      }
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var opened = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(opened));
+      });
+      document.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
+    })();
+  </script>
 </body>
 </html>
