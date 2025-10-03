@@ -1,126 +1,55 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>ติดต่อเรา | Click & Go</title>
-  <meta name="description" content="ติดต่อฝ่ายบริการของ Click & Go ได้ง่าย ๆ ผ่านปุ่มส่งอีเมล หรืออีเมลมาที่ support@clickandgo.asia"/>
-  <link rel="icon" href="favicon.ico"/><link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ติดต่อ Click & Go</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Header -->
-  <header class="site-header" role="banner">
-    <div class="inner">
-      <a href="index.html" class="brand" aria-label="Click & Go">
-        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy"/>
-        <span class="brand-text" aria-hidden="true">Click & Go</span>
-      </a>
-      <nav class="main-nav" aria-label="เมนูหลัก">
-        <a href="index.html">หน้าแรก</a>
-        <a href="deals.html">โปรโมชั่น</a>
-        <div class="lang">
-          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
-          <div class="lang-menu" role="menu">
-            <a role="menuitem" href="#" aria-current="true">ไทย</a>
-            <a role="menuitem" href="#">English</a>
-          </div>
-        </div>
-      </nav>
+  <header>
+    <div class="logo">
+      <a href="index.html"><img src="logo.png" alt="Click & Go Logo"></a>
     </div>
+    <nav>
+      <a href="index.html">หน้าแรก</a>
+      <a href="deals.html">โปรโมชั่น</a>
+      <div class="language">
+        <button>ภาษา</button>
+        <div class="dropdown">
+          <a href="contact.html">ไทย</a>
+          <a href="en/contact.html">English</a>
+        </div>
+      </div>
+    </nav>
   </header>
 
-  <!-- Main -->
-  <main class="container">
-    <section style="margin-top:20px">
-      <h1 class="section-title">ติดต่อ Click & Go</h1>
+  <main>
+    <h1>ติดต่อ Click & Go</h1>
+    <div class="contact-box">
+      <p>ติดต่อฝ่ายบริการ คลิกปุ่มด้านล่างเพื่อส่งอีเมลถึงเราได้ทันที</p>
+      <a href="mailto:support@clickandgo.asia" class="btn">ส่งอีเมลถึงเรา</a>
+      <p>หรือเขียนมาที่: <a href="mailto:support@clickandgo.asia">support@clickandgo.asia</a></p>
+    </div>
 
-      <div class="card" style="padding:16px;margin-top:8px">
-        <p class="muted">ติดต่อฝ่ายบริการ คลิกปุ่มด้านล่างเพื่อส่งอีเมลถึงเราได้ทันที</p>
-        <p style="margin:14px 0">
-          <a class="btn" href="mailto:support@clickandgo.asia" style="display:inline-block;padding:12px 18px;border-radius:8px;">
-            ส่งอีเมลถึงเรา
-          </a>
-        </p>
-        <p>หรือเขียนมาที่: <a href="mailto:support@clickandgo.asia">support@clickandgo.asia</a></p>
-      </div>
-
-      <h2 class="section-title" style="margin-top:24px">ข้อมูลบริษัท</h2>
-      <p>
-        Click & Go OTA (Thailand) Co., Ltd.<br/>
-        124 Sukhumvit 66/1 Bangna,<br/>
-        Bangkok, Thailand 10260
-      </p>
+    <section class="company-info">
+      <h2>ข้อมูลบริษัท</h2>
+      <p>Click & Go OTA (Thailand) Co., Ltd.<br>
+         124 Sukhumvit 66/1 Bangna, Bangkok, Thailand 10260</p>
     </section>
   </main>
 
-  <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
-      <div class="footer-links" style="white-space:nowrap">
+      <div class="footer-links">
         <a href="privacy.html">Privacy</a> ·
         <a href="terms.html">Terms</a> ·
         <a href="affiliate.html">Affiliate Disclosure</a> ·
-        <a href="about.html">About us</a> ·
+        <a href="about.html">About&nbsp;us</a> ·
         <a href="contact.html" aria-current="page">Contact</a> ·
         <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
   </footer>
-
-  <!-- Language + internal link mapping -->
-  <script>
-  (function(){
-    var isEN = location.pathname.startsWith('/en/');
-    var prefix = isEN ? '/en' : '';
-
-    // map internal links to keep language
-    var map = {
-      home:    prefix + '/index.html',
-      deals:   prefix + '/deals.html',
-      privacy: prefix + '/privacy.html',
-      terms:   prefix + '/terms.html',
-      aff:     prefix + '/affiliate.html',
-      about:   prefix + '/about.html',
-      contact: prefix + '/contact.html'
-    };
-
-    // header links
-    var nav = document.querySelector('.main-nav');
-    if (nav) {
-      nav.querySelectorAll('a').forEach(function(a){
-        var t = a.textContent.trim().toLowerCase();
-        if (t.includes('หน้าแรก') || t === 'home') a.href = map.home;
-        else if (t.includes('โปรโมชั่น') || t === 'deals') a.href = map.deals;
-      });
-    }
-    // footer links
-    var foot = document.querySelector('.footer-links');
-    if (foot) {
-      foot.querySelectorAll('a').forEach(function(a){
-        var t = a.textContent.trim().toLowerCase();
-        if (t.startsWith('privacy'))        a.href = map.privacy;
-        else if (t.startsWith('terms'))     a.href = map.terms;
-        else if (t.startsWith('affiliate')) a.href = map.aff;
-        else if (t.startsWith('about'))     a.href = map.about;
-        else if (t.startsWith('contact'))   a.href = map.contact;
-      });
-    }
-    // language switch
-    (function(){
-      var btn  = document.querySelector('.lang-btn');
-      var menu = document.querySelector('.lang-menu');
-      if (!btn || !menu) return;
-      var links = menu.querySelectorAll('a');
-      if (links.length >= 2) {
-        var th = links[0], en = links[1];
-        th.href = '/contact.html';
-        en.href = '/en/contact.html';
-      }
-      function closeMenu(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-      btn.addEventListener('click', function(e){ e.stopPropagation(); var o=menu.classList.toggle('open'); btn.setAttribute('aria-expanded', String(o)); });
-      document.addEventListener('click', closeMenu);
-      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
-    })();
-  })();
-  </script>
 </body>
 </html>
