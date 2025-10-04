@@ -12,7 +12,6 @@
     .container{max-width:960px;margin:0 auto;padding:16px}
     h1{font-size:26px;margin:6px 0 14px}
 
-    /* ฟอร์มหลัก */
     .box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.07);padding:16px}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .row.full{grid-template-columns:1fr}
@@ -45,8 +44,6 @@
     .ctxt{min-width:22px;text-align:center;font-weight:700}
     .btn-outline{border:1px solid #bbb;background:#fff;color:#111;border-radius:8px;padding:8px 14px}
     .btn-primary{border:0;background:var(--brand);color:#fff;border-radius:8px;padding:8px 14px}
-
-    .ghost{background:#e5e7eb;color:#111}
   </style>
 </head>
 <body>
@@ -70,10 +67,11 @@
         <div>
           <div class="label">ชื่อโรงแรม</div>
           <div class="suggest-wrap">
-            <input id="hotelInput" class="input" placeholder="เช่น เมอเคียว, เดอะ..." aria-label="ชื่อโรงแรม">
+            <input id="hotelInput" class="input" placeholder="เช่น ทวิน โลตัส, เมอเคียว, เดอะ..." aria-label="ชื่อโรงแรม">
             <div id="suggest" class="suggest" role="listbox" aria-label="คำแนะนำโรงแรม"></div>
           </div>
           <input type="hidden" id="hid" name="hid" value="">
+          <input type="hidden" name="lang" value="th-th">
         </div>
 
         <div>
@@ -92,13 +90,11 @@
           <input type="hidden" id="rooms" name="rooms" value="1">
           <input type="hidden" id="adults" name="adults" value="2">
           <input type="hidden" id="children" name="children" value="0">
-          <input type="hidden" name="lang" value="th-th">
         </div>
       </div>
 
       <div class="row full">
         <button type="submit" class="btn">ค้นหา</button>
-        <a class="btn ghost" href="https://www.agoda.com/th-th/partners/partnersearch.aspx?cid=1949420&pcs=1&noapp=1" target="_blank" rel="nofollow noopener">ไปยังหน้าโรงแรมที่พันธมิตร</a>
       </div>
     </form>
   </div>
@@ -200,10 +196,18 @@
 
   const esc=s=>String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]) );
 
+  const isHotelItem = (it)=>{
+    const t = String(it.type||'').toLowerCase();
+    const id = it.hotel_id ?? it.id;
+    // ต้องมี id และ type เป็น hotel เท่านั้น
+    return !!id && (t.includes('hotel'));
+  };
+
   function row(h){
-    const id=h.id||h.hotel_id||'', name=h.name||h.label||h.title||'โรงแรม';
-    const city=h.city||h.city_name||h.cityName||'';
-    const country=h.country||h.country_name||'';
+    const id = h.hotel_id ?? h.id ?? '';
+    const name = h.name || h.label || h.title || 'โรงแรม';
+    const city = h.city || h.city_name || h.cityName || '';
+    const country = h.country || h.country_name || '';
     return `<div class="s-item" data-id="${esc(id)}" data-name="${esc(name)}">
       <div>
         <div class="s-title">${esc(name)}</div>
@@ -235,17 +239,21 @@
   async function fetchHotels(q){
     // 1) endpoint เฉพาะโรงแรม
     let data = await j(`/api/hotel-suggest?q=${encodeURIComponent(q)}&lang=th-th&limit=30`);
-    if (data && data.ok) return data;
-
-    // 2) /api/suggest type=hotel
-    data = await j(`/api/suggest?q=${encodeURIComponent(q)}&lang=th-th&type=hotel&limit=30`);
-    if (data && data.ok) return data;
-
-    // 3) fallback หาแบบผสมแล้วกรองเก็บเฉพาะโรงแรม
-    data = await j(`/api/suggest?q=${encodeURIComponent(q)}&lang=th-th&type=mixed&limit=40`);
     if (data && data.ok) {
-      const items = (data.items||[]).filter(it=>String(it.type||'').toLowerCase().includes('hotel'));
-      return {ok:true, items};
+      data.items = (data.items||[]).filter(isHotelItem);
+      return data;
+    }
+    // 2) /api/suggest type=hotel
+    data = await j(`/api/suggest?q=${encodeURIComponent(q)}&lang=th-th&type=hotel&limit=40`);
+    if (data && data.ok) {
+      data.items = (data.items||[]).filter(isHotelItem);
+      return data;
+    }
+    // 3) fallback ผสมแล้วกรองเอาเฉพาะที่เป็น hotel
+    data = await j(`/api/suggest?q=${encodeURIComponent(q)}&lang=th-th&type=mixed&limit=60`);
+    if (data && data.ok) {
+      data.items = (data.items||[]).filter(isHotelItem);
+      return data;
     }
     return {ok:false, items:[]};
   }
@@ -254,7 +262,7 @@
     const q=(input.value||'').trim();
     hid.value='';
     if(timer) clearTimeout(timer);
-    if(!q){ panel.style.display='none'; panel.innerHTML=''; return; }
+    if(q.length<3){ panel.style.display='none'; panel.innerHTML=''; return; }
     panel.innerHTML = `<div class="s-item"><div class="s-sub">กำลังค้นหา...</div></div>`;
     panel.style.display='block';
     timer=setTimeout(async ()=>{
@@ -262,9 +270,9 @@
       const d=await fetchHotels(q);
       const items=Array.isArray(d.items)?d.items:[];
       panel.innerHTML = items.length ? items.map(row).join('') :
-        `<div class="s-item"><div class="s-title">ไม่พบรายการ</div><div class="s-sub">ลองพิมพ์ให้ยาวขึ้น</div></div>`;
+        `<div class="s-item"><div class="s-title">ไม่พบรายการ</div><div class="s-sub">ลองพิมพ์ให้ยาวขึ้น หรือระบุคำครบถ้วน</div></div>`;
       panel.style.display='block'; bind();
-    }, 200);
+    }, 220);
   }
 
   input.addEventListener('input', onInput);
@@ -281,12 +289,12 @@
       children: document.getElementById('children').value || '0',
       lang: 'th-th'
     });
-    const id = hid.value.trim();
+    const id = (hid.value||'').trim();
     if (id) {
       params.set('hid', id);
     } else {
       const q = (input.value||'').trim();
-      if (q) params.set('q', q);
+      if (q.length>=3) params.set('q', q);
     }
     location.href = 'search.html?'+params.toString();
   });
