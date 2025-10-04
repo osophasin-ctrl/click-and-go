@@ -12,12 +12,15 @@
     .main-title{font-size:36px;line-height:1.2;margin:8px 0 4px}
     @media(max-width:640px){.main-title{font-size:30px}}
     .muted{color:var(--muted)} .nowrap{white-space:nowrap}
+
     .change-row{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;margin:4px 0 12px}
     .change-row .hint{color:#d32f2f;font-weight:500}
     .change-row .btn{background:var(--brand);color:#fff;border:0;border-radius:999px;padding:10px 16px;font-weight:700;cursor:pointer;flex:0 0 auto}
+
     .bar{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;overflow:auto;padding:8px 0;margin:12px 0 16px}
     .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer}
     .chip span{color:#111}.chip small{color:#666}
+
     dialog{border:none;border-radius:14px;max-width:520px;width:calc(100% - 24px);padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
     dialog::backdrop{background:rgba(0,0,0,.35)}
     .dlg-title{font-weight:700;margin:0 0 12px}
@@ -29,6 +32,7 @@
     .counter{display:flex;align-items:center;gap:8px}.cbtn{width:32px;height:32px;border-radius:50%;border:1px solid #bbb;background:#fff;font-size:18px;cursor:pointer}
     .ctxt{min-width:20px;text-align:center;font-weight:700}
     .dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.btn.secondary{background:#e5e7eb;color:#111}
+
     .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
     @media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:640px){.cards{grid-template-columns:1fr}}
     .card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);border:2px solid var(--card-border)}
@@ -37,9 +41,11 @@
     .price{font-weight:700;margin-top:8px}.h-actions{margin-top:auto;display:flex;justify-content:flex-end}
     .stars{display:inline-flex;gap:2px;vertical-align:middle}.star{width:16px;height:16px;display:inline-block}.star svg{width:100%;height:100%;fill:var(--gold)}
     .score{color:#c62828}
+
     .skeleton{background:linear-gradient(90deg,#f2f2f2 25%,#e9e9e9 37%,#f2f2f2 63%);animation:s 1.4s ease infinite}
     @keyframes s{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}
     .sk-img{height:210px}.sk-line{height:14px;margin-top:8px;border-radius:6px}
+
     .cta-wrap{display:flex;justify-content:center;margin:28px 0}.cta{padding:12px 22px;border-radius:999px;font-weight:600}
   </style>
 </head>
@@ -97,7 +103,7 @@
   </form>
 </dialog>
 
-<!-- Dialogs เดิมคงไว้ (Sort/Stars/Price/Score) -->
+<!-- Dialogs (Sort/Stars/Price/Score) -->
 <dialog id="dlgSort"><h3 class="dlg-title">เรียงโดย</h3>
   <div class="radio-list">
     <label class="radio-item"><input type="radio" name="sort" value="rec"> แนะนำ</label>
@@ -143,14 +149,20 @@
   const $ = s => document.querySelector(s);
   const params = new URLSearchParams(location.search);
 
+  // today / tomorrow fallback
+  const ONE = 86400000;
+  const iso = d => new Date(d).toISOString().slice(0,10);
+  const todayIso = iso(new Date());
+  const tomorrowIso = iso(Date.now() + ONE);
+
   const state = {
     q: (params.get('q') || ''),
     cityId: params.get('cityId') || params.get('cityid') || '',
     hid: params.get('hid') || params.get('hotelId') || '',
     city: params.get('city') || '',
     country: params.get('country') || '',
-    checkin: params.get('checkin'),
-    checkout: params.get('checkout'),
+    checkin: params.get('checkin') || todayIso,
+    checkout: params.get('checkout') || tomorrowIso,
     rooms: +(params.get('rooms') || 1),
     adults: +(params.get('adults') || 2),
     children: +(params.get('children') || 0),
@@ -165,30 +177,37 @@
   };
   const draft = JSON.parse(JSON.stringify(state));
 
-  function normalizeQ(q){ return String(q||'').replace(/กรุงเทพมหานคร|กรุงเทพฯ/g,'กรุงเทพ').trim(); }
+  const normalizeQ = (q) => String(q||'').replace(/กรุงเทพมหานคร|กรุงเทพฯ/g,'กรุงเทพ').trim();
   state.q = normalizeQ(state.q);
 
+  // subtitle (2 บรรทัด, nowrap)
   (function setSubtitle(){
     const ci = (state.checkin || '').replaceAll('-', '/');
     const co = (state.checkout || '').replaceAll('-', '/');
     const place = state.city || state.q || '—';
-    $('#subtitle').innerHTML = `<span class="nowrap">${place} | วันที่: ${ci} → ${co}</span><br><span class="nowrap">ผู้เข้าพัก: ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง</span>`;
+    $('#subtitle').innerHTML =
+      `<span class="nowrap">${place} | วันที่: ${ci} → ${co}</span><br>
+       <span class="nowrap">ผู้เข้าพัก: ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง</span>`;
   })();
 
   function fmt(n, cur = state.currency){
     if (n == null) return '-';
-    const zero = new Set(['THB','JPY','IDR','KRW','VND']).has(String(cur).toUpperCase());
-    const val = zero ? Math.round(n) : n;
-    try{ return new Intl.NumberFormat('th-TH',{maximumFractionDigits:zero?0:2}).format(val); }catch(_){ return String(val); }
+    const zero = new Set(['THB','JPY','IDR','KRW','VND']).has(String(cur||'').toUpperCase());
+    const val = zero ? Math.round(+n) : +n;
+    try{
+      return new Intl.NumberFormat('th-TH',{maximumFractionDigits: zero?0:2}).format(val);
+    }catch(_){ return String(val); }
   }
-  const esc = s => String(s).replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+  const esc = s => String(s ?? '').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
   function updateChips(){
-    $('#chipSortV').textContent = draft.sort==='price_asc'?'ราคาต่ำ → สูง':draft.sort==='price_desc'?'ราคาสูง → ต่ำ':'แนะนำ';
-    $('#chipStarsV').textContent = draft.starsMin?`${draft.starsMin} ดาวขึ้นไป`:'ทั้งหมด';
+    $('#chipSortV').textContent = draft.sort==='price_asc' ? 'ราคาต่ำ → สูง'
+                               : draft.sort==='price_desc' ? 'ราคาสูง → ต่ำ'
+                               : 'แนะนำ';
+    $('#chipStarsV').textContent = draft.starsMin ? `${draft.starsMin} ดาวขึ้นไป` : 'ทั้งหมด';
     const pm = Math.min(draft.priceMin, draft.priceMax), px = Math.max(draft.priceMin, draft.priceMax);
     $('#chipPriceV').textContent = `฿${fmt(pm)} – ฿${fmt(px)}`;
-    $('#chipScoreV').textContent = draft.scoreMin?`${draft.scoreMin} คะแนนขึ้นไป`:'ทั้งหมด';
+    $('#chipScoreV').textContent = draft.scoreMin ? `${draft.scoreMin} คะแนนขึ้นไป` : 'ทั้งหมด';
   }
   updateChips();
 
@@ -209,6 +228,7 @@
     if ((state.cityId || state.hid) || !state.q) return;
     const q = normalizeQ(state.q);
     try{
+      // primary: city-suggest
       const r = await fetch(`/api/city-suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(state.lang)}&limit=1`, {cache:'no-store'});
       const d = await r.json();
       if (d && d.ok && Array.isArray(d.items) && d.items[0]?.city_id){
@@ -218,13 +238,14 @@
       }
     }catch(_){}
     try{
+      // fallback: mixed suggest
       const r = await fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(state.lang)}&type=mixed`, {cache:'no-store'});
       const d = await r.json();
       if (d && d.ok && Array.isArray(d.items) && d.items.length){
-        const city = d.items.find(it => String(it.type||'').toLowerCase().includes('city'));
-        const hotel= d.items.find(it => String(it.type||'').toLowerCase().includes('hotel'));
+        const city  = d.items.find(it => String(it.type||'').toLowerCase().includes('city'));
+        const hotel = d.items.find(it => String(it.type||'').toLowerCase().includes('hotel'));
         if (city){ state.cityId = String(city.city_id ?? city.value ?? city.id ?? ''); state.city = city.label || state.city; }
-        else if (hotel){ state.hid = String(hotel.id||hotel.hotel_id||''); }
+        else if (hotel){ state.hid = String(hotel.id || hotel.hotel_id || ''); }
       }
     }catch(_){}
   }
@@ -232,43 +253,53 @@
   function calcLos(ci, co){
     try{ const a=new Date(ci+'T12:00:00Z'), b=new Date(co+'T12:00:00Z'); return Math.max(1, Math.round((b-a)/86400000)); }catch(_){ return 1; }
   }
+
   function partnerUrl(){
     const langPath = state.lang || 'th-th';
+    // prioritise hid / cityId if present for partnersearch
     if (state.hid || state.cityId){
       const base=`https://www.agoda.com/${langPath}/partners/partnersearch.aspx`;
       const sp=new URLSearchParams({
-        cid:'1949420', ...(state.hid?{hid:String(state.hid)}:{city:String(state.cityId)}),
+        cid:'1949420',
+        ...(state.hid ? {hid:String(state.hid)} : {city:String(state.cityId)}),
         checkin:state.checkin||'', checkout:state.checkout||'',
         rooms:String(state.rooms||1), adults:String(state.adults||2), children:String(state.children||0),
         currency:state.currency||'THB', utm_source:'clickandgo', utm_medium:'affiliate', noapp:'1', pcs:'1'
-      }); return `${base}?${sp.toString()}`;
+      });
+      return `${base}?${sp.toString()}`;
     }
+    // generic search
     const base=`https://www.agoda.com/${langPath}/search`;
     const sp=new URLSearchParams({
       cid:'1949420', currency:state.currency||'THB', checkin:state.checkin||'', checkout:state.checkout||'',
       adults:String(state.adults||2), children:String(state.children||0), rooms:String(state.rooms||1),
       los:String(calcLos(state.checkin,state.checkout)), utm_source:'clickandgo', utm_medium:'affiliate', noapp:'1', pcs:'1'
     });
-    if (state.q) sp.set('q', state.q); return `${base}?${sp.toString()}`;
+    if (state.q) sp.set('q', state.q);
+    return `${base}?${sp.toString()}`;
   }
-  const refreshPartnerCta=()=>$('#partnerMore').setAttribute('href', partnerUrl());
+  const refreshPartnerCta = () => $('#partnerMore').setAttribute('href', partnerUrl());
 
   async function fetchJson(url){
-    try{ const r=await fetch(url,{cache:'no-store'}); return await r.json(); }catch(_){ return {ok:false}; }
+    try{ const r=await fetch(url,{cache:'no-store'}); return await r.json(); }
+    catch(_){ return {ok:false}; }
   }
 
   async function load(){
     renderSkeleton();
     if (!state.cityId && !state.hid && state.q) await resolveDestinationIfNeeded();
 
-    // try #1: /api/search (เดิม)
+    // try #1: /api/search
     const base = new URL('/api/search', location.origin);
     const p = base.searchParams;
-    if (state.hid) p.set('hid', state.hid); else if (state.cityId) p.set('cityId', state.cityId); else if (state.q) p.set('q', state.q);
-    ['checkin','checkout','rooms','adults','children','lang','currency','page','sort','starsMin','scoreMin','priceMin','priceMax'].forEach(k => p.set(k, state[k]));
+    if (state.hid) p.set('hid', state.hid);
+    else if (state.cityId) p.set('cityId', state.cityId);
+    else if (state.q) p.set('q', state.q);
+    ['checkin','checkout','rooms','adults','children','lang','currency','page','sort','starsMin','scoreMin','priceMin','priceMax']
+      .forEach(k => p.set(k, state[k]));
     let data = await fetchJson(base.toString());
 
-    // try #2a: ถ้ามี hotelId แต่ผลว่าง → เรียก /api/hotel-search แบบ hotelId
+    // try #2a: hotelId → /api/hotel-search?hotelId
     if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.hid){
       const u = new URL('/api/hotel-search', location.origin);
       const q = u.searchParams;
@@ -277,11 +308,10 @@
       q.set('checkout', state.checkout||'');
       q.set('adults', String(state.adults||2));
       q.set('children', String(state.children||0));
-      // rooms ไม่ใช้ใน Long Tail V2 แต่คงส่งไปได้ไม่เป็นไร
       data = await fetchJson(u.toString());
     }
 
-    // try #2b: ถ้าผลว่างและมี cityId → /api/hotel-search?cityId=...&limit=30
+    // try #2b: cityId → /api/hotel-search?cityId&limit=30
     if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.cityId){
       const u = new URL('/api/hotel-search', location.origin);
       const q = u.searchParams;
@@ -302,11 +332,21 @@
       refreshPartnerCta(); return;
     }
 
-    // รองรับโครงสร้างผลลัพธ์หลายแบบ
+    // รองรับหลากหลาย key
     let items = data.results || data.items || data.hotels || [];
     if (!Array.isArray(items)) items = [];
 
-    // sort ตามที่เลือก
+    // filter ตาม chips (หากต้องการ กรองเบื้องต้นเฉพาะ score/stars/price)
+    items = items.filter(h => {
+      const stars = readStars(h);
+      const score = readScore(h);
+      const price = readPrice(h);
+      const starsOk = +state.starsMin ? (stars >= +state.starsMin) : true;
+      const scoreOk = +state.scoreMin ? ((score ?? 0) >= +state.scoreMin) : true;
+      const priceOk = price==null ? true : (price >= state.priceMin && price <= state.priceMax);
+      return starsOk && scoreOk && priceOk;
+    });
+
     if (state.sort === 'price_asc') items.sort((a,b)=>(readPrice(a)||1e15)-(readPrice(b)||1e15));
     if (state.sort === 'price_desc') items.sort((a,b)=>(readPrice(b)||0)-(readPrice(a)||0));
 
@@ -326,14 +366,15 @@
       </article>`).join('');
   }
 
+  // extractors
   const readName = h => h.name || h.hotelName || h.title || h.label || '—';
   const readImg  = h => h.thumbnail || h.image || h.img || h.photo || '';
-  const readUrl  = h => h.url || h.link || h.deeplink || '#';
+  const readUrl  = h => h.affiliateUrl || h.affiliate_url || h.url || h.link || h.deeplink || '#';
   const readStars= h => h.rating ?? h.stars ?? h.star ?? 0;
   const readScore= h => h.reviewScore ?? h.score ?? h.review_score ?? null;
-  const readCurr = h => h.currency || h.cur || 'THB';
+  const readCurr = h => h.currency || h.cur || state.currency || 'THB';
   function readPrice(h){
-    const v = h.price ?? h.minPrice ?? h.min_price ?? h.fromPrice ?? null;
+    const v = h.price ?? h.minPrice ?? h.min_price ?? h.fromPrice ?? h.priceFrom ?? null;
     return (v!=null && !isNaN(+v)) ? +v : null;
   }
 
@@ -345,7 +386,10 @@
   }
 
   function render(list){
-    if (!list.length){ $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`; return; }
+    if (!list.length){
+      $('#grid').innerHTML = `<p class="muted">ไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>`;
+      return;
+    }
     $('#grid').innerHTML = list.map(h => {
       const name = esc(readName(h));
       const img  = esc(readImg(h));
@@ -353,10 +397,10 @@
       const stars= readStars(h);
       const score= readScore(h);
       const price= readPrice(h);
-      const cur  = esc(readCurr(h) || state.currency);
+      const cur  = esc(readCurr(h));
       return `
         <article class="card">
-          <img src="${img}" alt="${name}">
+          <img src="${img}" alt="${name}" loading="lazy">
           <div class="card-body">
             <h3 style="font-size:18px;margin:0 0 6px">${name}</h3>
             <div class="muted" style="font-size:13px">
@@ -371,7 +415,6 @@
 
   /* ป๊อปอัปเปลี่ยนแปลง */
   const dlg = $('#dlgChange'); const chgQ = $('#chgQ'), chgCi = $('#chgCi'), chgCo = $('#chgCo');
-  const ONE = 86400000; const iso = d => new Date(d).toISOString().slice(0,10);
 
   function fillDialogWithState(){
     chgQ.value = state.city || state.q || '';
@@ -404,30 +447,58 @@
   $('#changeForm').addEventListener('submit',(e)=>{
     e.preventDefault();
     state.q = normalizeQ(chgQ.value||''); state.cityId=''; state.hid='';
-    state.checkin = chgCi.value; state.checkout = chgCo.value;
+    state.checkin = chgCi.value || todayIso; state.checkout = chgCo.value || tomorrowIso;
     state.rooms=+$('#cRooms').textContent; state.adults=+$('#cAdults').textContent; state.children=+$('#cChildren').textContent;
     const ci=state.checkin.replaceAll('-','/'), co=state.checkout.replaceAll('-','/');
-    $('#subtitle').innerHTML = `<span class="nowrap">${state.city || state.q || '—'} | วันที่: ${ci} → ${co}</span><br><span class="nowrap">ผู้เข้าพัก: ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง</span>`;
+    $('#subtitle').innerHTML =
+      `<span class="nowrap">${state.city || state.q || '—'} | วันที่: ${ci} → ${co}</span><br>
+       <span class="nowrap">ผู้เข้าพัก: ${state.adults} ผู้ใหญ่, ${state.children} เด็ก, ${state.rooms} ห้อง</span>`;
     updateQueryOnly(); dlg.close(); load();
   });
 
   // chips handlers
-  document.getElementById('chipSort').addEventListener('click',()=>{ document.getElementById('dlgSort').showModal(); [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort)); });
-  document.getElementById('chipStars').addEventListener('click',()=>{ document.getElementById('dlgStars').showModal(); [...document.querySelectorAll('input[name=stars]')].forEach(r=>r.checked=(+r.value===+draft.starsMin)); });
-  document.getElementById('chipPrice').addEventListener('click',()=>{ document.getElementById('dlgPrice').showModal(); setPriceWidgets(draft.priceMin,draft.priceMax); });
-  document.getElementById('chipScore').addEventListener('click',()=>{ document.getElementById('dlgScore').showModal(); [...document.querySelectorAll('input[name=score]')].forEach(r=>r.checked=(+r.value===+draft.scoreMin)); });
+  document.getElementById('chipSort').addEventListener('click',()=>{
+    document.getElementById('dlgSort').showModal();
+    [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort));
+  });
+  document.getElementById('chipStars').addEventListener('click',()=>{
+    document.getElementById('dlgStars').showModal();
+    [...document.querySelectorAll('input[name=stars]')].forEach(r=>r.checked=(+r.value===+draft.starsMin));
+  });
+  document.getElementById('chipPrice').addEventListener('click',()=>{
+    document.getElementById('dlgPrice').showModal();
+    setPriceWidgets(draft.priceMin,draft.priceMax);
+  });
+  document.getElementById('chipScore').addEventListener('click',()=>{
+    document.getElementById('dlgScore').showModal();
+    [...document.querySelectorAll('input[name=score]')].forEach(r=>r.checked=(+r.value===+draft.scoreMin));
+  });
 
-  document.getElementById('btnSortOk').addEventListener('click',()=>{ draft.sort=document.querySelector('input[name=sort]:checked')?.value||'rec'; updateChips(); document.getElementById('dlgSort').close(); });
-  document.getElementById('btnStarsOk').addEventListener('click',()=>{ draft.starsMin=+(document.querySelector('input[name=stars]:checked')?.value||0); updateChips(); document.getElementById('dlgStars').close(); });
-  document.getElementById('btnScoreOk').addEventListener('click',()=>{ draft.scoreMin=+(document.querySelector('input[name=score]:checked')?.value||0); updateChips(); document.getElementById('dlgScore').close(); });
+  document.getElementById('btnSortOk').addEventListener('click',()=>{
+    draft.sort=document.querySelector('input[name=sort]:checked')?.value||'rec';
+    updateChips(); document.getElementById('dlgSort').close();
+  });
+  document.getElementById('btnStarsOk').addEventListener('click',()=>{
+    draft.starsMin=+(document.querySelector('input[name=stars]:checked')?.value||0);
+    updateChips(); document.getElementById('dlgStars').close();
+  });
+  document.getElementById('btnScoreOk').addEventListener('click',()=>{
+    draft.scoreMin=+(document.querySelector('input[name=score]:checked')?.value||0);
+    updateChips(); document.getElementById('dlgScore').close();
+  });
+
+  // price widgets
+  const rMin=document.getElementById('rMin'), rMax=document.getElementById('rMax'),
+        nMin=document.getElementById('nMin'), nMax=document.getElementById('nMax'),
+        pvMin=document.getElementById('pvMin'), pvMax=document.getElementById('pvMax');
 
   function setPriceWidgets(min,max){
     const clamp=n=>Math.min(200000,Math.max(0,Math.round(n)));
     const m=clamp(Math.min(min,max)), x=clamp(Math.max(min,max));
-    rMin.value=m; rMax.value=x; nMin.value=m; nMax.value=x; pvMin.textContent=fmt(m); pvMax.textContent=fmt(x);
+    rMin.value=m; rMax.value=x; nMin.value=m; nMax.value=x;
+    pvMin.textContent=fmt(m); pvMax.textContent=fmt(x);
   }
   function readPriceWidgets(){ const m=Math.min(+rMin.value,+rMax.value), x=Math.max(+rMin.value,+rMax.value); return {m,x}; }
-  const rMin=document.getElementById('rMin'), rMax=document.getElementById('rMax'), nMin=document.getElementById('nMin'), nMax=document.getElementById('nMax'), pvMin=document.getElementById('pvMin'), pvMax=document.getElementById('pvMax');
   ['rMin','rMax'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{ const {m,x}=readPriceWidgets(); setPriceWidgets(m,x); }));
   ['nMin','nMax'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{ setPriceWidgets(+nMin.value,+nMax.value); }));
   document.getElementById('btnPriceReset').addEventListener('click',()=>setPriceWidgets(0,200000));
@@ -435,6 +506,9 @@
 
   document.getElementById('chipApply').addEventListener('click',()=>{ Object.assign(state, JSON.parse(JSON.stringify(draft))); updateQueryOnly(); load(); });
 
+  // initial render
+  updateQueryOnly(); // ให้ URL สะท้อนค่า default (เช่น วันนี้/พรุ่งนี้)
+  refreshPartnerCta();
   load();
 })();
 </script>
