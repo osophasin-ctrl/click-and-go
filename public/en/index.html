@@ -3,15 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Click & Go – Compare hotel prices. Book in one click.</title>
-  <meta name="description" content="Click & Go helps you find and compare hotel prices across multiple OTAs with direct booking links. Popular destinations in Thailand and worldwide." />
-
-  <link rel="icon" href="../favicon.ico" />
-  <link rel="stylesheet" href="../style.css" />
-
+  <title>Click & Go – Compare hotel prices. Book in one click</title>
+  <meta name="description" content="Click & Go finds you the best hotel deals with instant booking links, covering popular destinations in Thailand and worldwide." />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
-
   <style>
     /* ===== Search box ===== */
     .mock-wrap{max-width:1030px;width:100%;margin:0 auto}
@@ -29,7 +26,7 @@
     .mock-btn{background:#0ea5a0;color:#fff;border:0;cursor:pointer;font-weight:700}
     .mock-btn:active{transform:translateY(1px)}
 
-    /* city suggest */
+    /* suggestions */
     .suggest-wrap{position:relative;width:100%}
     .suggest-wrap input{width:100%}
     .suggest-panel{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.08);max-height:260px;overflow:auto;z-index:9999;display:none}
@@ -38,10 +35,9 @@
     .suggest-item:hover{background:#f6f6f6}
     .s-label{font-weight:600}.s-sub{color:#777;font-size:13px}
 
-    /* make flatpickr alt input look like others */
     .flatpickr-input.mock-input{width:100% !important;border:1px solid #d7d7d7;border-radius:8px;height:56px;box-sizing:border-box}
 
-    /* ===== guest modal ===== */
+    /* guest modal */
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:999}
     .modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border-radius:12px;width:min(92vw,420px);box-shadow:0 12px 24px rgba(0,0,0,.2);z-index:1000;display:none}
     .modal-header,.modal-footer{padding:14px 16px}
@@ -63,17 +59,14 @@
   <!-- Header -->
   <header class="site-header">
     <div class="inner">
-      <a href="index.html" class="brand">
-        <img src="../logo.png" alt="Click & Go" width="40" height="40"/>
-        <span class="brand-text">Click & Go</span>
-      </a>
+      <a href="/en/index.html" class="brand"><img src="/logo.png" alt="Click & Go" width="40" height="40"/><span class="brand-text">Click & Go</span></a>
       <nav class="main-nav">
-        <a href="index.html" aria-current="page">Home</a>
-        <a href="../deals.html">Deals</a>
+        <a href="/en/index.html" aria-current="page">Home</a>
+        <a href="/en/deals.html">Deals</a>
         <div class="lang">
           <button class="lang-btn">Language ▾</button>
           <div class="lang-menu">
-            <a href="../index.html">ไทย</a>
+            <a href="/index.html">ไทย</a>
             <a href="#" aria-current="true">English</a>
           </div>
         </div>
@@ -84,22 +77,21 @@
   <main class="container">
     <!-- Hero -->
     <section class="hero">
-      <img class="hero-img" src="../hero-bg.jpg" alt="Click & Go">
+      <img class="hero-img" src="/hero-bg.jpg" alt="Click & Go">
     </section>
 
     <!-- Search Box -->
     <section style="margin:24px 0">
-      <h2 class="section-title">Find hotels</h2>
+      <h2 class="section-title">We find the best deals for you</h2>
       <div class="mock-wrap">
         <div class="mock-box">
-          <h3 class="mock-title">Get the best deal for you</h3>
-          <p class="mock-sub">Type a city, choose dates, set guests, then search — or switch to searching by hotel name.</p>
+          <h3 class="mock-title">2.6M+ stays in 73,000 cities</h3>
+          <p class="mock-sub">Type a city, pick your dates, set guests, then search — or switch to hotel name search.</p>
 
-          <!-- CHANGED: action now points to /en/search.html -->
-          <form id="cgForm" class="mock-row" method="GET" action="search.html" autocomplete="off">
+          <form id="cgForm" class="mock-row" method="GET" action="/en/search.html" autocomplete="off">
             <!-- 1) City -->
             <div class="suggest-wrap full-row">
-              <input type="text" id="cityInput" class="mock-input" placeholder="Type a city, e.g., Bangkok" aria-label="City">
+              <input type="text" id="cityInput" class="mock-input" placeholder="Type a city e.g. Bangkok" aria-label="City">
               <div id="citySuggest" class="suggest-panel" role="listbox" aria-label="City suggestions"></div>
             </div>
 
@@ -116,17 +108,17 @@
             <!-- 3) Guests -->
             <button type="button" id="guestBtn" class="guest-input full-row">1 room, 2 adults, 0 children</button>
 
-            <!-- 4) Search button -->
+            <!-- 4) Search -->
             <button type="submit" class="mock-btn full-row">Search</button>
 
-            <!-- 5) Switch to hotel-name mode (EN page) -->
+            <!-- 5) Hotel mode -->
             <button type="button" id="btnHotelMode" class="mock-btn full-row">Or search by hotel name</button>
 
             <!-- hidden -->
             <input type="hidden" id="rooms" name="rooms" value="1">
             <input type="hidden" id="adults" name="adults" value="2">
             <input type="hidden" id="children" name="children" value="0">
-            <input type="hidden" name="lang" value="en">
+            <input type="hidden" name="lang" value="en-us">
             <input type="hidden" id="cityId" name="cityId" value="">
             <input type="hidden" id="cityLabel" value="">
           </form>
@@ -136,14 +128,14 @@
 
     <!-- Popular in Thailand -->
     <section>
-      <h2 class="section-title">Top destinations in Thailand</h2>
+      <h2 class="section-title">Popular in Thailand</h2>
       <div class="city-grid">
-        <a class="city-card" href="#" data-q="Bangkok"><figure><img src="../bangkok-tile.webp" alt="Bangkok"><figcaption>Bangkok</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="Chiang Mai"><figure><img src="../chiangmai-tile.webp" alt="Chiang Mai"><figcaption>Chiang Mai</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="Pattaya"><figure><img src="../pattaya-tile.webp" alt="Pattaya"><figcaption>Pattaya</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="Phuket"><figure><img src="../phuket-tile.webp" alt="Phuket"><figcaption>Phuket</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="Krabi"><figure><img src="../krabi-tile.webp" alt="Krabi"><figcaption>Krabi</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="Hua Hin"><figure><img src="../huahin-tile.webp" alt="Hua Hin"><figcaption>Hua Hin</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Bangkok"><figure><img src="/bangkok-tile.webp" alt="Bangkok"><figcaption>Bangkok</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Chiang Mai"><figure><img src="/chiangmai-tile.webp" alt="Chiang Mai"><figcaption>Chiang Mai</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Pattaya"><figure><img src="/pattaya-tile.webp" alt="Pattaya"><figcaption>Pattaya</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Phuket"><figure><img src="/phuket-tile.webp" alt="Phuket"><figcaption>Phuket</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Krabi"><figure><img src="/krabi-tile.webp" alt="Krabi"><figcaption>Krabi</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Hua Hin"><figure><img src="/huahin-tile.webp" alt="Hua Hin"><figcaption>Hua Hin</figcaption></figure></a>
       </div>
     </section>
 
@@ -151,22 +143,22 @@
     <section>
       <h2 class="section-title">Popular cities worldwide</h2>
       <div class="city-grid">
-        <a class="city-card" href="#" data-q="Tokyo"><figure><img src="../tokyo-tile.webp" alt="Tokyo"><figcaption>Tokyo</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="Seoul"><figure><img src="../seoul-tile.webp" alt="Seoul"><figcaption>Seoul</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="Singapore"><figure><img src="../singapore-tile.webp" alt="Singapore"><figcaption>Singapore</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="Hong Kong"><figure><img src="../hongkong-tile.webp" alt="Hong Kong"><figcaption>Hong Kong</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="London"><figure><img src="../london-tile.webp" alt="London"><figcaption>London</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="Paris"><figure><img src="../paris-tile.webp" alt="Paris"><figcaption>Paris</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Tokyo"><figure><img src="/tokyo-tile.webp" alt="Tokyo"><figcaption>Tokyo</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Seoul"><figure><img src="/seoul-tile.webp" alt="Seoul"><figcaption>Seoul</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Singapore"><figure><img src="/singapore-tile.webp" alt="Singapore"><figcaption>Singapore</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Hong Kong"><figure><img src="/hongkong-tile.webp" alt="Hong Kong"><figcaption>Hong Kong</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="London"><figure><img src="/london-tile.webp" alt="London"><figcaption>London</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="Paris"><figure><img src="/paris-tile.webp" alt="Paris"><figcaption>Paris</figcaption></figure></a>
       </div>
     </section>
 
-    <!-- Why us -->
+    <!-- Why Click & Go -->
     <section>
       <h2 class="section-title">Why Click & Go</h2>
       <div class="features">
-        <div class="feature"><h3>Find the best offer</h3><p>Connected to providers worldwide to fetch live prices.</p></div>
-        <div class="feature"><h3>Book with fewer steps</h3><p>Jump straight to partner hotel pages with one click.</p></div>
-        <div class="feature"><h3>Works on all devices</h3><p>Smooth experience on mobile, tablet, and desktop.</p></div>
+        <div class="feature"><h3>Best deals, everywhere</h3><p>We connect global providers and fetch real-time prices.</p></div>
+        <div class="feature"><h3>Book in one click</h3><p>Go straight to our partners’ hotel pages.</p></div>
+        <div class="feature"><h3>Works on any device</h3><p>Easy to use on mobile, tablet, and desktop.</p></div>
       </div>
     </section>
   </main>
@@ -214,17 +206,15 @@
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="/en/privacy.html">Privacy</a> ·
-        <a href="/en/terms.html">Terms</a> ·
-        <a href="/en/affiliate.html">Affiliate Disclosure</a> ·
-        <a href="/en/about.html">About us</a> ·
-        <a href="/en/contact.html">Contact</a> ·
-        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+        <a href="/en/privacy.html">Privacy</a> · <a href="/en/terms.html">Terms</a> ·
+        <a href="/en/affiliate.html">Affiliate Disclosure</a> · <a href="/en/about.html">About us</a> ·
+        <a href="/en/contact.html">Contact</a> · <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 
   <!-- Language menu -->
   <script>
@@ -238,7 +228,7 @@
     })();
   </script>
 
-  <!-- City autocomplete (with fallback) -->
+  <!-- City autocomplete with fallback -->
   <script>
     (function(){
       const cityInput=document.getElementById('cityInput');
@@ -246,11 +236,11 @@
       const cityIdEl =document.getElementById('cityId');
       const cityLblEl=document.getElementById('cityLabel');
 
-      const esc=s=>(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+      const esc=s=>(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
       const show=el=>el.style.display='block';
       const hide=el=>{el.style.display='none';el.innerHTML='';};
 
-      let timer=null;
+      let timer=null, ab=null;
 
       function rowCity(it){
         return `<div class="suggest-item" data-id="${esc(it.city_id)}" data-label="${esc(it.label)}">
@@ -279,25 +269,32 @@
       }
 
       async function fetchCitySuggest(q){
-        const u1 = `/api/city-suggest?q=${encodeURIComponent(q)}&lang=en&limit=30`;
+        // 1) primary
+        const u1 = `/api/city-suggest?q=${encodeURIComponent(q)}&lang=en-us&limit=30`;
         let data = await jTry(u1);
         if(data && data.ok) return data;
-        const u2 = `/api/city-search?q=${encodeURIComponent(q)}&lang=en&limit=30`;
+
+        // 2) fallback
+        const u2 = `/api/city-search?q=${encodeURIComponent(q)}&lang=en-us&limit=30`;
         data = await jTry(u2);
         return data || {ok:false,items:[]};
       }
 
       function suggestCity(){
-        const q=(cityInput.value||'').trim(); cityIdEl.value=''; cityLblEl.value='';
+        let q=(cityInput.value||'').trim();
+        // Normalize Bangkok Thai spellings to EN
+        q=q.replace(/กรุงเทพมหานคร|กรุงเทพฯ|กรุงเทพ/g,'Bangkok');
+        cityIdEl.value=''; cityLblEl.value='';
         if(timer) clearTimeout(timer);
         if(!q){ hide(cityPanel); return; }
-        cityPanel.innerHTML=`<div class="suggest-group">Searching…</div>`; show(cityPanel);
+        cityPanel.innerHTML=`<div class="suggest-group">Searching...</div>`; show(cityPanel);
         timer=setTimeout(async ()=>{
+          ab?.abort(); ab=new AbortController();
           try{
             const data=await fetchCitySuggest(q);
             const items=(data&&data.ok&&Array.isArray(data.items))?data.items:[];
             cityPanel.innerHTML = items.length ? (`<div class="suggest-group">Cities</div>`+items.map(rowCity).join(''))
-                                               : `<div class="suggest-item"><div class="s-label">No suggestions</div><div class="s-sub">Try typing more letters</div></div>`;
+                                               : `<div class="suggest-item"><div class="s-label">No suggestions</div><div class="s-sub">Try typing more</div></div>`;
             show(cityPanel); bindCity();
           }catch(_){ hide(cityPanel); }
         },200);
@@ -308,7 +305,7 @@
     })();
   </script>
 
-  <!-- Dates + guests + submit + city cards -->
+  <!-- Dates + Guests + Submit + City cards -->
   <script>
     (function(){
       const ONE=86400000, ci=document.getElementById('ci'), co=document.getElementById('co');
@@ -317,10 +314,10 @@
       let inP=null,outP=null;
 
       if(window.flatpickr){
-        inP=flatpickr("#ci",{dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",
+        inP=flatpickr("#ci",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:"today",
           onChange(d){if(d[0]){const n=new Date(d[0].getTime()+ONE);outP.set('minDate',n);if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0])outP.setDate(n,true);}}
         });
-        outP=flatpickr("#co",{dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:tom});
+        outP=flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"mock-input",allowInput:false,minDate:tom});
         inP.setDate(today,true); outP.setDate(tom,true);
       }else{
         ci.removeAttribute('readonly'); co.removeAttribute('readonly');
@@ -344,7 +341,7 @@
 
       function openGuest(){ roomsC.textContent=rooms; adultsC.textContent=adults; childrenC.textContent=children; modal.style.display='block'; backdrop.style.display='block'; }
       function closeGuest(){ modal.style.display='none'; backdrop.style.display='none'; }
-      function updateGuestBtn(){ guestBtn.textContent=`${rooms} room${rooms>1?'s':''}, ${adults} adult${adults>1?'s':''}, ${children} child${children!==1?'ren':''}`; }
+      function updateGuestBtn(){ guestBtn.textContent=`${rooms} room, ${adults} adult(s), ${children} child(ren)`; }
       updateGuestBtn();
 
       guestBtn.addEventListener('click', openGuest);
@@ -370,29 +367,38 @@
         updateGuestBtn(); closeGuest();
       });
 
-      /* CHANGED: go to EN hotel-search */
-      document.getElementById('btnHotelMode').addEventListener('click',()=>{ location.href='hotel-search.html'; });
+      /* hotel search mode */
+      document.getElementById('btnHotelMode').addEventListener('click',()=>{ location.href='/en/hotel-search.html'; });
 
-      /* Submit (city mode -> send q) — CHANGED to /en/search.html */
+      /* submit (city mode -> q) */
       document.getElementById('cgForm').addEventListener('submit',e=>{
         e.preventDefault();
         const cityLabel = document.getElementById('cityLabel').value || document.getElementById('cityInput').value || '';
-        let qCity = cityLabel || 'Bangkok';
+        let qCity = (cityLabel||'').replace(/กรุงเทพมหานคร|กรุงเทพฯ|กรุงเทพ/g,'Bangkok');
+        if(!qCity) qCity = 'Bangkok';
         const checkin  = document.getElementById('ci').value;
         const checkout = document.getElementById('co').value;
         const roomsV   = document.getElementById('rooms').value || '1';
         const adultsV  = document.getElementById('adults').value || '2';
         const childrenV= document.getElementById('children').value || '0';
-        const sp = new URLSearchParams({ q:qCity, checkin, checkout, rooms:roomsV, adults:adultsV, children:childrenV, lang:'en' });
-        location.href = 'search.html?' + sp.toString();
+        const sp = new URLSearchParams({ q:qCity, checkin, checkout, rooms:roomsV, adults:adultsV, children:childrenV, lang:'en-us' });
+        location.href = '/en/search.html?' + sp.toString();
       });
 
-      /* City cards -> to EN search with q */
+      /* city cards -> go to search with q */
       function fmtLocalStr(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+
+      // alias TH → EN to be safe
+      const CITY_ALIAS = {
+        'โซล': 'Seoul','โตเกียว': 'Tokyo','ฮ่องกง': 'Hong Kong','สิงคโปร์': 'Singapore',
+        'ลอนดอน': 'London','ปารีส': 'Paris','กรุงเทพฯ':'Bangkok','กรุงเทพมหานคร':'Bangkok','กรุงเทพ':'Bangkok'
+      };
+
       document.querySelectorAll('.city-card[data-q]').forEach(a=>{
         a.addEventListener('click',ev=>{
           ev.preventDefault();
-          let q=a.getAttribute('data-q')||'Bangkok';
+          let q=a.getAttribute('data-q')||'';
+          if (CITY_ALIAS[q]) q = CITY_ALIAS[q];
 
           const inP=window.flatpickr && document.querySelector('#ci')._flatpickr;
           const outP=window.flatpickr && document.querySelector('#co')._flatpickr;
@@ -406,8 +412,8 @@
           const adultsV=document.getElementById('adults').value||2;
           const childrenV=document.getElementById('children').value||0;
 
-          const sp=new URLSearchParams({q,checkin:ci,checkout:co,rooms:roomsV,adults:adultsV,children:childrenV,lang:'en'});
-          location.href='search.html?'+sp.toString();
+          const sp=new URLSearchParams({q,checkin:ci,checkout:co,rooms:roomsV,adults:adultsV,children:childrenV,lang:'en-us'});
+          location.href='/en/search.html?'+sp.toString();
         });
       });
     })();
