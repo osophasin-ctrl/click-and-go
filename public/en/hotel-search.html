@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Search by hotel name | Click & Go</title>
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/style.css">
@@ -55,10 +55,10 @@
 <body>
   <header class="site-header">
     <div class="inner">
-      <a href="/en/index.html" class="brand"><img src="/logo.png" width="40" height="40" alt="Click & Go logo"><span class="brand-text">Click & Go</span></a>
+      <a href="/en/index.html" class="brand"><img src="/logo.png" width="40" height="40" alt=""><span class="brand-text">Click & Go</span></a>
       <nav class="main-nav">
         <a href="/en/index.html">Home</a>
-        <a href="/deals.html">Deals</a>
+        <a href="/en/deals.html">Deals</a>
       </nav>
     </div>
   </header>
@@ -67,12 +67,12 @@
     <h2 class="section-title">Search by hotel name</h2>
     <div class="mock-box">
       <h3 class="mock-title">Type the hotel you’re looking for</h3>
-      <p class="mock-sub">Pick your dates and guests, then search. We’ll take you straight to results for that hotel.</p>
+      <p class="mock-sub">Pick the dates and guests, then hit search. We’ll take you straight to the result page for that hotel.</p>
 
       <form id="hotelForm" class="row" action="/en/search.html" method="GET" autocomplete="off">
         <!-- hotel input -->
         <div class="suggest-wrap row full">
-          <input id="hotelInput" class="input" type="text" placeholder="Type hotel name, e.g., Centara, Hilton, ...">
+          <input id="hotelInput" class="input" type="text" placeholder="Type hotel name e.g. Centara, Hilton, ...">
           <div id="hotelSuggest" class="suggest" role="listbox" aria-label="Hotel suggestions"></div>
         </div>
 
@@ -89,12 +89,12 @@
         <button id="guestBtn" type="button" class="guest-input">1 room, 2 adults, 0 children</button>
         <button type="submit" class="btn btn-wide">Search</button>
 
-        <!-- parameters sent to /en/search.html -->
+        <!-- params passed to search.html -->
         <input type="hidden" id="hid"      name="hid" value="">
         <input type="hidden" id="rooms"    name="rooms" value="1">
         <input type="hidden" id="adults"   name="adults" value="2">
         <input type="hidden" id="children" name="children" value="0">
-        <input type="hidden"               name="lang" value="en">
+        <input type="hidden"               name="lang" value="en-us">
       </form>
 
       <div style="margin-top:12px">
@@ -127,22 +127,21 @@
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
-        <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> ·
-        <a href="/affiliate.html">Affiliate Disclosure</a> · <a href="/about.html">About us</a> ·
-        <a href="/contact.html">Contact</a>
+        <a href="/en/privacy.html">Privacy</a> · <a href="/en/terms.html">Terms</a> ·
+        <a href="/en/affiliate.html">Affiliate Disclosure</a> · <a href="/en/about.html">About us</a> ·
+        <a href="/en/contact.html">Contact</a>
       </div>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
-  // ===== helpers =====
+  // ===== helper =====
   const $ = (s)=>document.querySelector(s);
   const esc = (s)=>String(s||'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[m]));
 
-  // ===== init dates (pick from query if any) =====
+  // ===== init dates =====
   (function initDates(){
-    const p = new URLSearchParams(location.search);
     const ONE = 86400000;
     const today = new Date(), tomorrow = new Date(Date.now()+ONE);
 
@@ -151,21 +150,19 @@
     });
     const outP = flatpickr("#co",{dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"input",minDate:tomorrow});
 
-    const qci = p.get('checkin'), qco = p.get('checkout');
-    if(qci) inP.setDate(qci,true); else inP.setDate(today,true);
-    if(qco) outP.setDate(qco,true); else outP.setDate(tomorrow,true);
+    inP.setDate(today,true);
+    outP.setDate(tomorrow,true);
   })();
 
   // ===== guests =====
   (function guests(){
-    const p = new URLSearchParams(location.search);
-    let rooms=+(p.get('rooms')||1), adults=+(p.get('adults')||2), children=+(p.get('children')||0);
+    let rooms=1, adults=2, children=0;
     const btn=$('#guestBtn'), hR=$('#rooms'), hA=$('#adults'), hC=$('#children');
     const modal=$('#guestModal'), back=$('#guestBackdrop');
     const rC=$('#roomsCount'), aC=$('#adultsCount'), cC=$('#childrenCount');
     function open(){rC.textContent=rooms;aC.textContent=adults;cC.textContent=children; modal.style.display='block';back.style.display='block';}
     function close(){modal.style.display='none';back.style.display='none';}
-    function upd(){ btn.textContent=`${rooms} room${rooms>1?'s':''}, ${adults} adult${adults>1?'s':''}, ${children} child${children!==1?'ren':''}`; hR.value=rooms; hA.value=adults; hC.value=children; }
+    function upd(){ btn.textContent=`${rooms} room, ${adults} adults, ${children} children`; hR.value=rooms; hA.value=adults; hC.value=children; }
     upd();
     btn.addEventListener('click',open); $('#btnCloseX').addEventListener('click',close); $('#btnCancel').addEventListener('click',close); back.addEventListener('click',close);
     document.querySelectorAll('.btn-ctrl').forEach(b=>{
@@ -181,7 +178,7 @@
     $('#btnSaveGuests').addEventListener('click',()=>{ upd(); close(); });
   })();
 
-  // ===== hotel autocomplete =====
+  // ===== hotel autocomplete (/api/hotel-search) =====
   (function hotelAuto(){
     const input = $('#hotelInput');
     const panel = $('#hotelSuggest');
@@ -214,18 +211,18 @@
     async function doSuggest(){
       const q=(input.value||'').trim(); hid.value='';
       if(timer) clearTimeout(timer);
-      if(!q){ hide(); return; }
-      panel.innerHTML = `<div class="s-item"><div class="s-sub">Searching…</div></div>`;
+      if(q.length<3){ hide(); return; } // avoid too-short queries
+      panel.innerHTML = `<div class="s-item"><div class="s-sub">Searching...</div></div>`;
       show();
       timer=setTimeout(async ()=>{
         aborter?.abort(); aborter=new AbortController();
         try{
-          const url = `/api/hotel-search?q=${encodeURIComponent(q)}&lang=en&limit=30`;
+          const url = `/api/hotel-search?q=${encodeURIComponent(q)}&lang=en-us&limit=30`;
           const r = await fetch(url, {signal:aborter.signal, cache:'no-store'});
           const data = await r.json();
           const items = (data && data.ok && Array.isArray(data.items)) ? data.items : [];
           panel.innerHTML = items.length ? items.map(itemRow).join('') :
-            `<div class="s-item"><div class="s-label">No hotels found</div><div class="s-sub">Try typing more letters</div></div>`;
+            `<div class="s-item"><div class="s-label">No hotels found</div><div class="s-sub">Try typing more</div></div>`;
           bind(); show();
         }catch(_){ hide(); }
       }, 200);
@@ -233,11 +230,11 @@
     input.addEventListener('input', doSuggest);
     document.addEventListener('click', (e)=>{ if(!panel.contains(e.target) && e.target!==input) hide(); });
 
-    // If user typed but didn't select → auto resolve first hotel
+    // If user types but doesn’t pick a suggestion, resolve first match
     async function ensureHotelIdIfNeed(q){
       if(hid.value || !q) return true;
       try{
-        const r=await fetch(`/api/hotel-search?q=${encodeURIComponent(q)}&lang=en&limit=1`, {cache:'no-store'});
+        const r=await fetch(`/api/hotel-search?q=${encodeURIComponent(q)}&lang=en-us&limit=1`, {cache:'no-store'});
         const d=await r.json();
         const it = d && d.ok && Array.isArray(d.items) && d.items[0];
         if(it){ hid.value = it.hotel_id || it.id || ''; return !!hid.value; }
@@ -250,7 +247,7 @@
       e.preventDefault();
       const q = (input.value||'').trim();
       const ok = await ensureHotelIdIfNeed(q);
-      if(!ok){ alert('Please select a hotel from suggestions.'); return; }
+      if(!ok){ alert('Please choose a hotel from the suggestions.'); return; }
       e.target.submit();
     });
   })();
