@@ -3,9 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+
   <title>ผลการค้นหา | Click & Go</title>
+  <meta name="description" content="ผลการค้นหาโรงแรมจาก Click & Go เลือกปลายทาง ช่วงวันที่ และตัวกรองต่าง ๆ เพื่อค้นหาข้อเสนอที่เหมาะกับคุณ">
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/style.css">
+
+  <!-- Canonical & Social -->
+  <link rel="canonical" href="https://clickandgo.asia/search.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Click & Go">
+  <meta property="og:title" content="ผลการค้นหา | Click & Go">
+  <meta property="og:description" content="ค้นหาและกรองข้อเสนอโรงแรมที่ดีที่สุด พร้อมลิงก์ไปจองทันที">
+  <meta property="og:url" content="https://clickandgo.asia/search.html">
+  <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg">
+  <meta property="og:image:alt" content="Click & Go">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ผลการค้นหา | Click & Go">
+  <meta name="twitter:description" content="ค้นหาและกรองข้อเสนอโรงแรมที่ดีที่สุด พร้อมลิงก์ไปจองทันที">
+  <meta name="twitter:image" content="https://clickandgo.asia/hero-bg.jpg">
+
   <style>
     :root{--brand:#0aa297;--card-border:#0aa29733;--gold:#d4a017;--muted:#666;}
     .container{max-width:1100px;margin:0 auto;padding:16px}
@@ -46,7 +63,7 @@
 <body>
 <header class="site-header" role="banner">
   <div class="inner">
-    <a href="/index.html" class="brand"><img src="/logo.png" width="40" height="40" alt="Click & Go"><span class="brand-text">Click & Go</span></a>
+    <a href="/index.html" class="brand"><img src="/logo.png" width="40" height="40" alt="Click & Go" loading="lazy" decoding="async"><span class="brand-text">Click & Go</span></a>
     <nav class="main-nav"><a href="/index.html">หน้าแรก</a><a href="/deals.html">โปรโมชั่น</a></nav>
   </div>
 </header>
@@ -168,17 +185,10 @@
   function normalizeQ(q){ return String(q||'').replace(/กรุงเทพมหานคร|กรุงเทพฯ/g,'กรุงเทพ').trim(); }
   state.q = normalizeQ(state.q);
 
-  // ✅ แผนที่ชื่อเมืองยอดนิยม (TH → EN) สำหรับ fallback
+  // alias เมืองยอดนิยม (TH → EN) ใช้ตอนหา cityId ไม่เจอ
   const CITY_ALIAS = {
-    'โซล': 'Seoul',
-    'โตเกียว': 'Tokyo',
-    'ฮ่องกง': 'Hong Kong',
-    'สิงคโปร์': 'Singapore',
-    'โอซาก้า': 'Osaka',
-    'ไทเป': 'Taipei',
-    'กัวลาลัมเปอร์': 'Kuala Lumpur',
-    'ลอนดอน': 'London',
-    'ปารีส': 'Paris'
+    'โซล': 'Seoul','โตเกียว': 'Tokyo','ฮ่องกง': 'Hong Kong','สิงคโปร์': 'Singapore',
+    'โอซาก้า': 'Osaka','ไทเป': 'Taipei','กัวลาลัมเปอร์': 'Kuala Lumpur','ลอนดอน': 'London','ปารีส': 'Paris'
   };
 
   (function setSubtitle(){
@@ -218,12 +228,11 @@
     history.replaceState({},'',u);
   }
 
-  // ✅ ปรับใหม่: TH → (ถ้าไม่เจอ) EN (ด้วย alias) → suggest แบบผสม
+  // หา cityId/hotelId จาก q (ลอง TH → EN alias → suggest แบบผสม)
   async function resolveDestinationIfNeeded(){
     if ((state.cityId || state.hid) || !state.q) return;
 
     const qTH = normalizeQ(state.q);
-    // 1) city-suggest ภาษาไทย
     try{
       const rTH = await fetch(`/api/city-suggest?q=${encodeURIComponent(qTH)}&lang=${encodeURIComponent(state.lang)}&limit=1`, {cache:'no-store'});
       const dTH = await rTH.json();
@@ -234,7 +243,6 @@
       }
     }catch(_){}
 
-    // 2) city-suggest ภาษาอังกฤษ (ผ่าน alias ถ้ามี)
     const qEN = CITY_ALIAS[qTH] || qTH;
     try{
       const rEN = await fetch(`/api/city-suggest?q=${encodeURIComponent(qEN)}&lang=en-us&limit=3`, {cache:'no-store'});
@@ -249,7 +257,6 @@
       }
     }catch(_){}
 
-    // 3) สำรอง: /api/suggest แบบผสม
     async function tryMixed(q, lang){
       try{
         const r = await fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(lang)}&type=mixed`, {cache:'no-store'});
@@ -393,7 +400,7 @@
       const cur  = esc(readCurr(h) || state.currency);
       return `
         <article class="card">
-          <img src="${img}" alt="${name}">
+          <img src="${img}" alt="${name}" loading="lazy" decoding="async">
           <div class="card-body">
             <h3 style="font-size:18px;margin:0 0 6px">${name}</h3>
             <div class="muted" style="font-size:13px">
