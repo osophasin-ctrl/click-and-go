@@ -3,38 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-
   <title>ผลการค้นหา | Click & Go</title>
-  <meta name="description" content="ผลการค้นหาโรงแรมจาก Click & Go เลือกปลายทาง ช่วงวันที่ และตัวกรองต่าง ๆ เพื่อค้นหาข้อเสนอที่เหมาะกับคุณ">
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/style.css">
-
-  <!-- Canonical & Social -->
-  <link rel="canonical" href="https://clickandgo.asia/search.html">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Click & Go">
-  <meta property="og:title" content="ผลการค้นหา | Click & Go">
-  <meta property="og:description" content="ค้นหาและกรองข้อเสนอโรงแรมที่ดีที่สุด พร้อมลิงก์ไปจองทันที">
-  <meta property="og:url" content="https://clickandgo.asia/search.html">
-  <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg">
-  <meta property="og:image:alt" content="Click & Go">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="ผลการค้นหา | Click & Go">
-  <meta name="twitter:description" content="ค้นหาและกรองข้อเสนอโรงแรมที่ดีที่สุด พร้อมลิงก์ไปจองทันที">
-  <meta name="twitter:image" content="https://clickandgo.asia/hero-bg.jpg">
-
   <style>
     :root{--brand:#0aa297;--card-border:#0aa29733;--gold:#d4a017;--muted:#666;}
     .container{max-width:1100px;margin:0 auto;padding:16px}
     .main-title{font-size:36px;line-height:1.2;margin:8px 0 4px}
     @media(max-width:640px){.main-title{font-size:30px}}
     .muted{color:var(--muted)} .nowrap{white-space:nowrap}
+
     .change-row{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;margin:4px 0 12px}
     .change-row .hint{color:#d32f2f;font-weight:500}
     .change-row .btn{background:var(--brand);color:#fff;border:0;border-radius:999px;padding:10px 16px;font-weight:700;cursor:pointer;flex:0 0 auto}
+
     .bar{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;overflow:auto;padding:8px 0;margin:12px 0 16px}
     .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer}
     .chip span{color:#111}.chip small{color:#666}
+
     dialog{border:none;border-radius:14px;max-width:520px;width:calc(100% - 24px);padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
     dialog::backdrop{background:rgba(0,0,0,.35)}
     .dlg-title{font-weight:700;margin:0 0 12px}
@@ -46,14 +32,22 @@
     .counter{display:flex;align-items:center;gap:8px}.cbtn{width:32px;height:32px;border-radius:50%;border:1px solid #bbb;background:#fff;font-size:18px;cursor:pointer}
     .ctxt{min-width:20px;text-align:center;font-weight:700}
     .dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.btn.secondary{background:#e5e7eb;color:#111}
+
     .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
     @media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:640px){.cards{grid-template-columns:1fr}}
+
     .card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);border:2px solid var(--card-border)}
     .card img{width:100%;height:210px;object-fit:cover;display:block;background:#f4f4f4}
     .card-body{padding:14px;display:flex;flex-direction:column;min-height:180px}
-    .price{font-weight:700;margin-top:8px}.h-actions{margin-top:auto;display:flex;justify-content:flex-end}
+
+    /* เดิม: .price ใช้โชว์ราคาหลัก — เปลี่ยนเป็น label ใหม่ */
+    .best-label{font-weight:700;color:#d32f2f;margin-top:8px}
+    .h-actions{margin-top:auto;display:flex;justify-content:flex-end;align-items:center;gap:10px}
+    .price-right{font-weight:700;white-space:nowrap}
+
     .stars{display:inline-flex;gap:2px;vertical-align:middle}.star{width:16px;height:16px;display:inline-block}.star svg{width:100%;height:100%;fill:var(--gold)}
     .score{color:#c62828}
+
     .skeleton{background:linear-gradient(90deg,#f2f2f2 25%,#e9e9e9 37%,#f2f2f2 63%);animation:s 1.4s ease infinite}
     @keyframes s{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}
     .sk-img{height:210px}.sk-line{height:14px;margin-top:8px;border-radius:6px}
@@ -63,7 +57,7 @@
 <body>
 <header class="site-header" role="banner">
   <div class="inner">
-    <a href="/index.html" class="brand"><img src="/logo.png" width="40" height="40" alt="Click & Go" loading="lazy" decoding="async"><span class="brand-text">Click & Go</span></a>
+    <a href="/index.html" class="brand"><img src="/logo.png" width="40" height="40" alt="Click & Go"><span class="brand-text">Click & Go</span></a>
     <nav class="main-nav"><a href="/index.html">หน้าแรก</a><a href="/deals.html">โปรโมชั่น</a></nav>
   </div>
 </header>
@@ -114,7 +108,7 @@
   </form>
 </dialog>
 
-<!-- Dialogs เดิมคงไว้ (Sort/Stars/Price/Score) -->
+<!-- Dialogs (Sort/Stars/Price/Score) -->
 <dialog id="dlgSort"><h3 class="dlg-title">เรียงโดย</h3>
   <div class="radio-list">
     <label class="radio-item"><input type="radio" name="sort" value="rec"> แนะนำ</label>
@@ -185,10 +179,10 @@
   function normalizeQ(q){ return String(q||'').replace(/กรุงเทพมหานคร|กรุงเทพฯ/g,'กรุงเทพ').trim(); }
   state.q = normalizeQ(state.q);
 
-  // alias เมืองยอดนิยม (TH → EN) ใช้ตอนหา cityId ไม่เจอ
+  // alias เมือง fallback
   const CITY_ALIAS = {
     'โซล': 'Seoul','โตเกียว': 'Tokyo','ฮ่องกง': 'Hong Kong','สิงคโปร์': 'Singapore',
-    'โอซาก้า': 'Osaka','ไทเป': 'Taipei','กัวลาลัมเปอร์': 'Kuala Lumpur','ลอนดอน': 'London','ปารีส': 'Paris'
+    'โอซาก้า':'Osaka','ไทเป':'Taipei','กัวลาลัมเปอร์':'Kuala Lumpur','ลอนดอน':'London','ปารีส':'Paris'
   };
 
   (function setSubtitle(){
@@ -228,7 +222,7 @@
     history.replaceState({},'',u);
   }
 
-  // หา cityId/hotelId จาก q (ลอง TH → EN alias → suggest แบบผสม)
+  // resolve ปลายทาง (ไทย → อังกฤษ/alias → mixed)
   async function resolveDestinationIfNeeded(){
     if ((state.cityId || state.hid) || !state.q) return;
 
@@ -237,9 +231,7 @@
       const rTH = await fetch(`/api/city-suggest?q=${encodeURIComponent(qTH)}&lang=${encodeURIComponent(state.lang)}&limit=1`, {cache:'no-store'});
       const dTH = await rTH.json();
       if (dTH && dTH.ok && Array.isArray(dTH.items) && dTH.items[0]?.city_id){
-        state.cityId = String(dTH.items[0].city_id);
-        state.city   = dTH.items[0].label || state.city;
-        return;
+        state.cityId = String(dTH.items[0].city_id); state.city = dTH.items[0].label || state.city; return;
       }
     }catch(_){}
 
@@ -249,11 +241,7 @@
       const dEN = await rEN.json();
       if (dEN && dEN.ok && Array.isArray(dEN.items) && dEN.items.length){
         const pick = dEN.items.find(it => it.city_id) || dEN.items[0];
-        if (pick?.city_id){
-          state.cityId = String(pick.city_id);
-          state.city   = pick.label || state.city || qEN;
-          return;
-        }
+        if (pick?.city_id){ state.cityId = String(pick.city_id); state.city = pick.label || state.city || qEN; return; }
       }
     }catch(_){}
 
@@ -313,7 +301,7 @@
     ['checkin','checkout','rooms','adults','children','lang','currency','page','sort','starsMin','scoreMin','priceMin','priceMax'].forEach(k => p.set(k, state[k]));
     let data = await fetchJson(base.toString());
 
-    // try #2a: /api/hotel-search โดย hotelId
+    // try #2a: hotelId
     if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.hid){
       const u = new URL('/api/hotel-search', location.origin);
       const q = u.searchParams;
@@ -325,7 +313,7 @@
       data = await fetchJson(u.toString());
     }
 
-    // try #2b: /api/hotel-search โดย cityId
+    // try #2b: cityId
     if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.cityId){
       const u = new URL('/api/hotel-search', location.origin);
       const q = u.searchParams;
@@ -398,16 +386,24 @@
       const score= readScore(h);
       const price= readPrice(h);
       const cur  = esc(readCurr(h) || state.currency);
+
       return `
         <article class="card">
-          <img src="${img}" alt="${name}" loading="lazy" decoding="async">
+          <img src="${img}" alt="${name}">
           <div class="card-body">
             <h3 style="font-size:18px;margin:0 0 6px">${name}</h3>
             <div class="muted" style="font-size:13px">
               ${starIcons(stars)}${score!=null ? `&nbsp;·&nbsp;<span class="score">คะแนนรีวิว ${score}</span>` : ''}
             </div>
-            <div class="price">${price!=null ? fmt(price, cur) : '-'} ${cur}</div>
-            <div class="h-actions"><a class="btn" href="${url}" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+
+            <!-- แทนราคาเดิมด้วยป้าย “ราคาดีที่สุด” -->
+            <div class="best-label">ราคาดีที่สุด</div>
+
+            <!-- แถวปุ่ม + ราคาเดิมชิดขวา -->
+            <div class="h-actions">
+              <a class="btn" href="${url}" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+              <span class="price-right">${price!=null ? fmt(price, cur) : '-'} ${cur}</span>
+            </div>
           </div>
         </article>`;
     }).join('');
