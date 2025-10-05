@@ -12,12 +12,15 @@
     .main-title{font-size:36px;line-height:1.2;margin:8px 0 4px}
     @media(max-width:640px){.main-title{font-size:30px}}
     .muted{color:var(--muted)} .nowrap{white-space:nowrap}
+
     .change-row{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;margin:4px 0 12px}
     .change-row .hint{color:#d32f2f;font-weight:500}
     .change-row .btn{background:var(--brand);color:#fff;border:0;border-radius:999px;padding:10px 16px;font-weight:700;cursor:pointer;flex:0 0 auto}
+
     .bar{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;overflow:auto;padding:8px 0;margin:12px 0 16px}
     .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer}
     .chip span{color:#111}.chip small{color:#666}
+
     dialog{border:none;border-radius:14px;max-width:520px;width:calc(100% - 24px);padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
     dialog::backdrop{background:rgba(0,0,0,.35)}
     .dlg-title{font-weight:700;margin:0 0 12px}
@@ -29,14 +32,25 @@
     .counter{display:flex;align-items:center;gap:8px}.cbtn{width:32px;height:32px;border-radius:50%;border:1px solid #bbb;background:#fff;font-size:18px;cursor:pointer}
     .ctxt{min-width:20px;text-align:center;font-weight:700}
     .dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.btn.secondary{background:#e5e7eb;color:#111}
+
     .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
     @media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:640px){.cards{grid-template-columns:1fr}}
+
     .card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);border:2px solid var(--card-border)}
     .card img{width:100%;height:210px;object-fit:cover;display:block;background:#f4f4f4}
     .card-body{padding:14px;display:flex;flex-direction:column;min-height:180px}
-    .price{font-weight:700;margin-top:8px}.h-actions{margin-top:auto;display:flex;justify-content:flex-end}
+
+    /* NEW: one-line "Best price" row */
+    .best-label{font-weight:700;color:#d32f2f}
+    .row-price{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+    .price-right{font-weight:700;white-space:nowrap;margin-left:12px}
+
+    /* keep CTA at bottom-right */
+    .h-actions{margin-top:auto;display:flex;justify-content:flex-end}
+
     .stars{display:inline-flex;gap:2px;vertical-align:middle}.star{width:16px;height:16px;display:inline-block}.star svg{width:100%;height:100%;fill:var(--gold)}
     .score{color:#c62828}
+
     .skeleton{background:linear-gradient(90deg,#f2f2f2 25%,#e9e9e9 37%,#f2f2f2 63%);animation:s 1.4s ease infinite}
     @keyframes s{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}
     .sk-img{height:210px}.sk-line{height:14px;margin-top:8px;border-radius:6px}
@@ -142,7 +156,7 @@
   const $ = s => document.querySelector(s);
   const params = new URLSearchParams(location.search);
 
-  // --- NEW: normalize language once and reuse everywhere ---
+  // normalize language
   const normalizeLang = (l) => {
     const v = String(l||'').toLowerCase();
     if (v.startsWith('th')) return 'th-th';
@@ -172,7 +186,7 @@
   };
   const draft = JSON.parse(JSON.stringify(state));
 
-  // normalize Bangkok spellings
+  // Bangkok spellings to EN
   function normalizeQ(q){
     return String(q||'')
       .replace(/กรุงเทพมหานคร|กรุงเทพฯ|กรุงเทพ/g,'Bangkok')
@@ -224,6 +238,7 @@
   async function resolveDestinationIfNeeded(){
     if ((state.cityId || state.hid) || !state.q) return;
     const q = normalizeQ(state.q);
+
     try{
       const r = await fetch(`/api/city-suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(state.lang)}&limit=1`, {cache:'no-store'});
       const d = await r.json();
@@ -233,12 +248,13 @@
         return;
       }
     }catch(_){}
+
     try{
       const r = await fetch(`/api/suggest?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(state.lang)}&type=mixed`, {cache:'no-store'});
       const d = await r.json();
       if (d && d.ok && Array.isArray(d.items) && d.items.length){
-        const city = d.items.find(it => String(it.type||'').toLowerCase().includes('city'));
-        const hotel= d.items.find(it => String(it.type||'').toLowerCase().includes('hotel'));
+        const city  = d.items.find(it => String(it.type||'').toLowerCase().includes('city'));
+        const hotel = d.items.find(it => String(it.type||'').toLowerCase().includes('hotel'));
         if (city){ state.cityId = String(city.city_id ?? city.value ?? city.id ?? ''); state.city = city.label || state.city; }
         else if (hotel){ state.hid = String(hotel.id||hotel.hotel_id||''); }
       }
@@ -249,7 +265,6 @@
     try{ const a=new Date(ci+'T12:00:00Z'), b=new Date(co+'T12:00:00Z'); return Math.max(1, Math.round((b-a)/86400000)); }catch(_){ return 1; }
   }
 
-  // Ensure Agoda gets correct language path (en-us/th-th)
   function partnerUrl(){
     const langPath = state.lang || 'en-us';
     if (state.hid || state.cityId){
@@ -279,14 +294,12 @@
     renderSkeleton();
     if (!state.cityId && !state.hid && state.q) await resolveDestinationIfNeeded();
 
-    // try #1: /api/search
     const base = new URL('/api/search', location.origin);
     const p = base.searchParams;
     if (state.hid) p.set('hid', state.hid); else if (state.cityId) p.set('cityId', state.cityId); else if (state.q) p.set('q', state.q);
     ['checkin','checkout','rooms','adults','children','lang','currency','page','sort','starsMin','scoreMin','priceMin','priceMax'].forEach(k => p.set(k, state[k]));
     let data = await fetchJson(base.toString());
 
-    // try #2a: hotelId
     if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.hid){
       const u = new URL('/api/hotel-search', location.origin);
       const q = u.searchParams;
@@ -295,12 +308,10 @@
       q.set('checkout', state.checkout||'');
       q.set('adults', String(state.adults||2));
       q.set('children', String(state.children||0));
-      // force language for fallback too
       q.set('lang', state.lang);
       data = await fetchJson(u.toString());
     }
 
-    // try #2b: cityId (limit 30)
     if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.cityId){
       const u = new URL('/api/hotel-search', location.origin);
       const q = u.searchParams;
@@ -311,7 +322,7 @@
       q.set('rooms', String(state.rooms||1));
       q.set('adults', String(state.adults||2));
       q.set('children', String(state.children||0));
-      q.set('lang', state.lang);           // << ensure EN
+      q.set('lang', state.lang);
       q.set('currency', state.currency);
       data = await fetchJson(u.toString());
     }
@@ -323,7 +334,6 @@
 
     let items = data.results || data.items || data.hotels || [];
     if (!Array.isArray(items)) items = [];
-
     if (state.sort === 'price_asc') items.sort((a,b)=>(readPrice(a)||1e15)-(readPrice(b)||1e15));
     if (state.sort === 'price_desc') items.sort((a,b)=>(readPrice(b)||0)-(readPrice(a)||0));
 
@@ -371,6 +381,7 @@
       const score= readScore(h);
       const price= readPrice(h);
       const cur  = esc(readCurr(h) || state.currency);
+
       return `
         <article class="card">
           <img src="${img}" alt="${name}">
@@ -379,7 +390,14 @@
             <div class="muted" style="font-size:13px">
               ${starIcons(stars)}${score!=null ? `&nbsp;·&nbsp;<span class="score">Review score ${score}</span>` : ''}
             </div>
-            <div class="price">${price!=null ? fmt(price, cur) : '-'} ${cur}</div>
+
+            <!-- NEW: one-line best price row -->
+            <div class="row-price">
+              <div class="best-label">Best price</div>
+              <span class="price-right">${price!=null ? fmt(price, cur) : '-'} ${cur}</span>
+            </div>
+
+            <!-- CTA stays at bottom-right -->
             <div class="h-actions"><a class="btn" href="${url}" target="_blank" rel="nofollow noopener">View offer</a></div>
           </div>
         </article>`;
@@ -428,7 +446,7 @@
     updateQueryOnly(); dlg.close(); load();
   });
 
-  // chip handlers
+  // Chip handlers
   document.getElementById('chipSort').addEventListener('click',()=>{ document.getElementById('dlgSort').showModal(); [...document.querySelectorAll('input[name=sort]')].forEach(r=>r.checked=(r.value===draft.sort)); });
   document.getElementById('chipStars').addEventListener('click',()=>{ document.getElementById('dlgStars').showModal(); [...document.querySelectorAll('input[name=stars]')].forEach(r=>r.checked=(+r.value===+draft.starsMin)); });
   document.getElementById('chipPrice').addEventListener('click',()=>{ document.getElementById('dlgPrice').showModal(); setPriceWidgets(draft.priceMin,draft.priceMax); });
