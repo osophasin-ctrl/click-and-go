@@ -3,12 +3,32 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <title>Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว</title>
   <meta name="description" content="Click & Go ช่วยค้นหาราคาโรงแรมและข้อเสนอที่ดีที่สุด พร้อมลิงก์ไปจองทันที ครอบคลุมปลายทางยอดนิยมทั้งในไทยและต่างประเทศ" />
+
+  <!-- Canonical & Social -->
+  <link rel="canonical" href="https://clickandgo.asia/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Click & Go">
+  <meta property="og:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว">
+  <meta property="og:description" content="ค้นหาข้อเสนอโรงแรมที่ดีที่สุด กดจองได้ทันที ครอบคลุมปลายทางยอดนิยมทั่วโลก">
+  <meta property="og:url" content="https://clickandgo.asia/">
+  <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg">
+  <meta property="og:image:alt" content="Click & Go Thailand">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Click & Go – เปรียบเทียบราคาโรงแรม จองง่ายในคลิกเดียว">
+  <meta name="twitter:description" content="ค้นหาข้อเสนอโรงแรมที่ดีที่สุด กดจองได้ทันที ครอบคลุมปลายทางยอดนิยมทั่วโลก">
+  <meta name="twitter:image" content="https://clickandgo.asia/hero-bg.jpg">
+
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Flatpickr -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
+
   <style>
     /* ===== กล่องค้นหา ===== */
     .mock-wrap{max-width:1030px;width:100%;margin:0 auto}
@@ -61,7 +81,10 @@
   <!-- Header -->
   <header class="site-header">
     <div class="inner">
-      <a href="index.html" class="brand"><img src="logo.png" alt="Click & Go" width="40" height="40"/><span class="brand-text">Click & Go</span></a>
+      <a href="index.html" class="brand">
+        <img src="logo.png" alt="Click & Go" width="40" height="40" loading="lazy" decoding="async" />
+        <span class="brand-text">Click & Go</span>
+      </a>
       <nav class="main-nav">
         <a href="index.html" aria-current="page">หน้าแรก</a>
         <a href="deals.html">โปรโมชั่น</a>
@@ -79,7 +102,7 @@
   <main class="container">
     <!-- Hero -->
     <section class="hero">
-      <img class="hero-img" src="hero-bg.jpg" alt="Click & Go Thailand">
+      <img class="hero-img" src="hero-bg.jpg" alt="Click & Go Thailand" loading="eager" decoding="async">
     </section>
 
     <!-- Search Box -->
@@ -132,12 +155,12 @@
     <section>
       <h2 class="section-title">ปลายทางยอดนิยมในไทย</h2>
       <div class="city-grid">
-        <a class="city-card" href="#" data-q="กรุงเทพฯ"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ"><figcaption>กรุงเทพฯ</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="เชียงใหม่"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่"><figcaption>เชียงใหม่</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="พัทยา"><figure><img src="pattaya-tile.webp" alt="พัทยา"><figcaption>พัทยา</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="ภูเก็ต"><figure><img src="phuket-tile.webp" alt="ภูเก็ต"><figcaption>ภูเก็ต</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="กระบี่"><figure><img src="krabi-tile.webp" alt="กระบี่"><figcaption>กระบี่</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="หัวหิน"><figure><img src="huahin-tile.webp" alt="หัวหิน"><figcaption>หัวหิน</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="กรุงเทพฯ"><figure><img src="bangkok-tile.webp" alt="กรุงเทพฯ" loading="lazy" decoding="async"><figcaption>กรุงเทพฯ</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="เชียงใหม่"><figure><img src="chiangmai-tile.webp" alt="เชียงใหม่" loading="lazy" decoding="async"><figcaption>เชียงใหม่</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="พัทยา"><figure><img src="pattaya-tile.webp" alt="พัทยา" loading="lazy" decoding="async"><figcaption>พัทยา</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="ภูเก็ต"><figure><img src="phuket-tile.webp" alt="ภูเก็ต" loading="lazy" decoding="async"><figcaption>ภูเก็ต</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="กระบี่"><figure><img src="krabi-tile.webp" alt="กระบี่" loading="lazy" decoding="async"><figcaption>กระบี่</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="หัวหิน"><figure><img src="huahin-tile.webp" alt="หัวหิน" loading="lazy" decoding="async"><figcaption>หัวหิน</figcaption></figure></a>
       </div>
     </section>
 
@@ -145,12 +168,12 @@
     <section>
       <h2 class="section-title">เมืองยอดฮิตในต่างประเทศ</h2>
       <div class="city-grid">
-        <a class="city-card" href="#" data-q="โตเกียว"><figure><img src="tokyo-tile.webp" alt="โตเกียว"><figcaption>โตเกียว</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="โซล"><figure><img src="seoul-tile.webp" alt="โซล"><figcaption>โซล</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="สิงคโปร์"><figure><img src="singapore-tile.webp" alt="สิงคโปร์"><figcaption>สิงคโปร์</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="ฮ่องกง"><figure><img src="hongkong-tile.webp" alt="ฮ่องกง"><figcaption>ฮ่องกง</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="ลอนดอน"><figure><img src="london-tile.webp" alt="ลอนดอน"><figcaption>ลอนดอน</figcaption></figure></a>
-        <a class="city-card" href="#" data-q="ปารีส"><figure><img src="paris-tile.webp" alt="ปารีส"><figcaption>ปารีส</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="โตเกียว"><figure><img src="tokyo-tile.webp" alt="โตเกียว" loading="lazy" decoding="async"><figcaption>โตเกียว</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="โซล"><figure><img src="seoul-tile.webp" alt="โซล" loading="lazy" decoding="async"><figcaption>โซล</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="สิงคโปร์"><figure><img src="singapore-tile.webp" alt="สิงคโปร์" loading="lazy" decoding="async"><figcaption>สิงคโปร์</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="ฮ่องกง"><figure><img src="hongkong-tile.webp" alt="ฮ่องกง" loading="lazy" decoding="async"><figcaption>ฮ่องกง</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="ลอนดอน"><figure><img src="london-tile.webp" alt="ลอนดอน" loading="lazy" decoding="async"><figcaption>ลอนดอน</figcaption></figure></a>
+        <a class="city-card" href="#" data-q="ปารีส"><figure><img src="paris-tile.webp" alt="ปารีส" loading="lazy" decoding="async"><figcaption>ปารีส</figcaption></figure></a>
       </div>
     </section>
 
@@ -210,13 +233,16 @@
       <div class="footer-links">
         <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> ·
         <a href="affiliate.html">Affiliate Disclosure</a> · <a href="about.html">About us</a> ·
-        <a href="contact.html">Contact</a> · <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+        <a href="contact.html">Contact</a> ·
+        <a href="https://clickandgo.asia" target="_blank" rel="noopener">clickandgo.asia</a> ·
+        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
       </div>
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+  <!-- Flatpickr (defer) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 
   <!-- เมนูภาษา -->
   <script>
@@ -230,6 +256,11 @@
     })();
   </script>
 
+  <!-- ค่าคงที่โดเมนหลักสำหรับใช้งานในสคริปต์/ดีปลิงก์ -->
+  <script>
+    const SITE_URL = "https://clickandgo.asia";
+  </script>
+
   <!-- Autocomplete เมือง (มี fallback) -->
   <script>
     (function(){
@@ -238,7 +269,8 @@
       const cityIdEl =document.getElementById('cityId');
       const cityLblEl=document.getElementById('cityLabel');
 
-      const esc=s=>(s||'').replace(/[&<>"']/g,m=>({'&':'&','<':'<','>':'>','"':'"'}[m]));
+      // แก้ escape ให้ถูกต้อง
+      const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
       const show=el=>el.style.display='block';
       const hide=el=>{el.style.display='none';el.innerHTML='';};
 
@@ -402,7 +434,6 @@
           ev.preventDefault();
           let q=a.getAttribute('data-q')||'';
           q=q.replace(/กรุงเทพมหานคร/g,'กรุงเทพ').replace(/กรุงเทพฯ/g,'กรุงเทพ');
-          // ใช้ alias ถ้ามี (เช่น โซล -> Seoul)
           if (CITY_ALIAS[q]) q = CITY_ALIAS[q];
 
           const inP=window.flatpickr && document.querySelector('#ci')._flatpickr;
