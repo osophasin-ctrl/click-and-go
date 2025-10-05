@@ -40,10 +40,13 @@
     .card img{width:100%;height:210px;object-fit:cover;display:block;background:#f4f4f4}
     .card-body{padding:14px;display:flex;flex-direction:column;min-height:180px}
 
-    /* เดิม: .price ใช้โชว์ราคาหลัก — เปลี่ยนเป็น label ใหม่ */
-    .best-label{font-weight:700;color:#d32f2f;margin-top:8px}
-    .h-actions{margin-top:auto;display:flex;justify-content:flex-end;align-items:center;gap:10px}
-    .price-right{font-weight:700;white-space:nowrap}
+    /* แถว 'ราคาดีที่สุด | ราคา' */
+    .best-label{font-weight:700;color:#d32f2f}
+    .row-price{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+    .price-right{font-weight:700;white-space:nowrap;margin-left:12px}
+
+    /* ปุ่มล่างขวา */
+    .h-actions{margin-top:auto;display:flex;justify-content:flex-end}
 
     .stars{display:inline-flex;gap:2px;vertical-align:middle}.star{width:16px;height:16px;display:inline-block}.star svg{width:100%;height:100%;fill:var(--gold)}
     .score{color:#c62828}
@@ -179,11 +182,7 @@
   function normalizeQ(q){ return String(q||'').replace(/กรุงเทพมหานคร|กรุงเทพฯ/g,'กรุงเทพ').trim(); }
   state.q = normalizeQ(state.q);
 
-  // alias เมือง fallback
-  const CITY_ALIAS = {
-    'โซล': 'Seoul','โตเกียว': 'Tokyo','ฮ่องกง': 'Hong Kong','สิงคโปร์': 'Singapore',
-    'โอซาก้า':'Osaka','ไทเป':'Taipei','กัวลาลัมเปอร์':'Kuala Lumpur','ลอนดอน':'London','ปารีส':'Paris'
-  };
+  const CITY_ALIAS = {'โซล':'Seoul','โตเกียว':'Tokyo','ฮ่องกง':'Hong Kong','สิงคโปร์':'Singapore','โอซาก้า':'Osaka','ไทเป':'Taipei','กัวลาลัมเปอร์':'Kuala Lumpur','ลอนดอน':'London','ปารีส':'Paris'};
 
   (function setSubtitle(){
     const ci = (state.checkin || '').replaceAll('-', '/');
@@ -222,7 +221,6 @@
     history.replaceState({},'',u);
   }
 
-  // resolve ปลายทาง (ไทย → อังกฤษ/alias → mixed)
   async function resolveDestinationIfNeeded(){
     if ((state.cityId || state.hid) || !state.q) return;
 
@@ -294,38 +292,28 @@
     renderSkeleton();
     if (!state.cityId && !state.hid && state.q) await resolveDestinationIfNeeded();
 
-    // try #1: /api/search
     const base = new URL('/api/search', location.origin);
     const p = base.searchParams;
     if (state.hid) p.set('hid', state.hid); else if (state.cityId) p.set('cityId', state.cityId); else if (state.q) p.set('q', state.q);
     ['checkin','checkout','rooms','adults','children','lang','currency','page','sort','starsMin','scoreMin','priceMin','priceMax'].forEach(k => p.set(k, state[k]));
     let data = await fetchJson(base.toString());
 
-    // try #2a: hotelId
     if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.hid){
       const u = new URL('/api/hotel-search', location.origin);
       const q = u.searchParams;
       q.set('hotelId', state.hid);
-      q.set('checkin', state.checkin||'');
-      q.set('checkout', state.checkout||'');
-      q.set('adults', String(state.adults||2));
-      q.set('children', String(state.children||0));
+      q.set('checkin', state.checkin||''); q.set('checkout', state.checkout||'');
+      q.set('adults', String(state.adults||2)); q.set('children', String(state.children||0));
       data = await fetchJson(u.toString());
     }
 
-    // try #2b: cityId
     if ((!data || !data.ok || !Array.isArray(data.results) || data.results.length===0) && state.cityId){
       const u = new URL('/api/hotel-search', location.origin);
       const q = u.searchParams;
-      q.set('cityId', state.cityId);
-      q.set('limit','30');
-      q.set('checkin', state.checkin||'');
-      q.set('checkout', state.checkout||'');
-      q.set('rooms', String(state.rooms||1));
-      q.set('adults', String(state.adults||2));
-      q.set('children', String(state.children||0));
-      q.set('lang', state.lang);
-      q.set('currency', state.currency);
+      q.set('cityId', state.cityId); q.set('limit','30');
+      q.set('checkin', state.checkin||''); q.set('checkout', state.checkout||'');
+      q.set('rooms', String(state.rooms||1)); q.set('adults', String(state.adults||2)); q.set('children', String(state.children||0));
+      q.set('lang', state.lang); q.set('currency', state.currency);
       data = await fetchJson(u.toString());
     }
 
@@ -334,11 +322,8 @@
       refreshPartnerCta(); return;
     }
 
-    // รองรับโครงสร้างผลลัพธ์หลายแบบ
     let items = data.results || data.items || data.hotels || [];
     if (!Array.isArray(items)) items = [];
-
-    // sort
     if (state.sort === 'price_asc') items.sort((a,b)=>(readPrice(a)||1e15)-(readPrice(b)||1e15));
     if (state.sort === 'price_desc') items.sort((a,b)=>(readPrice(b)||0)-(readPrice(a)||0));
 
@@ -396,13 +381,15 @@
               ${starIcons(stars)}${score!=null ? `&nbsp;·&nbsp;<span class="score">คะแนนรีวิว ${score}</span>` : ''}
             </div>
 
-            <!-- แทนราคาเดิมด้วยป้าย “ราคาดีที่สุด” -->
-            <div class="best-label">ราคาดีที่สุด</div>
+            <!-- บรรทัดเดียว: ราคาดีที่สุด (ซ้าย) | ราคา (ขวา) -->
+            <div class="row-price">
+              <div class="best-label">ราคาดีที่สุด</div>
+              <span class="price-right">${price!=null ? fmt(price, cur) : '-'} ${cur}</span>
+            </div>
 
-            <!-- แถวปุ่ม + ราคาเดิมชิดขวา -->
+            <!-- ปุ่มล่างขวา -->
             <div class="h-actions">
               <a class="btn" href="${url}" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
-              <span class="price-right">${price!=null ? fmt(price, cur) : '-'} ${cur}</span>
             </div>
           </div>
         </article>`;
