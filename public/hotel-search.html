@@ -3,11 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>ค้นหาตามชื่อโรงแรม | Click & Go</title>
+  <meta name="description" content="พิมพ์ชื่อโรงแรมที่ต้องการ เลือกวันที่และผู้เข้าพัก แล้วให้ Click & Go พาคุณไปยังหน้าผลลัพธ์ของโรงแรมนั้นทันที">
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
+
+  <!-- Canonical & Social -->
+  <link rel="canonical" href="https://clickandgo.asia/hotel-search.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Click & Go">
+  <meta property="og:title" content="ค้นหาตามชื่อโรงแรม | Click & Go">
+  <meta property="og:description" content="พิมพ์ชื่อโรงแรม เลือกวันที่ และผู้เข้าพัก แล้วไปยังหน้าผลลัพธ์ได้ทันที">
+  <meta property="og:url" content="https://clickandgo.asia/hotel-search.html">
+  <meta property="og:image" content="https://clickandgo.asia/hero-bg.jpg">
+  <meta property="og:image:alt" content="Click & Go">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ค้นหาตามชื่อโรงแรม | Click & Go">
+  <meta name="twitter:description" content="พิมพ์ชื่อโรงแรม เลือกวันที่ และผู้เข้าพัก แล้วไปยังหน้าผลลัพธ์ได้ทันที">
+  <meta name="twitter:image" content="https://clickandgo.asia/hero-bg.jpg">
+
   <style>
     :root{ --brand:#0ea5a0; --muted:#666; }
     .container{max-width:1030px;margin:0 auto;padding:16px}
@@ -55,7 +72,7 @@
 <body>
   <header class="site-header">
     <div class="inner">
-      <a href="/index.html" class="brand"><img src="/logo.png" width="40" height="40" alt=""><span class="brand-text">Click & Go</span></a>
+      <a href="/index.html" class="brand"><img src="/logo.png" width="40" height="40" alt="Click & Go" loading="lazy" decoding="async"><span class="brand-text">Click & Go</span></a>
       <nav class="main-nav">
         <a href="/index.html">หน้าแรก</a>
         <a href="/deals.html">โปรโมชั่น</a>
@@ -72,7 +89,7 @@
       <form id="hotelForm" class="row" action="/search.html" method="GET" autocomplete="off">
         <!-- กล่องค้นหาโรงแรม -->
         <div class="suggest-wrap row full">
-          <input id="hotelInput" class="input" type="text" placeholder="พิมพ์ชื่อโรงแรม เช่น Centara, Hilton, ...">
+          <input id="hotelInput" class="input" type="text" placeholder="พิมพ์ชื่อโรงแรม เช่น Centara, Hilton, ..." aria-label="พิมพ์ชื่อโรงแรม">
           <div id="hotelSuggest" class="suggest" role="listbox" aria-label="คำแนะนำโรงแรม"></div>
         </div>
 
@@ -104,19 +121,25 @@
   </main>
 
   <!-- Guest Modal -->
-  <div id="guestBackdrop" class="modal-backdrop"></div>
+  <div id="guestBackdrop" class="modal-backdrop" aria-hidden="true"></div>
   <div id="guestModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="guestTitle">
     <div class="modal-header">
       <div id="guestTitle" class="modal-title">ผู้เข้าพัก</div>
-      <button type="button" class="btn-outline" id="btnCloseX">×</button>
+      <button type="button" class="btn-outline" id="btnCloseX" aria-label="ปิดหน้าต่าง">×</button>
     </div>
     <div class="modal-body">
-      <div class="row-ctrl"><div class="label-wrap"><strong>ห้อง</strong><small>จำนวนห้องพัก</small></div>
-        <div class="counter"><button class="btn-ctrl" data-type="rooms" data-op="minus">−</button><span class="count" id="roomsCount">1</span><button class="btn-ctrl" data-type="rooms" data-op="plus">+</button></div></div>
-      <div class="row-ctrl"><div class="label-wrap"><strong>ผู้ใหญ่</strong><small>อายุ 18 ปีขึ้นไป</small></div>
-        <div class="counter"><button class="btn-ctrl" data-type="adults" data-op="minus">−</button><span class="count" id="adultsCount">2</span><button class="btn-ctrl" data-type="adults" data-op="plus">+</button></div></div>
-      <div class="row-ctrl"><div class="label-wrap"><strong>เด็ก</strong><small>อายุ 0–17 ปี</small></div>
-        <div class="counter"><button class="btn-ctrl" data-type="children" data-op="minus">−</button><span class="count" id="childrenCount">0</span><button class="btn-ctrl" data-type="children" data-op="plus">+</button></div></div>
+      <div class="row-ctrl">
+        <div class="label-wrap"><strong>ห้อง</strong><small>จำนวนห้องพัก</small></div>
+        <div class="counter"><button class="btn-ctrl" data-type="rooms" data-op="minus">−</button><span class="count" id="roomsCount">1</span><button class="btn-ctrl" data-type="rooms" data-op="plus">+</button></div>
+      </div>
+      <div class="row-ctrl">
+        <div class="label-wrap"><strong>ผู้ใหญ่</strong><small>อายุ 18 ปีขึ้นไป</small></div>
+        <div class="counter"><button class="btn-ctrl" data-type="adults" data-op="minus">−</button><span class="count" id="adultsCount">2</span><button class="btn-ctrl" data-type="adults" data-op="plus">+</button></div>
+      </div>
+      <div class="row-ctrl">
+        <div class="label-wrap"><strong>เด็ก</strong><small>อายุ 0–17 ปี</small></div>
+        <div class="counter"><button class="btn-ctrl" data-type="children" data-op="minus">−</button><span class="count" id="childrenCount">0</span><button class="btn-ctrl" data-type="children" data-op="plus">+</button></div>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn-outline" id="btnCancel">ยกเลิก</button>
@@ -141,18 +164,27 @@
   const $ = (s)=>document.querySelector(s);
   const esc = (s)=>String(s||'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[m]));
 
-  // ===== init วันที่ =====
+  // ===== init วันที่ (มี fallback ถ้า flatpickr โหลดไม่สำเร็จ) =====
   (function initDates(){
     const ONE = 86400000;
     const today = new Date(), tomorrow = new Date(Date.now()+ONE);
 
-    const inP = flatpickr("#ci", {locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"input",minDate:"today",
-      onChange(d){ if(d[0]) { const n=new Date(d[0].getTime()+ONE); outP.set('minDate',n); if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0]) outP.setDate(n,true); } }
-    });
-    const outP = flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"input",minDate:tomorrow});
-
-    inP.setDate(today,true);
-    outP.setDate(tomorrow,true);
+    if (window.flatpickr) {
+      const inP = flatpickr("#ci", {locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"input",minDate:"today",
+        onChange(d){ if(d[0]) { const n=new Date(d[0].getTime()+ONE); outP.set('minDate',n); if(!outP.selectedDates[0]||outP.selectedDates[0]<=d[0]) outP.setDate(n,true); } }
+      });
+      const outP = flatpickr("#co",{locale:'th',dateFormat:"Y-m-d",altInput:true,altFormat:"j M Y",altInputClass:"input",minDate:tomorrow});
+      inP.setDate(today,true);
+      outP.setDate(tomorrow,true);
+    } else {
+      const ci = $('#ci'), co = $('#co');
+      const fmt = (d)=>{const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());};
+      ci.removeAttribute('readonly'); co.removeAttribute('readonly');
+      ci.type='date'; co.type='date';
+      ci.value=fmt(today); ci.min=fmt(today);
+      co.value=fmt(tomorrow); co.min=fmt(tomorrow);
+      ci.addEventListener('change',()=>{const a=new Date(ci.value||fmt(today));const n=new Date(a.getTime()+ONE); if(!co.value||new Date(co.value)<=a){co.value=fmt(n);} co.min=fmt(n);});
+    }
   })();
 
   // ===== ผู้เข้าพัก =====
