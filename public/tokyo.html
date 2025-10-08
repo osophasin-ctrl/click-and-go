@@ -1,357 +1,466 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>มัดรวมกันไว้ให้แล้ว 100 โรงแรม โดนใจในโตเกียว | Click&Go</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --brand:#10b981;      /* เขียวเดิม */
-    --brand-600:#059669;
-    --ink:#0f172a;
-    --muted:#64748b;
-    --card:#ffffff;
-    --bg:#f8fafc;
-    --pill:#e6f9f1;
-    --border:#e2e8f0;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Prompt',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";line-height:1.6}
-  a{color:inherit;text-decoration:none}
-  .container{max-width:1120px;margin:0 auto;padding:24px 16px}
-  header h1{font-size:28px;margin:4px 0 8px;font-weight:700}
-  header p{margin:0;color:var(--muted)}
-  .zones{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 8px}
-  .chip{padding:10px 14px;border:1px solid var(--border);border-radius:999px;background:#fff;color:#0f172a;font-weight:500;cursor:pointer}
-  .chip.active{background:var(--pill);border-color:#b6f3da}
-  .section{padding:20px 0}
-  .section h2{font-size:22px;margin:0 0 6px}
-  .section .sub{color:var(--muted);margin:0 0 16px}
-  /* cards grid */
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  @media (max-width:960px){.grid{grid-template-columns:repeat(2,1fr)}}
-  @media (max-width:640px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 0 rgba(15,23,42,.03)}
-  .thumb{position:relative;aspect-ratio:16/10;overflow:hidden;background:#ddd}
-  .thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
-  .card:hover .thumb img{transform:scale(1.03)}
-  .body{padding:14px 14px 8px}
-  .name{font-weight:600;font-size:16px;margin:0 0 4px}
-  .meta{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center;margin-bottom:10px}
-  .star{color:#f59e0b;font-weight:600}
-  .score{font-weight:600}
-  .blurb{font-size:14px;color:#0f172a;margin:0 0 12px}
-  .bullet{margin:0 0 8px;padding-left:18px}
-  .bullet li{margin:4px 0}
-  .footer{display:flex;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid var(--border);background:#fff}
-  .priceWrap{flex:1}
-  .note{font-size:11px;color:var(--muted);line-height:1.2;margin-bottom:2px}
-  .price{font-weight:700}
-  .btn{background:var(--brand);color:#fff;padding:10px 14px;border-radius:999px;font-weight:600;white-space:nowrap}
-  .btn:hover{background:var(--brand-600)}
-  .pill{background:var(--pill);color:var(--brand-600);font-size:12px;padding:4px 8px;border-radius:999px;margin-left:auto}
-  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-  /* anchor spacing */
-  .anchor{position:relative;top:-76px}
-  nav.sticky{position:sticky;top:0;background:linear-gradient(#fff,#fffcc0 0) transparent;background:#fff;border-bottom:1px solid var(--border);z-index:5}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>โตเกียว – โรงแรมแนะนำตามโซน | Click & Go</title>
+  <meta name="description" content="มัดรวม 100 โรงแรมในโตเกียว คัดคุณภาพ รีวิวดี คุ้มค่า โลเคชันเทพ แบ่งตามโซน เลือกง่าย คลิกดูข้อเสนอได้เลย" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --green:#0fb29a;
+      --green-200:#e6fbf7;
+      --ink:#0c2233;
+      --muted:#6b7a89;
+      --card:#ffffff;
+      --bg:#fafbfc;
+      --pill:#f1f5f9;
+      --shadow:0 4px 16px rgba(2,37,52,.08);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Prompt',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,'Apple Color Emoji','Segoe UI Emoji';}
+    a{color:inherit;text-decoration:none}
+    /* --- NAV --- */
+    .nav{position:relative;z-index:5;background:#fff;border-bottom:1px solid #eef2f6}
+    .nav-wrap{max-width:1100px;margin:auto;display:flex;align-items:center;gap:20px;padding:14px 16px}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo-badge{width:40px;height:40px;border-radius:12px;background:var(--green);display:grid;place-items:center;color:#fff;font-weight:700}
+    .nav-links{margin-left:auto;display:flex;gap:20px}
+    .nav-link{padding:8px 10px;border-radius:10px}
+    .nav-link:hover{background:#f6f8fb}
+    /* --- CONTAINER --- */
+    .container{max-width:1100px;margin:0 auto;padding:20px 16px}
+    /* --- HEADER BLOCK --- */
+    .headline{font-size:clamp(26px,4.2vw,42px);line-height:1.15;margin:18px 0 8px;font-weight:800;letter-spacing:.2px}
+    .lead{color:var(--muted);font-size:18px}
+    /* --- ZONE PILLS --- */
+    .zones{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0 10px}
+    .pill{background:var(--pill);padding:12px 16px;border-radius:999px;border:1px solid #e8edf2;color:#1c2b39;cursor:pointer;transition:.15s}
+    .pill.active{background:var(--green-200);border-color:#bdf3ea}
+    .pill:hover{transform:translateY(-1px)}
+    /* --- SECTION TITLE --- */
+    .section-head{margin:28px 0 8px}
+    .section-title{font-size:28px;font-weight:800;margin:0 0 6px}
+    .section-desc{color:var(--muted)}
+    /* --- GRID --- */
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;margin-top:14px}
+    @media (max-width:960px){.grid{grid-template-columns:repeat(8,1fr)}}
+    @media (max-width:680px){.grid{grid-template-columns:repeat(4,1fr)}}
+    /* --- CARD --- */
+    .card{grid-column:span 4;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+    .thumb{aspect-ratio:16/10;width:100%;object-fit:cover;display:block}
+    .card-body{padding:14px 14px 12px}
+    .name{font-weight:700;margin:4px 0 2px;font-size:16px}
+    .sub{color:var(--muted);font-size:13px}
+    .rate{display:flex;align-items:center;gap:8px;margin:8px 0 10px}
+    .badge{background:#0e7c66;color:#fff;font-weight:700;border-radius:10px;padding:4px 8px;font-size:12px}
+    .review{color:#6c7a87;font-size:12px}
+    .desc{font-size:14px;margin:4px 0 12px;color:#1f2f3a}
+    .priceRow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding:0 14px 14px}
+    .price{font-weight:800;color:#0e7c66}
+    .note{font-size:11px;color:#8b98a6;margin-top:-2px}
+    .btn{background:var(--green);color:#fff;padding:10px 14px;border-radius:12px;font-weight:700;display:inline-flex;gap:8px;align-items:center}
+    .btn:hover{filter:brightness(.95)}
+    /* --- FOOTER --- */
+    .footer{margin-top:40px;background:#fff;border-top:1px solid #eef2f6}
+    .footer-wrap{max-width:1100px;margin:auto;padding:22px 16px;color:#5b6a79}
+    .links{display:flex;flex-wrap:wrap;gap:12px 18px}
+    .links a{color:#2b4457}
+    /* utility */
+    .mt8{margin-top:8px}
+    .mt16{margin-top:16px}
+  </style>
 </head>
 <body>
 
-  <nav class="sticky">
-    <div class="container">
-      <h1 style="margin:10px 0 4px">มัดรวมกันไว้ให้แล้ว 100 โรงแรม โดนใจในโตเกียว 🇯🇵</h1>
-      <p style="margin:0 0 12px;color:var(--muted)">
-        รวมให้ครบทุกโซนฮิต—ตั้งแต่งบคุ้มถึงบูทีคสุดคูล! อยากได้วิว, ราคาโดน, หรือโลเคชันเทพ เราคัดมาแบบเพื่อนแนะนำเพื่อน เที่ยวโตเกียวรอบนี้ไม่ต้องไถหานาน ✨
-      </p>
-      <div class="zones">
-        <a class="chip active" href="#zone-a">Shibuya / Harajuku</a>
-        <a class="chip" href="#zone-b">Shinjuku</a>
-        <a class="chip" href="#zone-c">Ueno – Asakusa</a>
-        <a class="chip" href="#zone-d">Ginza – Tokyo Station</a>
-        <a class="chip" href="#zone-e">Akihabara – Kanda</a>
-        <a class="chip" href="#zone-f">Odaiba & Around</a>
-      </div>
+  <!-- NAV -->
+  <header class="nav">
+    <div class="nav-wrap">
+      <a href="/" class="logo" aria-label="Click & Go Home">
+        <div class="logo-badge">GO</div>
+        <strong>Click &amp; Go</strong>
+      </a>
+      <nav class="nav-links">
+        <a class="nav-link" href="/">หน้าแรก</a>
+        <a class="nav-link" href="/promotions">โปรโมชั่น</a>
+        <a class="nav-link" href="/#lang">ภาษา</a>
+      </nav>
     </div>
-  </nav>
+  </header>
 
-  <!-- Zone A -->
-  <div id="zone-a" class="anchor"></div>
-  <section class="section">
-    <div class="container">
-      <h2>โซน A — Shibuya / Harajuku</h2>
-      <p class="sub">สายแฟ สายคาเฟ่ เดินเล่น Cat Street – Omotesando ง่าย ใกล้ Miyashita Park และย่านชิบูย่า</p>
+  <main class="container" id="top">
+    <!-- Heading -->
+    <h1 class="headline">มัดรวมกันไว้ให้แล้ว 100 โรงแรม โดนใจในโตเกียว 🇯🇵</h1>
+    <p class="lead">
+      รวมให้ครบทุกโซนฮิต—ตั้งแต่งบคุ้มถึงบูทีคสุดคูล! อยากได้วิวดี ราคาโดน หรือโลเคชันเทพ เราคัดมาแบบเพื่อนแนะนำเพื่อน
+      เที่ยวโตเกียวรอบนี้ไม่ต้องไถหานาน ✨
+    </p>
+
+    <!-- Zones -->
+    <div class="zones" role="navigation" aria-label="เลือกโซน">
+      <a class="pill active" href="#zone-a">Shibuya / Harajuku</a>
+      <a class="pill" href="#zone-b">Shinjuku</a>
+      <a class="pill" href="#zone-c">Ueno – Asakusa</a>
+      <a class="pill" href="#zone-d">Ginza – Tokyo Station</a>
+      <a class="pill" href="#zone-e">Akihabara – Kanda</a>
+      <a class="pill" href="#zone-f">Odaiba &amp; Around</a>
+    </div>
+
+    <!-- Zone A -->
+    <section id="zone-a" class="section-head">
+      <h2 class="section-title">โซน A — Shibuya / Harajuku</h2>
+      <p class="section-desc">สายแฟ สายคาเฟ่ เดินเล่น Cat Street – Omotesando ง่าย ใกล้ Miyashita Park และย่านชิบูยะ</p>
 
       <div class="grid">
 
-        <!-- 1 Shibuya Granbell -->
+        <!-- 1 Shibuya Granbell Hotel -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=271529" target="_blank" rel="noopener">
-            <img alt="Shibuya Granbell Hotel" src="//pix8.agoda.net/hotelImages/271/271529/271529_15032314580026357133.jpg?ca=3&ce=1&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=271529" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="Shibuya Granbell Hotel" src="//pix8.agoda.net/hotelImages/271/271529/271529_15032314580026357133.jpg?ca=3&ce=1&s=720x540">
           </a>
-          <div class="body">
-            <h3 class="name">Shibuya Granbell Hotel — ชิบูยา แกรนเบลส์</h3>
-            <div class="meta">
-              <span class="star">★</span>
-              <span class="score">8.3 ดีเยี่ยม</span> • <span>6,672 รีวิว</span>
-            </div>
-            <p class="blurb">เดิน 3–5 นาทีถึงชิบูยาครอสซิ่ง โลเคชันเด็ดมาก เหมาะกับสายบาร์/กิน/เที่ยวแบบข้ามถนนฉลองต่อครับ</p>
+          <div class="card-body">
+            <h3 class="name">Shibuya Granbell Hotel — ชิบูย่า แกรนเบลล์ โฮเต็ล</h3>
+            <div class="sub">ชิบูย่า • เดิน 3–5 นาทีถึงศูนย์ชิบูย่า</div>
+            <div class="rate"><span class="badge">8.3 ดีเยี่ยม</span> <span class="review">6,672 รีวิว</span></div>
+            <p class="desc">โลเคชันดีมาก เหมาะกับสายช้อป/กิน/เที่ยวแบบชนจรดลึก</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap">
-              <div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
-              <div class="price">ราคาประมาณ ฿4,331+</div>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿4,331*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
             </div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=271529" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=271529" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
         <!-- 2 HOTEL GRAPHY SHIBUYA -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=46856644" target="_blank" rel="noopener">
-            <img alt="HOTEL GRAPHY SHIBUYA" src="//pix8.agoda.net/hotelImages/46856644/-1/9334716898ff3c6a5ed3181528011931.jpg?ce=0&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=46856644" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="HOTEL GRAPHY SHIBUYA" src="//pix8.agoda.net/hotelImages/46856644/-1/9334716898ff3c6a5ed3181528011931.jpg?ce=0&s=720x540">
           </a>
-          <div class="body">
-            <h3 class="name">HOTEL GRAPHY SHIBUYA — โฮเทล กราฟฟี่ ชิบูย่า</h3>
-            <div class="meta"><span class="star">★</span><span class="score">8.7 ดีเยี่ยม</span> • <span>3,127 รีวิว</span></div>
-            <p class="blurb">สไตล์คูลลอฟท์ มีโซนเลานจ์ถ่ายรูปสวย ใกล้รถไฟใต้ดิน เดินเล่นแมวยาชิตะพาร์คชิล ๆ</p>
+          <div class="card-body">
+            <h3 class="name">HOTEL GRAPHY SHIBUYA — กราฟฟี่ ชิบูย่า</h3>
+            <div class="sub">ชิบูย่า • ใกล้ Miyashita Park</div>
+            <div class="rate"><span class="badge">8.7 ดีเยี่ยม</span> <span class="review">3,127 รีวิว</span></div>
+            <p class="desc">สไตล์ลอฟต์เท่ ๆ มีโซนเลานจ์/โต๊ะบิลเลียดให้ชิลแบบแฟนซีกว่าเดิม</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿4,457+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=46856644" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿4,457*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=46856644" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
-        <!-- 3 MUSTARD HOTEL Shimokitazawa -->
+        <!-- 3 MUSTARD HOTEL SHIMOKITAZAWA -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=19164160" target="_blank" rel="noopener">
-            <img alt="MUSTARD HOTEL Shimokitazawa" src="//pix8.agoda.net/hotelImages/19164160/-1/4901d3f3360a6d10bbec2a90d90399a5.jpg?ca=20&ce=0&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=19164160" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="MUSTARD HOTEL SHIMOKITAZAWA" src="//pix8.agoda.net/hotelImages/19164160/-1/4901d3f3360a6d10bbec2a90d90399a5.jpg?ca=20&ce=0&s=720x540">
           </a>
-          <div class="body">
-            <h3 class="name">MUSTARD HOTEL Shimokitazawa — มัสตาร์ด ชิโมคิตะซาวะ</h3>
-            <div class="meta"><span class="star">★</span><span class="score">8.6 ดีเยี่ยม</span> • <span>4,728 รีวิว</span></div>
-            <p class="blurb">ย่านอินดี้ของจริง! ร้านเสื้อผ้าวินเทจ คาเฟ่เพียบ เบาๆ ชิลๆ และคนญี่ปุ่นโลคอลเยอะ</p>
+          <div class="card-body">
+            <h3 class="name">MUSTARD HOTEL Shimokitazawa — มัสตาร์ด ชิโมกิตะซาวะ</h3>
+            <div class="sub">ชิบูย่า • ชิโมกิตะซาวะ</div>
+            <div class="rate"><span class="badge">8.6 ดีเยี่ยม</span> <span class="review">4,728 รีวิว</span></div>
+            <p class="desc">ย่านฮิปสุดชิคของวัยรุ่น ร้านมือสอง เบเกอรี่ และคาเฟ่เด็ด เดิน 1–2 นาทีจากสถานี</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿4,739+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=19164160" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿4,739*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=19164160" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
         <!-- 4 Himalaya Cloud Hotel -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9544293" target="_blank" rel="noopener">
-            <img alt="Himalaya Cloud Hotel" src="//pix8.agoda.net/hotelImages/954/9544293/9544293_19092412170081257158.jpg?ca=9&ce=1&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9544293" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="Himalaya Cloud Hotel" src="//pix8.agoda.net/hotelImages/954/9544293/9544293_19092412170081257158.jpg?ca=9&ce=1&s=720x540">
           </a>
-          <div class="body">
-            <h3 class="name">Himalaya Cloud Hotel — หิมาลัย คลาวด์ (ชิบูย่า)</h3>
-            <div class="meta"><span class="star">★</span><span class="score">8.4 ดีเยี่ยม</span> • <span>1,421 รีวิว</span></div>
-            <p class="blurb">ทำเลสงบกว่าโลเคชันฮอต บริการอบอุ่น ใหม่ เดินทางสะดวก เหมาะมาพักยาวหรือทำงาน</p>
+          <div class="card-body">
+            <h3 class="name">Himalaya Cloud Hotel — หิมาลัย คลาวด์ โฮเต็ล (ชิบูย่า)</h3>
+            <div class="sub">ชิบูย่า • 1.5 กม. จากใจกลางเมือง</div>
+            <div class="rate"><span class="badge">8.4 ดีเยี่ยม</span> <span class="review">1,421 รีวิว</span></div>
+            <p class="desc">ห้องสวยสบายตา โลเคชันสงบ เดินทางสะดวก เหมาะสำหรับคู่รัก/เพื่อนที่อยากหลบคน</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿5,689+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9544293" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿5,689*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9544293" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
         <!-- 5 The Millennials Shibuya -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=4128776" target="_blank" rel="noopener">
-            <img alt="The Millennials Shibuya" src="//pix8.agoda.net/hotelImages/4128776/-1/9831f63b3b5136f4a36a7c5df0425a11.png?ce=0&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=4128776" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="The Millennials Shibuya" src="//pix8.agoda.net/hotelImages/4128776/-1/9831f63b3b5136f4a36a7c5df0425a11.png?ce=0&s=720x540">
           </a>
-          <div class="body">
+          <div class="card-body">
             <h3 class="name">The Millennials Shibuya — เดอะมิลเลนเนียล ชิบูย่า</h3>
-            <div class="meta"><span class="star">★</span><span class="score">9.0 ยอดเยี่ยม</span> • <span>5,468 รีวิว</span></div>
-            <p class="blurb">แคปซูลหรู! ฟีลฮิปๆ กลางเมือง ใกล้รถไฟใต้ดิน เดินไปแหล่งช็อป/กิน/คาเฟ่ได้สบาย</p>
+            <div class="sub">ชิบูย่า • โลเคชันกลางย่าน</div>
+            <div class="rate"><span class="badge">9.0 ยอดเยี่ยม</span> <span class="review">5,468 รีวิว</span></div>
+            <p class="desc">คูลสุด ๆ แบบโคลง Pod ไฮเทค เตียงไฟฟ้า แถมบาร์/โคเวิร์กกิ้งให้นั่งได้ยาว</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿5,044+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=4128776" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿5,044*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=4128776" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
-        <!-- 6 Sakura Fleur Aoyama -->
+        <!-- 6 Sakura Fleur Aoyama Hotel -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9068237" target="_blank" rel="noopener">
-            <img alt="Sakura Fleur Aoyama" src="//pix8.agoda.net/hotelImages/9068237/0/01ba10dea05cda88cc541ee7a5b90a18.jpeg?ce=0&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9068237" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="Sakura Fleur Aoyama Hotel" src="//pix8.agoda.net/hotelImages/9068237/0/01ba10dea05cda88cc541ee7a5b90a18.jpeg?ce=0&s=720x540">
           </a>
-          <div class="body">
-            <h3 class="name">Sakura Fleur Aoyama — ซากุระ เฟลอร์ อาโอยาม่า</h3>
-            <div class="meta"><span class="star">★</span><span class="score">8.3 ดีเยี่ยม</span> • <span>5,312 รีวิว</span></div>
-            <p class="blurb">บูทีคโรวแมนติก ใกล้ Omotesando/ฮาราจูกุ สายถ่ายรูป—สายคาเฟ่ น่าพักต่อยอดทริปช้อป</p>
+          <div class="card-body">
+            <h3 class="name">Sakura Fleur Aoyama — ซากุระเฟลอ อาโอยาม่า</h3>
+            <div class="sub">ชิบูย่า • ใกล้ Omotesando</div>
+            <div class="rate"><span class="badge">8.3 ดีเยี่ยม</span> <span class="review">5,312 รีวิว</span></div>
+            <p class="desc">โทนวินเทจน่ารัก เดินถึง Omotesando/ฮาราจูกุง่าย สายถ่ายรูป–สายคาเฟ่ต้องชอบ</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿4,690+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9068237" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿4,690*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9068237" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
         <!-- 7 lyf Shibuya Tokyo -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=60496595" target="_blank" rel="noopener">
-            <img alt="lyf Shibuya Tokyo" src="//pix8.agoda.net/hotelImages/60496595/-1/db633b1d185db65e82ce726e39271bfc.jpg?ce=0&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=60496595" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="lyf Shibuya Tokyo" src="//pix8.agoda.net/hotelImages/60496595/-1/db633b1d185db65e82ce726e39271bfc.jpg?ce=0&s=720x540">
           </a>
-          <div class="body">
-            <h3 class="name">lyf Shibuya Tokyo — ไลฟ์ ชิบูยา โตเกียว</h3>
-            <div class="meta"><span class="star">★</span><span class="score">9.2 ยอดเยี่ยม</span> • <span>847 รีวิว</span></div>
-            <p class="blurb">ที่พักคูลมีคอมมอนสเปซ ใกล้ที่ช็อปหลัก เดินสนุกทั้งวัน กลับดึกก็ยังคึกคัก ปลอดภัย</p>
+          <div class="card-body">
+            <h3 class="name">lyf Shibuya Tokyo — ไลฟ์ ชิบูย่า โตเกียว</h3>
+            <div class="sub">ชิบูย่า • โลเคชันเทพ</div>
+            <div class="rate"><span class="badge">9.2 ยอดเยี่ยม</span> <span class="review">847 รีวิว</span></div>
+            <p class="desc">ที่พักคูลสุดนอนสบาย ใกล้ทุกอย่าง เดินสนุกทั้งวัน กลับดึกก็ยังสว่าง ปลอดภัย</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿5,286+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=60496595" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿5,286*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=60496595" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
         <!-- 8 Prince Smart Inn Ebisu -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=13507618" target="_blank" rel="noopener">
-            <img alt="Prince Smart Inn Ebisu" src="//pix8.agoda.net/hotelImages/13507618/-1/ee2a2a07afaec49dd70a6ca82ef6dc51.jpg?ce=0&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=13507618" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="Prince Smart Inn Ebisu" src="//pix8.agoda.net/hotelImages/13507618/-1/ee2a2a07afaec49dd70a6ca82ef6dc51.jpg?ce=0&s=720x540">
           </a>
-          <div class="body">
-            <h3 class="name">Prince Smart Inn Ebisu — ปรินซ์ สมาร์ท อินน์ เอบิสุ</h3>
-            <div class="meta"><span class="star">★</span><span class="score">8.5 ดีเยี่ยม</span> • <span>1,281 รีวิว</span></div>
-            <p class="blurb">ย่านเอบิสุสายกินชื่อดัง ร้านชอปเยอะเชียบ ใกล้ JR และเดินไปชิบุย่าได้</p>
+          <div class="card-body">
+            <h3 class="name">Prince Smart Inn Ebisu — ปรินซ์ สมาร์ท อินน์ เอบิสึ</h3>
+            <div class="sub">ชิบูย่า/เอบิสึ • ใกล้ JR</div>
+            <div class="rate"><span class="badge">8.5 ดีเยี่ยม</span> <span class="review">1,281 รีวิว</span></div>
+            <p class="desc">สไตล์มินิมอลสะอาดตา ร้านรอบข้างเพียบ ช่วงค่ำเดินเล่นได้ชิล</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿5,447+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=13507618" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿5,447*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=13507618" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
         <!-- 9 Shibuya Tobu Hotel -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=59215" target="_blank" rel="noopener">
-            <img alt="Shibuya Tobu Hotel" src="//pix8.agoda.net/hotelImages/59215/-1/7de45c82a873988760a9c745b6dd1dea.jpg?ce=0&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=59215" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="Shibuya Tobu Hotel" src="//pix8.agoda.net/hotelImages/59215/-1/7de45c82a873988760a9c745b6dd1dea.jpg?ce=0&s=720x540">
           </a>
-          <div class="body">
-            <h3 class="name">Shibuya Tobu Hotel — ชิบูยา โทบุ โฮเต็ล</h3>
-            <div class="meta"><span class="star">★</span><span class="score">8.3 ดีเยี่ยม</span> • <span>9,425 รีวิว</span></div>
-            <p class="blurb">ทำเลใจกลางชิบูย่าจริง ๆ ใกล้ Center Gai/Miyashita Park ได้เดินเล่นทั้งวัน</p>
+          <div class="card-body">
+            <h3 class="name">Shibuya Tobu Hotel — ชิบูย่า โทบุ โฮเต็ล</h3>
+            <div class="sub">ชิบูย่า • ใกล้ Center Gai/Miyashita Park</div>
+            <div class="rate"><span class="badge">8.3 ดีเยี่ยม</span> <span class="review">9,425 รีวิว</span></div>
+            <p class="desc">ทำเลใจกลางของจริง เดินถึงทุกจุดฮิต ง่ายมาก เหมาะกับเที่ยวกินเพลิน ๆ</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿5,906+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=59215" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿5,906*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=59215" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
-        <!-- 10 Shibuya Creston Hotel -->
+        <!--10 Shibuya Creston Hotel -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=285804" target="_blank" rel="noopener">
-            <img alt="Shibuya Creston Hotel" src="//pix8.agoda.net/hotelImages/285804/0/691b0ac29fa15e6773055c647453f6ce.jpg?ce=2&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=285804" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="Shibuya Creston Hotel" src="//pix8.agoda.net/hotelImages/285804/0/691b0ac29fa15e6773055c647453f6ce.jpg?ce=2&s=720x540">
           </a>
-          <div class="body">
-            <h3 class="name">Shibuya Creston Hotel — ชิบูยา เครสตัน</h3>
-            <div class="meta"><span class="star">★</span><span class="score">8.3 ดีเยี่ยม</span> • <span>1,606 รีวิว</span></div>
-            <p class="blurb">บรรยากาศสงบกว่าใกล้ทางเดินนา นอนเต็มอิ่ม ตื่นมาพร้อมไฟลงไปล่าโกะหา</p>
+          <div class="card-body">
+            <h3 class="name">Shibuya Creston Hotel — ชิบูย่า เครสตัน</h3>
+            <div class="sub">ชิบูย่า • โลเคชันเงียบ นอนเต็มอิ่ม</div>
+            <div class="rate"><span class="badge">8.3 ดีเยี่ยม</span> <span class="review">1,606 รีวิว</span></div>
+            <p class="desc">บรรยากาศอบอุ่น ใครอยากพักสงบ ๆ แต่ยังเดินถึงย่านได้ไม่ไกลกำลังดี</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿4,649+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=285804" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿4,649*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=285804" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
-        <!-- 11 All Day Place Shibuya -->
+        <!--11 All Day Place Shibuya -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=28822466" target="_blank" rel="noopener">
-            <img alt="All Day Place Shibuya" src="//pix8.agoda.net/hotelImages/28822466/-1/4652e14a129146d9147b1022dc9e26d6.jpg?ca=29&ce=0&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=28822466" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="All Day Place Shibuya" src="//pix8.agoda.net/hotelImages/28822466/-1/4652e14a129146d9147b1022dc9e26d6.jpg?ca=29&ce=0&s=720x540">
           </a>
-          <div class="body">
+          <div class="card-body">
             <h3 class="name">All Day Place Shibuya — ออลเดย์ เพลส ชิบูย่า</h3>
-            <div class="meta"><span class="star">★</span><span class="score">8.6 ดีเยี่ยม</span> • <span>3,477 รีวิว</span></div>
-            <p class="blurb">ดีไซน์มินิมอลสะอาดตา มีคาเฟ่/บาร์ในตัว เดินง่าย ใกล้สนามเด็กเล่นคาเฟ่ดัง ๆ</p>
+            <div class="sub">ชิบูย่า • คึกคัก ใต้ตึกมีคาเฟ่</div>
+            <div class="rate"><span class="badge">8.6 ดีเยี่ยม</span> <span class="review">3,477 รีวิว</span></div>
+            <p class="desc">ดีไซน์เก๋ ล็อบบี้ชิค ๆ นั่งทำงาน/นัดเพื่อนได้สบาย</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿5,934+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=28822466" target="_blank" rel="noopener">ดูข้อเสนอ</a>
-          </div>
-        </article>
-
-        <!-- 12 Tokyu Stay Shibuya Shin Minami Guchi -->
-        <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=271712" target="_blank" rel="noopener">
-            <img alt="Tokyu Stay Shibuya Shin Minami Guchi" src="//pix8.agoda.net/property/271712/0/3dfb3f21b81b566f3de5001349e8420e.jpeg?ce=0&s=720x540">
-          </a>
-          <div class="body">
-            <h3 class="name">Tokyu Stay Shibuya Shin Minami Guchi — โทคิว สเตย์ ชิบูยา ชิน มินามิ</h3>
-            <div class="meta"><span class="star">★</span><span class="score">8.3 ดีเยี่ยม</span> • <span>1,912 รีวิว</span></div>
-            <p class="blurb">ห้องกว้างแบบอยู่ยาวได้ มีเครื่องซักผ้าในห้อง เหมาะครอบครัว/ทำงาน</p>
-          </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿4,875+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=271712" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿5,934*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=28822466" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
-        <!-- 13 JR EAST HOTEL METS SHIBUYA -->
+        <!--12 Tokyu Stay Shibuya Shin Minami Guchi -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=6577165" target="_blank" rel="noopener">
-            <img alt="JR EAST HOTEL METS SHIBUYA" src="//pix8.agoda.net/hotelImages/6577165/0/6bd0dce405da0a2b5cfe0c37755dcbdb.jpg?ce=2&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=271712" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="Tokyu Stay Shibuya Shin Minami Guchi" src="//pix8.agoda.net/property/271712/0/3dfb3f21b81b566f3de5001349e8420e.jpeg?ce=0&s=720x540">
           </a>
-          <div class="body">
-            <h3 class="name">JR EAST HOTEL METS SHIBUYA — เจอาร์ อีสต์ เม็ตส์ ชิบูย่า</h3>
-            <div class="meta"><span class="star">★</span><span class="score">8.8 ดีเยี่ยม</span> • <span>6,156 รีวิว</span></div>
-            <p class="blurb">ติดสถานี เดินทางง่ายสุด ๆ เช็กอินไว ห้องสะอาด บริการเสถียร</p>
+          <div class="card-body">
+            <h3 class="name">Tokyu Stay Shibuya Shin Minami Guchi — โทคิว สเตย์ ชิบูย่า ชิน มินามิ</h3>
+            <div class="sub">ชิบูย่า • เงียบสงบ ใกล้สถานี</div>
+            <div class="rate"><span class="badge">8.3 ดีเยี่ยม</span> <span class="review">1,912 รีวิว</span></div>
+            <p class="desc">ห้องกว้าง มีเครื่องซักผ้าในห้อง เหมาะกับพักหลายคืน/กลับมาซักผ้าได้</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿5,125+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=6577165" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿4,875*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=271712" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
-        <!-- 14 sequence MIYASHITA PARK / SHIBUYA -->
+        <!--13 JR EAST HOTEL METS SHIBUYA -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=12506368" target="_blank" rel="noopener">
-            <img alt="sequence MIYASHITA PARK / Shibuya" src="//pix8.agoda.net/hotelImages/12506368/-1/fe489cbb383811bb792f638fa60089ff.jpg?ce=0&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=6577165" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="JR EAST HOTEL METS SHIBUYA" src="//pix8.agoda.net/hotelImages/6577165/0/6bd0dce405da0a2b5cfe0c37755dcbdb.jpg?ce=2&s=720x540">
           </a>
-          <div class="body">
-            <h3 class="name">sequence MIYASHITA PARK / Shibuya — ซีเควนซ์ มิยาชิตะพาร์ค</h3>
-            <div class="meta"><span class="star">★</span><span class="score">8.5 ดีเยี่ยม</span> • <span>12,998 รีวิว</span></div>
-            <p class="blurb">อยู่บน Miyashita Park วิวสวนเมืองสวยสุด เดินลงไปช้อป/กิน/คาเฟ่ ได้ทั้งวัน</p>
+          <div class="card-body">
+            <h3 class="name">JR EAST HOTEL METS SHIBUYA</h3>
+            <div class="sub">ชิบูย่า • 270 ม. จากใจกลาง</div>
+            <div class="rate"><span class="badge">8.8 ดีเยี่ยม</span> <span class="review">6,156 รีวิว</span></div>
+            <p class="desc">ติดขนส่ง เดินทางสะดวกสุด ๆ ห้องใหม่ สะอาด บริการเสถียร</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿6,514+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=12506368" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿5,125*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=6577165" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
-        <!-- 15 Shibuya Excel Hotel Tokyu -->
+        <!--14 sequence MIYASHITA PARK / Shibuya -->
         <article class="card">
-          <a class="thumb" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=7005" target="_blank" rel="noopener">
-            <img alt="Shibuya Excel Hotel Tokyu" src="//pix8.agoda.net/hotelImages/7005/0/6a2f9b7c59697109ebcad23b3b6ee8fa.jpg?ce=2&s=720x540">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=12506368" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="sequence MIYASHITA PARK / Shibuya" src="//pix8.agoda.net/hotelImages/12506368/-1/fe489cbb383811bb792f638fa60089ff.jpg?ce=0&s=720x540">
           </a>
-          <div class="body">
-            <h3 class="name">Shibuya Excel Hotel Tokyu — ชิบูย่า เอ็กเซล โฮเทล โทคิว</h3>
-            <div class="meta"><span class="star">★</span><span class="score">8.7 ดีเยี่ยม</span> • <span>15,386 รีวิว</span></div>
-            <p class="blurb">เชื่อมสถานีชิบูย่าโดยตรง วิวเมืองอลังการ ใครเน้นสะดวก + วิวสวย แนะนำมาก</p>
+          <div class="card-body">
+            <h3 class="name">sequence MIYASHITA PARK / Shibuya</h3>
+            <div class="sub">ชิบูย่า • ติดสวนดาดฟ้ามิยาชิตะ</div>
+            <div class="rate"><span class="badge">8.5 ดีเยี่ยม</span> <span class="review">12,998 รีวิว</span></div>
+            <p class="desc">ตึกใหม่วิวสวน ทันสมัยมาก ใต้ตึกมีร้านเท่ ๆ เพียบ เดินเล่นได้ทั้งวัน</p>
           </div>
-          <div class="footer">
-            <div class="priceWrap"><div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div><div class="price">ราคาประมาณ ฿8,185+</div></div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=7005" target="_blank" rel="noopener">ดูข้อเสนอ</a>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿6,514*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=12506368" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+          </div>
+        </article>
+
+        <!--15 Shibuya Excel Hotel Tokyu -->
+        <article class="card">
+          <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=7005" target="_blank" rel="nofollow noopener">
+            <img class="thumb" alt="Shibuya Excel Hotel Tokyu" src="//pix8.agoda.net/hotelImages/7005/0/6a2f9b7c59697109ebcad23b3b6ee8fa.jpg?ce=2&s=720x540">
+          </a>
+          <div class="card-body">
+            <h3 class="name">Shibuya Excel Hotel Tokyu — เอ็กเซล โฮเทล โตคิว</h3>
+            <div class="sub">ชิบูย่า • วิวแยกชิบูย่าสุดปัง</div>
+            <div class="rate"><span class="badge">8.7 ดีเยี่ยม</span> <span class="review">15,386 รีวิว</span></div>
+            <p class="desc">โลเคชันระดับตำนาน เห็นวิวแยกเดินชนคนชัด ๆ ใต้ตึกเชื่อมสถานี สบายสุด</p>
+          </div>
+          <div class="priceRow">
+            <div>
+              <div class="price">ราคาประมาณ ฿8,185*</div>
+              <div class="note">*ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=7005" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
           </div>
         </article>
 
       </div>
+    </section>
+
+    <!-- โซนอื่น ๆ (วาง placeholder ไว้ให้เลื่อนไปได้) -->
+    <section id="zone-b" class="section-head">
+      <h2 class="section-title">โซน B — Shinjuku</h2>
+      <p class="section-desc">กำลังคัดเลือกโรงแรมเด็ด ๆ (จะเติมต่อหลังจากโซน A)</p>
+    </section>
+
+    <section id="zone-c" class="section-head">
+      <h2 class="section-title">โซน C — Ueno / Asakusa</h2>
+      <p class="section-desc">จะตามสไตล์เดียวกันนี้เลย</p>
+    </section>
+
+    <section id="zone-d" class="section-head">
+      <h2 class="section-title">โซน D — Ginza / Tokyo Station</h2>
+      <p class="section-desc">จะตามสไตล์เดียวกันนี้เลย</p>
+    </section>
+
+    <section id="zone-e" class="section-head">
+      <h2 class="section-title">โซน E — Akihabara / Kanda</h2>
+      <p class="section-desc">จะตามสไตล์เดียวกันนี้เลย</p>
+    </section>
+
+    <section id="zone-f" class="section-head">
+      <h2 class="section-title">โซน F — Odaiba & Around</h2>
+      <p class="section-desc">จะตามสไตล์เดียวกันนี้เลย</p>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-wrap">
+      <div class="links">
+        <a href="/privacy">Privacy</a> ·
+        <a href="/terms">Terms</a> ·
+        <a href="/affiliate">Affiliate Disclosure</a> ·
+        <a href="/about">About us</a> ·
+        <a href="/contact">Contact</a> ·
+        <a href="https://www.clickandgo.asia" target="_blank" rel="noopener">clickandgo.asia</a> ·
+        <a href="https://www.facebook.com" target="_blank" rel="noopener">Facebook</a>
+      </div>
     </div>
-  </section>
-
-  <!-- Placeholders for other zones (จะเติมต่อเมื่อคุณส่งลิงก์มา) -->
-  <div id="zone-b" class="anchor"></div>
-  <section class="section"><div class="container"><h2>โซน B — Shinjuku</h2><p class="sub">กำลังรวบรวม… ส่งลิงก์มาได้เลย เดี๋ยวผมใส่ต่อให้ทันทีครับ</p></div></section>
-
-  <div id="zone-c" class="anchor"></div>
-  <section class="section"><div class="container"><h2>โซน C — Ueno / Asakusa</h2><p class="sub">กำลังรวบรวม…</p></div></section>
-
-  <div id="zone-d" class="anchor"></div>
-  <section class="section"><div class="container"><h2>โซน D — Ginza / Tokyo Station</h2><p class="sub">กำลังรวบรวม…</p></div></section>
-
-  <div id="zone-e" class="anchor"></div>
-  <section class="section"><div class="container"><h2>โซน E — Akihabara / Kanda</h2><p class="sub">กำลังรวบรวม…</p></div></section>
-
-  <div id="zone-f" class="anchor"></div>
-  <section class="section"><div class="container"><h2>โซน F — Odaiba & Around</h2><p class="sub">กำลังรวบรวม…</p></div></section>
+  </footer>
 
 </body>
 </html>
