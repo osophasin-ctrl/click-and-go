@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>โตเกียว – 15 โรงแรมคัดสรร (Top Rating + Best Value) | Click & Go</title>
-  <meta name="description" content="15 โรงแรมในโตเกียวคัดสรรโดย Click & Go เน้นทำเลดี คุ้มค่า และรีวิวดี เหมาะกับทั้งสายช้อป สายคาเฟ่ และครอบครัว คลิกเดียวไปจองกับ Agoda ได้ทันที" />
+  <meta name="description" content="15 โรงแรมในโตเกียวคัดสรรโดย Click & Go เน้นทำเลดี คุ้มค่า และรีวิวดี ครอบคลุมย่านฮิต เช่น ชินจูกุ ชิบูย่า กินซ่า อาซากุสะ อิเคะบุคุโระ พร้อมลิงก์ไปจองกับ Agoda">
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/tokyo.html" />
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="style.css" />
@@ -30,7 +30,7 @@
     .container{max-width:1100px;margin:0 auto;padding:16px}
     .section-title{font-size:26px;margin:18px 0 8px}
     .lead{color:#374151}
-    .hero-city{position:relative;min-height:220px;background: center/cover no-repeat}
+    .hero-city{position:relative;min-height:220px;background:center/cover no-repeat}
     .hero-city .overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.35))}
     .hero-city .content{position:relative;color:#fff;padding:36px 16px}
     .note{font-size:13px;color:var(--muted)}
@@ -77,7 +77,7 @@
       <div class="overlay"></div>
       <div class="content">
         <h1>โตเกียว – 15 โรงแรมคัดสรร</h1>
-        <p class="lead">ทีม Click & Go เลือกมาให้เน้น <b>ทำเลดี</b> <b>รีวิวดี</b> และ <b>ความคุ้มค่า</b> ครอบคลุมย่านยอดนิยมอย่าง ชินจูกุ ชิบูย่า กินซ่า อุเอโนะ อาซากุสะ อากิฮาบาระ และรปปงหงิ</p>
+        <p class="lead">ทีม Click & Go เลือกมาให้เน้น <b>ทำเลดี</b> <b>รีวิวดี</b> และ <b>ความคุ้มค่า</b> ครอบคลุมย่านยอดนิยมอย่าง ชินจูกุ ชิบูย่า กินซ่า อาซากุสะ อิเคะบุคุโระ และรปปงหงิ</p>
       </div>
     </section>
 
@@ -108,11 +108,11 @@
   </footer>
 
   <script>
-    // ลิงก์ partner สำรอง (ค้นหาโตเกียวรวม)
+    // ปุ่มค้นหาเพิ่มเติม (Tokyo cityId)
     const partnerUrl = () => {
       const sp = new URLSearchParams({
         cid:'1949420',
-        city:'17072',   // หมายเลข cityId ของ Tokyo (ตัวอย่างทั่วไปของ Agoda)
+        city:'17072', // cityId ของโตเกียว (ทั่วไป)
         currency:'THB',
         utm_source:'clickandgo',
         utm_medium:'affiliate',
@@ -123,25 +123,143 @@
     };
     document.getElementById('partnerMore').href = partnerUrl();
 
-    // ====== ข้อมูล 15 โรงแรมคัดสรร ======
-    // agodaImageHtml: วาง "โค้ด Image Link" จากหน้า Agoda Partners ได้เลย (เป็น <a><img></a>)
-    // agodaTextLink: วาง "Text Link" ของโรงแรม (สำหรับปุ่ม)
+    // ====== ข้อมูล 15 โรงแรมคัดสรร (ฝังโค้ดจาก Agoda ตามที่คุณส่งมา) ======
     const HOTELS = [
-      { name:'Hotel Gracery Shinjuku', area:'Shinjuku', why:'แลนด์มาร์ก Godzilla เดินเล่นย่านบันเทิง ร้านอาหารแน่น', goodFor:'คู่รัก/เพื่อน/สายไนท์ไลฟ์', headsUp:'ห้องขนาดกะทัดรัดสไตล์โตเกียว', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'Shinjuku Washington Hotel', area:'Shinjuku', why:'ใกล้ศาลาว่าการฯ วิวเมือง เดินทางสะดวก', goodFor:'นักธุรกิจ/ทริปสั้น', headsUp:'เชื่อมอุโมงค์ถึงสถานีช่วงเวลาจำกัด', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'Tokyu Stay Shinjuku', area:'Shinjuku', why:'ทำเลกลางชินจูกุ ห้องมีเครื่องซักผ้าในตัวบางประเภท', goodFor:'อยู่หลายคืน/ทำงาน', headsUp:'ห้องบางแบบมีครัวเล็ก', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'Shibuya Excel Hotel Tokyu', area:'Shibuya', why:'ติดสถานี/แยกชิบูย่า เดินเที่ยวง่าย', goodFor:'มือใหม่โตเกียว/ช้อปปิ้ง', headsUp:'ราคาพีคช่วงสุดสัปดาห์', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'Shibuya Stream Excel Hotel Tokyu', area:'Shibuya', why:'โรงแรมใหม่ย่าน Stream ร้านอาหารเยอะ', goodFor:'คู่รัก/สายคาเฟ่', headsUp:'จองล่วงหน้าเพื่อราคาดี', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'Mitsui Garden Hotel Ginza Premier', area:'Ginza', why:'วิวอ่าวสวย เดินถึงกินซ่า ช้อปสะดวก', goodFor:'ช้อปหรู/ดินเนอร์', headsUp:'ห้องไม่ใหญ่มาก', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'The Royal Park Hotel Iconic Tokyo Shiodome', area:'Shiodome/Ginza', why:'ห้องกว้าง เดินทางดี เชื่อมรถไฟ/ใต้ดิน', goodFor:'นักธุรกิจ/คู่รัก', headsUp:'ย่านเงียบตอนดึก', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'Park Hotel Tokyo', area:'Shiodome', why:'คอนเซ็ปต์ Art Hotel ห้องธีมศิลปิน วิวเมือง', goodFor:'คู่รัก/สายศิลป์', headsUp:'ห้องธีมเต็มไว', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'Hotel Ryumeikan Tokyo', area:'Tokyo Station/Nihonbashi', why:'ใกล้โตเกียวสเตชัน เดินต่อชินคันเซ็นง่าย', goodFor:'ทริปต่อเมือง/ครอบครัว', headsUp:'รอบเช้าเช็กเอาต์คึกคัก', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'The Tokyo Station Hotel', area:'Tokyo Station', why:'ตึกประวัติศาสตร์ไอคอนิก บริการเยี่ยม', goodFor:'ฮันนีมูน/ทริพพิเศษ', headsUp:'งบค่อนสูง', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'Richmond Hotel Premier Asakusa International', area:'Asakusa', why:'ใกล้วัดเซ็นโซจิ ร้านอาหารท้องถิ่นเพียบ', goodFor:'ครอบครัว/สายวัฒนธรรม', headsUp:'นักท่องเที่ยวเยอะช่วงเย็น', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'Asakusa View Hotel', area:'Asakusa', why:'วิวโตเกียวสกายทรี สระว่ายน้ำในร่ม', goodFor:'ครอบครัว', headsUp:'ตึกเก่าแต่ดูแลดี', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'Hotel Niwa Tokyo', area:'Suidobashi/JR', why:'บูทีคญี่ปุ่นร่วมสมัย สงบ เดินทางสะดวก', goodFor:'คู่รัก/พักผ่อน', headsUp:'ย่านไม่ใช่แหล่งช้อปหลัก', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'Hotel Metropolitan Tokyo Ikebukuro', area:'Ikebukuro', why:'ติดสถานีใหญ่ ร้านอาหารและห้างเยอะ', goodFor:'ครอบครัว/ช้อปประหยัด', headsUp:'คนเยอะช่วงเย็น', agodaImageHtml:'', agodaTextLink:'' },
-      { name:'Sunshine City Prince Hotel', area:'Ikebukuro', why:'อยู่ในคอมเพล็กซ์ Sunshine City สะดวกสุด', goodFor:'ครอบครัว/สาย Aquarium & พิพิธภัณฑ์', headsUp:'ห้องคอมแพ็กต์', agodaImageHtml:'', agodaTextLink:'' },
+      {
+        name:'Hotel Gracery Shinjuku',
+        area:'Shinjuku',
+        why:'แลนด์มาร์ก Godzilla เดินเล่นย่านบันเทิง ร้านอาหารแน่น',
+        goodFor:'คู่รัก/เพื่อน/สายไนท์ไลฟ์',
+        headsUp:'ห้องขนาดกะทัดรัดสไตล์โตเกียว',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9074284" target="_blank"><img src="//pix8.agoda.net/hotelImages/9074284/0/8e0b4d0fef22e5fba29d416ab65c14ee.jpeg?ce=0&s=360x270" srcset="//pix8.agoda.net/hotelImages/9074284/0/8e0b4d0fef22e5fba29d416ab65c14ee.jpeg?ce=0&s=360x270 1x, //pix8.agoda.net/hotelImages/9074284/0/8e0b4d0fef22e5fba29d416ab65c14ee.jpeg?ce=0&s=720x540 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9074284'
+      },
+      {
+        name:'Shinjuku Granbell Hotel',
+        area:'Shinjuku',
+        why:'ใจกลางชินจูกุ ดีไซน์โมเดิร์น บาร์ดาดฟ้าวิวเมือง',
+        goodFor:'คู่รัก/เพื่อน/เที่ยวกลางคืน',
+        headsUp:'ห้องสไตล์โตเกียว ขนาดคอมแพ็กต์',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=546669" target="_blank"><img src="//pix8.agoda.net/hotelImages/546/546669/546669_17022109010051144512.jpg?ca=6&ce=1&s=360x270" srcset="//pix8.agoda.net/hotelImages/546/546669/546669_17022109010051144512.jpg?ca=6&ce=1&s=360x270 1x, //pix8.agoda.net/hotelImages/546/546669/546669_17022109010051144512.jpg?ca=6&ce=1&s=720x540 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=546669'
+      },
+      {
+        name:'Shibuya Excel Hotel Tokyu',
+        area:'Shibuya',
+        why:'ติดสถานี/แยก Shibuya Scramble วิวเมืองสวย เดินทางง่ายสุด',
+        goodFor:'มือใหม่โตเกียว/ช้อปปิ้ง',
+        headsUp:'ห้องหัวมุมวิวดีมาก แนะนำเช็คราคาแต่เนิ่นๆ',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=7005" target="_blank"><img src="//pix8.agoda.net/hotelImages/7005/0/6a2f9b7c59697109ebcad23b3b6ee8fa.jpg?ce=2&s=360x270" srcset="//pix8.agoda.net/hotelImages/7005/0/6a2f9b7c59697109ebcad23b3b6ee8fa.jpg?ce=2&s=360x270 1x, //pix8.agoda.net/hotelImages/7005/0/6a2f9b7c59697109ebcad23b3b6ee8fa.jpg?ce=2&s=720x540 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=7005'
+      },
+      {
+        name:'The Royal Park Hotel Tokyo Shiodome',
+        area:'Shiodome / Ginza',
+        why:'ใกล้ Ginza–Shimbashi เดินทางสะดวก ห้องสะอาด วิวเมืองสวย',
+        goodFor:'นักธุรกิจ/คู่รัก/ใกล้ย่านช้อป',
+        headsUp:'ย่านเงียบช่วงดึก เหมาะกับการพักผ่อน',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=51463" target="_blank"><img src="//q-xx.bstatic.com/xdata/images/hotel/max500/439050315.jpg?k=9c75312a77727d10f0f2cc4adda720ba3cde3bae281ca4d1c902c846dd5e4386&o=" srcset="//q-xx.bstatic.com/xdata/images/hotel/max500/439050315.jpg?k=9c75312a77727d10f0f2cc4adda720ba3cde3bae281ca4d1c902c846dd5e4386&o= 1x, //q-xx.bstatic.com/xdata/images/hotel/840x460/439050315.jpg?k=9c75312a77727d10f0f2cc4adda720ba3cde3bae281ca4d1c902c846dd5e4386&o= 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=51463'
+      },
+      {
+        name:'Mitsui Garden Hotel Ginza Premier',
+        area:'Ginza',
+        why:'วิวอ่าวสวย ทำเลช้อปปิ้ง เดินทางสะดวก ดีไซน์โมเดิร์น',
+        goodFor:'คู่รัก/สายดินเนอร์/ช้อปหรู',
+        headsUp:'ห้องไม่ใหญ่มาก แนะนำจองล่วงหน้า',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=69183" target="_blank"><img src="//pix8.agoda.net/hotelImages/69183/0/318e3221cd4a7ece2f24e5f55cef20bb.jpg?ce=2&s=360x270" srcset="//pix8.agoda.net/hotelImages/69183/0/318e3221cd4a7ece2f24e5f55cef20bb.jpg?ce=2&s=360x270 1x, //pix8.agoda.net/hotelImages/69183/0/318e3221cd4a7ece2f24e5f55cef20bb.jpg?ce=2&s=720x540 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=69183'
+      },
+      {
+        name:'Park Hotel Tokyo',
+        area:'Shiodome',
+        why:'คอนเซ็ปต์ Art Hotel ห้องธีมศิลปิน วิวเมืองสวย',
+        goodFor:'คู่รัก/สายศิลป์/คนชอบดีไซน์',
+        headsUp:'ห้องธีมเต็มไว แนะนำจองล่วงหน้า',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=51457" target="_blank"><img src="//pix8.agoda.net/hotelImages/5745730/0/042af1551be5816df2cf8250749507f2.jpg?ce=0&s=360x270" srcset="//pix8.agoda.net/hotelImages/5745730/0/042af1551be5816df2cf8250749507f2.jpg?ce=0&s=360x270 1x, //pix8.agoda.net/hotelImages/5745730/0/042af1551be5816df2cf8250749507f2.jpg?ce=0&s=720x540 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=51457'
+      },
+      {
+        name:'Hotel Ryumeikan Tokyo',
+        area:'Tokyo Station / Nihonbashi',
+        why:'ใกล้โตเกียวสเตชัน เดินต่อชินคันเซ็น/สนามบินสะดวก บริการดี',
+        goodFor:'ครอบครัว/นักธุรกิจ/ทริปต่อเมือง',
+        headsUp:'ช่วงเช้าช่วงเช็กเอาต์คึกคักเล็กน้อย',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=164430" target="_blank"><img src="//q-xx.bstatic.com/xdata/images/hotel/max500/587415661.jpg?k=21766767db9f8795c8e2444f972051c8bafe28af91d61892ab8f769297306e51&o=" srcset="//q-xx.bstatic.com/xdata/images/hotel/max500/587415661.jpg?k=21766767db9f8795c8e2444f972051c8bafe28af91d61892ab8f769297306e51&o= 1x, //q-xx.bstatic.com/xdata/images/hotel/840x460/587415661.jpg?k=21766767db9f8795c8e2444f972051c8bafe28af91d61892ab8f769297306e51&o= 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=164430'
+      },
+      {
+        name:'The Tokyo Station Hotel',
+        area:'Tokyo Station',
+        why:'ตึกประวัติศาสตร์ไอคอนิก บริการเยี่ยม ทำเลในสถานีสะดวกมาก',
+        goodFor:'ฮันนีมูน/โอกาสพิเศษ/ต้องการความสะดวกสูง',
+        headsUp:'งบค่อนสูง แนะนำเช็คโปรล่วงหน้า',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=305312" target="_blank"><img src="//pix8.agoda.net/hotelImages/305312/0/70246962d84bd63e2c0b1b20740df7a3.jpg?ca=7&ce=1&s=360x270" srcset="//pix8.agoda.net/hotelImages/305312/0/70246962d84bd63e2c0b1b20740df7a3.jpg?ca=7&ce=1&s=360x270 1x, //pix8.agoda.net/hotelImages/305312/0/70246962d84bd63e2c0b1b20740df7a3.jpg?ca=7&ce=1&s=720x540 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=305312'
+      },
+      {
+        name:'Hotel Niwa Tokyo',
+        area:'Suidobashi / JR & Metro',
+        why:'บูทีคญี่ปุ่นร่วมสมัย เงียบสงบ ห้องคุณภาพดี ความสะอาดยอดเยี่ยม',
+        goodFor:'คู่รัก/พักผ่อน/ทำงานแบบสงบ',
+        headsUp:'ไม่ใช่ย่านช้อปหลัก แต่เดินทางง่าย',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9067838" target="_blank"><img src="//pix8.agoda.net/hotelImages/9067838/0/442dfcf922915ce131736fd0779aa804.jpg?ce=0&s=360x270" srcset="//pix8.agoda.net/hotelImages/9067838/0/442dfcf922915ce131736fd0779aa804.jpg?ce=0&s=360x270 1x, //pix8.agoda.net/hotelImages/9067838/0/442dfcf922915ce131736fd0779aa804.jpg?ce=0&s=720x540 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9067838'
+      },
+      {
+        name:'Hotel Metropolitan Tokyo Ikebukuro',
+        area:'Ikebukuro',
+        why:'ติดสถานีใหญ่ เดินทางสะดวก ร้านอาหาร/ห้างเยอะ ราคาเป็นมิตร',
+        goodFor:'ครอบครัว/นักช้อป/งบคุ้มค่า',
+        headsUp:'ช่วงเย็นคนคึกคัก',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=6063" target="_blank"><img src="//pix8.agoda.net/hotelImages/6063/-1/aed2b9f6f410af35ba7b2e9410d8c7a2.jpg?ce=0&s=360x270" srcset="//pix8.agoda.net/hotelImages/6063/-1/aed2b9f6f410af35ba7b2e9410d8c7a2.jpg?ce=0&s=360x270 1x, //pix8.agoda.net/hotelImages/6063/-1/aed2b9f6f410af35ba7b2e9410d8c7a2.jpg?ce=0&s=720x540 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=6063'
+      },
+      {
+        name:'Richmond Hotel Premier Asakusa International',
+        area:'Asakusa',
+        why:'ใกล้วัดเซ็นโซจิ/นากามิเสะ รีวิวดีมากเรื่องความสะอาดและบริการ',
+        goodFor:'ครอบครัว/มือใหม่เที่ยวโตเกียว/สายวัฒนธรรม',
+        headsUp:'ช่วงเย็นคนคึกคักรอบแลนด์มาร์ก',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9071424" target="_blank"><img src="//pix8.agoda.net/hotelImages/9071424/0/c2b762393423d75fe6b9f03bda1291c8.jpg?ce=0&s=360x270" srcset="//pix8.agoda.net/hotelImages/9071424/0/c2b762393423d75fe6b9f03bda1291c8.jpg?ce=0&s=360x270 1x, //pix8.agoda.net/hotelImages/9071424/0/c2b762393423d75fe6b9f03bda1291c8.jpg?ce=0&s=720x540 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9071424'
+      },
+      {
+        name:'Asakusa View Hotel',
+        area:'Asakusa',
+        why:'วิวโตเกียวสกายทรีสวย ห้องกว้าง ทำเลดีใกล้แลนด์มาร์ก',
+        goodFor:'ครอบครัว/คนชอบวิวสูง/สายถ่ายรูป',
+        headsUp:'อาคารมีอายุแต่ดูแลดี สิ่งอำนวยความสะดวกครบ',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9069626" target="_blank"><img src="//pix8.agoda.net/hotelImages/9069626/0/42746c6b5b41247b81b19dd5c5f6179f.jpeg?ce=0&s=360x270" srcset="//pix8.agoda.net/hotelImages/9069626/0/42746c6b5b41247b81b19dd5c5f6179f.jpeg?ce=0&s=360x270 1x, //pix8.agoda.net/hotelImages/9069626/0/42746c6b5b41247b81b19dd5c5f6179f.jpeg?ce=0&s=720x540 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9069626'
+      },
+      {
+        name:'Shibuya Stream Excel Hotel Tokyu',
+        area:'Shibuya',
+        why:'โรงแรมใหม่ในโครงการ Shibuya Stream เชื่อมสถานี ร้านอาหารเพียบ',
+        goodFor:'คู่รัก/สายคาเฟ่/ช้อปปิ้ง',
+        headsUp:'คืนศุกร์–เสาร์ราคามักสูง แนะนำจองล่วงหน้า',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=10565024" target="_blank"><img src="//pix8.agoda.net/hotelImages/10565024/0/652ac63072fbe477969d41eb7e8f271a.jpg?ce=0&s=360x270" srcset="//pix8.agoda.net/hotelImages/10565024/0/652ac63072fbe477969d41eb7e8f271a.jpg?ce=0&s=360x270 1x, //pix8.agoda.net/hotelImages/10565024/0/652ac63072fbe477969d41eb7e8f271a.jpg?ce=0&s=720x540 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=10565024'
+      },
+      {
+        name:'Shinjuku Washington Hotel',
+        area:'Shinjuku',
+        why:'ทำเลดี ใกล้ศาลาว่าการฯ/สวนชินจูกุ ทางเชื่อมใต้ดินบางช่วงเวลา',
+        goodFor:'นักธุรกิจ/ทริปสั้น/เดินทางง่าย',
+        headsUp:'ห้องคอมแพ็กต์ตามสไตล์โตเกียว',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=3084610" target="_blank"><img src="//q-xx.bstatic.com/xdata/images/hotel/max500/687541067.jpg?k=b67702d8000217912d5487bd37cb98f3886a965053b70632e0ad8abbe4ee7556&o=" srcset="//q-xx.bstatic.com/xdata/images/hotel/max500/687541067.jpg?k=b67702d8000217912d5487bd37cb98f3886a965053b70632e0ad8abbe4ee7556&o= 1x, //q-xx.bstatic.com/xdata/images/hotel/840x460/687541067.jpg?k=b67702d8000217912d5487bd37cb98f3886a965053b70632e0ad8abbe4ee7556&o= 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=3084610'
+      },
+      {
+        name:'Sunshine City Prince Hotel',
+        area:'Ikebukuro (Sunshine City Complex)',
+        why:'อยู่ในคอมเพล็กซ์ Sunshine City เดินถึงห้าง/อควาเรียม/พิพิธภัณฑ์ สะดวกกับครอบครัว',
+        goodFor:'ครอบครัว/นักช้อป/มือใหม่เที่ยวโตเกียว',
+        headsUp:'ห้องคอมแพ็กต์ เลือกชั้นสูงเพื่อวิวดี',
+        agodaImageHtml:`<a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9067756" target="_blank"><img src="//pix8.agoda.net/hotelImages/9067756/901487171/df9818b8d777639237af48f28c8ce933.jpeg?ce=0&s=360x270" srcset="//pix8.agoda.net/hotelImages/9067756/901487171/df9818b8d777639237af48f28c8ce933.jpeg?ce=0&s=360x270 1x, //pix8.agoda.net/hotelImages/9067756/901487171/df9818b8d777639237af48f28c8ce933.jpeg?ce=0&s=720x540 2x" /></a>`,
+        agodaTextLink:'https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=9067756'
+      }
     ];
 
     // ====== เรนเดอร์การ์ด ======
