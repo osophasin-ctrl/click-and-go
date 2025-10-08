@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>โตเกียว (Tokyo) – 30 โรงแรมคัดสรร Top Rating + Best Value | Click & Go</title>
-  <meta name="description" content="รวม 30 โรงแรมในโตเกียวที่คัดสรรโดย Click & Go จากคะแนนรีวิวสูงและคุ้มค่า (Top rating + Best value) เลือกโรงแรมที่ใช่แล้วคลิกจองได้ทันที">
+  <title>โตเกียว – 15 โรงแรมคัดสรร (Top Rating + Best Value) | Click & Go</title>
+  <meta name="description" content="15 โรงแรมในโตเกียวคัดสรรโดย Click & Go เน้นทำเลดี คุ้มค่า และรีวิวดี เหมาะกับทั้งสายช้อป สายคาเฟ่ และครอบครัว คลิกเดียวไปจองกับ Agoda ได้ทันที" />
   <link rel="canonical" href="https://click-and-go-navy.vercel.app/tokyo.html" />
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="style.css" />
@@ -12,10 +12,10 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Click & Go" />
-  <meta property="og:title" content="โตเกียว (Tokyo) – 30 โรงแรมคัดสรร Top Rating + Best Value" />
-  <meta property="og:description" content="เลือกจาก 30 โรงแรมที่คะแนนรีวิวสูงและคุ้มค่าในโตเกียว คลิกเดียวไปจองได้เลย" />
+  <meta property="og:title" content="โตเกียว – 15 โรงแรมคัดสรร (Top Rating + Best Value) | Click & Go" />
+  <meta property="og:description" content="เลือกมาแล้วสำหรับคุณ: 15 โรงแรมทำเลดี ราคาคุ้ม รีวิวดีในโตเกียว คลิกเดียวไปจองกับ Agoda" />
   <meta property="og:url" content="https://click-and-go-navy.vercel.app/tokyo.html" />
-  <meta property="og:image" content="https://click-and-go-navy.vercel.app/tokyo-hero.jpg" />
+  <meta property="og:image" content="https://click-and-go-navy.vercel.app/hero-bg.jpg" />
 
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QR2EGFWN3"></script>
@@ -25,8 +25,30 @@
     gtag('js', new Date()); gtag('config', 'G-1QR2EGFWN3');
   </script>
 
-  <!-- JSON-LD: ItemList (เติมตอนเรนเดอร์) -->
-  <script id="ldjson" type="application/ld+json"></script>
+  <style>
+    :root{--brand:#0aa297;--card-border:#0aa29733;--muted:#666;--ink:#0f172a}
+    .container{max-width:1100px;margin:0 auto;padding:16px}
+    .section-title{font-size:26px;margin:18px 0 8px}
+    .lead{color:#374151}
+    .hero-city{position:relative;min-height:220px;background: center/cover no-repeat}
+    .hero-city .overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.35))}
+    .hero-city .content{position:relative;color:#fff;padding:36px 16px}
+    .note{font-size:13px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}}
+    .card{background:#fff;border-radius:12px;overflow:hidden;border:2px solid var(--card-border);box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;flex-direction:column}
+    .thumb{width:100%;height:210px;object-fit:cover;background:#f3f4f6;display:block}
+    .card-body{padding:14px;display:flex;flex-direction:column;gap:8px}
+    .card h3{font-size:18px;margin:0;color:var(--ink)}
+    .pill{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:#eef7f6;color:#0b7f76;font-weight:600;font-size:12px}
+    .muted{color:var(--muted)} .area{font-weight:600}
+    .meta{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+    .btn{background:var(--brand);color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:700;text-decoration:none;display:inline-block}
+    .cta-wrap{display:flex;justify-content:center;margin:28px 0}
+    .cta{padding:12px 22px;border-radius:999px;font-weight:600}
+    .img-embed :is(img,iframe){width:100%;height:210px;object-fit:cover;border:0;border-radius:0}
+  </style>
 </head>
 <body>
   <!-- Header -->
@@ -52,44 +74,22 @@
   <main class="container">
     <!-- Hero -->
     <section class="hero-city" style="background-image:url('tokyo-hero.jpg')">
-      <div class="overlay" aria-hidden="true"></div>
+      <div class="overlay"></div>
       <div class="content">
-        <nav class="breadcrumb" aria-label="breadcrumb">
-          <a href="index.html">หน้าหลัก</a> › <span>โตเกียว</span>
-        </nav>
-        <h1>โตเกียว (Tokyo)</h1>
-        <p>มหานครที่ไม่เคยหลับไหล อาหารอร่อย แหล่งช้อปปิ้งเพียบ — เลือกจาก 30 โรงแรมคัดสรรของเรา คลิกเดียวไปจองได้ทันที</p>
+        <h1>โตเกียว – 15 โรงแรมคัดสรร</h1>
+        <p class="lead">ทีม Click & Go เลือกมาให้เน้น <b>ทำเลดี</b> <b>รีวิวดี</b> และ <b>ความคุ้มค่า</b> ครอบคลุมย่านยอดนิยมอย่าง ชินจูกุ ชิบูย่า กินซ่า อุเอโนะ อาซากุสะ อากิฮาบาระ และรปปงหงิ</p>
       </div>
     </section>
 
-    <!-- Intro / Must-do -->
-    <section class="section" id="tokyo-intro">
-      <h2 class="section-title">แนะนำโตเกียวแบบสั้น ๆ</h2>
-      <div class="widget-like solid">
-        <p class="muted" id="intro-1">โตเกียวเป็นเมืองที่ผสมผสานความทันสมัยและวัฒนธรรมดั้งเดิมได้อย่างลงตัว เดินทางสะดวกด้วยรถไฟ ครบทั้งช้อป ชิม และชมแลนด์มาร์ก</p>
-        <p class="muted" id="intro-2">ช่วงน่าเที่ยว: มี.ค.–พ.ค. (ซากุระ) และ ต.ค.–ธ.ค. (อากาศเย็นสบาย) เหมาะทั้งคู่รัก ครอบครัว และสายกิน</p>
-        <div class="highlight-list" id="must-do">
-          <!-- จะเติมรายการจาก JSON -->
-        </div>
+    <!-- List -->
+    <section>
+      <h2 class="section-title">Top Rating + Best Value ในโตเกียว</h2>
+      <p class="note">* รูปภาพและราคาจาก Agoda อาจเปลี่ยนแปลงตามช่วงเวลาและโปรโมชั่น</p>
+      <div id="grid" class="grid"></div>
+
+      <div class="cta-wrap">
+        <a id="partnerMore" class="btn cta" href="#" target="_blank" rel="nofollow noopener">ค้นหาโรงแรมอื่นในโตเกียว (Agoda)</a>
       </div>
-    </section>
-
-    <!-- 30 Picks -->
-    <section class="section" id="picks">
-      <h2 class="section-title">
-        30 โรงแรมในโตเกียวที่เราคัดสรร จาก <span class="badge">Top rating</span> + <span class="badge">Best value</span>
-      </h2>
-      <p class="muted" style="margin:-8px 0 14px">
-        เกณฑ์คัดเลือก: คะแนนรีวิวสูง (≥ 8 โดยอ้างอิงจากผลลัพธ์การค้นหา) + ราคา/ความคุ้มค่าโดยรวม
-      </p>
-
-      <div class="deal-grid" id="hotel-grid" aria-live="polite">
-        <!-- การ์ดโรงแรม 30 ใบจะถูกเรนเดอร์จาก JSON -->
-      </div>
-
-      <p class="tiny-note" style="margin-top:12px">
-        * ลิงก์ “ดูดีล/จอง” เป็นลิงก์พันธมิตร (affiliate) อาจมีการเก็บค่าคอมมิชชั่น โดยไม่เพิ่มราคาให้ผู้ใช้
-      </p>
     </section>
   </main>
 
@@ -107,105 +107,80 @@
     </div>
   </footer>
 
-  <!-- Page Script -->
   <script>
-    // ── language pop-up
+    // ลิงก์ partner สำรอง (ค้นหาโตเกียวรวม)
+    const partnerUrl = () => {
+      const sp = new URLSearchParams({
+        cid:'1949420',
+        city:'17072',   // หมายเลข cityId ของ Tokyo (ตัวอย่างทั่วไปของ Agoda)
+        currency:'THB',
+        utm_source:'clickandgo',
+        utm_medium:'affiliate',
+        noapp:'1',
+        pcs:'1'
+      });
+      return `https://www.agoda.com/th-th/partners/partnersearch.aspx?${sp.toString()}`;
+    };
+    document.getElementById('partnerMore').href = partnerUrl();
+
+    // ====== ข้อมูล 15 โรงแรมคัดสรร ======
+    // agodaImageHtml: วาง "โค้ด Image Link" จากหน้า Agoda Partners ได้เลย (เป็น <a><img></a>)
+    // agodaTextLink: วาง "Text Link" ของโรงแรม (สำหรับปุ่ม)
+    const HOTELS = [
+      { name:'Hotel Gracery Shinjuku', area:'Shinjuku', why:'แลนด์มาร์ก Godzilla เดินเล่นย่านบันเทิง ร้านอาหารแน่น', goodFor:'คู่รัก/เพื่อน/สายไนท์ไลฟ์', headsUp:'ห้องขนาดกะทัดรัดสไตล์โตเกียว', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'Shinjuku Washington Hotel', area:'Shinjuku', why:'ใกล้ศาลาว่าการฯ วิวเมือง เดินทางสะดวก', goodFor:'นักธุรกิจ/ทริปสั้น', headsUp:'เชื่อมอุโมงค์ถึงสถานีช่วงเวลาจำกัด', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'Tokyu Stay Shinjuku', area:'Shinjuku', why:'ทำเลกลางชินจูกุ ห้องมีเครื่องซักผ้าในตัวบางประเภท', goodFor:'อยู่หลายคืน/ทำงาน', headsUp:'ห้องบางแบบมีครัวเล็ก', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'Shibuya Excel Hotel Tokyu', area:'Shibuya', why:'ติดสถานี/แยกชิบูย่า เดินเที่ยวง่าย', goodFor:'มือใหม่โตเกียว/ช้อปปิ้ง', headsUp:'ราคาพีคช่วงสุดสัปดาห์', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'Shibuya Stream Excel Hotel Tokyu', area:'Shibuya', why:'โรงแรมใหม่ย่าน Stream ร้านอาหารเยอะ', goodFor:'คู่รัก/สายคาเฟ่', headsUp:'จองล่วงหน้าเพื่อราคาดี', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'Mitsui Garden Hotel Ginza Premier', area:'Ginza', why:'วิวอ่าวสวย เดินถึงกินซ่า ช้อปสะดวก', goodFor:'ช้อปหรู/ดินเนอร์', headsUp:'ห้องไม่ใหญ่มาก', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'The Royal Park Hotel Iconic Tokyo Shiodome', area:'Shiodome/Ginza', why:'ห้องกว้าง เดินทางดี เชื่อมรถไฟ/ใต้ดิน', goodFor:'นักธุรกิจ/คู่รัก', headsUp:'ย่านเงียบตอนดึก', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'Park Hotel Tokyo', area:'Shiodome', why:'คอนเซ็ปต์ Art Hotel ห้องธีมศิลปิน วิวเมือง', goodFor:'คู่รัก/สายศิลป์', headsUp:'ห้องธีมเต็มไว', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'Hotel Ryumeikan Tokyo', area:'Tokyo Station/Nihonbashi', why:'ใกล้โตเกียวสเตชัน เดินต่อชินคันเซ็นง่าย', goodFor:'ทริปต่อเมือง/ครอบครัว', headsUp:'รอบเช้าเช็กเอาต์คึกคัก', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'The Tokyo Station Hotel', area:'Tokyo Station', why:'ตึกประวัติศาสตร์ไอคอนิก บริการเยี่ยม', goodFor:'ฮันนีมูน/ทริพพิเศษ', headsUp:'งบค่อนสูง', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'Richmond Hotel Premier Asakusa International', area:'Asakusa', why:'ใกล้วัดเซ็นโซจิ ร้านอาหารท้องถิ่นเพียบ', goodFor:'ครอบครัว/สายวัฒนธรรม', headsUp:'นักท่องเที่ยวเยอะช่วงเย็น', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'Asakusa View Hotel', area:'Asakusa', why:'วิวโตเกียวสกายทรี สระว่ายน้ำในร่ม', goodFor:'ครอบครัว', headsUp:'ตึกเก่าแต่ดูแลดี', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'Hotel Niwa Tokyo', area:'Suidobashi/JR', why:'บูทีคญี่ปุ่นร่วมสมัย สงบ เดินทางสะดวก', goodFor:'คู่รัก/พักผ่อน', headsUp:'ย่านไม่ใช่แหล่งช้อปหลัก', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'Hotel Metropolitan Tokyo Ikebukuro', area:'Ikebukuro', why:'ติดสถานีใหญ่ ร้านอาหารและห้างเยอะ', goodFor:'ครอบครัว/ช้อปประหยัด', headsUp:'คนเยอะช่วงเย็น', agodaImageHtml:'', agodaTextLink:'' },
+      { name:'Sunshine City Prince Hotel', area:'Ikebukuro', why:'อยู่ในคอมเพล็กซ์ Sunshine City สะดวกสุด', goodFor:'ครอบครัว/สาย Aquarium & พิพิธภัณฑ์', headsUp:'ห้องคอมแพ็กต์', agodaImageHtml:'', agodaTextLink:'' },
+    ];
+
+    // ====== เรนเดอร์การ์ด ======
+    const grid = document.getElementById('grid');
+    grid.innerHTML = HOTELS.map((h,i)=>`
+      <article class="card">
+        <div class="img-embed">
+          ${h.agodaImageHtml ? h.agodaImageHtml
+            : `<img class="thumb" src="tokyo-tile.webp" alt="${h.name} ในย่าน ${h.area}" loading="lazy">`}
+        </div>
+        <div class="card-body">
+          <div class="pill">คัดสรร #${String(i+1).padStart(2,'0')}</div>
+          <h3>${h.name}</h3>
+          <div class="muted"><span class="area">ย่าน:</span> ${h.area}</div>
+          <p style="margin:0">
+            <b>เหตุผลที่เราเลือก:</b> ${h.why}<br>
+            <b>เหมาะกับ:</b> ${h.goodFor}<br>
+            <b>ข้อควรรู้:</b> ${h.headsUp}
+          </p>
+          <div class="meta">
+            <span class="muted">Top rating · Best value</span>
+            <a class="btn" href="${h.agodaTextLink||'#'}" ${h.agodaTextLink? 'target="_blank" rel="nofollow noopener"':''}
+               onclick="try{gtag('event','click',{event_category:'outbound',event_label:'tokyo_'+${i}})}catch(e){}">
+              ดูข้อเสนอ
+            </a>
+          </div>
+        </div>
+      </article>
+    `).join('');
+  </script>
+
+  <script>
+    // language pop-up (เหมือนหน้าเดิม)
     (function(){
       const btn=document.querySelector('.lang-btn'); const menu=document.querySelector('.lang-menu');
       if(!btn||!menu) return;
       const close=()=>{menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};
       btn.addEventListener('click',e=>{e.stopPropagation();const opened=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(opened));});
       document.addEventListener('click',close); document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
-    })();
-
-    // ── small helpers
-    const fmtPrice = (txt)=> txt || '';
-    const el = (sel)=> document.querySelector(sel);
-    const grid = ()=> el('#hotel-grid');
-
-    // ── render Must-do (from JSON)
-    function renderMustDo(list){
-      const root = document.getElementById('must-do');
-      if(!list || !root) return;
-      root.innerHTML = `
-        <ul class="bullets">
-          ${list.map(i => `<li><strong>${i.title}</strong> — ${i.desc}${i.tip ? ` <em class="muted">Tip: ${i.tip}</em>`:''}</li>`).join('')}
-        </ul>`;
-    }
-
-    // ── render one hotel card
-    function hotelCard(h){
-      const tags = (h.tags||[]).slice(0,3).map(t=>`<span class="tag">${t}</span>`).join('');
-      const bullets = (h.highlights||[]).slice(0,3).map(b=>`<li>${b}</li>`).join('');
-      return `
-        <article class="deal-card" data-rating="${h.rating||''}">
-          <img class="thumb" src="${h.image}" alt="${h.name}" loading="lazy" width="640" height="400">
-          <div class="body">
-            <h3>${h.name}</h3>
-            <p>⭐ ${h.rating ?? '-'} <span class="sep">·</span> ${h.area || ''} ${tags ? `<span class="sep">·</span> ${tags}`:''}</p>
-            <ul class="mini">${bullets}</ul>
-          </div>
-          <div class="meta">
-            <strong>${fmtPrice(h.price_hint)}</strong>
-            <a class="btn" href="${h.affiliate_url}" target="_blank" rel="nofollow noopener">ดูดีล / จอง</a>
-          </div>
-        </article>
-      `;
-    }
-
-    // ── JSON-LD ItemList for SEO
-    function injectItemListJsonLD(city, hotels){
-      try{
-        const data = {
-          "@context":"https://schema.org",
-          "@type":"ItemList",
-          "name": `Top 30 Hotels in ${city} by Click & Go`,
-          "itemListOrder": "http://schema.org/ItemListOrderDescending",
-          "numberOfItems": hotels.length,
-          "itemListElement": hotels.map((h, idx)=>({
-            "@type":"ListItem",
-            "position": idx+1,
-            "name": h.name,
-            "url": h.affiliate_url
-          }))
-        };
-        document.getElementById('ldjson').textContent = JSON.stringify(data);
-      }catch(e){}
-    }
-
-    // ── load data
-    (async function(){
-      try{
-        const res = await fetch('hotel-index/tokyo.json',{cache:'no-cache'});
-        const data = await res.json();
-
-        // Set intro
-        if(Array.isArray(data.intro_paragraphs)){
-          document.getElementById('intro-1').textContent = data.intro_paragraphs[0] || document.getElementById('intro-1').textContent;
-          document.getElementById('intro-2').textContent = data.intro_paragraphs[1] || document.getElementById('intro-2').textContent;
-        }
-        renderMustDo(data.must_do || []);
-
-        // Render hotels (expect 30)
-        const list = (data.hotels||[]).slice(0, 30);
-        grid().innerHTML = list.map(hotelCard).join('');
-
-        // Analytics helper events
-        grid().addEventListener('click', (e)=>{
-          const a = e.target.closest('a.btn');
-          if(!a) return;
-          const card = e.target.closest('.deal-card');
-          gtag('event','hotel_click',{
-            event_category:'city_tokyo',
-            event_label: a.href,
-            value: card ? Number(card.getAttribute('data-rating')||0) : undefined
-          });
-        });
-
-        injectItemListJsonLD('Tokyo', list);
-      }catch(err){
-        grid().innerHTML = `<p class="muted">ขออภัย โหลดรายการโรงแรมไม่สำเร็จ กรุณารีเฟรชอีกครั้ง</p>`;
-      }
     })();
   </script>
 </body>
