@@ -324,6 +324,11 @@
 
     let items = data.results || data.items || data.hotels || [];
     if (!Array.isArray(items)) items = [];
+
+    /* ---------- PATCH: กรองตามตัวกรองคะแนนรีวิว/ดาว/ราคา อย่างเคร่งครัด ---------- */
+    items = applyFilters(items);   // ← เพิ่มบรรทัดนี้
+    /* ------------------------------------------------------------------------- */
+
     if (state.sort === 'price_asc') items.sort((a,b)=>(readPrice(a)||1e15)-(readPrice(b)||1e15));
     if (state.sort === 'price_desc') items.sort((a,b)=>(readPrice(b)||0)-(readPrice(a)||0));
 
@@ -346,13 +351,45 @@
   const readName = h => h.name || h.hotelName || h.title || h.label || '—';
   const readImg  = h => h.thumbnail || h.image || h.img || h.photo || '';
   const readUrl  = h => h.url || h.link || h.deeplink || '#';
-  const readStars= h => h.rating ?? h.stars ?? h.star ?? 0;
-  const readScore= h => h.reviewScore ?? h.score ?? h.review_score ?? null;
+  const readStars= h => h.rating ?? h.stars ?? h.star ?? 0;     // หมายถึง "ดาวโรงแรม"
+  const readScore= h => h.reviewScore ?? h.score ?? h.review_score ?? null; // หมายถึง "คะแนนรีวิว"
   const readCurr = h => h.currency || h.cur || 'THB';
   function readPrice(h){
     const v = h.price ?? h.minPrice ?? h.min_price ?? h.fromPrice ?? null;
     return (v!=null && !isNaN(+v)) ? +v : null;
   }
+
+  /* ---------- PATCH: helpers สำหรับการกรองคะแนน/ดาว/ราคา ---------- */
+  function normalizeScore(h){
+    const src = readScore(h);
+    if (src==null) return null;
+    const n = Number(src);
+    return Number.isNaN(n) ? null : n;
+  }
+  function applyFilters(list){
+    const sMin = +state.scoreMin || 0;     // คะแนนรีวิวขั้นต่ำ (เช่น 8)
+    const stMin= +state.starsMin || 0;     // ดาวขั้นต่ำ
+    const pMin = Math.min(+state.priceMin || 0, +state.priceMax || 200000);
+    const pMax = Math.max(+state.priceMin || 0, +state.priceMax || 200000);
+
+    return list.filter(h=>{
+      // กรองคะแนนรีวิว
+      const sc = normalizeScore(h);
+      if (sMin>0 && !(sc!=null && sc>=sMin)) return false;
+
+      // กรองดาวโรงแรม
+      const st = Number(readStars(h) || 0);
+      if (stMin>0 && !(st>=stMin)) return false;
+
+      // กรองช่วงราคา (ถ้าผู้ใช้กำหนด)
+      if (pMin>0 || pMax<200000){
+        const pr = readPrice(h);
+        if (pr==null || pr<pMin || pr>pMax) return false;
+      }
+      return true;
+    });
+  }
+  /* ------------------------------------------------------------------ */
 
   function starIcons(n){
     const c = Math.max(0, Math.min(5, Math.round(n||0)));
