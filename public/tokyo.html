@@ -1,389 +1,379 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>โตเกียว – 10 โรงแรมคัดสรร | Click & Go</title>
-  <meta name="description" content="รวม 10 โรงแรมคัดสรรในโตเกียว Top rating + Best value พร้อมลิงก์จอง Agoda (พันธมิตรของเรา)" />
-  <link rel="icon" href="/favicon.ico" />
-  <link rel="stylesheet" href="/style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>โตเกียว – โรงแรมแนะนำตามโซน | Click & Go</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/style.css">
+
   <style>
-    :root{--brand:#0aa297;--muted:#667085;--card:#ffffff;--ring:#0aa29733;--gold:#d4a017}
-    body{background:#f7f7f7}
+    :root{
+      --brand:#0aa297; --brand-10:#0aa2971a; --card-border:#0aa29733;
+      --gold:#d4a017; --muted:#666; --ink:#111; --bg:#fff;
+    }
+    body{background:#fafafa;color:#111;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans Thai","Noto Sans",sans-serif;}
     .container{max-width:1100px;margin:0 auto;padding:16px}
-    .hero{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:18px}
-    .hero h1{margin:0 0 6px;font-size:28px}
-    .hero p{margin:0;color:var(--muted)}
-    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:18px 0}
-    @media(max-width:860px){.grid{grid-template-columns:1fr}}
-    .card{background:var(--card);border:2px solid var(--ring);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
-    .thumb{width:100%;height:260px;object-fit:cover;background:#eee;display:block}
-    .body{padding:14px 16px 16px;display:flex;flex-direction:column}
-    .title{margin:0 0 6px;font-size:20px}
-    .rating{font-size:13px;color:#111;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+    .main-title{font-size:36px;line-height:1.2;margin:8px 0 4px}
+    @media(max-width:640px){.main-title{font-size:30px}}
+    .muted{color:var(--muted)} .nowrap{white-space:nowrap}
+    .chipnav{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
+    .chipnav a{display:inline-block;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;color:#111;text-decoration:none}
+    .chipnav a.active,.chipnav a:hover{border-color:var(--brand);box-shadow:0 0 0 2px var(--brand-10)}
+    /* cards */
+    .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    @media(min-width:980px){.cards{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:640px){.cards{grid-template-columns:1fr}}
+    .card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);border:2px solid var(--card-border);display:flex;flex-direction:column}
+    .card img{width:100%;height:210px;object-fit:cover;display:block;background:#f4f4f4}
+    .card-body{padding:14px;display:flex;flex-direction:column}
+    .title{font-size:18px;margin:0 0 6px}
+    .meta{font-size:13px;color:var(--muted);display:flex;gap:10px;align-items:center}
     .stars{display:inline-flex;gap:2px;vertical-align:middle}
     .star{width:16px;height:16px;display:inline-block}
     .star svg{width:100%;height:100%;fill:var(--gold)}
-    .desc{color:#111;line-height:1.7;margin:8px 0 0}
-    .desc b{font-weight:700}
-    .tags{color:#667085;margin-top:10px;font-size:14px}
-    .cta-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-top:12px}
-    .price-box{display:flex;flex-direction:column}
-    .price-note{font-size:12px;color:var(--muted);line-height:1}
-    .price-val{font-weight:800;font-size:18px}
-    .btn{background:var(--brand);color:#fff;border:none;border-radius:999px;padding:10px 16px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;white-space:nowrap}
-    .cta-wrap{display:flex;justify-content:center;margin:26px 0}
-    .cta{background:var(--brand);color:#fff;border-radius:999px;padding:12px 22px;font-weight:700;text-decoration:none}
-    /* header language menu minimal (kept from site) */
-    .site-header .inner{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
-    .brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:#111}
-    .main-nav a{margin-left:14px}
-    .lang{position:relative}
-    .lang-btn{background:transparent;border:1px solid #e5e7eb;border-radius:8px;padding:6px 10px;cursor:pointer}
-    .lang-menu{position:absolute;right:0;top:120%;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:6px;min-width:120px;display:none}
-    .lang-menu.open{display:block}
-    .lang-menu a{display:block;padding:8px 10px;text-decoration:none}
+    .score{color:#c62828;font-weight:600}
+    .pill{font-size:12px;color:#0f5132;background:#d1e7dd;border:1px solid #badbcc;border-radius:999px;padding:4px 8px;display:inline-flex;gap:6px;align-items:center}
+    .list{margin:10px 0 0;padding-left:18px}
+    .list li{margin:4px 0}
+    /* price row */
+    .note{font-size:12px;color:#777;margin-top:8px}
+    .row-price{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:10px}
+    .price-left{font-weight:700}
+    .cta{background:var(--brand);color:#fff;border:0;border-radius:999px;padding:10px 14px;font-weight:700;text-decoration:none;display:inline-flex;gap:6px;align-items:center;white-space:nowrap}
+    .cta:hover{filter:brightness(.95)}
+    /* section */
+    .section{margin:28px 0}
+    .section h2{font-size:26px;margin:4px 0 4px}
+    .section p{margin:0 0 12px;color:#444}
+    .sechead{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
+    .sechead .tag{font-size:12px;color:var(--brand);font-weight:700}
+    .divider{height:1px;background:#eee;margin:16px 0}
+    /* partner CTA bottom */
+    .cta-wrap{display:flex;justify-content:center;margin:32px 0}
+    .btn{height:42px;border:1px solid #d7d7d7;border-radius:999px;padding:0 16px;background:var(--brand);color:#fff;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+    .btn.ghost{background:#fff;color:#111}
+    .badge{background:var(--brand-10);color:var(--brand);font-weight:700;border-radius:8px;padding:4px 8px}
   </style>
 </head>
 <body>
-  <header class="site-header" role="banner">
-    <div class="inner">
-      <a href="/index.html" class="brand" aria-label="Click & Go">
-        <img src="/logo.png" alt="Click & Go" width="40" height="40" loading="lazy" />
-        <span class="brand-text">Click & Go</span>
-      </a>
-      <nav class="main-nav" aria-label="เมนูหลัก">
-        <a href="/index.html">หน้าแรก</a>
-        <a href="/deals.html">โปรโมชั่น</a>
-        <div class="lang">
-          <button class="lang-btn" aria-haspopup="true" aria-expanded="false">ภาษา ▾</button>
-          <div class="lang-menu" role="menu">
-            <a role="menuitem" href="#" aria-current="true">ไทย</a>
-            <a role="menuitem" href="/en/tokyo.html">English</a>
-          </div>
-        </div>
-      </nav>
-    </div>
-  </header>
+<header class="site-header" role="banner">
+  <div class="inner">
+    <a href="/index.html" class="brand">
+      <img src="/logo.png" width="40" height="40" alt="Click & Go">
+      <span class="brand-text">Click & Go</span>
+    </a>
+    <nav class="main-nav">
+      <a href="/index.html">หน้าแรก</a>
+      <a href="/deals.html">โปรโมชั่น</a>
+    </nav>
+  </div>
+</header>
 
-  <main class="container">
-    <!-- Hero (ไม่มีภาพพื้นหลัง) -->
-    <section class="hero">
-      <h1>โตเกียว – 10 โรงแรมคัดสรร</h1>
-      <p>Top rating + Best value | คัดเลือกจากรีวิวจริง ทำเลเดินทางง่าย เหมาะกับนักเดินทางสายคุ้มค่า</p>
-    </section>
+<main class="container">
+  <h1 class="main-title">โตเกียว – โรงแรมแนะนำตามโซน</h1>
+  <p class="muted">เราแยกย่านยอดฮิตให้เลือกง่ายขึ้น เลื่อนดูโซนที่ใช่ แล้วเลือกโรงแรมที่ “คุ้มจริง” ได้เลย</p>
 
-    <section class="grid" aria-label="รายการโรงแรมคัดสรรในโตเกียว">
+  <!-- Quick jump to zones -->
+  <nav class="chipnav" aria-label="โซน">
+    <a href="#zone-a">Shibuya</a>
+    <a href="#zone-b">Shinjuku</a>
+    <a href="#zone-c">Ueno – Asakusa</a>
+    <a href="#zone-d">Ginza – Tokyo Station</a>
+    <a href="#zone-e">Akihabara – Kanda</a>
+    <a href="#zone-f">Odaiba & Around</a>
+  </nav>
 
-      <!-- 1 Almont Inn Nihonbashi -->
-      <article class="card">
-        <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=303102" target="_blank" rel="nofollow noopener">
-          <img class="thumb" src="//pix8.agoda.net/hotelImages/303102/-1/961efbaeb13c0b4ba908f22900551ddd.jpg?ca=11&ce=1&s=720x540" alt="Almont Inn Nihonbashi">
-        </a>
-        <div class="body">
-          <h3 class="title">Almont Inn Nihonbashi</h3>
-          <p class="rating">
-            <span class="stars" aria-label="3 ดาว">
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-            </span>
-            · <span class="score">คะแนนรีวิว 8.8 (4,198 รีวิว)</span>
-          </p>
-          <p class="desc"><b>จุดเด่นโดนใจ:</b> โฮเทลสไตล์เรียบง่ายน่านอน สะอาดเนี้ยบ บริการอบอุ่น ราคาเป็นมิตร—เหมาะมากเป็นฐานออกเที่ยวทั้งวัน</p>
-          <p class="desc"><b>การเดินทาง:</b> ย่าน Nihonbashi เดินไม่ไกลถึงสถานี เชื่อมหลายสาย ไปอากิฮาบาระ–กินซ่า–Tokyo Station สบายๆ</p>
-          <div class="tags">Top rating · Best value</div>
-          <div class="cta-row">
-            <div class="price-box">
-              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
-              <span class="price-val">ราคาประมาณ ฿2,546</span>
-            </div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=303102" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
-          </div>
-        </div>
-      </article>
+  <div class="divider"></div>
 
-      <!-- 2 APA Nihombashi Bakurocho-Ekimae -->
-      <article class="card">
-        <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5728068" target="_blank" rel="nofollow noopener">
-          <img class="thumb" src="//pix8.agoda.net/hotelImages/5728068/-1/6095962befb21560df4d99fc959dfcb7.jpg?ce=0&s=720x540" alt="APA Hotel Nihombashi Bakurocho-Ekimae">
-        </a>
-        <div class="body">
-          <h3 class="title">APA Hotel Nihombashi Bakurocho-Ekimae</h3>
-          <p class="rating">
-            <span class="stars" aria-label="3 ดาว">
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-            </span>
-            · <span class="score">คะแนนรีวิว 8.6 (7,424 รีวิว)</span>
-          </p>
-          <p class="desc"><b>จุดเด่นโดนใจ:</b> แบรนด์ APA การันตี—ห้องกะทัดรัดแต่ครบ ลื่นไหลทุกดีเทล Wi-Fi เร็ว ความสะอาดชนะใจสายคุ้ม</p>
-          <p class="desc"><b>การเดินทาง:</b> ชื่อก็บอก Ekimae—ใกล้สถานีมาก! เที่ยวอากิฮาบาระ อาซากุสะ หรือเข้า Tokyo Station ง่ายสุดๆ</p>
-          <div class="tags">Top rating · Best value</div>
-          <div class="cta-row">
-            <div class="price-box">
-              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
-              <span class="price-val">ราคาประมาณ ฿3,125</span>
-            </div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5728068" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- 3 APA Asakusabashi Ekimae -->
-      <article class="card">
-        <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5500893" target="_blank" rel="nofollow noopener">
-          <img class="thumb" src="//pix8.agoda.net/hotelImages/5500893/-1/5084046a8897b3d6e71c2cae26b72158.jpg?ca=7&ce=1&s=720x540" alt="APA Hotel Asakusabashi Ekimae">
-        </a>
-        <div class="body">
-          <h3 class="title">APA Hotel Asakusabashi Ekimae</h3>
-          <p class="rating">
-            <span class="stars" aria-label="3 ดาว">
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-            </span>
-            · <span class="score">คะแนนรีวิว 8.7 (3,197 รีวิว)</span>
-          </p>
-          <p class="desc"><b>จุดเด่นโดนใจ:</b> ทำเลทองระหว่าง Ueno–Akihabara–Asakusa ห้องใหม่สะอาด ราคาดี เหมาะกับทริปสั้นที่อยากเก็บแลนด์มาร์กครบ</p>
-          <p class="desc"><b>การเดินทาง:</b> ใกล้สถานี Asakusabashi ต่อ JR/ใต้ดินไปทุกย่านหลักได้รวดเร็ว</p>
-          <div class="tags">Top rating · Best value</div>
-          <div class="cta-row">
-            <div class="price-box">
-              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
-              <span class="price-val">ราคาประมาณ ฿3,448</span>
-            </div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5500893" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- 4 Pearl Hotel Shinjuku Akebonobashi -->
-      <article class="card">
-        <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5764573" target="_blank" rel="nofollow noopener">
-          <img class="thumb" src="//pix8.agoda.net/hotelImages/5764573/-1/7f59da09c64e3092d3f6c9cbe710027b.jpg?ca=7&ce=1&s=720x540" alt="Pearl Hotel Shinjuku Akebonobashi">
-        </a>
-        <div class="body">
-          <h3 class="title">Pearl Hotel Shinjuku Akebonobashi</h3>
-          <p class="rating">
-            <span class="stars" aria-label="3 ดาว">
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-            </span>
-            · <span class="score">คะแนนรีวิว 8.6 (7,759 รีวิว)</span>
-          </p>
-          <p class="desc"><b>จุดเด่นโดนใจ:</b> อยากใกล้ชินจูกุแต่ไม่วุ่นวาย—ที่นี่ตอบโจทย์! ห้องสะอาดเรียบร้อย ราคาเบา เดินเล่นเข้าเมืองง่าย</p>
-          <p class="desc"><b>การเดินทาง:</b> ติดสถานี Akebonobashi (Toei Shinjuku Line) เพียงไม่กี่นาทีถึง Shinjuku</p>
-          <div class="tags">Top rating · Best value</div>
-          <div class="cta-row">
-            <div class="price-box">
-              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
-              <span class="price-val">ราคาประมาณ ฿2,983</span>
-            </div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5764573" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- 5 Sotetsu Fresa Inn Nihombashi-Kayabacho -->
-      <article class="card">
-        <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=478188" target="_blank" rel="nofollow noopener">
-          <img class="thumb" src="//pix8.agoda.net/hotelImages/478/478188/478188_16071409050044662039.jpg?ca=6&ce=1&s=720x540" alt="Sotetsu Fresa Inn Nihombashi-Kayabacho">
-        </a>
-        <div class="body">
-          <h3 class="title">Sotetsu Fresa Inn Nihombashi-Kayabacho</h3>
-          <p class="rating">
-            <span class="stars" aria-label="3 ดาว">
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-            </span>
-            · <span class="score">คะแนนรีวิว 8.6 (14,840 รีวิว)</span>
-          </p>
-          <p class="desc"><b>จุดเด่นโดนใจ:</b> เครือ Fresa คุณภาพเสมอต้นเสมอปลาย—ห้องสะอาด ฟังก์ชันครบ พนักงานน่ารัก เหมาะทั้งทำงานและท่องเที่ยว</p>
-          <p class="desc"><b>การเดินทาง:</b> ใกล้สถานี Kayabacho ต่อรถได้หลายสาย เข้า-ออกย่านหลักคล่องตัว</p>
-          <div class="tags">Top rating · Best value</div>
-          <div class="cta-row">
-            <div class="price-box">
-              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
-              <span class="price-val">ราคาประมาณ ฿2,995</span>
-            </div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=478188" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- 6 ICI HOTEL Ueno Shin-okachimachi -->
-      <article class="card">
-        <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=4983269" target="_blank" rel="nofollow noopener">
-          <img class="thumb" src="//pix8.agoda.net/hotelImages/4983269/-1/545a53be706d15d2f8b4451a835c99e6.jpg?ca=7&ce=1&s=720x540" alt="ICI HOTEL Ueno Shin-okachimachi">
-        </a>
-        <div class="body">
-          <h3 class="title">ICI HOTEL Ueno Shin-okachimachi</h3>
-          <p class="rating">
-            <span class="stars" aria-label="3 ดาว">
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-            </span>
-            · <span class="score">คะแนนรีวิว 8.7 (4,232 รีวิว)</span>
-          </p>
-          <p class="desc"><b>จุดเด่นโดนใจ:</b> โทนโมเดิร์น เท่ เรียบ แต่ครบ ฟีลดีตั้งแต่ล็อบบี้ถึงห้องพัก เดินเล่น Ameyoko/สวนอุเอโนะได้เพลิน</p>
-          <p class="desc"><b>การเดินทาง:</b> ใกล้ Shin-okachimachi/Okachimachi ต่อไป Ueno–Asakusa–Akihabara ง่ายนิดเดียว</p>
-          <div class="tags">Top rating · Best value</div>
-          <div class="cta-row">
-            <div class="price-box">
-              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
-              <span class="price-val">ราคาประมาณ ฿4,291</span>
-            </div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=4983269" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- 7 Hotel Resol Akihabara -->
-      <article class="card">
-        <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=30639271" target="_blank" rel="nofollow noopener">
-          <img class="thumb" src="//pix8.agoda.net/hotelImages/30639271/-1/ce66ce2baad1fc2b51912b3af2c043df.jpg?ce=0&s=720x540" alt="Hotel Resol Akihabara">
-        </a>
-        <div class="body">
-          <h3 class="title">Hotel Resol Akihabara</h3>
-          <p class="rating">
-            <span class="stars" aria-label="3 ดาว">
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-            </span>
-            · <span class="score">คะแนนรีวิว 9.1 (5,143 รีวิว)</span>
-          </p>
-          <p class="desc"><b>จุดเด่นโดนใจ:</b> ล็อบบี้สวยมีสไตล์ ห้องนอนคุณภาพดี นอนอิ่มชาร์จพลัง เที่ยว/ช้อปต่อแถว Akiba ไม่มีสะดุด</p>
-          <p class="desc"><b>การเดินทาง:</b> เดินถึงสถานี Akihabara ต่อรถไป Ueno–Tokyo Station ง่าย</p>
-          <div class="tags">Top rating · Best value</div>
-          <div class="cta-row">
-            <div class="price-box">
-              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
-              <span class="price-val">ราคาประมาณ ฿4,448</span>
-            </div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=30639271" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- 8 Nesthotel alt. Kuramae Station -->
-      <article class="card">
-        <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=24119420" target="_blank" rel="nofollow noopener">
-          <img class="thumb" src="//pix8.agoda.net/hotelImages/24119420/-1/397d51f2f6809ad8b1846dbee1330823.jpg?ca=21&ce=0&s=720x540" alt="Nesthotel alt. Kuramae Station">
-        </a>
-        <div class="body">
-          <h3 class="title">Nesthotel alt. Kuramae Station</h3>
-          <p class="rating">
-            <span class="stars" aria-label="3 ดาว">
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-            </span>
-            · <span class="score">คะแนนรีวิว 8.9 (1,101 รีวิว)</span>
-          </p>
-          <p class="desc"><b>จุดเด่นโดนใจ:</b> โทนอบอุ่น มีคาแรกเตอร์ ห้องสวยน่านอน ราคาเฟรนด์ลี่ สายชิลรักย่านเก่าต้องปลื้ม</p>
-          <p class="desc"><b>การเดินทาง:</b> ใกล้ Kuramae (Oedo/Asakusa Line) เที่ยวอาซากุสะ–อุเอโนะสะดวก ต่อเข้าเมืองได้เร็ว</p>
-          <div class="tags">Top rating · Best value</div>
-          <div class="cta-row">
-            <div class="price-box">
-              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
-              <span class="price-val">ราคาประมาณ ฿3,757</span>
-            </div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=24119420" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- 9 THE TOURIST HOTEL & Cafe AKIHABARA -->
-      <article class="card">
-        <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=12499747" target="_blank" rel="nofollow noopener">
-          <img class="thumb" src="//pix8.agoda.net/hotelImages/12499747/-1/66eb0dff8572fd9a3e3f07a05c055713.jpg?ca=12&ce=1&s=720x540" alt="THE TOURIST HOTEL & Cafe AKIHABARA">
-        </a>
-        <div class="body">
-          <h3 class="title">THE TOURIST HOTEL & Cafe AKIHABARA</h3>
-          <p class="rating">
-            <span class="stars" aria-label="3 ดาว">
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-            </span>
-            · <span class="score">คะแนนรีวิว 8.9 (7,426 รีวิว)</span>
-          </p>
-          <p class="desc"><b>จุดเด่นโดนใจ:</b> ดีไซน์ชิค มีคาเฟ่ในตัว แวะจิบกาแฟก่อนลุย Akiba—ช้อป/เที่ยว/กิน ครบในรัศมีเดิน</p>
-          <p class="desc"><b>การเดินทาง:</b> เดินสบายๆ ถึงสถานี Akihabara ต่อรถไป Ueno–Ginza–Tokyo Station ง่ายดาย</p>
-          <div class="tags">Top rating · Best value</div>
-          <div class="cta-row">
-            <div class="price-box">
-              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
-              <span class="price-val">ราคาประมาณ ฿4,533</span>
-            </div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=12499747" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- 10 Hotaku HOTEL -->
-      <article class="card">
-        <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=30045166" target="_blank" rel="nofollow noopener">
-          <img class="thumb" src="//pix8.agoda.net/hotelImages/30045166/-1/bd24ac6660946d9035d70ed6a79667f7.jpg?ce=0&s=720x540" alt="Hotaku HOTEL">
-        </a>
-        <div class="body">
-          <h3 class="title">Hotaku HOTEL</h3>
-          <p class="rating">
-            <span class="stars" aria-label="3 ดาว">
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
-            </span>
-            · <span class="score">คะแนนรีวิว 8.9 (1,458 รีวิว)</span>
-          </p>
-          <p class="desc"><b>จุดเด่นโดนใจ:</b> สะอาด ปลอดภัย บริการกันเอง ทำเลดีในโซนอากิฮาบาระ—คุ้มค่าสำหรับทั้งคู่รักและครอบครัว</p>
-          <p class="desc"><b>การเดินทาง:</b> ใกล้สถานีหลายสายในย่าน Akiba ไป Ueno/Asakusa/โตเกียวสเตชัน ง่ายไม่ต้องเปลี่ยนเยอะ</p>
-          <div class="tags">Top rating · Best value</div>
-          <div class="cta-row">
-            <div class="price-box">
-              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
-              <span class="price-val">ราคาประมาณ ฿3,777</span>
-            </div>
-            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=30045166" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
-          </div>
-        </div>
-      </article>
-
-    </section>
-
-    <div class="cta-wrap">
-      <a class="cta" href="https://www.agoda.com/th-th/partners/partnersearch.aspx?cid=1949420&pcs=1&hl=th-th" target="_blank" rel="nofollow noopener">ค้นหาเพิ่มเติมจากพันธมิตรของเรา</a>
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container" style="text-align:center">
-      <div class="footer-links">
-        <a href="/privacy.html">Privacy</a> · 
-        <a href="/terms.html">Terms</a> · 
-        <a href="/affiliate.html">Affiliate Disclosure</a> · 
-        <a href="/about.html">About us</a> · 
-        <a href="/contact.html">Contact</a> ·
-        <a href="https://web.facebook.com/clickandgothailand" target="_blank" rel="nofollow noopener">Facebook</a>
+  <!-- ============== ZONE A ============== -->
+  <section id="zone-a" class="section">
+    <div class="sechead">
+      <div>
+        <h2>โซน A — Shibuya / Harajuku</h2>
+        <p class="muted">สายแฟ สายคาเฟ่ เดินเล่น Cat Street – Omotesando ได้ง่าย ใกล้สถานีหลัก</p>
       </div>
+      <span class="tag">คัดมาเพื่อความคุ้มค่า + รีวิวดี</span>
     </div>
-  </footer>
 
-  <script>
-    (function(){
-      const btn=document.querySelector('.lang-btn'); const menu=document.querySelector('.lang-menu');
-      if(!btn||!menu) return;
-      const close=()=>{menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};
-      btn.addEventListener('click',e=>{e.stopPropagation();const opened=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(opened));});
-      document.addEventListener('click',close);
-      document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
-    })();
-  </script>
+    <div class="cards">
+
+      <!-- HOTEL ITEM (แทนค่าตามคอมเมนต์) -->
+      <article class="card">
+        <!-- ใส่ลิงก์ Agoda + รูปโรงแรม -->
+        <a href="#" target="_blank" rel="nofollow noopener">
+          <img src="https://placehold.co/720x540?text=Hotel+Image" alt="ชื่อโรงแรม">
+        </a>
+
+        <div class="card-body">
+          <!-- ชื่อโรงแรม -->
+          <h3 class="title">ชื่อโรงแรม (Shibuya)</h3>
+
+          <!-- แถวเรตติ้ง/สกอร์: ถ้ามีดาวให้แทนค่า c ใน starIcons() ด้านล่างด้วย -->
+          <div class="meta">
+            <span class="stars" aria-label="4 ดาว">
+              <!-- ★ x N (แก้จำนวนให้ตรงดาวจริง) -->
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            <span>รีวิวสกอร์ <span class="score">—</span></span>
+          </div>
+
+          <!-- จุดเด่นโดนใจ -->
+          <div class="pill" style="margin-top:10px">จุดเด่นโดนใจ</div>
+          <ul class="list">
+            <li>ใกล้สถานี … เดิน … นาที</li>
+            <li>ย่านคาเฟ่/ช้อปปิ้ง เดินเล่นสนุก</li>
+            <li>ห้องพักสะอาด บริการดี</li>
+          </ul>
+
+          <!-- ราคา + ปุ่ม -->
+          <div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+          <div class="row-price">
+            <!-- ใส่ราคาโดยประมาณ เช่น ~ ฿3,990 -->
+            <div class="price-left">~ ฿ —</div>
+            <a class="cta" href="#" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+          </div>
+        </div>
+      </article>
+      <!-- /HOTEL ITEM -->
+
+      <!-- คัดลอกบล็อก HOTEL ITEM นี้ให้ครบ 10 รายการในโซน A แล้วแก้ข้อมูลทีละจุด -->
+      <!-- HOTEL ITEM -->
+      <article class="card">
+        <a href="#" target="_blank" rel="nofollow noopener">
+          <img src="https://placehold.co/720x540?text=Hotel+Image" alt="ชื่อโรงแรม">
+        </a>
+        <div class="card-body">
+          <h3 class="title">ชื่อโรงแรม (Shibuya)</h3>
+          <div class="meta">
+            <span class="stars" aria-label="3 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            <span>รีวิวสกอร์ <span class="score">—</span></span>
+          </div>
+          <div class="pill" style="margin-top:10px">จุดเด่นโดนใจ</div>
+          <ul class="list">
+            <li>เดินถึง …</li><li>ห้องใหม่ สะอาด</li><li>ย่านคึกคัก</li>
+          </ul>
+          <div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+          <div class="row-price"><div class="price-left">~ ฿ —</div><a class="cta" href="#" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+        </div>
+      </article>
+      <!-- เพิ่มต่อจนครบ 10 ใบ -->
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============== ZONE B ============== -->
+  <section id="zone-b" class="section">
+    <div class="sechead">
+      <div>
+        <h2>โซน B — Shinjuku</h2>
+        <p class="muted">ใจกลางโตเกียว เดินทางง่าย ร้านอาหาร/ช้อปปิ้งแน่น เหมาะสาย Nightlife</p>
+      </div>
+      <span class="tag">เดินทางสะดวก + ราคาดี</span>
+    </div>
+    <div class="cards">
+      <!-- วาง 10 ใบ เหมือนตัวอย่างในโซน A -->
+      <!-- HOTEL ITEM -->
+      <article class="card">
+        <a href="#" target="_blank" rel="nofollow noopener">
+          <img src="https://placehold.co/720x540?text=Hotel+Image" alt="ชื่อโรงแรม">
+        </a>
+        <div class="card-body">
+          <h3 class="title">ชื่อโรงแรม (Shinjuku)</h3>
+          <div class="meta">
+            <span class="stars" aria-label="4 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            <span>รีวิวสกอร์ <span class="score">—</span></span>
+          </div>
+          <div class="pill" style="margin-top:10px">จุดเด่นโดนใจ</div>
+          <ul class="list"><li>ใกล้สถานี …</li><li>แหล่งกินดื่มครบ</li><li>ห้องเงียบพักสบาย</li></ul>
+          <div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+          <div class="row-price"><div class="price-left">~ ฿ —</div><a class="cta" href="#" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+        </div>
+      </article>
+      <!-- /HOTEL ITEM -->
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============== ZONE C ============== -->
+  <section id="zone-c" class="section">
+    <div class="sechead">
+      <div>
+        <h2>โซน C — Ueno / Asakusa</h2>
+        <p class="muted">กลิ่นอายวัฒนธรรม เดินเที่ยววัดเซนโซจิ พิพิธภัณฑ์ อาหาร local ราคาน่ารัก</p>
+      </div>
+      <span class="tag">ประหยัด + รีวิวดี</span>
+    </div>
+    <div class="cards">
+      <!-- วาง 10 ใบ -->
+      <!-- HOTEL ITEM -->
+      <article class="card">
+        <a href="#" target="_blank" rel="nofollow noopener">
+          <img src="https://placehold.co/720x540?text=Hotel+Image" alt="ชื่อโรงแรม">
+        </a>
+        <div class="card-body">
+          <h3 class="title">ชื่อโรงแรม (Ueno/Asakusa)</h3>
+          <div class="meta">
+            <span class="stars" aria-label="3 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            <span>รีวิวสกอร์ <span class="score">—</span></span>
+          </div>
+          <div class="pill" style="margin-top:10px">จุดเด่นโดนใจ</div>
+          <ul class="list"><li>ใกล้เซนโซจิ/อุเอโนะพาร์ค</li><li>เดินทางสะดวก</li><li>คุ้มราคา</li></ul>
+          <div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+          <div class="row-price"><div class="price-left">~ ฿ —</div><a class="cta" href="#" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============== ZONE D ============== -->
+  <section id="zone-d" class="section">
+    <div class="sechead">
+      <div>
+        <h2>โซน D — Ginza / Tokyo Station</h2>
+        <p class="muted">หรู เรียบ เนี้ยบ ใกล้ศูนย์กลางคมนาคม และย่านช้อปสุดพรีเมียม</p>
+      </div>
+      <span class="tag">เดินทางทั่วญี่ปุ่นง่าย (ชินคันเซ็น)</span>
+    </div>
+    <div class="cards">
+      <!-- HOTEL ITEM -->
+      <article class="card">
+        <a href="#" target="_blank" rel="nofollow noopener">
+          <img src="https://placehold.co/720x540?text=Hotel+Image" alt="ชื่อโรงแรม">
+        </a>
+        <div class="card-body">
+          <h3 class="title">ชื่อโรงแรม (Ginza/Tokyo Sta.)</h3>
+          <div class="meta">
+            <span class="stars" aria-label="4 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            <span>รีวิวสกอร์ <span class="score">—</span></span>
+          </div>
+          <div class="pill" style="margin-top:10px">จุดเด่นโดนใจ</div>
+          <ul class="list"><li>ใกล้ Tokyo Station</li><li>ย่านช้อประดับพรีเมียม</li><li>บริการประทับใจ</li></ul>
+          <div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+          <div class="row-price"><div class="price-left">~ ฿ —</div><a class="cta" href="#" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============== ZONE E ============== -->
+  <section id="zone-e" class="section">
+    <div class="sechead">
+      <div>
+        <h2>โซน E — Akihabara / Kanda</h2>
+        <p class="muted">สวรรค์ของสายอนิเมะ–เกม–แก็ดเจ็ต ร้านค้าแน่น เดินทางต่อสะดวก</p>
+      </div>
+      <span class="tag">สายโอตะ/ไอที ต้องมา</span>
+    </div>
+    <div class="cards">
+      <!-- HOTEL ITEM -->
+      <article class="card">
+        <a href="#" target="_blank" rel="nofollow noopener">
+          <img src="https://placehold.co/720x540?text=Hotel+Image" alt="ชื่อโรงแรม">
+        </a>
+        <div class="card-body">
+          <h3 class="title">ชื่อโรงแรม (Akihabara)</h3>
+          <div class="meta">
+            <span class="stars" aria-label="3 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            <span>รีวิวสกอร์ <span class="score">—</span></span>
+          </div>
+          <div class="pill" style="margin-top:10px">จุดเด่นโดนใจ</div>
+          <ul class="list"><li>ช้อปมันส์ทั้งวัน</li><li>ร้านอาหารเพียบ</li><li>เดินทางสะดวก</li></ul>
+          <div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+          <div class="row-price"><div class="price-left">~ ฿ —</div><a class="cta" href="#" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============== ZONE F ============== -->
+  <section id="zone-f" class="section">
+    <div class="sechead">
+      <div>
+        <h2>โซน F — Odaiba & รอบอ่าว</h2>
+        <p class="muted">วิวอ่าวสุดโรแมนติก ที่เที่ยวสำหรับครอบครัว โมเดิร์น โล่ง โปร่ง สบาย</p>
+      </div>
+      <span class="tag">ครอบครัว/คู่รัก วิวสวย</span>
+    </div>
+    <div class="cards">
+      <!-- HOTEL ITEM -->
+      <article class="card">
+        <a href="#" target="_blank" rel="nofollow noopener">
+          <img src="https://placehold.co/720x540?text=Hotel+Image" alt="ชื่อโรงแรม">
+        </a>
+        <div class="card-body">
+          <h3 class="title">ชื่อโรงแรม (Odaiba)</h3>
+          <div class="meta">
+            <span class="stars" aria-label="4 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            <span>รีวิวสกอร์ <span class="score">—</span></span>
+          </div>
+          <div class="pill" style="margin-top:10px">จุดเด่นโดนใจ</div>
+          <ul class="list"><li>วิวอ่าวโตเกียว</li><li>ห้าง/พิพิธภัณฑ์/TeamLab</li><li>ห้องกว้างสบาย</li></ul>
+          <div class="note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</div>
+          <div class="row-price"><div class="price-left">~ ฿ —</div><a class="cta" href="#" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Partner CTA bottom -->
+  <div class="cta-wrap">
+    <a id="partnerMore" class="btn" href="https://www.agoda.com/th-th/search?cid=1949420&pcs=1&q=Tokyo" target="_blank" rel="nofollow noopener">ค้นหาเพิ่มเติมจากพันธมิตรของเรา</a>
+  </div>
+
+</main>
+
+<script>
+  // (ออปชัน) ทำให้เมนูโซนด้านบนไฮไลต์ลิงก์ปัจจุบันแบบง่ายๆ
+  const links = document.querySelectorAll('.chipnav a');
+  const secs = [...document.querySelectorAll('.section')];
+  const onScroll = () => {
+    const y = window.scrollY + 120;
+    let cur = secs[0]?.id;
+    for (const s of secs){ if (s.offsetTop <= y) cur = s.id; }
+    links.forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+cur));
+  };
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+</script>
 </body>
 </html>
