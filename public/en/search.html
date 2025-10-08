@@ -40,12 +40,10 @@
     .card img{width:100%;height:210px;object-fit:cover;display:block;background:#f4f4f4}
     .card-body{padding:14px;display:flex;flex-direction:column;min-height:180px}
 
-    /* NEW: one-line "Best price" row */
     .best-label{font-weight:700;color:#d32f2f}
     .row-price{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
     .price-right{font-weight:700;white-space:nowrap;margin-left:12px}
 
-    /* keep CTA at bottom-right */
     .h-actions{margin-top:auto;display:flex;justify-content:flex-end}
 
     .stars{display:inline-flex;gap:2px;vertical-align:middle}.star{width:16px;height:16px;display:inline-block}.star svg{width:100%;height:100%;fill:var(--gold)}
@@ -186,7 +184,7 @@
   };
   const draft = JSON.parse(JSON.stringify(state));
 
-  // Bangkok spellings to EN
+  // Simple normalization (Thai spellings → EN common)
   function normalizeQ(q){
     return String(q||'')
       .replace(/กรุงเทพมหานคร|กรุงเทพฯ|กรุงเทพ/g,'Bangkok')
@@ -334,6 +332,11 @@
 
     let items = data.results || data.items || data.hotels || [];
     if (!Array.isArray(items)) items = [];
+
+    /* === ENFORCE FILTERS: review score / stars / price === */
+    items = applyFilters(items);
+    /* ===================================================== */
+
     if (state.sort === 'price_asc') items.sort((a,b)=>(readPrice(a)||1e15)-(readPrice(b)||1e15));
     if (state.sort === 'price_desc') items.sort((a,b)=>(readPrice(b)||0)-(readPrice(a)||0));
 
@@ -356,13 +359,42 @@
   const readName = h => h.name || h.hotelName || h.title || h.label || '—';
   const readImg  = h => h.thumbnail || h.image || h.img || h.photo || '';
   const readUrl  = h => h.url || h.link || h.deeplink || '#';
-  const readStars= h => h.rating ?? h.stars ?? h.star ?? 0;
-  const readScore= h => h.reviewScore ?? h.score ?? h.review_score ?? null;
+  const readStars= h => h.rating ?? h.stars ?? h.star ?? 0;         // hotel stars
+  const readScore= h => h.reviewScore ?? h.score ?? h.review_score ?? null; // review score
   const readCurr = h => h.currency || h.cur || 'THB';
   function readPrice(h){
     const v = h.price ?? h.minPrice ?? h.min_price ?? h.fromPrice ?? null;
     return (v!=null && !isNaN(+v)) ? +v : null;
   }
+
+  /* ---------- FILTER HELPERS (added) ---------- */
+  function normalizeScore(h){
+    const raw = readScore(h);
+    if (raw==null) return null;
+    const n = Number(raw);
+    return Number.isNaN(n) ? null : n;
+  }
+  function applyFilters(list){
+    const sMin = +state.scoreMin || 0;     // review score min (e.g. 8)
+    const stMin= +state.starsMin || 0;     // stars min
+    const pMin = Math.min(+state.priceMin || 0, +state.priceMax || 200000);
+    const pMax = Math.max(+state.priceMin || 0, +state.priceMax || 200000);
+
+    return list.filter(h=>{
+      const sc = normalizeScore(h);
+      if (sMin>0 && !(sc!=null && sc>=sMin)) return false;
+
+      const st = Number(readStars(h) || 0);
+      if (stMin>0 && !(st>=stMin)) return false;
+
+      if (pMin>0 || pMax<200000){
+        const pr = readPrice(h);
+        if (pr==null || pr<pMin || pr>pMax) return false;
+      }
+      return true;
+    });
+  }
+  /* ------------------------------------------- */
 
   function starIcons(n){
     const c = Math.max(0, Math.min(5, Math.round(n||0)));
@@ -391,13 +423,11 @@
               ${starIcons(stars)}${score!=null ? `&nbsp;·&nbsp;<span class="score">Review score ${score}</span>` : ''}
             </div>
 
-            <!-- NEW: one-line best price row -->
             <div class="row-price">
               <div class="best-label">Best price</div>
               <span class="price-right">${price!=null ? fmt(price, cur) : '-'} ${cur}</span>
             </div>
 
-            <!-- CTA stays at bottom-right -->
             <div class="h-actions"><a class="btn" href="${url}" target="_blank" rel="nofollow noopener">View offer</a></div>
           </div>
         </article>`;
