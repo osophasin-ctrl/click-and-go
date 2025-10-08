@@ -9,32 +9,33 @@
   <link rel="stylesheet" href="/style.css" />
 
   <style>
-    :root{--brand:#0aa297;--muted:#667085;--card:#ffffff;--ring:#0aa29733}
+    :root{--brand:#0aa297;--muted:#667085;--card:#ffffff;--ring:#0aa29733;--gold:#d4a017}
     body{background:#f7f7f7}
     .container{max-width:1100px;margin:0 auto;padding:16px}
-    .hero{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:18px 18px}
+    .hero{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:18px}
     .hero h1{margin:0 0 6px;font-size:28px}
     .hero p{margin:0;color:var(--muted)}
     .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:18px 0}
     @media(max-width:860px){.grid{grid-template-columns:1fr}}
-    .card{background:var(--card);border:2px solid var(--ring);border-radius:16px;overflow:hidden}
+    .card{background:var(--card);border:2px solid var(--ring);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
     .thumb{width:100%;height:260px;object-fit:cover;background:#eee;display:block}
-    .body{padding:14px 16px 16px}
-    .badge{display:inline-block;background:#eaf8f6;color:#107e75;border-radius:999px;padding:6px 10px;font-weight:700;margin-bottom:8px}
+    .body{padding:14px 16px 16px;display:flex;flex-direction:column}
     .title{margin:0 0 6px;font-size:20px}
-    .meta{font-size:14px;color:#111;margin:0 0 10px}
-    .meta b{font-weight:700}
-    .desc{color:#111;line-height:1.7;margin:6px 0 0}
+    .rating{font-size:13px;color:#111;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+    .stars{display:inline-flex;gap:2px;vertical-align:middle}
+    .star{width:16px;height:16px;display:inline-block}
+    .star svg{width:100%;height:100%;fill:var(--gold)}
+    .desc{color:#111;line-height:1.7;margin:8px 0 0}
     .desc b{font-weight:700}
     .tags{color:#667085;margin-top:10px;font-size:14px}
-    .actions{display:flex;justify-content:flex-end;margin-top:12px}
+    .actions{margin-top:12px;display:flex;justify-content:flex-end}
     .btn{background:var(--brand);color:#fff;border:none;border-radius:999px;padding:10px 16px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
     .cta-wrap{display:flex;justify-content:center;margin:26px 0}
     .cta{background:var(--brand);color:#fff;border-radius:999px;padding:12px 22px;font-weight:700;text-decoration:none}
   </style>
 </head>
 <body>
-  <!-- Header (เดิม) -->
+  <!-- Header -->
   <header class="site-header" role="banner">
     <div class="inner">
       <a href="/index.html" class="brand" aria-label="Click & Go">
@@ -56,24 +57,36 @@
   </header>
 
   <main class="container">
-    <!-- Hero: ไม่มีภาพพื้นหลัง ตามที่ขอ -->
+    <!-- Hero: ไม่มีภาพพื้นหลัง -->
     <section class="hero">
       <h1>โตเกียว – 10 โรงแรมคัดสรร</h1>
       <p>Top rating + Best value | คัดเลือกจากรีวิวจริง ทำเลเดินทางง่าย เหมาะกับนักเดินทางสายคุ้มค่า</p>
     </section>
 
     <section class="grid" aria-label="รายการโรงแรมคัดสรรในโตเกียว">
+
+      <!-- helper: 3 ดาว -->
+      <!-- ใช้ซ้ำในทุกการ์ด -->
+      <!-- ใส่เป็นฟังก์ชันก็ได้ แต่เก็บเป็น HTML ตรงๆ เพื่อความเรียบง่าย -->
+      <!-- template: <span class="stars" aria-label="3 ดาว"> ... </span> -->
+
       <!-- 1 Almont Inn Nihonbashi -->
       <article class="card">
         <a href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=303102" target="_blank" rel="nofollow noopener">
           <img class="thumb" src="//pix8.agoda.net/hotelImages/303102/-1/961efbaeb13c0b4ba908f22900551ddd.jpg?ca=11&ce=1&s=720x540" alt="Almont Inn Nihonbashi">
         </a>
         <div class="body">
-          <div class="badge">คัดสรร #1</div>
           <h3 class="title">Almont Inn Nihonbashi</h3>
-          <p class="meta"><b>ย่าน:</b> Nihonbashi (ใจกลางเมือง ใกล้ Tokyo Station)</p>
-          <p class="desc"><b>เหตุผลที่เราเลือก:</b> โรงแรมบิสซิเนสสไตล์เรียบง่าย ห้องสะอาด บริการอบอุ่น ได้รับคำชมเรื่องความคุ้มค่า เหมาะกับคนที่ต้องการฐานที่พักกลางเมืองไปเที่ยวง่ายทั้งวัน</p>
-          <p class="desc"><b>การเดินทาง:</b> เดินสั้นๆ ถึงสถานีในย่านนิฮอนบาชิ เชื่อมต่อหลายสาย ไปอากิฮาบาระ–กินซ่า–โตเกียวสเตชันได้รวดเร็ว</p>
+          <p class="rating">
+            <span class="stars" aria-label="3 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            · <span class="score">คะแนนรีวิว 8.8 (4,198 รีวิว)</span>
+          </p>
+          <p class="desc"><b>จุดเด่นโดนใจ:</b> โฮเทลสไตล์เรียบง่ายน่านอน สะอาดเนี้ยบ บริการอบอุ่น ราคาเป็นมิตร—เหมาะมากเป็นฐานออกเที่ยวทั้งวัน</p>
+          <p class="desc"><b>การเดินทาง:</b> ย่าน Nihonbashi เดินไม่ไกลถึงสถานี เชื่อมหลายสาย ไปอากิฮาบาระ–กินซ่า–Tokyo Station สบายๆ</p>
           <div class="tags">Top rating · Best value</div>
           <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=303102" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
         </div>
@@ -85,11 +98,17 @@
           <img class="thumb" src="//pix8.agoda.net/hotelImages/5728068/-1/6095962befb21560df4d99fc959dfcb7.jpg?ce=0&s=720x540" alt="APA Hotel Nihombashi Bakurocho-Ekimae">
         </a>
         <div class="body">
-          <div class="badge">คัดสรร #2</div>
           <h3 class="title">APA Hotel Nihombashi Bakurocho-Ekimae</h3>
-          <p class="meta"><b>ย่าน:</b> Nihombashi (Bakurocho)</p>
-          <p class="desc"><b>เหตุผลที่เราเลือก:</b> แบรนด์ APA มาตรฐานดี ห้องกะทัดรัดครบฟังก์ชัน อินเทอร์เน็ตแรง ทำความสะอาดเยี่ยม คะแนนรีวิวสูงอย่างสม่ำเสมอ</p>
-          <p class="desc"><b>การเดินทาง:</b> ทำเล “Ekimae” ใกล้สถานีมาก เดินทางสะดวกไปอากิฮาบาระ อาซากุสะ และโตเกียวสเตชัน</p>
+          <p class="rating">
+            <span class="stars" aria-label="3 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            · <span class="score">คะแนนรีวิว 8.6 (7,424 รีวิว)</span>
+          </p>
+          <p class="desc"><b>จุดเด่นโดนใจ:</b> แบรนด์ APA การันตี—ห้องกะทัดรัดแต่ครบ ลื่นไหลทุกดีเทล Wi-Fi เร็ว ความสะอาดชนะใจสายคุ้ม</p>
+          <p class="desc"><b>การเดินทาง:</b> ชื่อก็บอก Ekimae—ใกล้สถานีมาก! เที่ยวอากิฮาบาระ อาซากุสะ หรือเข้า Tokyo Station ง่ายสุดๆ</p>
           <div class="tags">Top rating · Best value</div>
           <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5728068" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
         </div>
@@ -101,11 +120,17 @@
           <img class="thumb" src="//pix8.agoda.net/hotelImages/5500893/-1/5084046a8897b3d6e71c2cae26b72158.jpg?ca=7&ce=1&s=720x540" alt="APA Hotel Asakusabashi Ekimae">
         </a>
         <div class="body">
-          <div class="badge">คัดสรร #3</div>
           <h3 class="title">APA Hotel Asakusabashi Ekimae</h3>
-          <p class="meta"><b>ย่าน:</b> Asakusabashi (ระหว่าง Ueno–Akihabara–Asakusa)</p>
-          <p class="desc"><b>เหตุผลที่เราเลือก:</b> ราคาดี ห้องใหม่สะอาด อุปกรณ์ครบ เหมาะสำหรับผู้ที่อยากเที่ยวทั้งอาซากุสะและอากิฮาบาระในทริปเดียว</p>
-          <p class="desc"><b>การเดินทาง:</b> ใกล้สถานี Asakusabashi เดินสั้นๆ เชื่อม JR และรถไฟใต้ดิน ไปอุเอโนะ/อาซากุสะ/โตเกียวสเตชันได้ง่าย</p>
+          <p class="rating">
+            <span class="stars" aria-label="3 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            · <span class="score">คะแนนรีวิว 8.7 (3,197 รีวิว)</span>
+          </p>
+          <p class="desc"><b>จุดเด่นโดนใจ:</b> ทำเลทองระหว่าง Ueno–Akihabara–Asakusa ห้องใหม่สะอาด ราคาดี เหมาะกับทริปสั้นที่อยากเก็บแลนด์มาร์กครบ</p>
+          <p class="desc"><b>การเดินทาง:</b> ใกล้สถานี Asakusabashi ต่อ JR/ใต้ดินไปทุกย่านหลักได้รวดเร็ว</p>
           <div class="tags">Top rating · Best value</div>
           <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5500893" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
         </div>
@@ -117,11 +142,17 @@
           <img class="thumb" src="//pix8.agoda.net/hotelImages/5764573/-1/7f59da09c64e3092d3f6c9cbe710027b.jpg?ca=7&ce=1&s=720x540" alt="Pearl Hotel Shinjuku Akebonobashi">
         </a>
         <div class="body">
-          <div class="badge">คัดสรร #4</div>
           <h3 class="title">Pearl Hotel Shinjuku Akebonobashi</h3>
-          <p class="meta"><b>ย่าน:</b> Shinjuku (Akebonobashi)</p>
-          <p class="desc"><b>เหตุผลที่เราเลือก:</b> ราคาประหยัดในย่านยอดฮิต ห้องสะอาดเรียบร้อย รีวิวดี คุ้มค่าสำหรับคนอยากอยู่ใกล้ชินจูกุแต่ไม่วุ่นวาย</p>
-          <p class="desc"><b>การเดินทาง:</b> ใกล้สถานี Akebonobashi (Toei Shinjuku Line) นั่งรถไฟเพียงไม่กี่นาทีถึง Shinjuku</p>
+          <p class="rating">
+            <span class="stars" aria-label="3 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            · <span class="score">คะแนนรีวิว 8.6 (7,759 รีวิว)</span>
+          </p>
+          <p class="desc"><b>จุดเด่นโดนใจ:</b> อยากใกล้ชินจูกุแต่ไม่วุ่นวาย—ที่นี่ตอบโจทย์! ห้องสะอาดเรียบร้อย ราคาเบา เดินเล่นเข้าเมืองง่าย</p>
+          <p class="desc"><b>การเดินทาง:</b> ติดสถานี Akebonobashi (Toei Shinjuku Line) เพียงไม่กี่นาทีถึง Shinjuku</p>
           <div class="tags">Top rating · Best value</div>
           <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5764573" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
         </div>
@@ -133,11 +164,17 @@
           <img class="thumb" src="//pix8.agoda.net/hotelImages/478/478188/478188_16071409050044662039.jpg?ca=6&ce=1&s=720x540" alt="Sotetsu Fresa Inn Nihombashi-Kayabacho">
         </a>
         <div class="body">
-          <div class="badge">คัดสรร #5</div>
           <h3 class="title">Sotetsu Fresa Inn Nihombashi-Kayabacho</h3>
-          <p class="meta"><b>ย่าน:</b> Kayabacho / Nihombashi</p>
-          <p class="desc"><b>เหตุผลที่เราเลือก:</b> โรงแรมเครือคุณภาพ มาตรฐานดีมาก ห้องสะอาด เรียบง่าย ใช้งานสะดวก เหมาะกับทั้งคู่รักและนักธุรกิจ</p>
-          <p class="desc"><b>การเดินทาง:</b> ใกล้สถานี Kayabacho เชื่อมต่อหลายสาย เข้าเมือง–ออกย่านต่างๆ ได้รวดเร็ว</p>
+          <p class="rating">
+            <span class="stars" aria-label="3 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            · <span class="score">คะแนนรีวิว 8.6 (14,840 รีวิว)</span>
+          </p>
+          <p class="desc"><b>จุดเด่นโดนใจ:</b> เครือ Fresa คุณภาพเสมอต้นเสมอปลาย—ห้องสะอาด ฟังก์ชันครบ พนักงานน่ารัก เหมาะทั้งทำงานและท่องเที่ยว</p>
+          <p class="desc"><b>การเดินทาง:</b> ใกล้สถานี Kayabacho ต่อรถได้หลายสาย เข้า-ออกย่านหลักคล่องตัว</p>
           <div class="tags">Top rating · Best value</div>
           <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=478188" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
         </div>
@@ -149,11 +186,17 @@
           <img class="thumb" src="//pix8.agoda.net/hotelImages/4983269/-1/545a53be706d15d2f8b4451a835c99e6.jpg?ca=7&ce=1&s=720x540" alt="ICI HOTEL Ueno Shin-okachimachi">
         </a>
         <div class="body">
-          <div class="badge">คัดสรร #6</div>
           <h3 class="title">ICI HOTEL Ueno Shin-okachimachi</h3>
-          <p class="meta"><b>ย่าน:</b> Ueno / Okachimachi</p>
-          <p class="desc"><b>เหตุผลที่เราเลือก:</b> โรงแรมโทนโมเดิร์น ห้องใหม่ สะอาด บรรยากาศดี เหมาะกับคนที่อยากเดินเล่นตลาด Ameyoko และสวนอุเอโนะ</p>
-          <p class="desc"><b>การเดินทาง:</b> ใกล้สถานี Shin-okachimachi/Okachimachi เดินทางต่อไป Ueno, Asakusa และ Akihabara ง่ายมาก</p>
+          <p class="rating">
+            <span class="stars" aria-label="3 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            · <span class="score">คะแนนรีวิว 8.7 (4,232 รีวิว)</span>
+          </p>
+          <p class="desc"><b>จุดเด่นโดนใจ:</b> โทนโมเดิร์น เท่ เรียบ แต่ครบ ฟีลดีตั้งแต่ล็อบบี้ถึงห้องพัก เดินเล่น Ameyoko/สวนอุเอโนะได้เพลิน</p>
+          <p class="desc"><b>การเดินทาง:</b> ใกล้ Shin-okachimachi/Okachimachi ต่อไป Ueno–Asakusa–Akihabara ง่ายนิดเดียว</p>
           <div class="tags">Top rating · Best value</div>
           <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=4983269" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
         </div>
@@ -165,11 +208,17 @@
           <img class="thumb" src="//pix8.agoda.net/hotelImages/30639271/-1/ce66ce2baad1fc2b51912b3af2c043df.jpg?ce=0&s=720x540" alt="Hotel Resol Akihabara">
         </a>
         <div class="body">
-          <div class="badge">คัดสรร #7</div>
           <h3 class="title">Hotel Resol Akihabara</h3>
-          <p class="meta"><b>ย่าน:</b> Akihabara</p>
-          <p class="desc"><b>เหตุผลที่เราเลือก:</b> ดีไซน์เท่ ล็อบบี้สวย บรรยากาศผ่อนคลาย ห้องนอนคุณภาพดี คะแนนรีวิวเรื่องความสะอาดและทำเลโดดเด่น</p>
-          <p class="desc"><b>การเดินทาง:</b> ใกล้สถานี Akihabara เดินเล่นย่านอิเล็กทรอนิกส์สะดวก และต่อสายไป Ueno–Tokyo Station ได้สบาย</p>
+          <p class="rating">
+            <span class="stars" aria-label="3 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            · <span class="score">คะแนนรีวิว 8.8 (5,868 รีวิว)</span>
+          </p>
+          <p class="desc"><b>จุดเด่นโดนใจ:</b> ล็อบบี้สวยมีสไตล์ ห้องนอนคุณภาพดี นอนอิ่มชาร์จพลัง เที่ยว/ช้อปต่อแถว Akiba ไม่มีสะดุด</p>
+          <p class="desc"><b>การเดินทาง:</b> เดินถึงสถานี Akihabara ต่อรถไป Ueno–Tokyo Station ง่าย</p>
           <div class="tags">Top rating · Best value</div>
           <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=30639271" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
         </div>
@@ -181,11 +230,17 @@
           <img class="thumb" src="//pix8.agoda.net/hotelImages/24119420/-1/397d51f2f6809ad8b1846dbee1330823.jpg?ca=21&ce=0&s=720x540" alt="Nesthotel alt. Kuramae Station">
         </a>
         <div class="body">
-          <div class="badge">คัดสรร #8</div>
           <h3 class="title">Nesthotel alt. Kuramae Station</h3>
-          <p class="meta"><b>ย่าน:</b> Kuramae (ใกล้ Asakusa)</p>
-          <p class="desc"><b>เหตุผลที่เราเลือก:</b> โฮเทลสไตล์อบอุ่น มีคาแรกเตอร์ ห้องสวยน่านอน ราคาเป็นมิตร เหมาะสำหรับคนชอบโซนเก่าของโตเกียว</p>
-          <p class="desc"><b>การเดินทาง:</b> ใกล้สถานี Kuramae (Oedo/Asakusa Line) เที่ยวอาซากุสะ–อุเอโนะสะดวก และต่อรถเข้าเมืองง่าย</p>
+          <p class="rating">
+            <span class="stars" aria-label="3 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            · <span class="score">คะแนนรีวิว 8.9 (1,101 รีวิว)</span>
+          </p>
+          <p class="desc"><b>จุดเด่นโดนใจ:</b> โทนอบอุ่น มีคาแรกเตอร์ ห้องสวยน่านอน ราคาเฟรนด์ลี่ สายชิลรักย่านเก่าต้องปลื้ม</p>
+          <p class="desc"><b>การเดินทาง:</b> ใกล้ Kuramae (Oedo/Asakusa Line) เที่ยวอาซากุสะ–อุเอโนะสะดวก ต่อเข้าเมืองได้เร็ว</p>
           <div class="tags">Top rating · Best value</div>
           <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=24119420" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
         </div>
@@ -197,11 +252,17 @@
           <img class="thumb" src="//pix8.agoda.net/hotelImages/12499747/-1/66eb0dff8572fd9a3e3f07a05c055713.jpg?ca=12&ce=1&s=720x540" alt="THE TOURIST HOTEL & Cafe AKIHABARA">
         </a>
         <div class="body">
-          <div class="badge">คัดสรร #9</div>
           <h3 class="title">THE TOURIST HOTEL & Cafe AKIHABARA</h3>
-          <p class="meta"><b>ย่าน:</b> Akihabara</p>
-          <p class="desc"><b>เหตุผลที่เราเลือก:</b> โรงแรมเท่ๆ มีคาเฟ่ในตัว บรรยากาศชิค รีวิวเรื่องทำเลและความสะอาดดีมาก เหมาะกับทั้งสายคาเฟ่และนักช้อปแกดเจ็ต</p>
-          <p class="desc"><b>การเดินทาง:</b> เดินสบายๆ ถึงสถานี Akihabara ต่อรถไฟไป Ueno–Ginza–Tokyo Station ได้รวดเร็ว</p>
+          <p class="rating">
+            <span class="stars" aria-label="3 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            · <span class="score">คะแนนรีวิว 8.9 (7,426 รีวิว)</span>
+          </p>
+          <p class="desc"><b>จุดเด่นโดนใจ:</b> ดีไซน์ชิค มีคาเฟ่ในตัว แวะจิบกาแฟก่อนลุย Akiba—ช้อป/เที่ยว/กิน ครบในรัศมีเดิน</p>
+          <p class="desc"><b>การเดินทาง:</b> เดินสบายๆ ถึงสถานี Akihabara ต่อรถไป Ueno–Ginza–Tokyo Station ง่ายดาย</p>
           <div class="tags">Top rating · Best value</div>
           <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=12499747" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
         </div>
@@ -213,15 +274,22 @@
           <img class="thumb" src="//pix8.agoda.net/hotelImages/30045166/-1/bd24ac6660946d9035d70ed6a79667f7.jpg?ce=0&s=720x540" alt="Hotaku HOTEL">
         </a>
         <div class="body">
-          <div class="badge">คัดสรร #10</div>
           <h3 class="title">Hotaku HOTEL</h3>
-          <p class="meta"><b>ย่าน:</b> Akihabara</p>
-          <p class="desc"><b>เหตุผลที่เราเลือก:</b> ห้องพักสะอาด ปลอดภัย บริการเป็นกันเอง ราคาดีเมื่อเทียบทำเล เหมาะกับครอบครัวหรือนักเดินทางที่อยากอยู่โซนอากิฮาบาระ</p>
-          <p class="desc"><b>การเดินทาง:</b> ใกล้สถานีในย่าน Akihabara เดินทางเชื่อมหลายสาย ไป Ueno/Asakusa/โตเกียวสเตชัน ได้สะดวก</p>
+          <p class="rating">
+            <span class="stars" aria-label="3 ดาว">
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+              <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+            </span>
+            · <span class="score">คะแนนรีวิว 8.9 (1,458 รีวิว)</span>
+          </p>
+          <p class="desc"><b>จุดเด่นโดนใจ:</b> สะอาด ปลอดภัย บริการกันเอง ทำเลดีในโซนอากิฮาบาระ—คุ้มค่าสำหรับทั้งคู่รักและครอบครัว</p>
+          <p class="desc"><b>การเดินทาง:</b> ใกล้สถานีหลายสายในย่าน Akiba ไป Ueno/Asakusa/โตเกียวสเตชัน ง่ายไม่ต้องเปลี่ยนเยอะ</p>
           <div class="tags">Top rating · Best value</div>
           <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=30045166" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
         </div>
       </article>
+
     </section>
 
     <div class="cta-wrap">
@@ -229,7 +297,7 @@
     </div>
   </main>
 
-  <!-- Footer (เดิม) -->
+  <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
@@ -244,7 +312,7 @@
   </footer>
 
   <script>
-    // language pop-up (เหมือนเดิม)
+    // dropdown ภาษา (เหมือนเดิม)
     (function(){
       const btn=document.querySelector('.lang-btn'); const menu=document.querySelector('.lang-menu');
       if(!btn||!menu) return;
