@@ -7,7 +7,6 @@
   <meta name="description" content="รวม 10 โรงแรมคัดสรรในโตเกียว Top rating + Best value พร้อมลิงก์จอง Agoda (พันธมิตรของเรา)" />
   <link rel="icon" href="/favicon.ico" />
   <link rel="stylesheet" href="/style.css" />
-
   <style>
     :root{--brand:#0aa297;--muted:#667085;--card:#ffffff;--ring:#0aa29733;--gold:#d4a017}
     body{background:#f7f7f7}
@@ -28,14 +27,25 @@
     .desc{color:#111;line-height:1.7;margin:8px 0 0}
     .desc b{font-weight:700}
     .tags{color:#667085;margin-top:10px;font-size:14px}
-    .actions{margin-top:12px;display:flex;justify-content:flex-end}
-    .btn{background:var(--brand);color:#fff;border:none;border-radius:999px;padding:10px 16px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+    .cta-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-top:12px}
+    .price-box{display:flex;flex-direction:column}
+    .price-note{font-size:12px;color:var(--muted);line-height:1}
+    .price-val{font-weight:800;font-size:18px}
+    .btn{background:var(--brand);color:#fff;border:none;border-radius:999px;padding:10px 16px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;white-space:nowrap}
     .cta-wrap{display:flex;justify-content:center;margin:26px 0}
     .cta{background:var(--brand);color:#fff;border-radius:999px;padding:12px 22px;font-weight:700;text-decoration:none}
+    /* header language menu minimal (kept from site) */
+    .site-header .inner{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:#111}
+    .main-nav a{margin-left:14px}
+    .lang{position:relative}
+    .lang-btn{background:transparent;border:1px solid #e5e7eb;border-radius:8px;padding:6px 10px;cursor:pointer}
+    .lang-menu{position:absolute;right:0;top:120%;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:6px;min-width:120px;display:none}
+    .lang-menu.open{display:block}
+    .lang-menu a{display:block;padding:8px 10px;text-decoration:none}
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="site-header" role="banner">
     <div class="inner">
       <a href="/index.html" class="brand" aria-label="Click & Go">
@@ -57,18 +67,13 @@
   </header>
 
   <main class="container">
-    <!-- Hero: ไม่มีภาพพื้นหลัง -->
+    <!-- Hero (ไม่มีภาพพื้นหลัง) -->
     <section class="hero">
       <h1>โตเกียว – 10 โรงแรมคัดสรร</h1>
       <p>Top rating + Best value | คัดเลือกจากรีวิวจริง ทำเลเดินทางง่าย เหมาะกับนักเดินทางสายคุ้มค่า</p>
     </section>
 
     <section class="grid" aria-label="รายการโรงแรมคัดสรรในโตเกียว">
-
-      <!-- helper: 3 ดาว -->
-      <!-- ใช้ซ้ำในทุกการ์ด -->
-      <!-- ใส่เป็นฟังก์ชันก็ได้ แต่เก็บเป็น HTML ตรงๆ เพื่อความเรียบง่าย -->
-      <!-- template: <span class="stars" aria-label="3 ดาว"> ... </span> -->
 
       <!-- 1 Almont Inn Nihonbashi -->
       <article class="card">
@@ -88,7 +93,13 @@
           <p class="desc"><b>จุดเด่นโดนใจ:</b> โฮเทลสไตล์เรียบง่ายน่านอน สะอาดเนี้ยบ บริการอบอุ่น ราคาเป็นมิตร—เหมาะมากเป็นฐานออกเที่ยวทั้งวัน</p>
           <p class="desc"><b>การเดินทาง:</b> ย่าน Nihonbashi เดินไม่ไกลถึงสถานี เชื่อมหลายสาย ไปอากิฮาบาระ–กินซ่า–Tokyo Station สบายๆ</p>
           <div class="tags">Top rating · Best value</div>
-          <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=303102" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+          <div class="cta-row">
+            <div class="price-box">
+              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
+              <span class="price-val">ราคาประมาณ ฿2,546</span>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=303102" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+          </div>
         </div>
       </article>
 
@@ -110,7 +121,13 @@
           <p class="desc"><b>จุดเด่นโดนใจ:</b> แบรนด์ APA การันตี—ห้องกะทัดรัดแต่ครบ ลื่นไหลทุกดีเทล Wi-Fi เร็ว ความสะอาดชนะใจสายคุ้ม</p>
           <p class="desc"><b>การเดินทาง:</b> ชื่อก็บอก Ekimae—ใกล้สถานีมาก! เที่ยวอากิฮาบาระ อาซากุสะ หรือเข้า Tokyo Station ง่ายสุดๆ</p>
           <div class="tags">Top rating · Best value</div>
-          <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5728068" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+          <div class="cta-row">
+            <div class="price-box">
+              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
+              <span class="price-val">ราคาประมาณ ฿3,125</span>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5728068" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+          </div>
         </div>
       </article>
 
@@ -132,7 +149,13 @@
           <p class="desc"><b>จุดเด่นโดนใจ:</b> ทำเลทองระหว่าง Ueno–Akihabara–Asakusa ห้องใหม่สะอาด ราคาดี เหมาะกับทริปสั้นที่อยากเก็บแลนด์มาร์กครบ</p>
           <p class="desc"><b>การเดินทาง:</b> ใกล้สถานี Asakusabashi ต่อ JR/ใต้ดินไปทุกย่านหลักได้รวดเร็ว</p>
           <div class="tags">Top rating · Best value</div>
-          <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5500893" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+          <div class="cta-row">
+            <div class="price-box">
+              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
+              <span class="price-val">ราคาประมาณ ฿3,448</span>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5500893" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+          </div>
         </div>
       </article>
 
@@ -154,7 +177,13 @@
           <p class="desc"><b>จุดเด่นโดนใจ:</b> อยากใกล้ชินจูกุแต่ไม่วุ่นวาย—ที่นี่ตอบโจทย์! ห้องสะอาดเรียบร้อย ราคาเบา เดินเล่นเข้าเมืองง่าย</p>
           <p class="desc"><b>การเดินทาง:</b> ติดสถานี Akebonobashi (Toei Shinjuku Line) เพียงไม่กี่นาทีถึง Shinjuku</p>
           <div class="tags">Top rating · Best value</div>
-          <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5764573" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+          <div class="cta-row">
+            <div class="price-box">
+              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
+              <span class="price-val">ราคาประมาณ ฿2,983</span>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=5764573" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+          </div>
         </div>
       </article>
 
@@ -176,7 +205,13 @@
           <p class="desc"><b>จุดเด่นโดนใจ:</b> เครือ Fresa คุณภาพเสมอต้นเสมอปลาย—ห้องสะอาด ฟังก์ชันครบ พนักงานน่ารัก เหมาะทั้งทำงานและท่องเที่ยว</p>
           <p class="desc"><b>การเดินทาง:</b> ใกล้สถานี Kayabacho ต่อรถได้หลายสาย เข้า-ออกย่านหลักคล่องตัว</p>
           <div class="tags">Top rating · Best value</div>
-          <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=478188" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+          <div class="cta-row">
+            <div class="price-box">
+              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
+              <span class="price-val">ราคาประมาณ ฿2,995</span>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=478188" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+          </div>
         </div>
       </article>
 
@@ -198,7 +233,13 @@
           <p class="desc"><b>จุดเด่นโดนใจ:</b> โทนโมเดิร์น เท่ เรียบ แต่ครบ ฟีลดีตั้งแต่ล็อบบี้ถึงห้องพัก เดินเล่น Ameyoko/สวนอุเอโนะได้เพลิน</p>
           <p class="desc"><b>การเดินทาง:</b> ใกล้ Shin-okachimachi/Okachimachi ต่อไป Ueno–Asakusa–Akihabara ง่ายนิดเดียว</p>
           <div class="tags">Top rating · Best value</div>
-          <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=4983269" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+          <div class="cta-row">
+            <div class="price-box">
+              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
+              <span class="price-val">ราคาประมาณ ฿4,291</span>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=4983269" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+          </div>
         </div>
       </article>
 
@@ -215,12 +256,18 @@
               <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
               <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
             </span>
-            · <span class="score">คะแนนรีวิว 8.8 (5,868 รีวิว)</span>
+            · <span class="score">คะแนนรีวิว 9.1 (5,143 รีวิว)</span>
           </p>
           <p class="desc"><b>จุดเด่นโดนใจ:</b> ล็อบบี้สวยมีสไตล์ ห้องนอนคุณภาพดี นอนอิ่มชาร์จพลัง เที่ยว/ช้อปต่อแถว Akiba ไม่มีสะดุด</p>
           <p class="desc"><b>การเดินทาง:</b> เดินถึงสถานี Akihabara ต่อรถไป Ueno–Tokyo Station ง่าย</p>
           <div class="tags">Top rating · Best value</div>
-          <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=30639271" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+          <div class="cta-row">
+            <div class="price-box">
+              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
+              <span class="price-val">ราคาประมาณ ฿4,448</span>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=30639271" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+          </div>
         </div>
       </article>
 
@@ -242,7 +289,13 @@
           <p class="desc"><b>จุดเด่นโดนใจ:</b> โทนอบอุ่น มีคาแรกเตอร์ ห้องสวยน่านอน ราคาเฟรนด์ลี่ สายชิลรักย่านเก่าต้องปลื้ม</p>
           <p class="desc"><b>การเดินทาง:</b> ใกล้ Kuramae (Oedo/Asakusa Line) เที่ยวอาซากุสะ–อุเอโนะสะดวก ต่อเข้าเมืองได้เร็ว</p>
           <div class="tags">Top rating · Best value</div>
-          <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=24119420" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+          <div class="cta-row">
+            <div class="price-box">
+              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
+              <span class="price-val">ราคาประมาณ ฿3,757</span>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=24119420" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+          </div>
         </div>
       </article>
 
@@ -264,7 +317,13 @@
           <p class="desc"><b>จุดเด่นโดนใจ:</b> ดีไซน์ชิค มีคาเฟ่ในตัว แวะจิบกาแฟก่อนลุย Akiba—ช้อป/เที่ยว/กิน ครบในรัศมีเดิน</p>
           <p class="desc"><b>การเดินทาง:</b> เดินสบายๆ ถึงสถานี Akihabara ต่อรถไป Ueno–Ginza–Tokyo Station ง่ายดาย</p>
           <div class="tags">Top rating · Best value</div>
-          <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=12499747" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+          <div class="cta-row">
+            <div class="price-box">
+              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
+              <span class="price-val">ราคาประมาณ ฿4,533</span>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=12499747" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+          </div>
         </div>
       </article>
 
@@ -286,7 +345,13 @@
           <p class="desc"><b>จุดเด่นโดนใจ:</b> สะอาด ปลอดภัย บริการกันเอง ทำเลดีในโซนอากิฮาบาระ—คุ้มค่าสำหรับทั้งคู่รักและครอบครัว</p>
           <p class="desc"><b>การเดินทาง:</b> ใกล้สถานีหลายสายในย่าน Akiba ไป Ueno/Asakusa/โตเกียวสเตชัน ง่ายไม่ต้องเปลี่ยนเยอะ</p>
           <div class="tags">Top rating · Best value</div>
-          <div class="actions"><a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=30045166" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a></div>
+          <div class="cta-row">
+            <div class="price-box">
+              <span class="price-note">ราคาอาจเปลี่ยนแปลงตามวันที่เข้าพัก</span>
+              <span class="price-val">ราคาประมาณ ฿3,777</span>
+            </div>
+            <a class="btn" href="https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=30045166" target="_blank" rel="nofollow noopener">ดูข้อเสนอ</a>
+          </div>
         </div>
       </article>
 
@@ -297,7 +362,6 @@
     </div>
   </main>
 
-  <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="text-align:center">
       <div class="footer-links">
@@ -312,13 +376,13 @@
   </footer>
 
   <script>
-    // dropdown ภาษา (เหมือนเดิม)
     (function(){
       const btn=document.querySelector('.lang-btn'); const menu=document.querySelector('.lang-menu');
       if(!btn||!menu) return;
       const close=()=>{menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};
       btn.addEventListener('click',e=>{e.stopPropagation();const opened=menu.classList.toggle('open');btn.setAttribute('aria-expanded',String(opened));});
-      document.addEventListener('click',close); document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
+      document.addEventListener('click',close);
+      document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
     })();
   </script>
 </body>
