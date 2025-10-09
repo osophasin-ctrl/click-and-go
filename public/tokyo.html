@@ -26,6 +26,8 @@
   </script>
 
   <style>
+    html{scroll-behavior:smooth}
+
     /* ---------- Page-only enhancements to match search card style ---------- */
     .hero-city{position:relative;min-height:220px;background-size:cover;background-position:center;border-radius:18px;overflow:hidden}
     /* ทำโอเวอร์เลย์เข้มขึ้นเพื่อให้อ่านง่าย */
@@ -36,14 +38,15 @@
     /* บรรทัดอธิบายใต้หัวเรื่องให้สว่างและมีเงา */
     .hero-city .section-lead{color:rgba(255,255,255,.95);text-shadow:0 1px 3px rgba(0,0,0,.45);margin:.25rem 0 1rem}
 
-    .chip-row{display:flex;flex-wrap:wrap;gap:.75rem;margin:14px 0 22px}
-    /* ปุ่มโซนให้อ่านง่ายบนภาพ + ไม่ถูกทับด้วยสี */
+    /* ปุ่มโซน (อยู่นอก hero ใต้รูปภาพ) */
+    .zone-switcher{margin:12px 0 8px}
+    .chip-row{display:flex;flex-wrap:wrap;gap:.75rem;margin:0}
     .chip{padding:.55rem .9rem;border-radius:999px;background:rgba(255,255,255,.96);border:1px solid rgba(16,24,40,.12);color:#0b1b2b;
-          box-shadow:0 6px 18px rgba(0,0,0,.16);backdrop-filter:saturate(120%) blur(2px)}
+          box-shadow:0 6px 18px rgba(0,0,0,.06);backdrop-filter:saturate(120%) blur(2px);text-decoration:none;display:inline-block}
+    .chip:focus,.chip:hover{border-color:#95dac5;box-shadow:0 0 0 4px rgba(18,184,134,.15)}
     .chip.active{background:#12b886;border-color:#12b886;color:#fff}
-    /* กันไม่ให้ปุ่มถูกทับ */
-    .hero-city .chip{position:relative;z-index:2}
 
+    .section-title{margin:0 0 .25rem}
     .section-lead{color:#4a5a67;margin:.25rem 0 1rem}
 
     .hotel-list{display:grid;gap:18px}
@@ -96,19 +99,23 @@
       <div class="content">
         <h1>มัดรวมกันไว้ให้แล้ว 100 โรงแรม โดนใจในโตเกียว 🇯🇵</h1>
         <p class="section-lead">รวมให้ครบทุกโซนฮิต—ตั้งแต่ง่ายคุ้มถึงฟีลสุดคูล! อยากได้วิว ราคาโดน หรือโลเคชันเทพ เราคัดมาแบบเพื่อนแนะนำเพื่อนไปเที่ยว ✨</p>
-        <div class="chip-row" role="tablist" aria-label="เลือกโซน">
-          <span class="chip active">Shibuya / Harajuku</span>
-          <a class="chip" href="#shinjuku">Shinjuku</a>
-          <a class="chip" href="#ueno">Ueno – Asakusa</a>
-          <a class="chip" href="#ginza">Ginza – Tokyo Station</a>
-          <a class="chip" href="#akiba">Akihabara – Kanda</a>
-          <a class="chip" href="#odaiba">Odaiba & Around</a>
-        </div>
       </div>
     </section>
 
+    <!-- Zone selector (ใต้ hero และเหนือหัวข้อโซน) -->
+    <nav class="zone-switcher" aria-label="เลือกโซน">
+      <div class="chip-row" role="tablist">
+        <a class="chip active" href="#shibuya">Shibuya / Harajuku</a>
+        <a class="chip" href="#shinjuku">Shinjuku</a>
+        <a class="chip" href="#ueno">Ueno – Asakusa</a>
+        <a class="chip" href="#ginza">Ginza – Tokyo Station</a>
+        <a class="chip" href="#akiba">Akihabara – Kanda</a>
+        <a class="chip" href="#odaiba">Odaiba & Around</a>
+      </div>
+    </nav>
+
     <!-- Zone heading -->
-    <section style="margin-top:22px">
+    <section id="shibuya" style="margin-top:14px">
       <h2 class="section-title">โซน A — Shibuya / Harajuku</h2>
       <p class="section-lead">สายแฟ สายคาเฟ่ เดินเล่น Cat Street – Omotesando ง่าย ใกล้ Miyashita Park และย่านชิบูย่า</p>
     </section>
