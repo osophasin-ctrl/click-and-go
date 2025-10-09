@@ -24,12 +24,20 @@
     .main-nav a{margin:0 8px;text-decoration:none;color:#111}
     .main-nav a:hover{color:var(--brand)}
 
-    /* hero แบบเดียวกับหน้า Shibuya */
+    /* hero แบบเดียวกับหน้า Shibuya (ตรึงข้อความไว้ด้านล่าง) */
     .hero-city{position:relative;min-height:220px;border-radius:18px;overflow:hidden;background-size:cover;background-position:center}
     .hero-city .overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.68))}
-    .hero-city .content{position:relative;z-index:1;color:#fff;padding:28px}
-    .hero-city h1{font-size:2rem;margin:0 0 .25rem;text-shadow:0 2px 8px rgba(0,0,0,.45)}
-    .section-lead{color:rgba(255,255,255,.95);text-shadow:0 1px 3px rgba(0,0,0,.45);margin:.25rem 0 0}
+    .hero-city .content{
+      position:absolute;left:0;right:0;bottom:16px; /* ปรับระยะชิดล่างได้ */
+      z-index:1;color:#fff;padding:0 28px;
+    }
+    .hero-city h1{font-size:2rem;margin:0 0 .35rem;text-shadow:0 2px 8px rgba(0,0,0,.45)}
+    .section-lead{color:rgba(255,255,255,.95);text-shadow:0 1px 3px rgba(0,0,0,.45);margin:0}
+
+    @media(min-width:1024px){
+      .hero-city{min-height:280px}
+      .hero-city .content{bottom:22px}
+    }
 
     /* zone switcher (chips) */
     .zone-switcher{margin:12px 0 8px}
