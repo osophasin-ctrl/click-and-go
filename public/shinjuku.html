@@ -117,7 +117,7 @@
 (function(){
   const $ = s => document.querySelector(s);
 
-  // ---------- รายการโรงแรม 22 แห่ง (ตามข้อมูลที่คุณส่งมา) ----------
+  // ---------- รายการโรงแรม 22 แห่ง ----------
   const hotels = [
     {
       name:"Nippon Seinenkan Hotel Tokyo, Shinjuku",
@@ -205,7 +205,7 @@
       area:"Shinjuku", station:"Shinjuku Sanchome", stars:3,
       rating_score:8.9, rating_count:10330, price_hint_thb:4132,
       agoda_link:"https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1949420&hl=th-th&hid=788273",
-      image_url:"https://pix8.agoda.net/hotelImages/14626827/-1/9d1aa1c3710a4549905ebb57150a4774.jpg?ca=13&ce=1&s=720x540",
+      image_url:"https://pix8.agoda.net/hotelImages/788/788273/788273_15071318480032213641.jpg?ca=4&ce=1&s=720x540",
       features:["มีเครื่องซักผ้าในห้องหลายแบบ","เหมาะพักยาว","ย่านกินเที่ยวครบ"],
       access:"🚆 ใกล้ Shinjuku Sanchome"
     },
@@ -335,9 +335,8 @@
   }
 
   function partnerUrlFallback(){
-    // ลิงก์ค้นหา Shinjuku บน Agoda (ทั่วไป)
     const sp=new URLSearchParams({cid:'1949420', currency:'THB', utm_source:'clickandgo', utm_medium:'affiliate', noapp:'1', pcs:'1'});
-    return `https://www.agoda.com/th-th/search?city=16572&${sp.toString()}`; // หมายเลขเมืองอาจต่างไป แต่เป็นลิงก์ค้นหา Shinjuku
+    return `https://www.agoda.com/th-th/search?city=16572&${sp.toString()}`;
   }
 
   // ---------- Render ----------
@@ -394,3 +393,4 @@
 </script>
 </body>
 </html>
+```0
