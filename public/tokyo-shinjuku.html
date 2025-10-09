@@ -24,11 +24,20 @@
     .main-nav a{margin:0 8px;text-decoration:none;color:#111}
     .main-nav a:hover{color:var(--brand)}
 
-    /* hero */
-    .hero-plain{background:#f7f9f9;border:1px solid #e5f2f0;border-radius:12px;padding:18px 16px;margin:14px 0}
-    .hero-plain h1{margin:0 0 6px}
-    .hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-    .b{font-size:12px;border:1px solid #d7ece9;background:#fff;border-radius:999px;padding:6px 10px;color:#0b6e66}
+    /* hero แบบเดียวกับหน้า Shibuya */
+    .hero-city{position:relative;min-height:220px;border-radius:18px;overflow:hidden;background-size:cover;background-position:center}
+    .hero-city .overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.68))}
+    .hero-city .content{position:relative;z-index:1;color:#fff;padding:28px}
+    .hero-city h1{font-size:2rem;margin:0 0 .25rem;text-shadow:0 2px 8px rgba(0,0,0,.45)}
+    .section-lead{color:rgba(255,255,255,.95);text-shadow:0 1px 3px rgba(0,0,0,.45);margin:.25rem 0 0}
+
+    /* zone switcher (chips) */
+    .zone-switcher{margin:12px 0 8px}
+    .chip-row{display:flex;flex-wrap:wrap;gap:.75rem;margin:0}
+    .chip{padding:.55rem .9rem;border-radius:999px;background:rgba(255,255,255,.96);border:1px solid rgba(16,24,40,.12);color:#0b1b2b;
+          box-shadow:0 6px 18px rgba(0,0,0,.06);backdrop-filter:saturate(120%) blur(2px);text-decoration:none;display:inline-block}
+    .chip:focus,.chip:hover{border-color:#95dac5;box-shadow:0 0 0 4px rgba(18,184,134,.15)}
+    .chip.active{background:#12b886;border-color:#12b886;color:#fff}
 
     /* grid */
     .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -70,7 +79,7 @@
     footer{border-top:1px solid #eee;margin-top:20px}
     footer .container{padding:24px 16px;text-align:center}
     footer a{color:#111;text-decoration:none;margin:0 6px}
-    footer a:hover{color:var(--brand)}
+    footer a:hover{color:#0aa297}
   </style>
 </head>
 <body>
@@ -82,17 +91,27 @@
 </header>
 
 <main class="container">
-  <section class="hero-plain">
-    <h1 class="main-title">Shinjuku (ชินจูกุ)</h1>
-    <p class="sub muted">คัดมาให้แล้ว 22 โรงแรมน่าพัก เรทติ้งดี รีวิวแน่น ย่านชินจุกุ เดินทางสะดวก ใกล้รถไฟฟ้า สิ่งอำนวยความสะดวกครบครัน</p>
-    <div class="hero-badges">
-      <span class="b">≥ 8.3 คะแนน</span>
-      <span class="b">ใกล้รถไฟฟ้า</span>
-      <span class="b">Best Value / Top Rated</span>
-      <span class="b">ราคาอาจเปลี่ยนตามวันที่เข้าพัก</span>
+  <!-- HERO + CHIPS -->
+  <section class="hero-city" style="background-image:url('/image/tokyo/shinjuku.jpg')">
+    <div class="overlay" aria-hidden="true"></div>
+    <div class="content">
+      <h1>Shinjuku (ชินจูกุ)</h1>
+      <p class="section-lead">คัดพิเศษ 22 โรงแรมคะแนนดี เดินทางง่าย ใกล้รถไฟ – โฟกัส “ราคาประมาณ” ช่วงกลางสัปดาห์ 30–90 วันล่วงหน้า</p>
     </div>
   </section>
 
+  <nav class="zone-switcher" aria-label="เลือกโซน">
+    <div class="chip-row" role="tablist">
+      <a class="chip" href="/tokyo-shibuya.html">Shibuya / Harajuku</a>
+      <a class="chip active" href="/tokyo-shinjuku.html" aria-current="page">Shinjuku</a>
+      <a class="chip" href="/tokyo-ueno-asakusa.html">Ueno – Asakusa</a>
+      <a class="chip" href="/tokyo-ginza-tokyo-station.html">Ginza – Tokyo Station</a>
+      <a class="chip" href="/tokyo-akihabara-kanda.html">Akihabara – Kanda</a>
+      <a class="chip" href="/tokyo-odaiba.html">Odaiba & Around</a>
+    </div>
+  </nav>
+
+  <!-- GRID -->
   <section id="grid" class="cards" aria-live="polite"></section>
 
   <div class="cta-wrap">
@@ -117,7 +136,7 @@
 (function(){
   const $ = s => document.querySelector(s);
 
-  // ---------- รายการโรงแรม 22 แห่ง พร้อม "จุดเด่นโดนใจ" (6–7 บรรทัด) ----------
+  // ---------- รายการโรงแรม 22 แห่ง พร้อม "จุดเด่นโดนใจ" ----------
   const hotels = [
     {
       name:"Nippon Seinenkan Hotel Tokyo, Shinjuku",
